@@ -1,7 +1,6 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class Beneficiario implements Serializable {
@@ -12,7 +11,7 @@ public class Beneficiario implements Serializable {
 	private long cdTitular;
 	private String celular;
 	private String cpf;
-	private Date dataNascimento;
+	private String dataNascimento;
 	private String email;
 	private String nome;
 	private String nomeMae;
@@ -55,11 +54,11 @@ public class Beneficiario implements Serializable {
 		this.cpf = cpf;
 	}
 
-	public Date getDataNascimento() {
+	public String getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(String dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 

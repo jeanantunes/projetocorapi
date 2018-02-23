@@ -15,6 +15,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the TBOD_FORCA_VENDA database table.
@@ -27,7 +29,7 @@ public class TbodForcaVenda implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "SEQ_TBOD_FORCA_VENDA", sequenceName = "SEQ_TBOD_FORCA_VENDA",  allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEQ_TBOD_FORCA_VENDA", sequenceName = "SEQ_TBOD_FORCA_VENDA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_FORCA_VENDA")
 	@Column(name = "CD_FORCA_VENDA")
 	private long cdForcaVenda;
@@ -47,8 +49,15 @@ public class TbodForcaVenda implements Serializable {
 	@Column(name = "NOME")
 	private String nome;
 
+	@Temporal(TemporalType.DATE)
 	@Column(name = "DATA_NASCIMENTO")
 	private Date dataNascimento;
+
+	@Column(name = "CARGO")
+	private String cargo;
+
+	@Column(name = "DEPARTAMENTO")
+	private String departamento;
 
 	// bi-directional many-to-one association to TbodCorretora
 	@ManyToOne
@@ -125,6 +134,22 @@ public class TbodForcaVenda implements Serializable {
 
 	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
+	}
+
+	public String getCargo() {
+		return cargo;
+	}
+
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
+	}
+
+	public String getDepartamento() {
+		return departamento;
+	}
+
+	public void setDepartamento(String departamento) {
+		this.departamento = departamento;
 	}
 
 	public TbodCorretora getTbodCorretora() {

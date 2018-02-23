@@ -20,6 +20,7 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
+import br.com.odontoprev.portal.corretor.util.DataUtil;
 
 @Service
 public class BeneficiarioServiceImpl implements BeneficiarioService {
@@ -66,7 +67,7 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 				titular.setNome(beneficiario.getNome());
 				titular.setCpf(beneficiario.getCpf());
 				titular.setSexo(beneficiario.getSexo());
-				titular.setDataNascimento(beneficiario.getDataNascimento());
+				titular.setDataNascimento(DataUtil.dateParse(beneficiario.getDataNascimento()));
 				titular.setNomeMae(beneficiario.getNomeMae());
 				titular.setCelular(beneficiario.getCelular());
 				titular.setEmail(beneficiario.getEmail());
@@ -87,7 +88,7 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 					tbdep.setNome(dependente.getNome());
 					tbdep.setCpf(dependente.getCpf());
 					tbdep.setSexo(dependente.getSexo());
-					tbdep.setDataNascimento(dependente.getDataNascimento());
+					tbdep.setDataNascimento(DataUtil.dateParse(dependente.getDataNascimento()));
 					tbdep.setNomeMae(dependente.getNomeMae());
 					tbdep.setCelular(dependente.getCelular());
 					tbdep.setEmail(dependente.getEmail());
@@ -104,7 +105,7 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 			}
 
 		} catch (Exception e) {
-			log.info("BeneficiarioServiceImpl :: Erro ao cadastrar vidas. Detalhe: [" + e.getMessage() + "]");
+			log.error("BeneficiarioServiceImpl :: Erro ao cadastrar vidas. Detalhe: [" + e.getMessage() + "]");
 			return new BeneficiarioResponse(0, "Erro ao cadastrar vidas. Favor, entre em contato com o suporte.");
 		}
 

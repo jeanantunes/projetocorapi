@@ -90,7 +90,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			}
 			
 		} catch (Exception e) {
-			log.info("EmpresaServiceImpl :: Erro ao cadastrar empresa. Detalhe: [" + e.getMessage() + "]");
+			log.error("EmpresaServiceImpl :: Erro ao cadastrar empresa. Detalhe: [" + e.getMessage() + "]");
 			return new EmpresaResponse(0, "Erro ao cadastrar empresa. Favor, entre em contato com o suporte.");
 		}
 			

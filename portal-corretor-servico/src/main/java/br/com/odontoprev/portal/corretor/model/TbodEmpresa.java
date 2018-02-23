@@ -4,60 +4,62 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The persistent class for the TBOD_EMPRESA database table.
  * 
  */
 @Entity
-@Table(name="TBOD_EMPRESA")
-@NamedQuery(name="TbodEmpresa.findAll", query="SELECT t FROM TbodEmpresa t")
+@Table(name = "TBOD_EMPRESA")
+@NamedQuery(name = "TbodEmpresa.findAll", query = "SELECT t FROM TbodEmpresa t")
 public class TbodEmpresa implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "SEQ_TBOD_EMPRESA", sequenceName = "SEQ_TBOD_EMPRESA",  allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEQ_TBOD_EMPRESA", sequenceName = "SEQ_TBOD_EMPRESA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_EMPRESA")
-	@Column(name="CD_EMPRESA")
+	@Column(name = "CD_EMPRESA")
 	private long cdEmpresa;
 
-	@Column(name="CELULAR")
+	@Column(name = "CELULAR")
 	private String celular;
 
-	@Column(name="CNPJ")
+	@Column(name = "CNPJ")
 	private String cnpj;
 
-	@Column(name="CONTATO_EMPRESA")
+	@Column(name = "CONTATO_EMPRESA")
 	private String contatoEmpresa;
 
-	@Column(name="EMAIL")
+	@Column(name = "EMAIL")
 	private String email;
 
-	@Column(name="INC_ESTADUAL")
+	@Column(name = "INC_ESTADUAL")
 	private String incEstadual;
 
-	@Column(name="NOME_FANTASIA")
+	@Column(name = "NOME_FANTASIA")
 	private String nomeFantasia;
 
-	@Column(name="RAMO_ATIVIDADE")
+	@Column(name = "RAMO_ATIVIDADE")
 	private String ramoAtividade;
 
-	@Column(name="RAZAO_SOCIAL")
+	@Column(name = "RAZAO_SOCIAL")
 	private String razaoSocial;
 
-	@Column(name="REPRESENTANTE_LEGAL")
+	@Column(name = "REPRESENTANTE_LEGAL")
 	private String representanteLegal;
 
-	@Column(name="TELEFONE")
+	@Column(name = "TELEFONE")
 	private String telefone;
 
-	//bi-directional many-to-one association to TbodEndereco
+	@Column(name = "EMP_DCMS")
+	private long empDcms;
+
+	// bi-directional many-to-one association to TbodEndereco
 	@ManyToOne
-	@JoinColumn(name="CD_ENDERECO")
+	@JoinColumn(name = "CD_ENDERECO")
 	private TbodEndereco tbodEndereco;
 
-	//bi-directional many-to-one association to TbodVenda
-	@OneToMany(mappedBy="tbodEmpresa")
+	// bi-directional many-to-one association to TbodVenda
+	@OneToMany(mappedBy = "tbodEmpresa")
 	private List<TbodVenda> tbodVendas;
 
 	public TbodEmpresa() {
@@ -149,6 +151,14 @@ public class TbodEmpresa implements Serializable {
 
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
+	}
+
+	public long getEmpDcms() {
+		return empDcms;
+	}
+
+	public void setEmpDcms(long empDcms) {
+		this.empDcms = empDcms;
 	}
 
 	public TbodEndereco getTbodEndereco() {

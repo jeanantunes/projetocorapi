@@ -1,7 +1,6 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class ForcaVenda implements Serializable {
 
@@ -11,12 +10,11 @@ public class ForcaVenda implements Serializable {
 	private String celular;
 	private String email;
 	private Corretora corretora;
-	private String statusForcaVenda;
 	private String cpf;
 	private boolean ativo;
 	private String departamento;
 	private String cargo;
-	private Date dataNascimento;
+	private String dataNascimento;
 
 	public String getNome() {
 		return nome;
@@ -58,14 +56,6 @@ public class ForcaVenda implements Serializable {
 		this.cpf = cpf;
 	}
 
-	public String getStatusForcaVenda() {
-		return statusForcaVenda;
-	}
-
-	public void setStatusForcaVenda(String statusForcaVenda) {
-		this.statusForcaVenda = statusForcaVenda;
-	}
-
 	public boolean isAtivo() {
 		return ativo;
 	}
@@ -90,19 +80,19 @@ public class ForcaVenda implements Serializable {
 		this.cargo = cargo;
 	}
 
-	public Date getDataNascimento() {
+	public String getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(String dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
 	@Override
 	public String toString() {
 		return "ForcaVenda [nome=" + nome + ", celular=" + celular + ", email=" + email + ", corretora=" + corretora
-				+ ", statusForcaVenda=" + statusForcaVenda + ", cpf=" + cpf + ", ativo=" + ativo + ", departamento="
-				+ departamento + ", cargo=" + cargo + ", dataNascimento=" + dataNascimento + "]";
+				+ ", cpf=" + cpf + ", ativo=" + ativo + ", departamento=" + departamento + ", cargo=" + cargo
+				+ ", dataNascimento=" + dataNascimento + "]";
 	}
 
 }
