@@ -7,4 +7,6 @@ public interface ForcaVendaService {
 
 	public ForcaVendaResponse addForcaVenda(ForcaVenda forcaVenda);
 
+	public ForcaVenda findForcaVendaByCpf(String cpf);
+
 }

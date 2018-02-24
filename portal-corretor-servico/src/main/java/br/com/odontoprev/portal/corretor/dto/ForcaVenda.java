@@ -6,15 +6,25 @@ public class ForcaVenda implements Serializable {
 
 	private static final long serialVersionUID = 3665956677976317178L;
 
+	private Long cdForcaVenda;
 	private String nome;
 	private String celular;
 	private String email;
 	private Corretora corretora;
+	private String statusForcaVenda;
 	private String cpf;
 	private boolean ativo;
 	private String departamento;
 	private String cargo;
 	private String dataNascimento;
+
+	public Long getCdForcaVenda() {
+		return cdForcaVenda;
+	}
+
+	public void setCdForcaVenda(Long cdForcaVenda) {
+		this.cdForcaVenda = cdForcaVenda;
+	}
 
 	public String getNome() {
 		return nome;
@@ -46,6 +56,14 @@ public class ForcaVenda implements Serializable {
 
 	public void setCorretora(Corretora corretora) {
 		this.corretora = corretora;
+	}
+
+	public String getStatusForcaVenda() {
+		return statusForcaVenda;
+	}
+
+	public void setStatusForcaVenda(String statusForcaVenda) {
+		this.statusForcaVenda = statusForcaVenda;
 	}
 
 	public String getCpf() {
