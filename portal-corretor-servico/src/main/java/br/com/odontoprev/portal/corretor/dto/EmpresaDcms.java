@@ -6,7 +6,7 @@ public class EmpresaDcms implements Serializable {
 
 	private static final long serialVersionUID = -7393237693663557316L;
 
-	private long cdEmpresa;
+	private Long cdEmpresa;
 	private String cnpj;
 	private String empDcms;
 

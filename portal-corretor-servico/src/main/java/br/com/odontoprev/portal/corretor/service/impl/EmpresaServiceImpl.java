@@ -57,7 +57,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 		try {
 			TbodEndereco tbEndereco = new TbodEndereco();
 			Endereco endereco = empresa.getEnderecoEmpresa();
-			
+
 			tbEndereco.setLogradouro(endereco.getLogradouro());
 			tbEndereco.setBairro(endereco.getBairro());
 			tbEndereco.setCep(endereco.getCep());
@@ -99,7 +99,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 					vendaDao.save(tbVenda);
 				}
 			}
-			
+
 			XlsEmpresa xlsEmpresa = new XlsEmpresa();
 			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa.getVencimentoFatura());
 
@@ -114,20 +114,30 @@ public class EmpresaServiceImpl implements EmpresaService {
 	@Override
 	@Transactional
 	public EmpresaResponse updateEmpresa(EmpresaDcms empresaDcms) {
-		
+
 		log.info("[EmpresaServiceImpl::updateEmpresa]");
-		
-//		try {
-//			
-//		} catch (Exception e) {
-//			log.error("EmpresaServiceImpl :: Erro ao atualizar empresaDcms. Detalhe: [" + e.getMessage() + "]");
-//			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte.");
-//		}
-//		
-//		return new EmpresaResponse(, "Empresa atualizada.");
-		
-		return null;
-		
+
+		TbodEmpresa tbEmpresa = new TbodEmpresa();
+
+		try {
+
+			tbEmpresa = empresaDao.findBycdEmpresaAndCnpj(empresaDcms.getCdEmpresa(), empresaDcms.getCnpj());
+
+			if (tbEmpresa != null) {
+				tbEmpresa.setEmpDcms(empresaDcms.getEmpDcms());
+				empresaDao.save(tbEmpresa);
+			}
+			else {
+				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
+			}
+
+		} catch (Exception e) {
+			log.error("EmpresaServiceImpl :: Erro ao atualizar empresaDcms. Detalhe: [" + e.getMessage() + "]");
+			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte.");
+		}
+
+		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
+
 	}
 
 }
