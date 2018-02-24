@@ -7,7 +7,6 @@ public class Empresa implements Serializable {
 
 	private static final long serialVersionUID = -6170025278181580898L;
 
-//	private long cdEmpresa;
 	private String cnpj;
 	private String razaoSocial;
 	private String incEstadual;
@@ -21,14 +20,6 @@ public class Empresa implements Serializable {
 	private long vencimentoFatura;
 	private Endereco enderecoEmpresa;
 	private List<Plano> planos;
-
-//	public long getCdEmpresa() {
-//		return cdEmpresa;
-//	}
-//
-//	public void setCdEmpresa(long cdEmpresa) {
-//		this.cdEmpresa = cdEmpresa;
-//	}
 
 	public String getCnpj() {
 		return cnpj;

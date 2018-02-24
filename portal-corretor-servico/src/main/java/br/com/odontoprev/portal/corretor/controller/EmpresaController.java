@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.Empresa;
+import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
@@ -28,6 +29,16 @@ public class EmpresaController {
 		log.info(empresa);
 		
 		EmpresaResponse response = empresaService.add(empresa);
+		
+		return response;
+	}
+	
+	@RequestMapping(value = "/empresa-dcms", method = { RequestMethod.POST })
+	public EmpresaResponse updateEmpresa(@RequestBody EmpresaDcms empresaDcms) {
+		
+		log.info(empresaDcms);
+		
+		EmpresaResponse response = empresaService.updateEmpresa(empresaDcms);
 		
 		return response;
 	}

@@ -48,7 +48,7 @@ public class CorretoraServiceImpl implements CorretoraService {
 		TbodEndereco tbEndereco = new TbodEndereco();
 		Endereco endereco = corretora.getEnderecoCorretora();
 		
-		tbEndereco.setLogradouro(endereco.getEndereco()==null ? " " : endereco.getEndereco());
+		tbEndereco.setLogradouro(endereco.getLogradouro()==null ? " " : endereco.getLogradouro());
 		tbEndereco.setBairro(endereco.getBairro()==null ? " " : endereco.getBairro());
 		tbEndereco.setCep(endereco.getCep()==null ? " " : endereco.getCep());
 		tbEndereco.setCidade(endereco.getCidade()==null ? " " : endereco.getCidade());

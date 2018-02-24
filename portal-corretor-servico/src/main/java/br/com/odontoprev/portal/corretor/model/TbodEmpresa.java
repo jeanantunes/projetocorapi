@@ -51,7 +51,7 @@ public class TbodEmpresa implements Serializable {
 	private String telefone;
 
 	@Column(name = "EMP_DCMS")
-	private long empDcms;
+	private String empDcms;
 
 	// bi-directional many-to-one association to TbodEndereco
 	@ManyToOne
@@ -153,11 +153,11 @@ public class TbodEmpresa implements Serializable {
 		this.telefone = telefone;
 	}
 
-	public long getEmpDcms() {
+	public String getEmpDcms() {
 		return empDcms;
 	}
 
-	public void setEmpDcms(long empDcms) {
+	public void setEmpDcms(String empDcms) {
 		this.empDcms = empDcms;
 	}
 

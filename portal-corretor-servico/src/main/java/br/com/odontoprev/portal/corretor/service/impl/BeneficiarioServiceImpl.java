@@ -14,18 +14,21 @@ import br.com.odontoprev.portal.corretor.dao.VendaVidaDAO;
 import br.com.odontoprev.portal.corretor.dao.VidaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
-import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
+import br.com.odontoprev.portal.corretor.service.EnderecoService;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 
 @Service
 public class BeneficiarioServiceImpl implements BeneficiarioService {
 
 	private static final Log log = LogFactory.getLog(BeneficiarioServiceImpl.class);
+	
+	@Autowired
+	EnderecoService enderecoService;
 
 	@Autowired
 	VidaDAO vidaDao;
@@ -51,18 +54,13 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 
 			for (Beneficiario beneficiario : beneficiarios) {
 
-				// TODO Verificar inclusao de endereco
-				 TbodEndereco tbEndereco = new TbodEndereco();
-				 Endereco endereco = beneficiario.getEndereco();
+				TbodEndereco tbEndereco = new TbodEndereco();
 				
-				 tbEndereco.setLogradouro(endereco.getEndereco());
-				 tbEndereco.setBairro(endereco.getBairro());
-				 tbEndereco.setCep(endereco.getBairro());
-				 tbEndereco.setCidade(endereco.getCidade());
-				 tbEndereco.setNumero(endereco.getNumero());
-				 tbEndereco.setUf(endereco.getEstado());
-				 tbEndereco.setComplemento(endereco.getComplemento());
-				 tbEndereco = enderecoDao.save(tbEndereco);
+				if (beneficiario.getEndereco() != null) {
+					tbEndereco = enderecoService.addEndereco(beneficiario.getEndereco());
+				}
+
+				tbEndereco = enderecoDao.save(tbEndereco);
 
 				titular.setNome(beneficiario.getNome());
 				titular.setCpf(beneficiario.getCpf());
@@ -82,7 +80,7 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 				tbVendaVidaTit.setCdPlano(beneficiario.getCdPlano());
 				tbVendaVidaTit.setTbodVida(titular);
 				vendaVidaDao.save(tbVendaVidaTit);
-				
+
 				for (Beneficiario dependente : beneficiario.getDependentes()) {
 					TbodVida tbdep = new TbodVida();
 					tbdep.setNome(dependente.getNome());

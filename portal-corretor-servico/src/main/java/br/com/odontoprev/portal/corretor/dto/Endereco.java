@@ -7,12 +7,13 @@ public class Endereco implements Serializable {
 	private static final long serialVersionUID = 7446795200067239721L;
 
 	private String cep;
-	private String endereco;
+	private String logradouro;
 	private String numero;
 	private String complemento;
 	private String bairro;
 	private String cidade;
 	private String estado;
+	private Long tipoEndereco;
 
 	public String getCep() {
 		return cep;
@@ -22,18 +23,18 @@ public class Endereco implements Serializable {
 		this.cep = cep;
 	}
 
-	public String getEndereco() {
-		return endereco;
+	public String getLogradouro() {
+		return logradouro;
 	}
 
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 
 	public String getNumero() {
 		return numero;
 	}
-	
+
 	public void setNumero(String numero) {
 		this.numero = numero;
 	}
@@ -70,10 +71,19 @@ public class Endereco implements Serializable {
 		this.estado = estado;
 	}
 
+	public Long getTipoEndereco() {
+		return tipoEndereco;
+	}
+
+	public void setTipoEndereco(Long tipoEndereco) {
+		this.tipoEndereco = tipoEndereco;
+	}
+
 	@Override
 	public String toString() {
-		return "Endereco [cep=" + cep + ", endereco=" + endereco + ", numero=" + numero + ", complemento=" + complemento
-				+ ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado + "]";
+		return "Endereco [cep=" + cep + ", logradouro=" + logradouro + ", numero=" + numero + ", complemento="
+				+ complemento + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado + ", tipoEndereco="
+				+ tipoEndereco + "]";
 	}
-	
+
 }
