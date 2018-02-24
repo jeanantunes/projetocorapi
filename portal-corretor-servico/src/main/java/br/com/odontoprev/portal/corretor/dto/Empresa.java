@@ -18,6 +18,7 @@ public class Empresa implements Serializable {
 	private String celular;
 	private String email;
 	private long vencimentoFatura;
+	private String dataVencimentoFatura;
 	private Endereco enderecoEmpresa;
 	private List<Plano> planos;
 
@@ -101,6 +102,14 @@ public class Empresa implements Serializable {
 		this.email = email;
 	}
 
+	public String getDataVencimentoFatura() {
+		return dataVencimentoFatura;
+	}
+
+	public void setDataVencimentoFatura(String dataVencimentoFatura) {
+		this.dataVencimentoFatura = dataVencimentoFatura;
+	}
+
 	public Endereco getEnderecoEmpresa() {
 		return enderecoEmpresa;
 	}
@@ -127,11 +136,11 @@ public class Empresa implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Empresa [cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", incEstadual="
-				+ incEstadual + ", ramoAtividade=" + ramoAtividade + ", nomeFantasia=" + nomeFantasia
-				+ ", representanteLegal=" + representanteLegal + ", contatoEmpresa=" + contatoEmpresa + ", telefone="
-				+ telefone + ", celular=" + celular + ", email=" + email + ", enderecoEmpresa=" + enderecoEmpresa
-				+ ", vencimentoFatura=" + vencimentoFatura + ", planos=" + planos + "]";
+		return "Empresa [cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", incEstadual=" + incEstadual
+				+ ", ramoAtividade=" + ramoAtividade + ", nomeFantasia=" + nomeFantasia + ", representanteLegal="
+				+ representanteLegal + ", contatoEmpresa=" + contatoEmpresa + ", telefone=" + telefone + ", celular="
+				+ celular + ", email=" + email + ", enderecoEmpresa=" + enderecoEmpresa + ", vencimentoFatura="
+				+ vencimentoFatura + ", planos=" + planos + "]";
 	}
 
 }

@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------------------------------
--- Programador...: Marco Antonio Mendonça
+-- Programador...: Marco Antonio Mendonï¿½a
 -- Data..........: 15/02/2018
 ----------------------------------------------------------------------------------------------------------
 -- criando a sequendce para tabela TBOD_COR_PESSOA
@@ -249,7 +249,7 @@ create table TBOD_VIDA
 	sexo					char(1)			not null,
 	data_nascimento			date			not null,
 	nome_mae				varchar2(50)	not null,
-	celular					varchar2(9),
+	celular					varchar2(15),
 	email					varchar2(50),
 	cd_titular				numeric(10),
 	cd_endereco				numeric(10),

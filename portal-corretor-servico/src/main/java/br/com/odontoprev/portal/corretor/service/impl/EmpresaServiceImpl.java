@@ -24,6 +24,7 @@ import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -98,6 +99,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 					vendaDao.save(tbVenda);
 				}
 			}
+			
+			XlsEmpresa xlsEmpresa = new XlsEmpresa();
+			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa.getVencimentoFatura());
 
 		} catch (Exception e) {
 			log.error("EmpresaServiceImpl :: Erro ao cadastrar empresa. Detalhe: [" + e.getMessage() + "]");
@@ -108,6 +112,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	@Override
+	@Transactional
 	public EmpresaResponse updateEmpresa(EmpresaDcms empresaDcms) {
 		
 		log.info("[EmpresaServiceImpl::updateEmpresa]");
