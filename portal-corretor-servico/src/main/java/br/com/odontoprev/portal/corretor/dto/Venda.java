@@ -7,14 +7,23 @@ public class Venda implements Serializable {
 
 	private static final long serialVersionUID = 3281440316438484993L;
 
-	private long cdEmpresa;
-	private long cdPlano;
-	private long cdForcaVenda;
+	private Long cdVenda;
+	private Long cdEmpresa;
+	private Long cdPlano;
+	private Long cdForcaVenda;
 	private Date dataVenda;
-	private String statusVenda;
-	private long faturaVencimento;
+	private Long cdStatusVenda;
+	private Long faturaVencimento;
 
-	public long getCdEmpresa() {
+	public Long getCdVenda() {
+		return cdVenda;
+	}
+
+	public void setCdVenda(long cdVenda) {
+		this.cdVenda = cdVenda;
+	}
+
+	public Long getCdEmpresa() {
 		return cdEmpresa;
 	}
 
@@ -22,7 +31,7 @@ public class Venda implements Serializable {
 		this.cdEmpresa = cdEmpresa;
 	}
 
-	public long getCdPlano() {
+	public Long getCdPlano() {
 		return cdPlano;
 	}
 
@@ -30,7 +39,7 @@ public class Venda implements Serializable {
 		this.cdPlano = cdPlano;
 	}
 
-	public long getCdForcaVenda() {
+	public Long getCdForcaVenda() {
 		return cdForcaVenda;
 	}
 	
@@ -46,15 +55,15 @@ public class Venda implements Serializable {
 		this.dataVenda = dataVenda;
 	}
 
-	public String getStatusVenda() {
-		return statusVenda;
+	public Long getCdStatusVenda() {
+		return cdStatusVenda;
 	}
 
-	public void setStatusVenda(String statusVenda) {
-		this.statusVenda = statusVenda;
+	public void setCdStatusVenda(Long cdStatusVenda) {
+		this.cdStatusVenda = cdStatusVenda;
 	}
 
-	public long getFaturaVencimento() {
+	public Long getFaturaVencimento() {
 		return faturaVencimento;
 	}
 
@@ -64,8 +73,14 @@ public class Venda implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Venda [cdEmpresa=" + cdEmpresa + ", cdPlano=" + cdPlano + ", cdForcaVenda=" + cdForcaVenda
-				+ ", dataVenda=" + dataVenda + ", statusVenda=" + statusVenda + ", faturaVencimento=" + faturaVencimento
+		return "Venda ["
+				+ " cdVenda=" + cdVenda
+				+ ", cdEmpresa=" + cdEmpresa 
+				+ ", cdPlano=" + cdPlano 
+				+ ", cdForcaVenda=" + cdForcaVenda
+				+ ", dataVenda=" + dataVenda 
+				+ ", cdStatusVenda=" + cdStatusVenda 
+				+ ", faturaVencimento=" + faturaVencimento
 				+ "]";
 	}
 

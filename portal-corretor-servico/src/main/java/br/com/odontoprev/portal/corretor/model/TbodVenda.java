@@ -20,14 +20,14 @@ public class TbodVenda implements Serializable {
 	@SequenceGenerator(name = "SEQ_TBOD_VENDA", sequenceName = "SEQ_TBOD_VENDA",  allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_VENDA")
 	@Column(name="CD_VENDA")
-	private long cdVenda;
+	private Long cdVenda;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name="DT_VENDA")
 	private Date dtVenda;
 	
 	@Column(name="FATURA_VENCIMENTO")
-	private long faturaVencimento;
+	private Long faturaVencimento;
 
 	//bi-directional many-to-one association to TbodEmpresa
 	@ManyToOne
@@ -61,11 +61,11 @@ public class TbodVenda implements Serializable {
 	public TbodVenda() {
 	}
 
-	public long getCdVenda() {
+	public Long getCdVenda() {
 		return this.cdVenda;
 	}
 
-	public void setCdVenda(long cdVenda) {
+	public void setCdVenda(Long cdVenda) {
 		this.cdVenda = cdVenda;
 	}
 
@@ -77,11 +77,11 @@ public class TbodVenda implements Serializable {
 		this.dtVenda = dtVenda;
 	}
 	
-	public long getFaturaVencimento() {
+	public Long getFaturaVencimento() {
 		return faturaVencimento;
 	}
 	
-	public void setFaturaVencimento(long faturaVencimento) {
+	public void setFaturaVencimento(Long faturaVencimento) {
 		this.faturaVencimento = faturaVencimento;
 	}
 
