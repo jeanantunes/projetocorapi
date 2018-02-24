@@ -33,7 +33,7 @@ public class EmpresaController {
 		return response;
 	}
 	
-	@RequestMapping(value = "/empresa-dcms", method = { RequestMethod.POST })
+	@RequestMapping(value = "/empresa-dcms", method = { RequestMethod.PUT })
 	public EmpresaResponse updateEmpresa(@RequestBody EmpresaDcms empresaDcms) {
 		
 		log.info(empresaDcms);

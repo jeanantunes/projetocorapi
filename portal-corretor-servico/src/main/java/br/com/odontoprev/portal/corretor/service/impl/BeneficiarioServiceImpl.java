@@ -9,26 +9,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
+import br.com.odontoprev.portal.corretor.dao.TipoEnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaVidaDAO;
 import br.com.odontoprev.portal.corretor.dao.VidaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
+import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
+import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
-import br.com.odontoprev.portal.corretor.service.EnderecoService;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 
 @Service
 public class BeneficiarioServiceImpl implements BeneficiarioService {
 
 	private static final Log log = LogFactory.getLog(BeneficiarioServiceImpl.class);
-	
-	@Autowired
-	EnderecoService enderecoService;
 
 	@Autowired
 	VidaDAO vidaDao;
@@ -41,6 +40,9 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 
 	@Autowired
 	VendaVidaDAO vendaVidaDao;
+	
+	@Autowired
+	TipoEnderecoDAO tipoEnderecoDao;
 
 	@Override
 	@Transactional
@@ -53,11 +55,21 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 		try {
 
 			for (Beneficiario beneficiario : beneficiarios) {
-
+				
+				Endereco endereco = beneficiario.getEndereco();
 				TbodEndereco tbEndereco = new TbodEndereco();
 				
-				if (beneficiario.getEndereco() != null) {
-					tbEndereco = enderecoService.addEndereco(beneficiario.getEndereco());
+				tbEndereco.setLogradouro(endereco.getLogradouro());
+				tbEndereco.setBairro(endereco.getBairro());
+				tbEndereco.setCep(endereco.getCep());
+				tbEndereco.setCidade(endereco.getCidade());
+				tbEndereco.setNumero(endereco.getNumero());
+				tbEndereco.setUf(endereco.getEstado());
+				tbEndereco.setComplemento(endereco.getComplemento());
+
+				if (endereco.getTipoEndereco() != null) {
+					TbodTipoEndereco tbTipoEndereco = tipoEnderecoDao.findOne(endereco.getTipoEndereco());
+					tbEndereco.setTbodTipoEndereco(tbTipoEndereco);
 				}
 
 				tbEndereco = enderecoDao.save(tbEndereco);

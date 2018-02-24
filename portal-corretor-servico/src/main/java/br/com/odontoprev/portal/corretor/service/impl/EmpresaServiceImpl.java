@@ -11,17 +11,19 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
+import br.com.odontoprev.portal.corretor.dao.TipoEnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
+import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
+import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
-import br.com.odontoprev.portal.corretor.service.EnderecoService;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -29,7 +31,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 	private static final Log log = LogFactory.getLog(EmpresaServiceImpl.class);
 
 	@Autowired
-	EnderecoService enderecoService;
+	TipoEnderecoDAO tipoEnderecoDao;
 
 	@Autowired
 	EnderecoDAO enderecoDao;
@@ -53,10 +55,22 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		try {
 			TbodEndereco tbEndereco = new TbodEndereco();
+			Endereco endereco = empresa.getEnderecoEmpresa();
 			
-			if (empresa.getEnderecoEmpresa() != null) {
-				tbEndereco = enderecoService.addEndereco(empresa.getEnderecoEmpresa());
+			tbEndereco.setLogradouro(endereco.getLogradouro());
+			tbEndereco.setBairro(endereco.getBairro());
+			tbEndereco.setCep(endereco.getCep());
+			tbEndereco.setCidade(endereco.getCidade());
+			tbEndereco.setNumero(endereco.getNumero());
+			tbEndereco.setUf(endereco.getEstado());
+			tbEndereco.setComplemento(endereco.getComplemento());
+
+			if (endereco.getTipoEndereco() != null) {
+				TbodTipoEndereco tbTipoEndereco = tipoEnderecoDao.findOne(endereco.getTipoEndereco());
+				tbEndereco.setTbodTipoEndereco(tbTipoEndereco);
 			}
+
+			tbEndereco = enderecoDao.save(tbEndereco);
 
 			tbEmpresa.setCnpj(empresa.getCnpj());
 			tbEmpresa.setIncEstadual(empresa.getIncEstadual());
@@ -95,8 +109,20 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Override
 	public EmpresaResponse updateEmpresa(EmpresaDcms empresaDcms) {
-		// TODO Auto-generated method stub
+		
+		log.info("[EmpresaServiceImpl::updateEmpresa]");
+		
+//		try {
+//			
+//		} catch (Exception e) {
+//			log.error("EmpresaServiceImpl :: Erro ao atualizar empresaDcms. Detalhe: [" + e.getMessage() + "]");
+//			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte.");
+//		}
+//		
+//		return new EmpresaResponse(, "Empresa atualizada.");
+		
 		return null;
+		
 	}
 
 }
