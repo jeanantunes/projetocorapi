@@ -15,26 +15,34 @@ import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 
 @RestController
 public class ForcaVendaController {
-	
+
 	private static final Log log = LogFactory.getLog(ForcaVendaController.class);
-	
+
 	@Autowired
 	ForcaVendaService forcaVendaService;
-	
+
 	@RequestMapping(value = "/forcavenda", method = { RequestMethod.POST })
 	public ForcaVendaResponse addForcaVenda(@RequestBody ForcaVenda forcaVenda) {
-		
+
 		log.info(forcaVenda);
-		
+
 		return forcaVendaService.addForcaVenda(forcaVenda);
 	}
-	
+
 	@RequestMapping(value = "/forcavenda/{cpf}", method = { RequestMethod.GET })
 	public ForcaVenda findForcaVendaByCpf(@PathVariable String cpf) {
-		
+
 		log.info(cpf);
-		
+
 		return forcaVendaService.findForcaVendaByCpf(cpf);
+	}
+
+	@RequestMapping(value = "/forcavenda/{cdForcaVenda}/corretora/{cnpj}", method = { RequestMethod.GET })
+	public ForcaVendaResponse findAssocForcaVendaCorretora(@PathVariable Long cdForcaVenda, @PathVariable String cnpj) {
+
+		log.info("cdForcaVenda [" + cdForcaVenda + "] + cnpj [" + cnpj + "]");
+
+		return forcaVendaService.findAssocForcaVendaCorretora(cdForcaVenda, cnpj);
 	}
 
 }

@@ -42,14 +42,14 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
 
-		try {		
-			
+		try {
+
 			List<TbodForcaVenda> forcas = forcaVendaDao.findByCpf(forcaVenda.getCpf());
-			
-			if(forcas != null && !forcas.isEmpty()) {
+
+			if (forcas != null && !forcas.isEmpty()) {
 				throw new Exception("CPF " + forcaVenda.getCpf() + " já existe!");
 			}
-			
+
 			tbForcaVenda.setNome(forcaVenda.getNome());
 			tbForcaVenda.setCpf(forcaVenda.getCpf());
 			tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
@@ -80,53 +80,81 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	@Override
 	public ForcaVenda findForcaVendaByCpf(String cpf) {
-		
+
 		log.info("[ForcaVendaServiceImpl::findForcaVendaByCpf]");
-		
+
 		ForcaVenda forcaVenda = new ForcaVenda();
-		
+
 		List<TbodForcaVenda> entities = forcaVendaDao.findByCpf(cpf);
-		
-		if(!entities.isEmpty()) {
+
+		if (!entities.isEmpty()) {
 			TbodForcaVenda tbForcaVenda = entities.get(0);
-			
+
 			forcaVenda.setCdForcaVenda(tbForcaVenda.getCdForcaVenda());
 			forcaVenda.setNome(tbForcaVenda.getNome());
 			forcaVenda.setCelular(tbForcaVenda.getCelular());
 			forcaVenda.setEmail(tbForcaVenda.getEmail());
 			forcaVenda.setCpf(tbForcaVenda.getCpf());
 			forcaVenda.setAtivo("S".equals(tbForcaVenda.getAtivo()) ? true : false);
-			
+
 			String dataStr = "00/00/0000";
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			try {
 				dataStr = sdf.format(tbForcaVenda.getDataNascimento());
 			} catch (Exception e) {
-				log.error("ForcaVendaServiceImpl :: Erro ao formatar data de nascimento. Detalhe: [" + e.getMessage() + "]");
+				log.error("ForcaVendaServiceImpl :: Erro ao formatar data de nascimento. Detalhe: [" + e.getMessage()
+						+ "]");
 			}
 			forcaVenda.setDataNascimento(dataStr);
-			
+
 			forcaVenda.setCargo(tbForcaVenda.getCargo());
 			forcaVenda.setDepartamento(tbForcaVenda.getDepartamento());
-			
-			String statusForca = tbForcaVenda.getTbodStatusForcaVenda() != null ? tbForcaVenda.getTbodStatusForcaVenda().getDescricao() : "";
+
+			String statusForca = tbForcaVenda.getTbodStatusForcaVenda() != null
+					? tbForcaVenda.getTbodStatusForcaVenda().getDescricao()
+					: "";
 			forcaVenda.setStatusForcaVenda(statusForca);
-			
-			if(tbForcaVenda.getTbodCorretora() != null) {
-				
+
+			if (tbForcaVenda.getTbodCorretora() != null) {
+
 				TbodCorretora tbCorretora = tbForcaVenda.getTbodCorretora();
 				Corretora corretora = new Corretora();
-				
+
 				corretora.setCdCorretora(tbCorretora.getCdCorretora());
 				corretora.setCnpj(tbCorretora.getCnpj());
 				corretora.setRazaoSocial(tbCorretora.getRazaoSocial());
-				
+
 				forcaVenda.setCorretora(corretora);
 			}
 		}
-		
+
 		return forcaVenda;
-		
+
+	}
+
+	@Override
+	public ForcaVendaResponse findAssocForcaVendaCorretora(Long cdForcaVenda, String cnpj) {
+
+		log.info("[findAssocForcaVendaCorretora]");
+
+		TbodForcaVenda tbForcaVenda;
+
+		try {
+
+			tbForcaVenda = forcaVendaDao.findByCdForcaVendaAndTbodCorretoraCnpj(cdForcaVenda, cnpj);
+
+			if (tbForcaVenda == null) {
+				throw new Exception("ForcaVenda e Corretora nao associadas!");
+			}
+
+		} catch (Exception e) {
+			log.error("findAssocForcaVendaCorretora :: Detalhe: [" + e.getMessage() + "]");
+			return new ForcaVendaResponse(0, "[12:19:30] Detalhe: [" + e.getMessage() + "].");
+		}
+
+		return new ForcaVendaResponse(1, "ForcaVenda [" + tbForcaVenda.getCpf() + "] esta associada a corretora ["
+				+ tbForcaVenda.getTbodCorretora().getCnpj() + "]");
+
 	}
 
 }
