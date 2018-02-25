@@ -18,7 +18,7 @@ public class TbodEmpresa implements Serializable {
 	@SequenceGenerator(name = "SEQ_TBOD_EMPRESA", sequenceName = "SEQ_TBOD_EMPRESA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_EMPRESA")
 	@Column(name = "CD_EMPRESA")
-	private long cdEmpresa;
+	private Long cdEmpresa;
 
 	@Column(name = "CELULAR")
 	private String celular;
