@@ -1,10 +1,16 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.ManagedBean;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
@@ -13,6 +19,8 @@ import br.com.odontoprev.portal.corretor.dao.StatusVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
+import br.com.odontoprev.portal.corretor.dto.Proposta;
+import br.com.odontoprev.portal.corretor.dto.PropostaResponse;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
@@ -131,6 +139,25 @@ public class VendaPFBusiness {
 		}
 
 		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"].");
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private String chamarWSLegadoPropostaPOST(Proposta proposta){
+
+		String URLAPI_HOST = "https://api-it1.odontoprev.com.br:8243/dcss";
+		String URLAPI_SERV = "/vendas/1.0/proposta";
+				
+		PropostaResponse propostaResponse = new RestTemplate().postForObject(
+				(URLAPI_HOST + URLAPI_SERV), 
+				proposta, 
+				PropostaResponse.class
+				);
+		
+		if(propostaResponse == null) {
+			return "Login não encontrado";
+		}
+
+		return propostaResponse.getCodigoProposta();
 	}
 
 }
