@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.Venda;
+import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.service.VendaPFService;
 
@@ -29,10 +30,10 @@ public class VendaController {
 	}
 	
 	@RequestMapping(value = "/vendapme", method = { RequestMethod.POST })
-	public VendaResponse addVendaPME(@RequestBody Venda venda) {
+	public VendaResponse addVendaPME(@RequestBody VendaPME vendaPME) {
 		
-		log.info(venda);
+		log.info(vendaPME);
 		
-		return vendaPFService.addVenda(venda);
+		return vendaPFService.addVendaPME(vendaPME.getEmpresas(), vendaPME.getTitulares());
 	}
 }

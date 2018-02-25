@@ -11,6 +11,7 @@ public class Beneficiario implements Serializable {
 	private long cdTitular;
 	private String celular;
 	private String cpf;
+	private String cnpj;
 	private String dataNascimento;
 	private String email;
 	private String nome;
@@ -52,6 +53,14 @@ public class Beneficiario implements Serializable {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
 	}
 
 	public String getDataNascimento() {
@@ -137,8 +146,9 @@ public class Beneficiario implements Serializable {
 	@Override
 	public String toString() {
 		return "Beneficiario [cdVida=" + cdVida + ", cdTitular=" + cdTitular + ", celular=" + celular + ", cpf=" + cpf
-				+ ", dataNascimento=" + dataNascimento + ", email=" + email + ", nome=" + nome + ", nomeMae=" + nomeMae
-				+ ", pfPj=" + pfPj + ", sexo=" + sexo + ", endereco=" + endereco + ", dependentes=" + dependentes + "]";
+				+ ", cnpj=" + cnpj + ", dataNascimento=" + dataNascimento + ", email=" + email + ", nome=" + nome
+				+ ", nomeMae=" + nomeMae + ", pfPj=" + pfPj + ", sexo=" + sexo + ", cdPlano=" + cdPlano + ", cdVenda="
+				+ cdVenda + ", endereco=" + endereco + ", dependentes=" + dependentes + "]";
 	}
 
 }

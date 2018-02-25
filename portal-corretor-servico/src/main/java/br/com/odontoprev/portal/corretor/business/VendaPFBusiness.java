@@ -44,7 +44,7 @@ public class VendaPFBusiness {
 	@Autowired
 	BeneficiarioBusiness beneficiarioBusiness;
 	
-	public VendaResponse salvarVendaPFComTitularesComDependentes(Venda venda) {
+	public VendaResponse salvarVendaComTitularesComDependentes(Venda venda) {
 
 		log.info("[salvarVendaPFComTitularesComDependentes]");
 
@@ -64,22 +64,30 @@ public class VendaPFBusiness {
 			
 			tbVenda.setCdVenda(venda.getCdVenda());
 			
-			TbodEmpresa tbodEmpresa = empresaDao.findOne(venda.getCdEmpresa());
-			tbVenda.setTbodEmpresa(tbodEmpresa);
-			
-			TbodPlano tbodPlano = planoDao.findByCdPlano(venda.getCdPlano());
-			tbVenda.setTbodPlano(tbodPlano);
-			
-			TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
-			tbVenda.setTbodForcaVenda(tbodForcaVenda);
+			if(venda.getCdEmpresa() != null) {
+				TbodEmpresa tbodEmpresa = empresaDao.findOne(venda.getCdEmpresa());
+				tbVenda.setTbodEmpresa(tbodEmpresa);
+			}
+
+			if(venda.getCdPlano() != null) {
+				TbodPlano tbodPlano = planoDao.findByCdPlano(venda.getCdPlano());
+				tbVenda.setTbodPlano(tbodPlano);
+			}
+
+			if(venda.getCdForcaVenda() != null) {
+				TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
+				tbVenda.setTbodForcaVenda(tbodForcaVenda);
+			}
 			
 			tbVenda.setDtVenda(venda.getDataVenda());
 			
 			//TbodVendaVida tbodVendaVida = null;
 			//tbVenda.getTbodVendaVida().setCdVendaVida((Long) null);
 			
-			TbodStatusVenda tbodStatusVenda = statusVendaDao.findOne(venda.getCdStatusVenda());
-			tbVenda.setTbodStatusVenda(tbodStatusVenda);
+			if(venda.getCdStatusVenda() != null) {
+				TbodStatusVenda tbodStatusVenda = statusVendaDao.findOne(venda.getCdStatusVenda());
+				tbVenda.setTbodStatusVenda(tbodStatusVenda);
+			}
 			
 			tbVenda.setFaturaVencimento(venda.getFaturaVencimento());
 			

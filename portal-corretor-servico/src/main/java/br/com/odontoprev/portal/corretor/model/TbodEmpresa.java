@@ -65,11 +65,11 @@ public class TbodEmpresa implements Serializable {
 	public TbodEmpresa() {
 	}
 
-	public long getCdEmpresa() {
+	public Long getCdEmpresa() {
 		return this.cdEmpresa;
 	}
 
-	public void setCdEmpresa(long cdEmpresa) {
+	public void setCdEmpresa(Long cdEmpresa) {
 		this.cdEmpresa = cdEmpresa;
 	}
 
