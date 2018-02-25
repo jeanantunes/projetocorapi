@@ -21,11 +21,18 @@ public class VendaController {
 	VendaPFService vendaPFService;
 	
 	@RequestMapping(value = "/vendapf", method = { RequestMethod.POST })
-	public VendaResponse addvenda(@RequestBody Venda venda) {
+	public VendaResponse addVendaPF(@RequestBody Venda venda) {
 		
 		log.info(venda);
 		
 		return vendaPFService.addVenda(venda);
 	}
-
+	
+	@RequestMapping(value = "/vendapme", method = { RequestMethod.POST })
+	public VendaResponse addVendaPME(@RequestBody Venda venda) {
+		
+		log.info(venda);
+		
+		return vendaPFService.addVenda(venda);
+	}
 }

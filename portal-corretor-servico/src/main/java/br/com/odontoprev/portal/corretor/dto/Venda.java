@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Venda implements Serializable {
 
@@ -14,6 +15,8 @@ public class Venda implements Serializable {
 	private Date dataVenda;
 	private Long cdStatusVenda;
 	private Long faturaVencimento;
+
+	private List<Beneficiario> titulares;
 
 	public Long getCdVenda() {
 		return cdVenda;
@@ -69,6 +72,14 @@ public class Venda implements Serializable {
 
 	public void setFaturaVencimento(long faturaVencimento) {
 		this.faturaVencimento = faturaVencimento;
+	}
+
+	public List<Beneficiario> getTitulares() {
+		return titulares;
+	}
+
+	public void setTitulares(List<Beneficiario> titulares) {
+		this.titulares = titulares;
 	}
 
 	@Override
