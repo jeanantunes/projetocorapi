@@ -1,0 +1,420 @@
+172.16.20.30:7001/portal-corretor-servico-0.0.1-SNAPSHOT
+
+PLANOS
+
+	GET /plano - Retorna lista de planos
+
+	GET /plano-empresa/{cdEmpresa} - Retorna lista de planos da empresa x
+
+	
+	
+FORCAVENDA
+
+	GET /forcavenda/{cpf} - Retorna forcavenda por cpf
+
+	GET /forcavenda/{cdForcaVenda}/corretora/{cnpj} - Busca associacao forcavenda/corretora
+
+	POST /forcavenda
+	{  
+	   "nome":"joana da silva",
+	   "celular":"1234564585",
+	   "email":"teste@teste.com",
+	   "corretora":{  
+		  "cdCorretora":"1"
+		},
+		"cpf":"85347874",
+		"ativo":true,
+		"departamento":"ABC",
+		"cargo":"Analista de Sistemas",
+		"dataNascimento":"20-06-1980"
+	}
+	
+
+	
+EMPRESA
+
+	PUT /empresa-dcms - atualiza empDcms da empresa
+	{
+		"cdEmpresa":42,
+		"cnpj":"12311200003",
+		"empDcms":"B12345"
+	}
+
+	POST /empresa
+	{  
+	   "cnpj":"12311200003",
+	   "razaoSocial":"Empresa 2",
+	   "incEstadual":"0987654",
+	   "ramoAtividade":"teste 2 ramo atividade",
+	   "nomeFantasia":"teste 2 nome fantasia",
+	   "representanteLegal":"teste 2 representante legal",
+	   "contatoEmpresa":true,
+	   "telefone":"123456789",
+	   "celular":"1234564545",
+	   "email":"teste@teste.com",
+	   "vencimentoFatura":30,
+	   "enderecoEmpresa":{  
+		  "cep":"111111",
+		  "logradouro":"Rua empresa",
+		  "numero":"11111",
+		  "complemento":"c2",
+		  "bairro":"Teste",
+		  "cidade":"Teste",
+		  "estado":"Sp",
+		  "tipoEndereco":1
+		},
+		"planos":[
+			{
+				"cdPlano": 2
+			},
+			{
+				"cdPlano": 3
+			}
+		]	
+	}
+
+	
+	
+BENEFICIARIO
+
+	POST /beneficiario
+	[{  
+	   "cdVida":0,
+	   "cdTitular":0,
+	   "celular":"0987654",
+	   "cpf":"11111111",
+	   "dataNascimento":"2018-02-20",
+	   "email":"aaaaa@ddadadad",
+	   "nome":"JOAQUIM",
+	   "nomeMae":"JOAQUINA",
+	   "pfPj":"f",
+	   "sexo":"m",
+	   "cdPlano":1,
+	   "cdVenda":2,
+	   "endereco":{  
+		  "cep":"111111",
+		  "logradouro":"Rua teste",
+		  "numero":"11111",
+		  "complemento":"c2",
+		  "bairro":"Teste",
+		  "cidade":"Teste",
+		  "estado":"Sp",
+		  "tipoEndereco":1
+	   },
+	   "dependentes":[
+			{
+				"cdVida":0,
+				"cdTitular":0,
+				"celular":"0987654",
+				"cpf":"11111111",
+				"dataNascimento":"2018-02-20",
+				"email":"aaaaa@ddadadad",
+				"nome":"MARIO",
+				"nomeMae":"ROSA",
+				"pfPj":"f",
+				"sexo":"m"
+			},
+			{
+				"cdVida":0,
+				"cdTitular":0,
+				"celular":"0987654",
+				"cpf":"11111111",
+				"dataNascimento":"2018-02-20",
+				"email":"aaaaa@ddadadad",
+				"nome":"KARINA",
+				"nomeMae":"ROSA",
+				"pfPj":"f",
+				"sexo":"f"
+			}
+		]
+	}]
+
+
+VENDA
+	POST /vendapf 
+	{
+	"cdEmpresa":2, 
+	"cdPlano":3,
+	"cdForcaVenda":4,
+	"dataVenda":"2018-02-24T16:15:14.000-0300",
+	"cdStatusVenda":1,
+	"faturaVencimento":6,
+	"titulares":[
+		{  
+		   "cdVida":0,
+		   "cdTitular":0,
+		   "celular":"0987654",
+		   "cpf":"11111111",
+		   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+		   "email":"aaaaa@ddadadad",
+		   "nome":"JOAQUIM TIT 1",
+		   "nomeMae":"JOAQUINA TIT 1",
+		   "pfPj":"f",
+		   "sexo":"m",
+		   "cdPlano":1,
+		   "cdVenda":2,
+		   "cdTeste":123467,
+		   "endereco":{  
+			  "cep":"111111",
+			  "logradouro":"Rua teste",
+			  "numero":"11111",
+			  "complemento":"c2",
+			  "bairro":"Teste",
+			  "cidade":"Teste",
+			  "estado":"Sp",
+			  "tipoEndereco":1
+		   },
+		   "dependentes":[
+				{
+				"cdVida":0,
+				"cdTitular":0,
+				"celular":"0987654",
+				"cpf":"11111111",
+				"dataNascimento":"2018-02-20",
+				"email":"aaaaa@ddadadad",
+				"nome":"MARIO FILHO TIT 1",
+				"nomeMae":"ROSA ESPOSA TIT 1",
+				"pfPj":"f",
+				"sexo":"m"
+				},
+				{
+				"cdVida":0,
+				"cdTitular":0,
+				"celular":"0987654",
+				"cpf":"11111111",
+				"dataNascimento":"2018-02-20",
+				"email":"aaaaa@ddadadad",
+				"nome":"KARINA FILHA TIT 1",
+				"nomeMae":"ROSA ESPOSA TIT 1",
+				"pfPj":"f",
+				"sexo":"f"
+				}
+			]
+		},
+		{  
+		   "cdVida":0,
+		   "cdTitular":0,
+		   "celular":"0987654",
+		   "cpf":"11111111",
+		   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+		   "email":"aaaaa@ddadadad",
+		   "nome":"JOAQUIM TIT 2",
+		   "nomeMae":"JOAQUINA TIT 2",
+		   "pfPj":"f",
+		   "sexo":"m",
+		   "cdPlano":1,
+		   "cdVenda":2,
+		   "cdTeste":123467,
+		   "endereco":{  
+			  "cep":"111111",
+			  "logradouro":"Rua teste",
+			  "numero":"11111",
+			  "complemento":"c2",
+			  "bairro":"Teste",
+			  "cidade":"Teste",
+			  "estado":"Sp",
+			  "tipoEndereco":1
+		   },
+		   "dependentes":[
+				{
+				"cdVida":0,
+				"cdTitular":0,
+				"celular":"0987654",
+				"cpf":"11111111",
+				"dataNascimento":"2018-02-20",
+				"email":"aaaaa@ddadadad",
+				"nome":"MARIO FILHO TIT 2",
+				"nomeMae":"ROSA ESP TIT 2",
+				"pfPj":"f",
+				"sexo":"m"
+				},
+				{
+				"cdVida":0,
+				"cdTitular":0,
+				"celular":"0987654",
+				"cpf":"11111111",
+				"dataNascimento":"2018-02-20",
+				"email":"aaaaa@ddadadad",
+				"nome":"KARINA FILHA TIT 2",
+				"nomeMae":"ROSA ESP TIT 2",
+				"pfPj":"f",
+				"sexo":"f"
+				}
+			]
+		}
+	]}
+	
+	
+	POST /vendapme (APP - Sinc)
+	{
+	"empresas":[
+		{  
+		   "cnpj":"00880502000154",
+		   "razaoSocial":"Empresa 1",
+		   "incEstadual":"0987654",
+		   "ramoAtividade":"teste 1 ramo atividade",
+		   "nomeFantasia":"teste 1 nome fantasia",
+		   "representanteLegal":"teste 1 representante legal",
+		   "contatoEmpresa":true,
+		   "telefone":"123456789",
+		   "celular":"1234564545",
+		   "email":"teste@teste.com",
+		   "vencimentoFatura":30,
+		   "enderecoEmpresa":{  
+			  "cep":"111111",
+			  "logradouro":"Rua empresa 1",
+			  "numero":"11111",
+			  "complemento":"c2",
+			  "bairro":"Teste",
+			  "cidade":"Teste",
+			  "estado":"Sp",
+			  "tipoEndereco":1
+			},
+			"planos":[
+				{
+					"cdPlano": 2
+				},
+				{
+					"cdPlano": 3
+				}
+			]	
+		},
+		{  
+		   "cnpj":"00880502000254",
+		   "razaoSocial":"Empresa 2",
+		   "incEstadual":"0987654",
+		   "ramoAtividade":"teste 2 ramo atividade",
+		   "nomeFantasia":"teste 2 nome fantasia",
+		   "representanteLegal":"teste 2 representante legal",
+		   "contatoEmpresa":true,
+		   "telefone":"123456789",
+		   "celular":"1234564545",
+		   "email":"teste@teste.com",
+		   "vencimentoFatura":30,
+		   "enderecoEmpresa":{  
+			  "cep":"111111",
+			  "logradouro":"Rua empresa 2",
+			  "numero":"11111",
+			  "complemento":"c2",
+			  "bairro":"Teste",
+			  "cidade":"Teste",
+			  "estado":"Sp",
+			  "tipoEndereco":1
+			},
+			"planos":[
+				{
+					"cdPlano": 2
+				},
+				{
+					"cdPlano": 3
+				}
+			]	
+		}
+	],
+	"titulares":[
+		{  
+		   "cdVida":0,
+		   "cdTitular":0,
+		   "celular":"0987654",
+		   "cpf":"11111111",
+		   "cnpj":"00880502000154",
+		   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+		   "email":"aaaaa@ddadadad",
+		   "nome":"JOAQUIM TIT 1",
+		   "nomeMae":"JOAQUINA TIT 1",
+		   "pfPj":"f",
+		   "sexo":"m",
+		   "cdPlano":1,
+		   "cdVenda":2,
+		   "cdTeste":123467,
+		   "endereco":{  
+			  "cep":"111111",
+			  "logradouro":"Rua teste",
+			  "numero":"11111",
+			  "complemento":"c2",
+			  "bairro":"Teste",
+			  "cidade":"Teste",
+			  "estado":"Sp",
+			  "tipoEndereco":1
+		   },
+		   "dependentes":[
+				{
+					"cdVida":0,
+					"cdTitular":0,
+					"celular":"0987654",
+					"cpf":"11111111",
+					"dataNascimento":"2018-02-20",
+					"email":"aaaaa@ddadadad",
+					"nome":"MARIO FILHO TIT 1",
+					"nomeMae":"ROSA ESPOSA TIT 1",
+					"pfPj":"f",
+					"sexo":"m"
+				},
+				{
+					"cdVida":0,
+					"cdTitular":0,
+					"celular":"0987654",
+					"cpf":"11111111",
+					"dataNascimento":"2018-02-20",
+					"email":"aaaaa@ddadadad",
+					"nome":"KARINA FILHA TIT 1",
+					"nomeMae":"ROSA ESPOSA TIT 1",
+					"pfPj":"f",
+					"sexo":"f"
+				}
+			]
+		},
+		{  
+		   "cdVida":0,
+		   "cdTitular":0,
+		   "celular":"0987654",
+		   "cpf":"11111111",
+		   "cnpj":"00880502000254",
+		   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+		   "email":"aaaaa@ddadadad",
+		   "nome":"JOAQUIM TIT 2",
+		   "nomeMae":"JOAQUINA TIT 2",
+		   "pfPj":"f",
+		   "sexo":"m",
+		   "cdPlano":1,
+		   "cdVenda":2,
+		   "cdTeste":123467,
+		   "endereco":{  
+			  "cep":"111111",
+			  "logradouro":"Rua teste",
+			  "numero":"11111",
+			  "complemento":"c2",
+			  "bairro":"Teste",
+			  "cidade":"Teste",
+			  "estado":"Sp",
+			  "tipoEndereco":1
+		   },
+		   "dependentes":[
+				{
+					"cdVida":0,
+					"cdTitular":0,
+					"celular":"0987654",
+					"cpf":"11111111",
+					"dataNascimento":"2018-02-20",
+					"email":"aaaaa@ddadadad",
+					"nome":"MARIO FILHO TIT 2",
+					"nomeMae":"ROSA ESP TIT 2",
+					"pfPj":"f",
+					"sexo":"m"
+				},
+				{
+					"cdVida":0,
+					"cdTitular":0,
+					"celular":"0987654",
+					"cpf":"11111111",
+					"dataNascimento":"2018-02-20",
+					"email":"aaaaa@ddadadad",
+					"nome":"KARINA FILHA TIT 2",
+					"nomeMae":"ROSA ESP TIT 2",
+					"pfPj":"f",
+					"sexo":"f"
+				}
+			]
+		}
+	]}
+

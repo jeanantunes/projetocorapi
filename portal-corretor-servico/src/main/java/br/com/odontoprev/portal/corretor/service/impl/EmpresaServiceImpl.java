@@ -1,17 +1,22 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
+import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
+import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
 @Service
@@ -24,6 +29,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 	
 	@Autowired
 	EmpresaBusiness empresaBusiness;
+	
+	@Autowired
+	BeneficiarioBusiness beneficiarioBusiness;
 
 	@Override
 	@Transactional
@@ -49,6 +57,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 			if (tbEmpresa != null) {
 				tbEmpresa.setEmpDcms(empresaDcms.getEmpDcms());
 				empresaDao.save(tbEmpresa);
+				
+				List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa());
+				
 			}
 			else {
 				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
