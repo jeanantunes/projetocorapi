@@ -72,7 +72,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		} catch (Exception e) {
 			log.error("ForcaVendaServiceImpl :: Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
-			return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda.");
+			return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
 		}
 
 		return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(), "ForcaVenda cadastrada.");
