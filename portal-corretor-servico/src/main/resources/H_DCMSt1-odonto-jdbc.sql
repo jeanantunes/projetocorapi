@@ -1,80 +1,6 @@
-----------------------------------------------------------------------------------------------------------
--- Programador...: Marco Antonio Mendon�a
--- Data..........: 15/02/2018
-----------------------------------------------------------------------------------------------------------
--- criando a sequendce para tabela TBOD_COR_PESSOA
-create sequence SEQ_TB0D_PESSOA start with 1 increment by 1;
-
-create table TBOD_COR_PESSOA 
-(
-    id_pessoa           numeric (10)    not null,
-    cod_tipo_pessoa     CHAR(1),
-    cnpj                VARCHAR2(14)    not null,
-    nome                VARCHAR2(100)   not null,
-    celular             VARCHAR2(14)    not null,
-    email               VARCHAR2(250)   not null,
-    razao               VARCHAR2(200),
-    cnae                VARCHAR2(20)    not null,
-    Optante_simples     char(1)         not null,
-    data_abertura       date            not null,
-    status_cnpj         CHAR(1)         not null
-   
-);
-
-alter table TBOD_COR_PESSOA
-    add constraint "PK_pessoa_Id" primary key;
-
-alter table TBOD_COR_PESSOA
-    add constraint "FK_Pessoa_tipoPessao" FOREIGN KEY (cod_tipo_pessoa)
-        references TBOD_COR_TIPO_PESSOA (CD_TIPO_PESSOA);
-    
-----------------------------------------------------------------------------------------------------------
-create sequence SEQ_TBOD_COR_REPRESENTANTE_LEGAL start with 1 increment by 1;
-
-create table TBOD_COR_REPRESENTANTE_LEGAL
-(
-    id_representante     numeric (10)    not null,
-    id_pessoa            numeric (10)    not null,
-    nome_representante   VARCHAR2(200),
-    cpf                  VARCHAR2(14),
-    celular             VARCHAR2(14)    not null,
-    email               VARCHAR2(250)   not null       
-);
-
-alter table TBOD_COR_REPRESENTANTE_LEGAL
-    add constraint "PK_Representante_legal_Id";
-
-alter table TBOD_COR_REPRESENTANTE_LEGAL
-    add constraint "FK_Pessoa_id" FOREIGN KEY (id_pessoa)
-        references TBOD_COR_PESSOA (id_pessoa);
-
-----------------------------------------------------------------------------------------------------------
-create sequence SEQ_TBOD_COR_DADOS_BANCARIOS start with 1 increment by 1;
-
-create table TBOD_COR_DADOS_BANCARIOS
-(
-    id_TBOD_COR_DADOS_BANCARIOS     numeric (10)    not null,
-    id_pessoa                       numeric (10)    not null,  
-    banco                           VARCHAR2(15)    not null,
-    agencia                         VARCHAR2(15)    not null,
-    conta                           VARCHAR2(15)    not null,
-    senha                           VARCHAR2(15)    not null
-);
-
-alter table TBOD_COR_DADOS_BANCARIOS
-    add constraint "PK_Dados_Bancarios_pessoa" primary key;
-    
-alter table TBOD_COR_DADOS_BANCARIOS
-    add constraint "FK_TBOD_COR_DADOS_BANCARIOS_Pessoa" FOREIGN KEY (id_pessoa)
-        references TBOD_COR_PESSOA (id_pessoa);
-        
-		
-----------------------------------------------------------------------------------------------------------
-
 -- Desenvolvedora...: Jaqueline Alves
 -- Data..........: 16/02/2018
 
---criado
 create sequence SEQ_TBOD_PLANO start with 1 increment by 1;
 
 create table TBOD_PLANO 
@@ -98,7 +24,7 @@ alter table TBOD_PLANO
 		references TBOD_TIPO_PLANO (cd_tipo_plano);
 
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_TIPO_PLANO start with 1 increment by 1;
 
 create table TBOD_TIPO_PLANO 
@@ -111,7 +37,7 @@ alter table TBOD_TIPO_PLANO
 	add constraint "PK_TBOD_TIPO_PLANO" primary key (cd_tipo_plano);
 	
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_PLANO_COBERTURA start with 1 increment by 1;
 
 create table TBOD_PLANO_COBERTURA 
@@ -133,7 +59,7 @@ alter table TBOD_PLANO_COBERTURA
 		references TBOD_COBERTURA (cd_cobertura);
 	
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_COBERTURA start with 1 increment by 1;
 
 create table TBOD_COBERTURA 
@@ -146,8 +72,7 @@ alter table TBOD_COBERTURA
 	add constraint "PK_TBOD_COBERTURA" primary key (cd_cobertura);
 
 --------------------------------------------------------------------------------------------------------------
---criado 
---alterado em 17/02/2018 - inclusao de campos
+
 create sequence SEQ_TBOD_EMPRESA start with 1 increment by 1;
 
 create table TBOD_EMPRESA 
@@ -171,8 +96,7 @@ alter table TBOD_EMPRESA
 	add constraint "PK_TBOD_EMPRESA" primary key (cd_empresa);
 
 ----------------------------------------------------------------------------------------------------------
-----criado
-----ALTERADO EM 17/02/2018 - INCLUSAO DE CAMPOS
+
 create sequence SEQ_TBOD_VENDA start with 1 increment by 1;
 
 create table TBOD_VENDA 
@@ -210,7 +134,7 @@ alter table TBOD_VENDA
 		references TBOD_STATUS_VENDA (cd_status_venda);
 		
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_VENDA_VIDA start with 1 increment by 1;
 
 create table TBOD_VENDA_VIDA 
@@ -237,8 +161,7 @@ alter table TBOD_VENDA_VIDA
 		references TBOD_PLANO (cd_plano); --Verificar necessidade
 		
 ----------------------------------------------------------------------------------------------------------
---criado
---alterado em 17/02/2018 - inclusao de campo
+
 create sequence SEQ_TBOD_VIDA start with 1 increment by 1;
 
 create table TBOD_VIDA 
@@ -268,7 +191,7 @@ alter table TBOD_VIDA
 		references TBOD_ENDERECO (cd_endereco);
 		
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_PLANO_VIDA start with 1 increment by 1;
 
 create table TBOD_PLANO_VIDA 
@@ -290,7 +213,7 @@ alter table TBOD_PLANO_VIDA
 		references TBOD_PLANO_COBERTURA (cd_plano); --VERIFICAR
 		
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_TIPO_ENDERECO start with 1 increment by 1;
 
 create table TBOD_TIPO_ENDERECO 
@@ -303,8 +226,7 @@ alter table TBOD_TIPO_ENDERECO
 	add constraint "PK_TBOD_TIPO_ENDERECO" primary key (cd_tipo_endereco);
 	
 ----------------------------------------------------------------------------------------------------------
--- criado
---alterado em 17/02/2018 - inclusao de campo
+
 create sequence SEQ_TBOD_ENDERECO start with 1 increment by 1;
 
 create table TBOD_ENDERECO 
@@ -328,7 +250,7 @@ alter table TBOD_ENDERECO
 		references TBOD_TIPO_ENDERECO (cd_tipo_endereco);
 
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_DOCUMENTO_ASSOCIADO start with 1 increment by 1;
 
 create table TBOD_DOCUMENTO_ASSOCIADO 
@@ -359,7 +281,7 @@ alter table TBOD_DOCUMENTO_ASSOCIADO
 		references TBOD_DOCUMENTO (cd_documento);
 		
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_ORIGEM_ASSOCIADO start with 1 increment by 1;
 
 create table TBOD_ORIGEM_ASSOCIADO 
@@ -373,7 +295,7 @@ alter table TBOD_ORIGEM_ASSOCIADO
 		
 		
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_DOCUMENTO start with 1 increment by 1;
 
 create table TBOD_DOCUMENTO 
@@ -393,7 +315,7 @@ alter table TBOD_DOCUMENTO
 		references TBOD_TIPO_DOCUMENTO (cd_tipo_documento);
 		
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_TIPO_DOCUMENTO start with 1 increment by 1;
 
 create table TBOD_TIPO_DOCUMENTO 
@@ -406,8 +328,7 @@ alter table TBOD_TIPO_DOCUMENTO
 	add constraint "PK_TBOD_TIPO_DOCUMENTO" primary key (cd_tipo_documento);
 	
 ----------------------------------------------------------------------------------------------------------
---criado
---ALTERADO EM 17/02/2018 - EXCLUSAO DE CAMPOS
+
 create sequence SEQ_TBOD_FORCA_VENDA start with 1 increment by 1;
 
 create table TBOD_FORCA_VENDA 
@@ -437,7 +358,7 @@ alter table TBOD_FORCA_VENDA
 		references TBOD_STATUS_FORCA_VENDA (cd_status_forca_vendas);
 
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_STATUS_FORCA_VENDA start with 1 increment by 1;
 
 create table TBOD_STATUS_FORCA_VENDA 
@@ -451,7 +372,7 @@ alter table TBOD_STATUS_FORCA_VENDA
 	
 	
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_CORRETORA start with 1 increment by 1;
 
 create table TBOD_CORRETORA 
@@ -484,7 +405,7 @@ alter table TBOD_CORRETORA
 		
 	
 ----------------------------------------------------------------------------------------------------------
---criado
+
 create sequence SEQ_TBOD_LOGIN start with 1 increment by 1;
 
 create table TBOD_LOGIN 
@@ -508,8 +429,7 @@ alter table TBOD_LOGIN
 		references TBOD_CORRETORA (cd_corretora);
 		
 ----------------------------------------------------------------------------------------------------------
---criado
---alterado em 17/02/2018 - inclusao de campos
+
 create sequence SEQ_TBOD_CORRETORA_BANCO start with 1 increment by 1;
 
 create table TBOD_CORRETORA_BANCO 
@@ -534,8 +454,7 @@ alter table TBOD_CORRETORA_BANCO
 		references TBOD_BANCO_CONTA (cd_banco_conta);
 		
 ----------------------------------------------------------------------------------------------------------
---criado
---alterado em 17/02/2018 - inclusao de campo
+
 create sequence SEQ_TBOD_BANCO_CONTA start with 1 increment by 1;
 
 create table TBOD_BANCO_CONTA 
@@ -551,7 +470,7 @@ alter table TBOD_BANCO_CONTA
 
 
 ----------------------------------------------------------------------------------------------------------
---CRIADO EM 17/02/2018
+
 create sequence SEQ_TBOD_STATUS_VENDA start with 1 increment by 1;
 
 create table TBOD_STATUS_VENDA 
