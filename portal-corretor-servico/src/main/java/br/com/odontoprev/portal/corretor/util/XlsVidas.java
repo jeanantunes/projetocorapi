@@ -37,10 +37,12 @@ public class XlsVidas {
 		
 		String dataStr = "00/00/0000";
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		String pathVidas = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_VIDAS);
 
 		try {
 
-			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + Data() + ".xls";
+			String filename = pathVidas + Data() + ".xls";
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Vidas");
 
