@@ -1,22 +1,22 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 public class EnderecoProposta {
-	
+
 	private String cep;
-	
+
 	private String logradouro;
 
 	private String numero;
-	
+
 	private String complemento;
 
 	private String bairro;
-	
+
 	private String cidade;
 
 	private String estado;
 
-	public long getCep() {
+	public String getCep() {
 		return cep;
 	}
 
@@ -74,15 +74,9 @@ public class EnderecoProposta {
 
 	@Override
 	public String toString() {
-		return "EnderecoProposta [" 
-		+ "cep=" + cep 
-		+ ", logradouro=" + logradouro 
-		+ ", numero=" + numero 
-		+ ", complemento=" + complemento 
-		+ ", bairro=" + bairro 
-		+ ", cidade=" + cidade 
-		+ ", estado=" + estado 
-		+ "]";
+		return "EnderecoProposta [" + "cep=" + cep + ", logradouro=" + logradouro + ", numero=" + numero
+				+ ", complemento=" + complemento + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado
+				+ "]";
 	}
 
 }

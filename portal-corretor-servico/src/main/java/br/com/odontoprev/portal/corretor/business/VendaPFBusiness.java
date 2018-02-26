@@ -114,6 +114,7 @@ public class VendaPFBusiness {
 			
 			tbVenda.setFaturaVencimento(venda.getFaturaVencimento());
 			
+			
 			tbVenda = vendaDao.save(tbVenda);
 			
 			for (Beneficiario titular : venda.getTitulares()) {

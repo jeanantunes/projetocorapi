@@ -15,6 +15,13 @@ public class Venda implements Serializable {
 	private Date dataVenda;
 	private Long cdStatusVenda;
 	private Long faturaVencimento;
+	private String tipoConta;
+	private Long banco;
+	private String agencia;
+	private String agenciaDv;
+	private String conta;
+	private String contaDv;
+	private String tipoPagamento;
 
 	private List<Beneficiario> titulares;
 
@@ -45,7 +52,7 @@ public class Venda implements Serializable {
 	public Long getCdForcaVenda() {
 		return cdForcaVenda;
 	}
-	
+
 	public void setCdForcaVenda(long cdForcaVenda) {
 		this.cdForcaVenda = cdForcaVenda;
 	}
@@ -74,25 +81,68 @@ public class Venda implements Serializable {
 		this.faturaVencimento = faturaVencimento;
 	}
 
+	public String getTipoConta() {
+		return tipoConta;
+	}
+
+	public void setTipoConta(String tipoConta) {
+		this.tipoConta = tipoConta;
+	}
+
+	public Long getBanco() {
+		return banco;
+	}
+
+	public void setBanco(Long banco) {
+		this.banco = banco;
+	}
+
+	public String getAgencia() {
+		return agencia;
+	}
+
+	public void setAgencia(String agencia) {
+		this.agencia = agencia;
+	}
+
+	public String getAgenciaDv() {
+		return agenciaDv;
+	}
+
+	public void setAgenciaDv(String agenciaDv) {
+		this.agenciaDv = agenciaDv;
+	}
+
+	public String getConta() {
+		return conta;
+	}
+
+	public void setConta(String conta) {
+		this.conta = conta;
+	}
+
+	public String getContaDv() {
+		return contaDv;
+	}
+
+	public void setContaDv(String contaDv) {
+		this.contaDv = contaDv;
+	}
+
+	public String getTipoPagamento() {
+		return tipoPagamento;
+	}
+
+	public void setTipoPagamento(String tipoPagamento) {
+		this.tipoPagamento = tipoPagamento;
+	}
+
 	public List<Beneficiario> getTitulares() {
 		return titulares;
 	}
 
 	public void setTitulares(List<Beneficiario> titulares) {
 		this.titulares = titulares;
-	}
-
-	@Override
-	public String toString() {
-		return "Venda ["
-				+ " cdVenda=" + cdVenda
-				+ ", cdEmpresa=" + cdEmpresa 
-				+ ", cdPlano=" + cdPlano 
-				+ ", cdForcaVenda=" + cdForcaVenda
-				+ ", dataVenda=" + dataVenda 
-				+ ", cdStatusVenda=" + cdStatusVenda 
-				+ ", faturaVencimento=" + faturaVencimento
-				+ "]";
 	}
 
 }

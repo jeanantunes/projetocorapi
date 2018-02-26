@@ -5,57 +5,77 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the TBOD_VENDA database table.
  * 
  */
 @Entity
-@Table(name="TBOD_VENDA")
-@NamedQuery(name="TbodVenda.findAll", query="SELECT t FROM TbodVenda t")
+@Table(name = "TBOD_VENDA")
+@NamedQuery(name = "TbodVenda.findAll", query = "SELECT t FROM TbodVenda t")
 public class TbodVenda implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "SEQ_TBOD_VENDA", sequenceName = "SEQ_TBOD_VENDA",  allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEQ_TBOD_VENDA", sequenceName = "SEQ_TBOD_VENDA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_VENDA")
-	@Column(name="CD_VENDA")
+	@Column(name = "CD_VENDA")
 	private Long cdVenda;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="DT_VENDA")
+	@Column(name = "DT_VENDA")
 	private Date dtVenda;
-	
-	@Column(name="FATURA_VENCIMENTO")
+
+	@Column(name = "FATURA_VENCIMENTO")
 	private Long faturaVencimento;
 
-	//bi-directional many-to-one association to TbodEmpresa
+	@Column(name = "TIPO_CONTA")
+	private String tipoConta;
+
+	@Column(name = "BANCO")
+	private Long banco;
+
+	@Column(name = "AGENCIA")
+	private String agencia;
+
+	@Column(name = "AGENCIA_DV")
+	private String agenciaDv;
+
+	@Column(name = "CONTA")
+	private String conta;
+
+	@Column(name = "CONTA_DV")
+	private String contaDv;
+
+	@Column(name = "TIPO_PAGAMENTO")
+	private String tipoPagamento;
+
+	// bi-directional many-to-one association to TbodEmpresa
 	@ManyToOne
-	@JoinColumn(name="CD_EMPRESA")
+	@JoinColumn(name = "CD_EMPRESA")
 	private TbodEmpresa tbodEmpresa;
 
-	//bi-directional many-to-one association to TbodForcaVenda
+	// bi-directional many-to-one association to TbodForcaVenda
 	@ManyToOne
-	@JoinColumn(name="CD_FORCA_VENDAS")
+	@JoinColumn(name = "CD_FORCA_VENDAS")
 	private TbodForcaVenda tbodForcaVenda;
 
-	//bi-directional many-to-one association to TbodPlano
+	// bi-directional many-to-one association to TbodPlano
 	@ManyToOne
-	@JoinColumn(name="CD_PLANO")
+	@JoinColumn(name = "CD_PLANO")
 	private TbodPlano tbodPlano;
 
-	//bi-directional many-to-one association to TbodStatusVenda
+	// bi-directional many-to-one association to TbodStatusVenda
 	@ManyToOne
-	@JoinColumn(name="CD_STATUS_VENDA")
+	@JoinColumn(name = "CD_STATUS_VENDA")
 	private TbodStatusVenda tbodStatusVenda;
 
-	//bi-directional many-to-one association to TbodVendaVida
+	// bi-directional many-to-one association to TbodVendaVida
 	@ManyToOne
-	@JoinColumn(name="CD_VENDA_VIDA")
+	@JoinColumn(name = "CD_VENDA_VIDA")
 	private TbodVendaVida tbodVendaVida;
 
-	//bi-directional many-to-one association to TbodVendaVida
-	@OneToMany(mappedBy="tbodVenda")
+	// bi-directional many-to-one association to TbodVendaVida
+	@OneToMany(mappedBy = "tbodVenda")
 	private List<TbodVendaVida> tbodVendaVidas;
 
 	public TbodVenda() {
@@ -76,13 +96,69 @@ public class TbodVenda implements Serializable {
 	public void setDtVenda(Date dtVenda) {
 		this.dtVenda = dtVenda;
 	}
-	
+
 	public Long getFaturaVencimento() {
 		return faturaVencimento;
 	}
-	
+
 	public void setFaturaVencimento(Long faturaVencimento) {
 		this.faturaVencimento = faturaVencimento;
+	}
+
+	public String getTipoConta() {
+		return tipoConta;
+	}
+
+	public void setTipoConta(String tipoConta) {
+		this.tipoConta = tipoConta;
+	}
+
+	public Long getBanco() {
+		return banco;
+	}
+
+	public void setBanco(Long banco) {
+		this.banco = banco;
+	}
+
+	public String getAgencia() {
+		return agencia;
+	}
+
+	public void setAgencia(String agencia) {
+		this.agencia = agencia;
+	}
+
+	public String getAgenciaDv() {
+		return agenciaDv;
+	}
+
+	public void setAgenciaDv(String agenciaDv) {
+		this.agenciaDv = agenciaDv;
+	}
+
+	public String getConta() {
+		return conta;
+	}
+
+	public void setConta(String conta) {
+		this.conta = conta;
+	}
+
+	public String getContaDv() {
+		return contaDv;
+	}
+
+	public void setContaDv(String contaDv) {
+		this.contaDv = contaDv;
+	}
+
+	public String getTipoPagamento() {
+		return tipoPagamento;
+	}
+
+	public void setTipoPagamento(String tipoPagamento) {
+		this.tipoPagamento = tipoPagamento;
 	}
 
 	public TbodEmpresa getTbodEmpresa() {

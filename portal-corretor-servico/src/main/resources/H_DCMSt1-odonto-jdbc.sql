@@ -107,7 +107,15 @@ create table TBOD_VENDA
 	cd_forca_vendas			numeric (10) 	,
 	dt_venda				date			not null,
 	cd_venda_vida			numeric(10)		,
-	cd_status_venda			numeric(10)		
+	cd_status_venda			numeric(10)		,
+	tipo_conta				varchar(10)		,
+	banco					numeric(10)		,
+	agencia					varchar(10)		,
+	agencia_dv				varchar(10)		,
+	conta					varchar(10)		,
+	conta_dv				varchar(10)		,
+	tipo_pagamento			varchar(10)
+	
 );
 
 alter table TBOD_VENDA
@@ -343,7 +351,12 @@ create table TBOD_FORCA_VENDA
 	ativo						char(1)			not null,
 	data_nascimento				date,
 	cargo						varchar2(50),
-	departamento				varchar2(50)
+	departamento				varchar2(50),
+	banco						numeric (10),
+	agencia						varchar2(10),
+	conta						varchar2(10),
+	boleto						char    (1)
+	
 );
 
 alter table TBOD_FORCA_VENDA

@@ -111,13 +111,6 @@ public class ForcaVenda implements Serializable {
 		this.dataNascimento = dataNascimento;
 	}
 
-	@Override
-	public String toString() {
-		return "ForcaVenda [nome=" + nome + ", celular=" + celular + ", email=" + email + ", corretora=" + corretora
-				+ ", cpf=" + cpf + ", ativo=" + ativo + ", departamento=" + departamento + ", cargo=" + cargo
-				+ ", dataNascimento=" + dataNascimento + "]";
-	}
-
 	public String getNomeEmpresa() {
 		return nomeEmpresa;
 	}
@@ -158,5 +151,13 @@ public class ForcaVenda implements Serializable {
 		this.senha = senha;
 	}
 
+	@Override
+	public String toString() {
+		return "ForcaVenda [cdForcaVenda=" + cdForcaVenda + ", nome=" + nome + ", celular=" + celular + ", email="
+				+ email + ", corretora=" + corretora + ", statusForcaVenda=" + statusForcaVenda + ", cpf=" + cpf
+				+ ", ativo=" + ativo + ", departamento=" + departamento + ", cargo=" + cargo + ", dataNascimento="
+				+ dataNascimento + ", nomeEmpresa=" + nomeEmpresa + ", nomeGerente=" + nomeGerente + ", responsavel="
+				+ responsavel + ", rg=" + rg + ", senha=" + senha + "]";
+	}
 
 }
