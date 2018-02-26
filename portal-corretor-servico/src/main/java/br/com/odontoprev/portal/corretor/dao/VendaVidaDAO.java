@@ -7,5 +7,7 @@ import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 
 @Repository
 public interface VendaVidaDAO extends CrudRepository<TbodVendaVida, Long> {
+	
+	public TbodVendaVida findByTbodVidaCdVida(Long cdVida);
 
 }

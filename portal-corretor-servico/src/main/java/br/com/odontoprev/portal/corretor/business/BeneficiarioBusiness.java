@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.odontoprev.portal.corretor.dao.BeneficiarioDAO;
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
+import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
 import br.com.odontoprev.portal.corretor.dao.TipoEnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaVidaDAO;
@@ -19,6 +20,7 @@ import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
+import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
@@ -47,6 +49,9 @@ public class BeneficiarioBusiness {
 
 	@Autowired
 	BeneficiarioDAO beneficiarioDao;
+	
+	@Autowired
+	PlanoDAO planoDao;
 
 	public BeneficiarioResponse salvarTitularComDependentes(List<Beneficiario> titulares) {
 
@@ -147,6 +152,8 @@ public class BeneficiarioBusiness {
 
 			for (TbodVendaVida tbVendaVida : tbVendaVidas) {
 				if (tbVendaVida.getTbodVida() != null) {
+					TbodPlano tbPlano = planoDao.findByCdPlano(tbVendaVida.getCdPlano());
+					tbVendaVida.getTbodVida().setDescricaoPlano(tbPlano.getNomePlano());
 					tbVidas.add(tbVendaVida.getTbodVida());
 				}
 			}
