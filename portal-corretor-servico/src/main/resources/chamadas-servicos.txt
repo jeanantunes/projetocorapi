@@ -446,4 +446,48 @@ Login
 
 CORRETORA
 	GET /corretora{cnpj}
+	
+	resposta OK 
+	{
+    "cdCorretora": 0,
+    "cnpj": "123",
+    "razaoSocial": "Teste",
+    "cnae": null,
+    "telefone": "11111111",
+    "celular": "1221321",
+    "email": "teste@teste.com",
+    "statusCnpj": true,
+    "simplesNacional": true,
+    "dataAbertura": "2018-02-18",
+	"enderecoCorretora": {
+	        "cep": "00000000",
+	        "logradouro": "Rua teste",
+	        "numero": "123",
+	        "complemento": null,
+	        "bairro": "Bairro Teste",
+	        "cidade": "Cidade Teste",
+	        "estado": "TE",
+	        "tipoEndereco": null
+	    },
+    "conta": null,
+    "login": null,
+    "representantes": null
+	}
 
+	resposta Erro
+	{
+    "cdCorretora": 0,
+    "cnpj": null,
+    "razaoSocial": null,
+    "cnae": null,
+    "telefone": null,
+    "celular": null,
+    "email": null,
+    "statusCnpj": false,
+    "simplesNacional": false,
+    "dataAbertura": null,
+    "enderecoCorretora": null,
+    "conta": null,
+    "login": null,
+    "representantes": null
+	}
