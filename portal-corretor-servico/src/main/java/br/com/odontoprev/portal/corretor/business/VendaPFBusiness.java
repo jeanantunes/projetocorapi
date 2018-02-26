@@ -114,6 +114,18 @@ public class VendaPFBusiness {
 			
 			tbVenda.setFaturaVencimento(venda.getFaturaVencimento());
 			
+			//Dados Bancarios
+			tbVenda.setTipoConta(venda.getTipoConta());
+			tbVenda.setBanco(venda.getBanco());
+			String ag = (venda.getAgencia().replace("-", "")).substring(0,venda.getAgencia().length()-1);
+			String agDV = (venda.getAgencia().replace("-", "")).substring(venda.getAgencia().length()-1);
+			tbVenda.setAgencia(ag);
+			tbVenda.setAgenciaDv(agDV);
+			String c = (venda.getConta().replace("-", "")).substring(0,venda.getConta().length()-1);
+			String cDv = (venda.getConta().replace("-", "")).substring(venda.getConta().length()-1);
+			tbVenda.setConta(c);
+			tbVenda.setContaDv(cDv);
+			tbVenda.setTipoPagamento(venda.getTipoPagamento());
 			
 			tbVenda = vendaDao.save(tbVenda);
 			
@@ -187,12 +199,16 @@ public class VendaPFBusiness {
 		proposta.getTipoCobranca().setSigla("BO"); //BO = Boleto / DA = Debito automatico
 		
 		proposta.setDadosBancarios(new DadosBancariosProposta());
-		proposta.getDadosBancarios().setCodigoBanco("341banco"); //TODO
-		proposta.getDadosBancarios().setAgencia("1234agencia"); //TODO
-		proposta.getDadosBancarios().setAgenciaDV("5dvagencia"); //TODO
-		proposta.getDadosBancarios().setTipoConta("tipoConta"); //TODO dominio ???
-		proposta.getDadosBancarios().setConta("123456conta");
-		proposta.getDadosBancarios().setContaDV("9dvconta");
+		proposta.getDadosBancarios().setCodigoBanco(venda.getBanco());
+		String ag = (venda.getAgencia().replace("-", "")).substring(0,venda.getAgencia().length()-1);
+		String agDV = (venda.getAgencia().replace("-", "")).substring(venda.getAgencia().length()-1);
+		proposta.getDadosBancarios().setAgencia(ag); 
+		proposta.getDadosBancarios().setAgenciaDV(agDV); 
+		proposta.getDadosBancarios().setTipoConta(venda.getTipoConta());
+		String c = (venda.getConta().replace("-", "")).substring(0,venda.getConta().length()-1);
+		String cDv = (venda.getConta().replace("-", "")).substring(venda.getConta().length()-1);
+		proposta.getDadosBancarios().setConta(c);
+		proposta.getDadosBancarios().setContaDV(cDv);
 
 		proposta.setBeneficiarios(new ArrayList<>());
 		

@@ -16,11 +16,9 @@ public class Venda implements Serializable {
 	private Long cdStatusVenda;
 	private Long faturaVencimento;
 	private String tipoConta;
-	private Long banco;
+	private String banco;
 	private String agencia;
-	private String agenciaDv;
 	private String conta;
-	private String contaDv;
 	private String tipoPagamento;
 
 	private List<Beneficiario> titulares;
@@ -89,11 +87,11 @@ public class Venda implements Serializable {
 		this.tipoConta = tipoConta;
 	}
 
-	public Long getBanco() {
+	public String getBanco() {
 		return banco;
 	}
 
-	public void setBanco(Long banco) {
+	public void setBanco(String banco) {
 		this.banco = banco;
 	}
 
@@ -105,28 +103,12 @@ public class Venda implements Serializable {
 		this.agencia = agencia;
 	}
 
-	public String getAgenciaDv() {
-		return agenciaDv;
-	}
-
-	public void setAgenciaDv(String agenciaDv) {
-		this.agenciaDv = agenciaDv;
-	}
-
 	public String getConta() {
 		return conta;
 	}
 
 	public void setConta(String conta) {
 		this.conta = conta;
-	}
-
-	public String getContaDv() {
-		return contaDv;
-	}
-
-	public void setContaDv(String contaDv) {
-		this.contaDv = contaDv;
 	}
 
 	public String getTipoPagamento() {

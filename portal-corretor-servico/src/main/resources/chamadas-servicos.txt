@@ -142,17 +142,22 @@ VENDA
 	{
 	"cdEmpresa":2, 
 	"cdPlano":3,
-	"cdForcaVenda":4,
-	"dataVenda":"2018-02-24T16:15:14.000-0300",
+	"cdForcaVenda":161,
+	"dataVenda":"2018-02-25T20:16:14.000-0300",
 	"cdStatusVenda":1,
 	"faturaVencimento":6,
+	"tipoConta":"CC",
+	"banco":"033",
+	"agencia":"00012",
+	"conta":"014200001",
+	"tipoPagamento":"BO",
 	"titulares":[
 		{  
 		   "cdVida":0,
 		   "cdTitular":0,
 		   "celular":"0987654",
 		   "cpf":"11111111",
-		   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+		   "dataNascimento":"2018-02-20",
 		   "email":"aaaaa@ddadadad",
 		   "nome":"JOAQUIM TIT 1",
 		   "nomeMae":"JOAQUINA TIT 1",
@@ -162,14 +167,14 @@ VENDA
 		   "cdVenda":2,
 		   "cdTeste":123467,
 		   "endereco":{  
-			  "cep":"111111",
-			  "logradouro":"Rua teste",
-			  "numero":"11111",
-			  "complemento":"c2",
-			  "bairro":"Teste",
-			  "cidade":"Teste",
-			  "estado":"Sp",
-			  "tipoEndereco":1
+		      "cep":"111111",
+		      "logradouro":"Rua teste",
+		      "numero":"11111",
+		      "complemento":"c2",
+		      "bairro":"Teste",
+		      "cidade":"Teste",
+		      "estado":"Sp",
+		      "tipoEndereco":1
 		   },
 		   "dependentes":[
 				{
@@ -203,7 +208,7 @@ VENDA
 		   "cdTitular":0,
 		   "celular":"0987654",
 		   "cpf":"11111111",
-		   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+		   "dataNascimento":"2018-02-20",
 		   "email":"aaaaa@ddadadad",
 		   "nome":"JOAQUIM TIT 2",
 		   "nomeMae":"JOAQUINA TIT 2",
@@ -213,14 +218,14 @@ VENDA
 		   "cdVenda":2,
 		   "cdTeste":123467,
 		   "endereco":{  
-			  "cep":"111111",
-			  "logradouro":"Rua teste",
-			  "numero":"11111",
-			  "complemento":"c2",
-			  "bairro":"Teste",
-			  "cidade":"Teste",
-			  "estado":"Sp",
-			  "tipoEndereco":1
+		      "cep":"111111",
+		      "logradouro":"Rua teste",
+		      "numero":"11111",
+		      "complemento":"c2",
+		      "bairro":"Teste",
+		      "cidade":"Teste",
+		      "estado":"Sp",
+		      "tipoEndereco":1
 		   },
 		   "dependentes":[
 				{

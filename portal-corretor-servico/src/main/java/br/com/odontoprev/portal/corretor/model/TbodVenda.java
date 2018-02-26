@@ -32,7 +32,7 @@ public class TbodVenda implements Serializable {
 	private String tipoConta;
 
 	@Column(name = "BANCO")
-	private Long banco;
+	private String banco;
 
 	@Column(name = "AGENCIA")
 	private String agencia;
@@ -113,11 +113,11 @@ public class TbodVenda implements Serializable {
 		this.tipoConta = tipoConta;
 	}
 
-	public Long getBanco() {
+	public String getBanco() {
 		return banco;
 	}
 
-	public void setBanco(Long banco) {
+	public void setBanco(String banco) {
 		this.banco = banco;
 	}
 

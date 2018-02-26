@@ -406,7 +406,8 @@ create table TBOD_CORRETORA
 	nome_representante_legal1	varchar2(200),
 	nome_representante_legal2	varchar2(200),
 	celular						varchar2(9)		not null, 
-	email						varchar2(80)
+	email						varchar2(80),
+	cnae						varchar2(50)
 );
 
 alter table TBOD_CORRETORA
