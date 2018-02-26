@@ -27,6 +27,12 @@ FORCAVENDA
 		"departamento":"ABC",
 		"cargo":"Analista de Sistemas",
 		"dataNascimento":"20-06-1980"
+		"nomeEmpresa": ""
+        "nomeGerente": ""
+        "responsavel": ""
+        "rg": ""
+        "senha": ""
+
 	}
 	
 
@@ -417,4 +423,23 @@ VENDA
 			]
 		}
 	]}
+
+Login
+    POST /login
+    {"usuario":"1234", "senha": "123"}
+
+    Resposta 200
+    {
+        "usuario": "1234",
+        "sucesso": true,
+        "cdLogin": 2
+    }
+
+    403
+    {
+        "usuario": null,
+        "sucesso": false,
+        "cdLogin": null
+    }
+
 

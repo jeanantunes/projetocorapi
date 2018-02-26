@@ -17,6 +17,11 @@ public class ForcaVenda implements Serializable {
 	private String departamento;
 	private String cargo;
 	private String dataNascimento;
+	private String nomeEmpresa;
+	private String nomeGerente;
+	private String responsavel;
+	private String rg;
+	private String senha;
 
 	public Long getCdForcaVenda() {
 		return cdForcaVenda;
@@ -112,5 +117,46 @@ public class ForcaVenda implements Serializable {
 				+ ", cpf=" + cpf + ", ativo=" + ativo + ", departamento=" + departamento + ", cargo=" + cargo
 				+ ", dataNascimento=" + dataNascimento + "]";
 	}
+
+	public String getNomeEmpresa() {
+		return nomeEmpresa;
+	}
+
+	public void setNomeEmpresa(String nomeEmpresa) {
+		this.nomeEmpresa = nomeEmpresa;
+	}
+
+	public String getNomeGerente() {
+		return nomeGerente;
+	}
+
+	public void setNomeGerente(String nomeGerente) {
+		this.nomeGerente = nomeGerente;
+	}
+
+	public String getResponsavel() {
+		return responsavel;
+	}
+
+	public void setResponsavel(String responsavel) {
+		this.responsavel = responsavel;
+	}
+
+	public String getRg() {
+		return rg;
+	}
+
+	public void setRg(String rg) {
+		this.rg = rg;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
 
 }

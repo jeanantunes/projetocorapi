@@ -1,13 +1,5 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
@@ -20,141 +12,179 @@ import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodStatusForcaVenda;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ForcaVendaServiceImpl implements ForcaVendaService {
 
-	private static final Log log = LogFactory.getLog(ForcaVendaServiceImpl.class);
+    private static final Log log = LogFactory.getLog(ForcaVendaServiceImpl.class);
 
-	@Autowired
-	private CorretoraDAO corretoraDao;
+    @Autowired
+    private CorretoraDAO corretoraDao;
 
-	@Autowired
-	private StatusForcaVendaDAO statusForcaVendaDao;
+    @Autowired
+    private StatusForcaVendaDAO statusForcaVendaDao;
 
-	@Autowired
-	private ForcaVendaDAO forcaVendaDao;
+    @Autowired
+    private ForcaVendaDAO forcaVendaDao;
 
-	@Override
-	public ForcaVendaResponse addForcaVenda(ForcaVenda forcaVenda) {
+    @Value("${DCSS_URL}")
+    private String dcssUrl;
 
-		log.info("[ForcaVendaServiceImpl::addForcaVenda]");
+    private void integracaoForcaDeVendaDcss(ForcaVenda forca) {
 
-		TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
+        Map<String, Object> forcaMap = new HashMap<>();
 
-		try {
+        RestTemplate restTemplate = new RestTemplate();
+        forcaMap.put("nome", forca.getNome());
+        forcaMap.put("email", forca.getEmail());
+        forcaMap.put("telefone", forca.getCelular());
+        forcaMap.put("nomeEmpresa", forca.getNomeEmpresa());
+        forcaMap.put("login", forca.getCpf());
+        forcaMap.put("rg", forca.getRg());
+        forcaMap.put("cpf", forca.getCpf());
+        forcaMap.put("cargo", forca.getCargo());
+        forcaMap.put("responsavel", forca.getResponsavel());
+        forcaMap.put("nomeGerente", forca.getNomeGerente());
+        forcaMap.put("senha", forca.getSenha());
+        forcaMap.put("canalVenda", forca.getCdForcaVenda());
+        log.error(forcaMap);
+        restTemplate.postForEntity((dcssUrl+"/usuario/1.0/"), forcaMap, ForcaVenda.class);
 
-			List<TbodForcaVenda> forcas = forcaVendaDao.findByCpf(forcaVenda.getCpf());
+    }
 
-			if (forcas != null && !forcas.isEmpty()) {
-				throw new Exception("CPF " + forcaVenda.getCpf() + " já existe!");
-			}
+    @Override
+    public ForcaVendaResponse addForcaVenda(ForcaVenda forcaVenda) {
 
-			tbForcaVenda.setNome(forcaVenda.getNome());
-			tbForcaVenda.setCpf(forcaVenda.getCpf());
-			tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
-			tbForcaVenda.setCelular(forcaVenda.getCelular());
-			tbForcaVenda.setEmail(forcaVenda.getEmail());
-			tbForcaVenda.setAtivo(forcaVenda.isAtivo() == true ? "S" : "N");
-			tbForcaVenda.setCargo(forcaVenda.getCargo());
-			tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
-			TbodStatusForcaVenda statusForcaVenda = new TbodStatusForcaVenda();
-			if (forcaVenda.getCorretora() != null && forcaVenda.getCorretora().getCdCorretora() > 0) {
-				TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
-				tbForcaVenda.setTbodCorretora(tbCorretora);
-				statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.ATIVO.getCodigo());
-			} else {
-				statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.PENDENTE.getCodigo());
-			}
-			tbForcaVenda.setTbodStatusForcaVenda(statusForcaVenda);
+        log.info("[ForcaVendaServiceImpl::addForcaVenda]");
 
-			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
+        TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
 
-		} catch (Exception e) {
-			log.error("ForcaVendaServiceImpl :: Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
-			return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
-		}
+        try {
 
-		return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(), "ForcaVenda cadastrada.");
-	}
+            List<TbodForcaVenda> forcas = forcaVendaDao.findByCpf(forcaVenda.getCpf());
+            if (forcas != null && !forcas.isEmpty()) {
+                throw new Exception("CPF " + forcaVenda.getCpf() + " já existe!");
+            }
 
-	@Override
-	public ForcaVenda findForcaVendaByCpf(String cpf) {
+            tbForcaVenda.setNome(forcaVenda.getNome());
+            tbForcaVenda.setCpf(forcaVenda.getCpf());
+            tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
+            tbForcaVenda.setCelular(forcaVenda.getCelular());
+            tbForcaVenda.setEmail(forcaVenda.getEmail());
+            tbForcaVenda.setAtivo(forcaVenda.isAtivo() == true ? "S" : "N");
+            tbForcaVenda.setCargo(forcaVenda.getCargo());
+            tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
+            TbodStatusForcaVenda statusForcaVenda = new TbodStatusForcaVenda();
+            if (forcaVenda.getCorretora() != null && forcaVenda.getCorretora().getCdCorretora() > 0) {
+                TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
+                tbForcaVenda.setTbodCorretora(tbCorretora);
+                statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.ATIVO.getCodigo());
+            } else {
+                statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.PENDENTE.getCodigo());
+            }
+            tbForcaVenda.setTbodStatusForcaVenda(statusForcaVenda);
 
-		log.info("[ForcaVendaServiceImpl::findForcaVendaByCpf]");
 
-		ForcaVenda forcaVenda = new ForcaVenda();
+            tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
+            integracaoForcaDeVendaDcss(forcaVenda);
 
-		List<TbodForcaVenda> entities = forcaVendaDao.findByCpf(cpf);
+        } catch (Exception e) {
+            log.error(e);
+            log.error("ForcaVendaServiceImpl :: Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
+            return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
+        }
 
-		if (!entities.isEmpty()) {
-			TbodForcaVenda tbForcaVenda = entities.get(0);
+        return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(), "ForcaVenda cadastrada.");
+    }
 
-			forcaVenda.setCdForcaVenda(tbForcaVenda.getCdForcaVenda());
-			forcaVenda.setNome(tbForcaVenda.getNome());
-			forcaVenda.setCelular(tbForcaVenda.getCelular());
-			forcaVenda.setEmail(tbForcaVenda.getEmail());
-			forcaVenda.setCpf(tbForcaVenda.getCpf());
-			forcaVenda.setAtivo("S".equals(tbForcaVenda.getAtivo()) ? true : false);
+    @Override
+    public ForcaVenda findForcaVendaByCpf(String cpf) {
 
-			String dataStr = "00/00/0000";
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			try {
-				dataStr = sdf.format(tbForcaVenda.getDataNascimento());
-			} catch (Exception e) {
-				log.error("ForcaVendaServiceImpl :: Erro ao formatar data de nascimento. Detalhe: [" + e.getMessage()
-						+ "]");
-			}
-			forcaVenda.setDataNascimento(dataStr);
+        log.info("[ForcaVendaServiceImpl::findForcaVendaByCpf]");
 
-			forcaVenda.setCargo(tbForcaVenda.getCargo());
-			forcaVenda.setDepartamento(tbForcaVenda.getDepartamento());
+        ForcaVenda forcaVenda = new ForcaVenda();
 
-			String statusForca = tbForcaVenda.getTbodStatusForcaVenda() != null
-					? tbForcaVenda.getTbodStatusForcaVenda().getDescricao()
-					: "";
-			forcaVenda.setStatusForcaVenda(statusForca);
+        List<TbodForcaVenda> entities = forcaVendaDao.findByCpf(cpf);
 
-			if (tbForcaVenda.getTbodCorretora() != null) {
+        if (!entities.isEmpty()) {
+            TbodForcaVenda tbForcaVenda = entities.get(0);
 
-				TbodCorretora tbCorretora = tbForcaVenda.getTbodCorretora();
-				Corretora corretora = new Corretora();
+            forcaVenda.setCdForcaVenda(tbForcaVenda.getCdForcaVenda());
+            forcaVenda.setNome(tbForcaVenda.getNome());
+            forcaVenda.setCelular(tbForcaVenda.getCelular());
+            forcaVenda.setEmail(tbForcaVenda.getEmail());
+            forcaVenda.setCpf(tbForcaVenda.getCpf());
+            forcaVenda.setAtivo("S".equals(tbForcaVenda.getAtivo()) ? true : false);
 
-				corretora.setCdCorretora(tbCorretora.getCdCorretora());
-				corretora.setCnpj(tbCorretora.getCnpj());
-				corretora.setRazaoSocial(tbCorretora.getRazaoSocial());
+            String dataStr = "00/00/0000";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                dataStr = sdf.format(tbForcaVenda.getDataNascimento());
+            } catch (Exception e) {
+                log.error("ForcaVendaServiceImpl :: Erro ao formatar data de nascimento. Detalhe: [" + e.getMessage()
+                        + "]");
+            }
+            forcaVenda.setDataNascimento(dataStr);
 
-				forcaVenda.setCorretora(corretora);
-			}
-		}
+            forcaVenda.setCargo(tbForcaVenda.getCargo());
+            forcaVenda.setDepartamento(tbForcaVenda.getDepartamento());
 
-		return forcaVenda;
+            String statusForca = tbForcaVenda.getTbodStatusForcaVenda() != null
+                    ? tbForcaVenda.getTbodStatusForcaVenda().getDescricao()
+                    : "";
+            forcaVenda.setStatusForcaVenda(statusForca);
 
-	}
+            if (tbForcaVenda.getTbodCorretora() != null) {
 
-	@Override
-	public ForcaVendaResponse findAssocForcaVendaCorretora(Long cdForcaVenda, String cnpj) {
+                TbodCorretora tbCorretora = tbForcaVenda.getTbodCorretora();
+                Corretora corretora = new Corretora();
 
-		log.info("[findAssocForcaVendaCorretora]");
+                corretora.setCdCorretora(tbCorretora.getCdCorretora());
+                corretora.setCnpj(tbCorretora.getCnpj());
+                corretora.setRazaoSocial(tbCorretora.getRazaoSocial());
 
-		TbodForcaVenda tbForcaVenda;
+                forcaVenda.setCorretora(corretora);
+            }
+        }
 
-		try {
+        return forcaVenda;
 
-			tbForcaVenda = forcaVendaDao.findByCdForcaVendaAndTbodCorretoraCnpj(cdForcaVenda, cnpj);
+    }
 
-			if (tbForcaVenda == null) {
-				throw new Exception("ForcaVenda e Corretora nao associadas!");
-			}
+    @Override
+    public ForcaVendaResponse findAssocForcaVendaCorretora(Long cdForcaVenda, String cnpj) {
 
-		} catch (Exception e) {
-			log.error("findAssocForcaVendaCorretora :: Detalhe: [" + e.getMessage() + "]");
-			return new ForcaVendaResponse(0, "[12:19:30] Detalhe: [" + e.getMessage() + "].");
-		}
+        log.info("[findAssocForcaVendaCorretora]");
 
-		return new ForcaVendaResponse(1, "ForcaVenda [" + tbForcaVenda.getCpf() + "] esta associada a corretora ["
-				+ tbForcaVenda.getTbodCorretora().getCnpj() + "]");
+        TbodForcaVenda tbForcaVenda;
 
-	}
+        try {
+
+            tbForcaVenda = forcaVendaDao.findByCdForcaVendaAndTbodCorretoraCnpj(cdForcaVenda, cnpj);
+
+            if (tbForcaVenda == null) {
+                throw new Exception("ForcaVenda e Corretora nao associadas!");
+            }
+
+        } catch (Exception e) {
+            log.error("findAssocForcaVendaCorretora :: Detalhe: [" + e.getMessage() + "]");
+            return new ForcaVendaResponse(0, "[12:19:30] Detalhe: [" + e.getMessage() + "].");
+        }
+
+        return new ForcaVendaResponse(1, "ForcaVenda [" + tbForcaVenda.getCpf() + "] esta associada a corretora ["
+                + tbForcaVenda.getTbodCorretora().getCnpj() + "]");
+
+    }
 
 }
