@@ -8,4 +8,5 @@ import br.com.odontoprev.portal.corretor.model.TbodCorretora;
 @Repository
 public interface CorretoraDAO extends CrudRepository<TbodCorretora, Long>{
 	
+	public TbodCorretora findByCnpj(String cnpj);
 }

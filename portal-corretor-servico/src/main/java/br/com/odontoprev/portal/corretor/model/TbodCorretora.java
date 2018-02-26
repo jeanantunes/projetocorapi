@@ -67,6 +67,9 @@ public class TbodCorretora implements Serializable {
 
 	@Column(name="TELEFONE")
 	private String telefone;
+	
+	@Column(name="CNAE")
+	private String cnae;
 
 	//bi-directional many-to-one association to TbodEndereco
 	@ManyToOne
@@ -314,6 +317,14 @@ public class TbodCorretora implements Serializable {
 		tbodLogin.setTbodCorretora(null);
 
 		return tbodLogin;
+	}
+
+	public String getCnae() {
+		return cnae;
+	}
+
+	public void setCnae(String cnae) {
+		this.cnae = cnae;
 	}
 
 }
