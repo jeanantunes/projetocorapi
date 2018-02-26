@@ -4,56 +4,55 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
 
-
 /**
  * The persistent class for the TBOD_VENDA_VIDA database table.
  * 
  */
 @Entity
-@Table(name="TBOD_VENDA_VIDA")
-@NamedQuery(name="TbodVendaVida.findAll", query="SELECT t FROM TbodVendaVida t")
+@Table(name = "TBOD_VENDA_VIDA")
+@NamedQuery(name = "TbodVendaVida.findAll", query = "SELECT t FROM TbodVendaVida t")
 public class TbodVendaVida implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "SEQ_TBOD_VENDA_VIDA", sequenceName = "SEQ_TBOD_VENDA_VIDA",  allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEQ_TBOD_VENDA_VIDA", sequenceName = "SEQ_TBOD_VENDA_VIDA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_VENDA_VIDA")
-	@Column(name="CD_VENDA_VIDA")
-	private long cdVendaVida;
+	@Column(name = "CD_VENDA_VIDA")
+	private Long cdVendaVida;
 
-	@Column(name="CD_PLANO")
-	private long cdPlano;
-	
-	//bi-directional many-to-one association to TbodVenda
-	@OneToMany(mappedBy="tbodVendaVida")
+	@Column(name = "CD_PLANO")
+	private Long cdPlano;
+
+	// bi-directional many-to-one association to TbodVenda
+	@OneToMany(mappedBy = "tbodVendaVida")
 	private List<TbodVenda> tbodVendas;
 
-	//bi-directional many-to-one association to TbodVenda
+	// bi-directional many-to-one association to TbodVenda
 	@ManyToOne
-	@JoinColumn(name="CD_VENDA")
+	@JoinColumn(name = "CD_VENDA")
 	private TbodVenda tbodVenda;
 
-	//bi-directional many-to-one association to TbodVida
+	// bi-directional many-to-one association to TbodVida
 	@ManyToOne
-	@JoinColumn(name="CD_VIDA")
+	@JoinColumn(name = "CD_VIDA")
 	private TbodVida tbodVida;
 
 	public TbodVendaVida() {
 	}
 
-	public long getCdVendaVida() {
-		return this.cdVendaVida;
+	public Long getCdVendaVida() {
+		return cdVendaVida;
 	}
 
-	public void setCdVendaVida(long cdVendaVida) {
+	public void setCdVendaVida(Long cdVendaVida) {
 		this.cdVendaVida = cdVendaVida;
 	}
-	
-	public long getCdPlano() {
+
+	public Long getCdPlano() {
 		return cdPlano;
 	}
 
-	public void setCdPlano(long cdPlano) {
+	public void setCdPlano(Long cdPlano) {
 		this.cdPlano = cdPlano;
 	}
 

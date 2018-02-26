@@ -54,8 +54,10 @@ public class XlsEmpresa {
 
 			// Tratamento de CNPJ
 			String newcnpj = empresa[0].replaceAll("[.]", "").replaceAll("/", "");
+			
+			String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA);
 
-			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + empresa[16] + "_" + newcnpj + "_" + Data()
+			String filename = pathEmpresa + empresa[16] + "_" + newcnpj + "_" + Data()
 					+ ".xls";
 
 			HSSFWorkbook workbook = new HSSFWorkbook();

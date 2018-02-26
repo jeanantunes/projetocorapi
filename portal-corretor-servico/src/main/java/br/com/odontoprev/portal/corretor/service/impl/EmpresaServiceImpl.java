@@ -11,13 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
-import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.util.XlsVidas;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -60,6 +60,10 @@ public class EmpresaServiceImpl implements EmpresaService {
 				
 				List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa());
 				
+				if(vidas != null) {
+					XlsVidas xlsVidas = new XlsVidas();
+					xlsVidas.gerarVidasXLS(vidas, tbEmpresa);
+				}
 			}
 			else {
 				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
