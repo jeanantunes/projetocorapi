@@ -71,7 +71,8 @@ public class VendaPFBusiness {
 		log.info("[salvarVendaPFComTitularesComDependentes]");
 
 		TbodVenda tbVenda = new TbodVenda();
-
+		PropostaResponse propostaResponse = null;
+		
 		try {		
 			
 			if(venda != null) {
@@ -131,7 +132,7 @@ public class VendaPFBusiness {
 			String propostaJson = gson.toJson(proposta);			
 			log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
 
-			PropostaResponse propostaResponse = chamarWSLegadoPropostaPOST(proposta);
+			propostaResponse = chamarWSLegadoPropostaPOST(proposta);
 			if(propostaResponse != null) {
 				log.info("chamarWSLegadoPropostaPOST; propostaResponse:[" + propostaResponse.getNumeroProposta() + "]");
 			}
@@ -163,7 +164,7 @@ public class VendaPFBusiness {
 			return new VendaResponse(0, msg);
 		}
 
-		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"].");
+		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"]; NumeroProposta:[" + propostaResponse.getNumeroProposta() + "].");
 	}
 
 	private Proposta atribuirVendaPFParaProposta(Venda venda) {

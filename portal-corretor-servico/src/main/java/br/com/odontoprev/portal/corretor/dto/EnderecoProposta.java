@@ -16,7 +16,7 @@ public class EnderecoProposta {
 
 	private String estado;
 
-	public String getCep() {
+	public long getCep() {
 		return cep;
 	}
 
