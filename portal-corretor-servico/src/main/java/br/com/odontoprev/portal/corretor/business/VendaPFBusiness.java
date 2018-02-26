@@ -1,9 +1,9 @@
 package br.com.odontoprev.portal.corretor.business;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import javax.annotation.ManagedBean;
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,15 +12,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
+
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
 import br.com.odontoprev.portal.corretor.dao.StatusVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.BeneficiarioProposta;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
+import br.com.odontoprev.portal.corretor.dto.CorretoraProposta;
+import br.com.odontoprev.portal.corretor.dto.DadosBancariosProposta;
+import br.com.odontoprev.portal.corretor.dto.EnderecoProposta;
 import br.com.odontoprev.portal.corretor.dto.Proposta;
 import br.com.odontoprev.portal.corretor.dto.PropostaResponse;
+import br.com.odontoprev.portal.corretor.dto.TipoCobrancaProposta;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
@@ -33,7 +40,14 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 public class VendaPFBusiness {
 
 	private static final Log log = LogFactory.getLog(VendaPFBusiness.class);
+
+	private RestTemplate restTemplate = null;
 	
+	@PostConstruct
+	private void init() {		
+		if(restTemplate  == null)
+			restTemplate = new RestTemplate();
+	}
 	@Autowired
 	VendaDAO vendaDao;
 	
@@ -111,6 +125,17 @@ public class VendaPFBusiness {
 				throw new Exception(beneficiarioResponse.getMensagem());
 			}
 			
+			Proposta proposta = atribuirVendaPFParaProposta(venda);
+						
+			Gson gson = new Gson();
+			String propostaJson = gson.toJson(proposta);			
+			log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
+
+			PropostaResponse propostaResponse = chamarWSLegadoPropostaPOST(proposta);
+			if(propostaResponse != null) {
+				log.info("chamarWSLegadoPropostaPOST; propostaResponse:[" + propostaResponse.getNumeroProposta() + "]");
+			}
+			
 		} catch (Exception e) {
 			log.error("salvarVendaPFComTitularesComDependentes :: Erro ao cadastrar venda CdVenda:[" + venda.getCdVenda() + "]. Detalhe: [" + e.getMessage() + "]");
 			
@@ -141,23 +166,113 @@ public class VendaPFBusiness {
 		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"].");
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private String chamarWSLegadoPropostaPOST(Proposta proposta){
+	private Proposta atribuirVendaPFParaProposta(Venda venda) {
+		Proposta proposta = new Proposta();
 
-		String URLAPI_HOST = "https://api-it1.odontoprev.com.br:8243/dcss";
-		String URLAPI_SERV = "/vendas/1.0/proposta";
-				
-		PropostaResponse propostaResponse = new RestTemplate().postForObject(
-				(URLAPI_HOST + URLAPI_SERV), 
-				proposta, 
-				PropostaResponse.class
-				);
+		TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
 		
-		if(propostaResponse == null) {
-			return "Login não encontrado";
+		proposta.setCorretora(new CorretoraProposta());
+		proposta.getCorretora().setCodigo(tbodForcaVenda.getTbodCorretora().getCdCorretora());
+		proposta.getCorretora().setCnpj(tbodForcaVenda.getTbodCorretora().getCnpj());
+		proposta.getCorretora().setNome(tbodForcaVenda.getTbodCorretora().getNome());
+
+		proposta.setCodigoEmpresaDCMS("CodigoEmpresaDCMS"); //TODO tem na PF ?
+		proposta.setCodigoCanalVendas((long)225712); //TODO tem na PF ?		
+		proposta.setCodigoUsuario((long)225713); //TODO de onde ?
+		
+		proposta.setTipoCobranca(new TipoCobrancaProposta());
+		proposta.getTipoCobranca().setCodigo((long)231248); //Informar o que vem do serviço da empresa
+		proposta.getTipoCobranca().setSigla("BO"); //BO = Boleto / DA = Debito automatico
+		
+		proposta.setDadosBancarios(new DadosBancariosProposta());
+		proposta.getDadosBancarios().setCodigoBanco("341banco"); //TODO
+		proposta.getDadosBancarios().setAgencia("1234agencia"); //TODO
+		proposta.getDadosBancarios().setAgenciaDV("5dvagencia"); //TODO
+		proposta.getDadosBancarios().setTipoConta("tipoConta"); //TODO dominio ???
+		proposta.getDadosBancarios().setConta("123456conta");
+		proposta.getDadosBancarios().setContaDV("9dvconta");
+
+		proposta.setBeneficiarios(new ArrayList<>());
+		
+		for (Beneficiario titular : venda.getTitulares()) {
+			
+			BeneficiarioProposta beneficiarioPropostaTitular = new BeneficiarioProposta();
+			beneficiarioPropostaTitular.setNome(titular.getNome());
+			beneficiarioPropostaTitular.setCpf(titular.getCpf());
+			beneficiarioPropostaTitular.setSexo(titular.getSexo());
+			beneficiarioPropostaTitular.setDataNascimento(titular.getDataNascimento());
+			beneficiarioPropostaTitular.setNomeMae(titular.getNomeMae());
+			beneficiarioPropostaTitular.setCelular(titular.getCelular());
+			beneficiarioPropostaTitular.setEmail(titular.getEmail());
+			beneficiarioPropostaTitular.setCodigoPlano(venda.getCdPlano().toString());
+			beneficiarioPropostaTitular.setTitular(true); //TRUE PARA DEPENDENTE
+			
+			beneficiarioPropostaTitular.setEndereco(new EnderecoProposta());
+			beneficiarioPropostaTitular.getEndereco().setCep(titular.getEndereco().getCep());
+			beneficiarioPropostaTitular.getEndereco().setLogradouro(titular.getEndereco().getLogradouro());
+			beneficiarioPropostaTitular.getEndereco().setNumero(titular.getEndereco().getNumero());
+			beneficiarioPropostaTitular.getEndereco().setComplemento(titular.getEndereco().getComplemento());
+			beneficiarioPropostaTitular.getEndereco().setBairro(titular.getEndereco().getBairro());
+			beneficiarioPropostaTitular.getEndereco().setCidade(titular.getEndereco().getCidade());
+			beneficiarioPropostaTitular.getEndereco().setEstado(titular.getEndereco().getEstado());
+			
+			proposta.getBeneficiarios().add(beneficiarioPropostaTitular);
+			
+			for (Beneficiario dependente : titular.getDependentes()) {
+
+				BeneficiarioProposta beneficiarioPropostaDependente = new BeneficiarioProposta();
+				beneficiarioPropostaDependente.setNome(dependente.getNome());
+				beneficiarioPropostaDependente.setCpf(dependente.getCpf());
+				beneficiarioPropostaDependente.setSexo(dependente.getSexo());
+				beneficiarioPropostaDependente.setDataNascimento(dependente.getDataNascimento());
+				beneficiarioPropostaDependente.setNomeMae(dependente.getNomeMae());
+				beneficiarioPropostaDependente.setCelular(dependente.getCelular());
+				beneficiarioPropostaDependente.setEmail(dependente.getEmail());
+				beneficiarioPropostaDependente.setCodigoPlano(venda.getCdPlano().toString());
+				beneficiarioPropostaDependente.setTitular(false); //FALSE PARA DEPENDENTE
+				
+				beneficiarioPropostaDependente.setEndereco(new EnderecoProposta());
+				beneficiarioPropostaDependente.getEndereco().setCep(titular.getEndereco().getCep());
+				beneficiarioPropostaDependente.getEndereco().setLogradouro(titular.getEndereco().getLogradouro());
+				beneficiarioPropostaDependente.getEndereco().setNumero(titular.getEndereco().getNumero());
+				beneficiarioPropostaDependente.getEndereco().setComplemento(titular.getEndereco().getComplemento());
+				beneficiarioPropostaDependente.getEndereco().setBairro(titular.getEndereco().getBairro());
+				beneficiarioPropostaDependente.getEndereco().setCidade(titular.getEndereco().getCidade());
+				beneficiarioPropostaDependente.getEndereco().setEstado(titular.getEndereco().getEstado());
+				
+				proposta.getBeneficiarios().add(beneficiarioPropostaTitular);
+
+			} //for (Beneficiario dependente : titular.getDependentes())
+			
+		} //for (Beneficiario titular : venda.getTitulares())
+
+		return proposta;
+	}
+
+	@SuppressWarnings({ })
+	private PropostaResponse chamarWSLegadoPropostaPOST(Proposta proposta){
+
+		String URLAPI = "https://api-it1.odontoprev.com.br:8243/dcss/vendas/1.0/proposta";
+				
+		ResponseEntity<PropostaResponse> propostaRet = new RestTemplate().postForEntity(
+			URLAPI, 
+			proposta, 
+			PropostaResponse.class
+		);
+		
+		if(propostaRet != null) {
+			log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + propostaRet.getStatusCode() + "];");
 		}
 
-		return propostaResponse.getCodigoProposta();
+		if(propostaRet == null 
+			|| (propostaRet.getStatusCode() == HttpStatus.FORBIDDEN)
+			|| (propostaRet.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR)
+			|| (propostaRet.getStatusCode() == HttpStatus.BAD_REQUEST)
+		) {
+			return null;
+		}
+				
+		return propostaRet.getBody();
 	}
 
 }

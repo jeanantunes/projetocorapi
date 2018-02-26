@@ -4,26 +4,26 @@ import java.util.List;
 
 public class Proposta {
 
-	private CorretoraProposta corretoraProposta;
+	private CorretoraProposta corretora;
 	
 	private String codigoEmpresaDCMS;
 	
-	private int CodigoCanalVendas;
+	private Long codigoCanalVendas;
 	
-	private int codigoLogin; //Codigo identificador do usuario
+	private Long codigoUsuario; //Codigo identificador do usuario
 	
 	private TipoCobrancaProposta tipoCobranca;
 		
-	private DadosBancarioProposta dadosBancario;
+	private DadosBancariosProposta dadosBancarios;
 
-	private List<BeneficiarioProposta> beneficiarioProposta;
+	private List<BeneficiarioProposta> beneficiarios;
 
-	public CorretoraProposta getCorretoraProposta() {
-		return corretoraProposta;
+	public CorretoraProposta getCorretora() {
+		return corretora;
 	}
 
-	public void setCorretoraProposta(CorretoraProposta corretoraProposta) {
-		this.corretoraProposta = corretoraProposta;
+	public void setCorretora(CorretoraProposta corretora) {
+		this.corretora = corretora;
 	}
 
 	public String getCodigoEmpresaDCMS() {
@@ -34,20 +34,20 @@ public class Proposta {
 		this.codigoEmpresaDCMS = codigoEmpresaDCMS;
 	}
 
-	public int getCodigoCanalVendas() {
-		return CodigoCanalVendas;
+	public Long getCodigoCanalVendas() {
+		return codigoCanalVendas;
 	}
 
-	public void setCodigoCanalVendas(int codigoCanalVendas) {
-		CodigoCanalVendas = codigoCanalVendas;
+	public void setCodigoCanalVendas(Long codigoCanalVendas) {
+		this.codigoCanalVendas = codigoCanalVendas;
 	}
 
-	public int getCodigoLogin() {
-		return codigoLogin;
+	public Long getCodigoUsuario() {
+		return codigoUsuario;
 	}
 
-	public void setCodigoLogin(int codigoLogin) {
-		this.codigoLogin = codigoLogin;
+	public void setCodigoUsuario(Long codigoUsuario) {
+		this.codigoUsuario = codigoUsuario;
 	}
 
 	public TipoCobrancaProposta getTipoCobranca() {
@@ -58,32 +58,32 @@ public class Proposta {
 		this.tipoCobranca = tipoCobranca;
 	}
 
-	public DadosBancarioProposta getDadosBancario() {
-		return dadosBancario;
+	public DadosBancariosProposta getDadosBancarios() {
+		return dadosBancarios;
 	}
 
-	public void setDadosBancario(DadosBancarioProposta dadosBancario) {
-		this.dadosBancario = dadosBancario;
+	public void setDadosBancarios(DadosBancariosProposta dadosBancarios) {
+		this.dadosBancarios = dadosBancarios;
 	}
 
-	public List<BeneficiarioProposta> getBeneficiarioProposta() {
-		return beneficiarioProposta;
+	public List<BeneficiarioProposta> getBeneficiarios() {
+		return beneficiarios;
 	}
 
-	public void setBeneficiarioProposta(List<BeneficiarioProposta> beneficiarioProposta) {
-		this.beneficiarioProposta = beneficiarioProposta;
+	public void setBeneficiarios(List<BeneficiarioProposta> beneficiarios) {
+		this.beneficiarios = beneficiarios;
 	}
 
 	@Override
 	public String toString() {
 		return "Proposta [" 
-				+ "corretoraProposta=" + corretoraProposta 
+				+ "corretora=" + corretora 
 				+ ", codigoEmpresaDCMS=" + codigoEmpresaDCMS
-				+ ", CodigoCanalVendas=" + CodigoCanalVendas 
-				+ ", codigoLogin=" + codigoLogin 
+				+ ", codigoCanalVendas=" + codigoCanalVendas 
+				+ ", codigoUsuario=" + codigoUsuario 
 				+ ", tipoCobranca=" + tipoCobranca 
-				+ ", dadosBancario=" + dadosBancario 
-				+ ", beneficiarioProposta=" + beneficiarioProposta
+				+ ", dadosBancarios=" + dadosBancarios 
+				+ ", beneficiarios=" + beneficiarios
 				+ "]";
 	}	
 }

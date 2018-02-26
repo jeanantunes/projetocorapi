@@ -1,6 +1,6 @@
 package br.com.odontoprev.portal.corretor.dto;
 
-public class DadosBancarioProposta {
+public class DadosBancariosProposta {
 
 	private String codigoBanco;
 
