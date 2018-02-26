@@ -2,14 +2,14 @@ package br.com.odontoprev.portal.corretor.dto;
 
 public class PropostaResponse {
 
-	private String codigoProposta;
+	private String numeroProposta;
 
-	public String getCodigoProposta() {
-		return codigoProposta;
+	public String getNumeroProposta() {
+		return numeroProposta;
 	}
 
-	public void setCodigoProposta(String codigoProposta) {
-		this.codigoProposta = codigoProposta;
+	public void setNumeroProposta(String codigoProposta) {
+		this.numeroProposta = codigoProposta;
 	}
 	
 }

@@ -2,31 +2,31 @@ package br.com.odontoprev.portal.corretor.dto;
 
 public class TipoCobrancaProposta {
 
-	private int codigoTipoCobranca; //Informar o que vem do serviço da empresa
+	private Long codigo; //Informar o que vem do serviço da empresa
 
-	private String siglaTipoCobranca; //BO = Boleto / DA = Debito automatico
+	private String sigla; //BO = Boleto / DA = Debito automatico
 
-	public int getCodigoTipoCobranca() {
-		return codigoTipoCobranca;
+	public Long getCodigo() {
+		return codigo;
 	}
 
-	public void setCodigoTipoCobranca(int codigoTipoCobranca) {
-		this.codigoTipoCobranca = codigoTipoCobranca;
+	public void setCodigo(Long codigo) {
+		this.codigo = codigo;
 	}
 
-	public String getSiglaTipoCobranca() {
-		return siglaTipoCobranca;
+	public String getSigla() {
+		return sigla;
 	}
 
-	public void setSiglaTipoCobranca(String siglaTipoCobranca) {
-		this.siglaTipoCobranca = siglaTipoCobranca;
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
 	}
 
 	@Override
 	public String toString() {
 		return "TipoCobrancaProposta [" 
-				+ "codigoTipoCobranca=" + codigoTipoCobranca 
-				+ ", siglaTipoCobranca=" + siglaTipoCobranca 
+				+ "codigo=" + codigo 
+				+ ", sigla=" + sigla 
 				+ "]";
 	}
 

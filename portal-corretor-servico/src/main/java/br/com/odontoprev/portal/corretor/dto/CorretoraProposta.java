@@ -2,26 +2,26 @@ package br.com.odontoprev.portal.corretor.dto;
 
 public class CorretoraProposta {
 	
-	private int codigo; //Codigo identificador da empresa
+	private Long codigo; //Codigo identificador da empresa
 	
-	private String cNPJ; //CNPJ
+	private String cnpj; //CNPJ
 	
 	private String nome; //Razão Social
 
-	public int getCodigo() {
+	public Long getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
 
-	public String getcNPJ() {
-		return cNPJ;
+	public String getCnpj() {
+		return cnpj;
 	}
 
-	public void setcNPJ(String cNPJ) {
-		this.cNPJ = cNPJ;
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
 	}
 
 	public String getNome() {
@@ -36,7 +36,7 @@ public class CorretoraProposta {
 	public String toString() {
 		return "CorretoraProposta [" 
 				+ "codigo=" + codigo 
-				+ ", cNPJ=" + cNPJ 
+				+ ", cnpj=" + cnpj 
 				+ ", nome=" + nome 
 				+ "]";
 	}

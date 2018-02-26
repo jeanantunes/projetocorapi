@@ -1,7 +1,5 @@
 package br.com.odontoprev.portal.corretor.dto;
 
-import java.util.Date;
-
 public class BeneficiarioProposta {
 	
 	private String nome; //Nome do dependente
@@ -10,7 +8,8 @@ public class BeneficiarioProposta {
 
 	private String sexo; //char(1) (M)asculino / (F)eminino Sexo/Genero do dependente
 
-	private Date dataNascimento; //Data de nascimento do dependente
+	//private Date dataNascimento; //Data de nascimento do dependente
+	private String dataNascimento; //Data de nascimento do dependente //DD/MM/YYYY
 
 	private String nomeMae; //Nome mãe do dependente
 
@@ -20,9 +19,9 @@ public class BeneficiarioProposta {
 
 	private String codigoPlano; //Codigo do plano
 
-	private Boolean eTitular; //Flag indicativa se dependente é titular
+	private Boolean titular; //Flag indicativa se dependente é titular
 	
-	private EnderecoProposta enderecoProposta;
+	private EnderecoProposta endereco;
 
 	public String getNome() {
 		return nome;
@@ -48,11 +47,11 @@ public class BeneficiarioProposta {
 		this.sexo = sexo;
 	}
 
-	public Date getDataNascimento() {
+	public String getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(String dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -88,20 +87,20 @@ public class BeneficiarioProposta {
 		this.codigoPlano = codigoPlano;
 	}
 
-	public Boolean geteTitular() {
-		return eTitular;
+	public Boolean getTitular() {
+		return titular;
 	}
 
-	public void seteTitular(Boolean eTitular) {
-		this.eTitular = eTitular;
+	public void setTitular(Boolean titular) {
+		this.titular = titular;
 	}
 
-	public EnderecoProposta getEnderecoProposta() {
-		return enderecoProposta;
+	public EnderecoProposta getEndereco() {
+		return endereco;
 	}
 
-	public void setEnderecoProposta(EnderecoProposta enderecoProposta) {
-		this.enderecoProposta = enderecoProposta;
+	public void setEndereco(EnderecoProposta endereco) {
+		this.endereco = endereco;
 	}
 
 	@Override
@@ -115,8 +114,8 @@ public class BeneficiarioProposta {
 				+ ", celular=" + celular 
 				+ ", email=" + email
 				+ ", codigoPlano=" + codigoPlano 
-				+ ", eTitular=" + eTitular 
-				+ ", enderecoProposta=" + enderecoProposta
+				+ ", eTitular=" + titular 
+				+ ", enderecoProposta=" + endereco
 				+ "]";
 	}
 		

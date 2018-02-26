@@ -5,82 +5,84 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * The persistent class for the TBOD_VIDA database table.
  * 
  */
 @Entity
-@Table(name="TBOD_VIDA")
-@NamedQuery(name="TbodVida.findAll", query="SELECT t FROM TbodVida t")
+@Table(name = "TBOD_VIDA")
+@NamedQuery(name = "TbodVida.findAll", query = "SELECT t FROM TbodVida t")
 public class TbodVida implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "SEQ_TBOD_VIDA", sequenceName = "SEQ_TBOD_VIDA",  allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEQ_TBOD_VIDA", sequenceName = "SEQ_TBOD_VIDA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_VIDA")
-	@Column(name="CD_VIDA")
-	private long cdVida;
+	@Column(name = "CD_VIDA")
+	private Long cdVida;
 
-	@Column(name="CELULAR")
+	@Column(name = "CELULAR")
 	private String celular;
 
-	@Column(name="CPF")
+	@Column(name = "CPF")
 	private String cpf;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="DATA_NASCIMENTO")
+	@Column(name = "DATA_NASCIMENTO")
 	private Date dataNascimento;
 
-	@Column(name="EMAIL")
+	@Column(name = "EMAIL")
 	private String email;
 
-	@Column(name="NOME")
+	@Column(name = "NOME")
 	private String nome;
 
-	@Column(name="NOME_MAE")
+	@Column(name = "NOME_MAE")
 	private String nomeMae;
 
-	@Column(name="PF_PJ")
+	@Column(name = "PF_PJ")
 	private String pfPj;
 
-	@Column(name="SEXO")
+	@Column(name = "SEXO")
 	private String sexo;
 
-	//bi-directional many-to-one association to TbodDocumentoAssociado
-	@OneToMany(mappedBy="tbodVida")
+	@Transient
+	private String descricaoPlano;
+
+	// bi-directional many-to-one association to TbodDocumentoAssociado
+	@OneToMany(mappedBy = "tbodVida")
 	private List<TbodDocumentoAssociado> tbodDocumentoAssociados;
 
-	//bi-directional many-to-one association to TbodPlanoVida
-	@OneToMany(mappedBy="tbodVida")
+	// bi-directional many-to-one association to TbodPlanoVida
+	@OneToMany(mappedBy = "tbodVida")
 	private List<TbodPlanoVida> tbodPlanoVidas;
 
-	//bi-directional many-to-one association to TbodVendaVida
-	@OneToMany(mappedBy="tbodVida")
+	// bi-directional many-to-one association to TbodVendaVida
+	@OneToMany(mappedBy = "tbodVida")
 	private List<TbodVendaVida> tbodVendaVidas;
 
-	//bi-directional many-to-one association to TbodEndereco
+	// bi-directional many-to-one association to TbodEndereco
 	@ManyToOne
-	@JoinColumn(name="CD_ENDERECO")
+	@JoinColumn(name = "CD_ENDERECO")
 	private TbodEndereco tbodEndereco;
 
-	//bi-directional many-to-one association to TbodVida
+	// bi-directional many-to-one association to TbodVida
 	@ManyToOne
-	@JoinColumn(name="CD_TITULAR")
+	@JoinColumn(name = "CD_TITULAR")
 	private TbodVida tbodVida;
 
-	//bi-directional many-to-one association to TbodVida
-	@OneToMany(mappedBy="tbodVida")
+	// bi-directional many-to-one association to TbodVida
+	@OneToMany(mappedBy = "tbodVida")
 	private List<TbodVida> tbodVidas;
 
 	public TbodVida() {
 	}
 
-	public long getCdVida() {
-		return this.cdVida;
+	public Long getCdVida() {
+		return cdVida;
 	}
 
-	public void setCdVida(long cdVida) {
+	public void setCdVida(Long cdVida) {
 		this.cdVida = cdVida;
 	}
 
@@ -146,6 +148,14 @@ public class TbodVida implements Serializable {
 
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
+	}
+
+	public String getDescricaoPlano() {
+		return descricaoPlano;
+	}
+
+	public void setDescricaoPlano(String descricaoPlano) {
+		this.descricaoPlano = descricaoPlano;
 	}
 
 	public List<TbodDocumentoAssociado> getTbodDocumentoAssociados() {
