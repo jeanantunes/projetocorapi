@@ -28,7 +28,7 @@ public class TbodLogin implements Serializable {
 	@Column(name="SENHA")
 	private String senha;
 
-	//bi-directional many-to-one association to TbodCorretora
+	//bi-directional one-to-one association to TbodCorretora
 	@ManyToOne
 	@JoinColumn(name="CD_FORCA_VENDA_CORRETORA", insertable=false, updatable=false)
 	private TbodCorretora tbodCorretora;

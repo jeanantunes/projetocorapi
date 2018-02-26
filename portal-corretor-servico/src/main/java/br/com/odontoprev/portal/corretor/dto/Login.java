@@ -1,11 +1,15 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class Login implements Serializable {
 
 	private static final long serialVersionUID = -5493233987085523214L;
 
+	private Long cdLogin;
+	private BigDecimal cdTipoLogin;
+	private String fotoPerfilB64;
 	private String senha;
 	private String usuario;
 
@@ -23,5 +27,29 @@ public class Login implements Serializable {
 
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
+	}
+
+	public Long getCdLogin() {
+		return cdLogin;
+	}
+
+	public void setCdLogin(Long cdLogin) {
+		this.cdLogin = cdLogin;
+	}
+
+	public BigDecimal getCdTipoLogin() {
+		return cdTipoLogin;
+	}
+
+	public void setCdTipoLogin(BigDecimal cdTipoLogin) {
+		this.cdTipoLogin = cdTipoLogin;
+	}
+
+	public String getFotoPerfilB64() {
+		return fotoPerfilB64;
+	}
+
+	public void setFotoPerfilB64(String fotoPerfilB64) {
+		this.fotoPerfilB64 = fotoPerfilB64;
 	}
 }

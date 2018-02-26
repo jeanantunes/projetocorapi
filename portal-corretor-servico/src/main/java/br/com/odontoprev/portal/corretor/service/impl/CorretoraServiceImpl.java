@@ -1,7 +1,6 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import javax.persistence.NonUniqueResultException;
 
@@ -23,6 +22,7 @@ import br.com.odontoprev.portal.corretor.model.TbodCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodCorretoraBanco;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.service.CorretoraService;
 
 @Service
@@ -151,17 +151,19 @@ public class CorretoraServiceImpl implements CorretoraService {
 				endereco.setBairro(tbodEndereco.getBairro());
 				endereco.setCidade(tbodEndereco.getCidade());
 				endereco.setEstado(tbodEndereco.getUf());
-	//			endereco.setTipoEndereco(tbodEndereco.get); // FIXME
+				TbodTipoEndereco tbodTipoEndereco = tbodEndereco.getTbodTipoEndereco();
+				if(tbodTipoEndereco != null) {					
+					endereco.setTipoEndereco(tbodTipoEndereco.getCdTipoEndereco());
+				}
 				corretora.setEnderecoCorretora(endereco);
 			}
 			// Login
-			List<TbodLogin> tbodLogins = tbodCorretora.getTbodLogins();
-			if(tbodLogins != null && tbodLogins.size() > 0) {	
+			if(tbodCorretora.getTbodLogins() != null && tbodCorretora.getTbodLogins().size() > 0) {	
 				Login login = new Login();
-				TbodLogin tbodLogin = tbodCorretora.getTbodLogins().get(0); // FIXME
-	//			tbodLogin.getCdLogin(); // FIXME
-	//			tbodLogin.getCdTipoLogin(); // FIXME
-	//			tbodLogin.getFotoPerfilB64(); // FIXME
+				TbodLogin tbodLogin = tbodCorretora.getTbodLogins().get(0);
+				login.setCdLogin(tbodLogin.getCdLogin()); 
+				login.setCdTipoLogin(tbodLogin.getCdTipoLogin());
+				login.setFotoPerfilB64(tbodLogin.getFotoPerfilB64());
 				login.setSenha(tbodLogin.getSenha());
 				corretora.setLogin(login);
 			}
