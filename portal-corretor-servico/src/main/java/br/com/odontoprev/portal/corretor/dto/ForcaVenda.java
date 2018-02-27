@@ -22,6 +22,7 @@ public class ForcaVenda implements Serializable {
 	private String responsavel;
 	private String rg;
 	private String senha;
+	private String canalVenda;
 
 	public Long getCdForcaVenda() {
 		return cdForcaVenda;
@@ -149,6 +150,14 @@ public class ForcaVenda implements Serializable {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public String getCanalVenda() {
+		return canalVenda;
+	}
+
+	public void setCanalVenda(String canalVenda) {
+		this.canalVenda = canalVenda;
 	}
 
 	@Override

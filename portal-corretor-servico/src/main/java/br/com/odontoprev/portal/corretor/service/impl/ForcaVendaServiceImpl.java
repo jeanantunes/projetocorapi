@@ -272,4 +272,14 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		return forcaVenda;
 	}
 
+	@Override
+	public List<ForcaVenda> findForcaVendasByCdCorretoraStatusAprovacao(Long cdCorretora) {
+		log.info("[findForcaVendasByCdCorretoraStatusAprovacao]");
+
+		ForcaVenda forcaVenda = new ForcaVenda();
+
+//		List<TbodForcaVenda> entities = forcaVendaDao.findByCpf(cpf);
+		return null;
+	}
+
 }

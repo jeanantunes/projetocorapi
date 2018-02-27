@@ -1,5 +1,7 @@
 package br.com.odontoprev.portal.corretor.controller;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,14 @@ public class ForcaVendaController {
 		log.info("cdForcaVenda [" + cdForcaVenda + "] + cnpj [" + cnpj + "]");
 
 		return forcaVendaService.findAssocForcaVendaCorretora(cdForcaVenda, cnpj);
+	}
+	
+	@RequestMapping(value = "/forcavenda-aprovacao/corretora/{cdCorretora}", method = { RequestMethod.GET })
+	public List<ForcaVenda> findForcaVendasByCdCorretoraStatusAprovacao(@PathVariable Long cdCorretora) {
+
+		log.info("cdCorretora [" + cdCorretora + "]");
+
+		return forcaVendaService.findForcaVendasByCdCorretoraStatusAprovacao(cdCorretora);
 	}
 
 }
