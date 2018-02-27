@@ -5,6 +5,7 @@ import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.ATIVO
 import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.PRE_CADASTRO;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.LoginDAO;
 import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
@@ -117,7 +119,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			// integracaoForcaDeVendaDcss(forcaVenda); //Chamar no PUT
 
 		} catch (Exception e) {
-//			log.error(e);
+			// log.error(e);
 			log.error("Erro ao cadastrar forcaVenda :: Detalhe: [" + e.getMessage() + "]");
 			return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
 		}
@@ -226,29 +228,29 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			if (forcaVenda.getNome() != null && !forcaVenda.getNome().isEmpty()) {
 				tbForcaVenda.setNome(forcaVenda.getNome());
 			}
-			if(forcaVenda.getCelular() != null && !forcaVenda.getCelular().isEmpty()) {
+			if (forcaVenda.getCelular() != null && !forcaVenda.getCelular().isEmpty()) {
 				tbForcaVenda.setCelular(forcaVenda.getCelular());
 			}
-			if(forcaVenda.getEmail() != null && !forcaVenda.getEmail().isEmpty()) {
+			if (forcaVenda.getEmail() != null && !forcaVenda.getEmail().isEmpty()) {
 				tbForcaVenda.setEmail(forcaVenda.getEmail());
 			}
-			
+
 			TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(ATIVO.getCodigo());
 			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
 			tbForcaVenda.setAtivo("S");
-			
-			if(forcaVenda.getSenha() != null && !forcaVenda.getSenha().isEmpty()) {
+
+			if (forcaVenda.getSenha() != null && !forcaVenda.getSenha().isEmpty()) {
 				TbodLogin tbLogin = new TbodLogin();
 				tbLogin.setCdTipoLogin((long) 1); // TODO
 				tbLogin.setSenha(forcaVenda.getSenha());
 				tbLogin = loginDao.save(tbLogin);
 				tbForcaVenda.setTbodLogin(tbLogin);
 			}
-			//Atualiza forcaVenda e associa login
+			// Atualiza forcaVenda e associa login
 			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
-			forcaVenda = this.adaptEntityToDto(tbForcaVenda,forcaVenda);
+			forcaVenda = this.adaptEntityToDto(tbForcaVenda, forcaVenda);
 			this.integracaoForcaDeVendaDcss(forcaVenda);
-			
+
 		} catch (Exception e) {
 			log.error("Erro ao atualizar ForcaVendaLogin :: Detalhe: [" + e.getMessage() + "]");
 			return new ForcaVendaResponse(0, "Erro ao atualizar ForcaVendaLogin :: Detalhe: [" + e.getMessage() + "].");
@@ -258,7 +260,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	}
 
 	private ForcaVenda adaptEntityToDto(TbodForcaVenda tbForcaVenda, ForcaVenda forcaVenda) {
-		
+
 		forcaVenda.setCdForcaVenda(tbForcaVenda.getCdForcaVenda());
 		forcaVenda.setNome(tbForcaVenda.getNome());
 		forcaVenda.setCelular(tbForcaVenda.getCelular());
@@ -267,19 +269,85 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaVenda.setCpf(tbForcaVenda.getCpf());
 		forcaVenda.setAtivo(tbForcaVenda.getAtivo() == "S" ? true : false);
 		forcaVenda.setDepartamento(tbForcaVenda.getDepartamento());
-		forcaVenda.setCargo(tbForcaVenda.getCargo());	
-		
+		forcaVenda.setCargo(tbForcaVenda.getCargo());
+
 		return forcaVenda;
 	}
 
 	@Override
 	public List<ForcaVenda> findForcaVendasByCdCorretoraStatusAprovacao(Long cdCorretora) {
+
 		log.info("[findForcaVendasByCdCorretoraStatusAprovacao]");
 
-		ForcaVenda forcaVenda = new ForcaVenda();
+		List<TbodForcaVenda> forcaVendasEmAprovacao = new ArrayList<TbodForcaVenda>();
+		List<ForcaVenda> forcasVendas = new ArrayList<ForcaVenda>();
 
-//		List<TbodForcaVenda> entities = forcaVendaDao.findByCpf(cpf);
-		return null;
+		try {
+			Long cdStatusForcaVenda = AGUARDANDO_APRO.getCodigo();
+
+			forcaVendasEmAprovacao = forcaVendaDao
+					.findByTbodStatusForcaVendaCdStatusForcaVendasAndTbodCorretoraCdCorretora(cdStatusForcaVenda,
+							cdCorretora);
+
+			if (!forcaVendasEmAprovacao.isEmpty()) {
+				for (TbodForcaVenda tbodForcaVenda : forcaVendasEmAprovacao) {
+					ForcaVenda forcaVenda = new ForcaVenda();
+					forcasVendas.add(adaptEntityToDtoUpdated(tbodForcaVenda, forcaVenda));
+				}
+			}
+		} catch (Exception e) {
+			log.error("Erro ao buscar ForcaVenda em aprovacao :: Detalhe: [" + e.getMessage() + "]");
+			return new ArrayList<ForcaVenda>();
+		}
+
+		return forcasVendas;
 	}
 
+	public ForcaVenda adaptEntityToDtoUpdated(TbodForcaVenda tbForcaVenda, ForcaVenda forcaVenda) {
+		forcaVenda.setCdForcaVenda(tbForcaVenda.getCdForcaVenda());
+		forcaVenda.setAtivo(tbForcaVenda.getAtivo() == "S" ? true : false);
+		forcaVenda.setCargo(tbForcaVenda.getCargo());
+		forcaVenda.setCelular(tbForcaVenda.getCelular());
+		forcaVenda.setCpf(tbForcaVenda.getCpf());
+
+		forcaVenda.setDepartamento(tbForcaVenda.getDepartamento());
+		forcaVenda.setEmail(tbForcaVenda.getEmail());
+		forcaVenda.setNome(tbForcaVenda.getNome());
+		forcaVenda.setStatusForcaVenda(tbForcaVenda.getTbodStatusForcaVenda().getDescricao());
+
+		String dataStr = "00/00/0000";
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			dataStr = sdf.format(tbForcaVenda.getDataNascimento());
+		} catch (Exception e) {
+			log.error("Erro ao formatar data de nascimento :: Detalhe: [" + e.getMessage() + "]");
+		}
+		forcaVenda.setDataNascimento(dataStr);
+
+		Corretora corretora = new Corretora();
+		corretora.setCdCorretora(tbForcaVenda.getTbodCorretora().getCdCorretora());
+		corretora.setCnpj(tbForcaVenda.getTbodCorretora().getCnpj());
+		corretora.setCnae(tbForcaVenda.getTbodCorretora().getCnae());
+		corretora.setRazaoSocial(tbForcaVenda.getTbodCorretora().getRazaoSocial());
+		corretora.setTelefone(tbForcaVenda.getTbodCorretora().getTelefone());
+		corretora.setCelular(tbForcaVenda.getTbodCorretora().getCelular());
+		corretora.setEmail(tbForcaVenda.getTbodCorretora().getEmail());
+		corretora.setStatusCnpj(tbForcaVenda.getTbodCorretora().getStatusCnpj() == "S" ? true : false);
+		corretora.setSimplesNacional(tbForcaVenda.getTbodCorretora().getSimplesNacional() == "S" ? true : false);
+		corretora.setDataAbertura(tbForcaVenda.getTbodCorretora().getDataAbertura());
+		
+		Endereco enderecoCorretora = new Endereco();
+		enderecoCorretora.setLogradouro(tbForcaVenda.getTbodCorretora().getTbodEndereco().getLogradouro());
+		enderecoCorretora.setNumero(tbForcaVenda.getTbodCorretora().getTbodEndereco().getNumero());
+		enderecoCorretora.setComplemento(tbForcaVenda.getTbodCorretora().getTbodEndereco().getComplemento());
+		enderecoCorretora.setBairro(tbForcaVenda.getTbodCorretora().getTbodEndereco().getBairro());
+		enderecoCorretora.setCidade(tbForcaVenda.getTbodCorretora().getTbodEndereco().getCidade());
+		enderecoCorretora.setEstado(tbForcaVenda.getTbodCorretora().getTbodEndereco().getUf());
+		enderecoCorretora.setCep(tbForcaVenda.getTbodCorretora().getTbodEndereco().getCep());
+		corretora.setEnderecoCorretora(enderecoCorretora);
+		
+		
+		forcaVenda.setCorretora(corretora);
+		return forcaVenda;
+	}
 }

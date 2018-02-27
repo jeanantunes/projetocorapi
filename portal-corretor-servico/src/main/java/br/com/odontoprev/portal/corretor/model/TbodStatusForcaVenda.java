@@ -17,7 +17,7 @@ public class TbodStatusForcaVenda implements Serializable {
 
 	@Id
 	@Column(name="CD_STATUS_FORCA_VENDAS")
-	private long cdStatusForcaVendas;
+	private Long cdStatusForcaVendas;
 
 	@Column(name="DESCRICAO")
 	private String descricao;
@@ -29,11 +29,11 @@ public class TbodStatusForcaVenda implements Serializable {
 	public TbodStatusForcaVenda() {
 	}
 
-	public long getCdStatusForcaVendas() {
+	public Long getCdStatusForcaVendas() {
 		return this.cdStatusForcaVendas;
 	}
 
-	public void setCdStatusForcaVendas(long cdStatusForcaVendas) {
+	public void setCdStatusForcaVendas(Long cdStatusForcaVendas) {
 		this.cdStatusForcaVendas = cdStatusForcaVendas;
 	}
 
