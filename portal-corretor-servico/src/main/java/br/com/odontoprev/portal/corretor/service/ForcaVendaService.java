@@ -11,4 +11,6 @@ public interface ForcaVendaService {
 
 	public ForcaVendaResponse findAssocForcaVendaCorretora(Long cdForcaVenda, String cnpj);
 
+	public ForcaVendaResponse updateForcaVendaLogin(ForcaVenda forcaVenda);
+
 }

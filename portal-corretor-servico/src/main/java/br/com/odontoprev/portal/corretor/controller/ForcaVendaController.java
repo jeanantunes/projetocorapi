@@ -28,6 +28,14 @@ public class ForcaVendaController {
 
 		return forcaVendaService.addForcaVenda(forcaVenda);
 	}
+	
+	@RequestMapping(value = "/forcavenda/login", method = { RequestMethod.PUT })
+	public ForcaVendaResponse updateForcaVendaLogin(@RequestBody ForcaVenda forcaVenda) {
+
+		log.info(forcaVenda);
+
+		return forcaVendaService.updateForcaVendaLogin(forcaVenda);
+	}
 
 	@RequestMapping(value = "/forcavenda/{cpf}", method = { RequestMethod.GET })
 	public ForcaVenda findForcaVendaByCpf(@PathVariable String cpf) {
