@@ -1,7 +1,10 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -27,7 +30,7 @@ public class PropostaServiceImpl implements PropostaService {
 	PropostaDAO propostaDAO;
 
 	@Override
-	public PropostasDashBoard findPropostasByFiltro(DashBoardProposta dashBoardProposta) {
+	public PropostasDashBoard findPropostasByFiltro(DashBoardProposta dashBoardProposta) throws ParseException {
 		
 		log.info("[PropostaServiceImpl::findPropostasByFiltro]");
 		

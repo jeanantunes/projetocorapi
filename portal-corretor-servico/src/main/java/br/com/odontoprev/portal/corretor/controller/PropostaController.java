@@ -1,5 +1,7 @@
 package br.com.odontoprev.portal.corretor.controller;
 
+import java.text.ParseException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class PropostaController {
 	PropostaService propostaService;
 	
 	@RequestMapping(value = "/propostasDashBoard", method = { RequestMethod.POST })
-	public PropostasDashBoard findPropostasByFiltro(@RequestBody DashBoardProposta dashBoardProposta) {
+	public PropostasDashBoard findPropostasByFiltro(@RequestBody DashBoardProposta dashBoardProposta) throws ParseException {
 		return propostaService.findPropostasByFiltro(dashBoardProposta);
 	}
 }

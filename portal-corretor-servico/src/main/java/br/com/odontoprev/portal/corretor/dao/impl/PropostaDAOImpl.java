@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -24,7 +25,7 @@ public class PropostaDAOImpl implements PropostaDAO {
 	private EntityManager entityManager;
 	
 	@Override
-	public List<TbodVenda> propostasByFiltro(String dtInicio, String dtFim, long cdCorretora, long cdForcaVenda) {
+	public List<TbodVenda> propostasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda) {
 		
 		log.info("[PropostaDAOImpl::propostasByFiltro]");
 		
@@ -32,7 +33,7 @@ public class PropostaDAOImpl implements PropostaDAO {
 				+ " WHERE V.CD_FORCA_VENDAS = F.CD_FORCA_VENDA "
 				+ " AND F.CD_CORRETORA = C.CD_CORRETORA ";
 				
-		if((dtInicio != null && dtInicio.length() > 0) && (dtFim != null && dtFim.length() > 0)) {
+		if(dtInicio != null && dtFim != null) {
 			sQuery += " AND V.DT_VENDA >= :dtInicio AND V.DT_VENDA < :dtFim ";
 		}
 		
@@ -48,7 +49,7 @@ public class PropostaDAOImpl implements PropostaDAO {
 		
 		Query query = entityManager.createNativeQuery(sQuery, TbodVenda.class);
 		
-		if((dtInicio != null && dtInicio.length() > 0) && (dtFim != null && dtFim.length() > 0)) {
+		if(dtInicio != null && dtFim != null) {
 			query.setParameter("dtInicio", dtInicio);			
 			query.setParameter("dtFim", dtFim);
 		}

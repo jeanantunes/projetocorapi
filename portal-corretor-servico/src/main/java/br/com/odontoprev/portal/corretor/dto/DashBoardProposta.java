@@ -1,22 +1,24 @@
 package br.com.odontoprev.portal.corretor.dto;
 
+import java.util.Date;
+
 public class DashBoardProposta {
 
-	private String dtInicio; 
-	private String dtFim;
+	private Date dtInicio; 
+	private Date dtFim;
 	private long cdCorretora;
 	private long cdForcaVenda;
 	
-	public String getDtInicio() {
+	public Date getDtInicio() {
 		return dtInicio;
 	}
-	public void setDtInicio(String dtInicio) {
+	public void setDtInicio(Date dtInicio) {
 		this.dtInicio = dtInicio;
 	}
-	public String getDtFim() {
+	public Date getDtFim() {
 		return dtFim;
 	}
-	public void setDtFim(String dtFim) {
+	public void setDtFim(Date dtFim) {
 		this.dtFim = dtFim;
 	}
 	public long getCdCorretora() {
