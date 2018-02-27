@@ -70,8 +70,13 @@ public class TbodForcaVenda implements Serializable {
 	private TbodStatusForcaVenda tbodStatusForcaVenda;
 
 	// bi-directional many-to-one association to TbodLogin
-	@OneToMany(mappedBy = "tbodForcaVenda")
-	private List<TbodLogin> tbodLogins;
+	@ManyToOne
+	@JoinColumn(name = "CD_LOGIN")
+	private TbodLogin tbodLogin;
+
+	// // bi-directional many-to-one association to TbodLogin
+	// @OneToMany(mappedBy = "tbodForcaVenda")
+	// private List<TbodLogin> tbodLogins;
 
 	// bi-directional many-to-one association to TbodVenda
 	@OneToMany(mappedBy = "tbodForcaVenda")
@@ -168,27 +173,35 @@ public class TbodForcaVenda implements Serializable {
 		this.tbodStatusForcaVenda = tbodStatusForcaVenda;
 	}
 
-	public List<TbodLogin> getTbodLogins() {
-		return this.tbodLogins;
+	public TbodLogin getTbodLogin() {
+		return this.tbodLogin;
 	}
 
-	public void setTbodLogins(List<TbodLogin> tbodLogins) {
-		this.tbodLogins = tbodLogins;
+	public void setTbodLogin(TbodLogin tbodLogin) {
+		this.tbodLogin = tbodLogin;
 	}
 
-	public TbodLogin addTbodLogin(TbodLogin tbodLogin) {
-		getTbodLogins().add(tbodLogin);
-		tbodLogin.setTbodForcaVenda(this);
-
-		return tbodLogin;
-	}
-
-	public TbodLogin removeTbodLogin(TbodLogin tbodLogin) {
-		getTbodLogins().remove(tbodLogin);
-		tbodLogin.setTbodForcaVenda(null);
-
-		return tbodLogin;
-	}
+	// public List<TbodLogin> getTbodLogins() {
+	// return this.tbodLogins;
+	// }
+	//
+	// public void setTbodLogins(List<TbodLogin> tbodLogins) {
+	// this.tbodLogins = tbodLogins;
+	// }
+	//
+	// public TbodLogin addTbodLogin(TbodLogin tbodLogin) {
+	// getTbodLogins().add(tbodLogin);
+	// tbodLogin.setTbodForcaVenda(this);
+	//
+	// return tbodLogin;
+	// }
+	//
+	// public TbodLogin removeTbodLogin(TbodLogin tbodLogin) {
+	// getTbodLogins().remove(tbodLogin);
+	// tbodLogin.setTbodForcaVenda(null);
+	//
+	// return tbodLogin;
+	// }
 
 	public List<TbodVenda> getTbodVendas() {
 		return this.tbodVendas;

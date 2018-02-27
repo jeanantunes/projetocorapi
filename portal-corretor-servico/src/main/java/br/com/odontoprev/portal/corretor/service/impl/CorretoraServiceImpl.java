@@ -158,9 +158,9 @@ public class CorretoraServiceImpl implements CorretoraService {
 				corretora.setEnderecoCorretora(endereco);
 			}
 			// Login
-			if(tbodCorretora.getTbodLogins() != null && tbodCorretora.getTbodLogins().size() > 0) {	
+			if(tbodCorretora.getTbodLogin() != null) {	
 				Login login = new Login();
-				TbodLogin tbodLogin = tbodCorretora.getTbodLogins().get(0);
+				TbodLogin tbodLogin = tbodCorretora.getTbodLogin();
 				login.setCdLogin(tbodLogin.getCdLogin()); 
 				login.setCdTipoLogin(tbodLogin.getCdTipoLogin());
 				login.setFotoPerfilB64(tbodLogin.getFotoPerfilB64());

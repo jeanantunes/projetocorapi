@@ -9,9 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoginDAO extends JpaRepository<TbodLogin, Long> {
 
-    @Query("select login  from TbodLogin login  where login.tbodCorretora.cnpj  =:cnpj ")
-    TbodLogin findByTbodCorretora(@Param("cnpj") String cnpj);
+    @Query("select login from TbodLogin login join login.tbodCorretoras corretora where corretora.cnpj  =:cnpj ")
+    TbodLogin findByTbodCorretoras(@Param("cnpj") String cnpj);
     
-    TbodLogin findByTbodForcaVendaCdForcaVenda(Long cdForcaVenda);
-
 }

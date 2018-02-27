@@ -48,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
                     return new LoginResponse(null, false, null);
                 }
             } else {
-                TbodLogin corretora = loginDAO.findByTbodCorretora(login.getUsuario());
+                TbodLogin corretora = loginDAO.findByTbodCorretoras(login.getUsuario());
                 if (corretora != null && login.getSenha() != null && corretora.getSenha().equals(login.getSenha())) {
                     return new LoginResponse(login.getUsuario(), true, corretora.getCdLogin());
                 } else {

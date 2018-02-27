@@ -22,7 +22,6 @@ public class CorretoraController {
 		return corretoraService.addCorretora(corretora);
 	}
 	
-	
 	@RequestMapping(value = "/corretor", method = { RequestMethod.POST })
 	public CorretoraResponse addCorretor(@RequestBody Corretora corretora) {
 		return corretoraService.addCorretor(corretora);
@@ -32,6 +31,5 @@ public class CorretoraController {
 	public Corretora buscaPorCnpj(@PathVariable String cnpj) {
 		return corretoraService.buscaCorretoraPorCnpj(cnpj);
 	}
-	
 
 }

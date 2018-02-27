@@ -355,8 +355,8 @@ create table TBOD_FORCA_VENDA
 	banco						numeric (10),
 	agencia						varchar2(10),
 	conta						varchar2(10),
-	boleto						char    (1)
-	
+	boleto						char    (1),
+	cd_login					numeric (10)	
 );
 
 alter table TBOD_FORCA_VENDA
@@ -369,6 +369,10 @@ alter table TBOD_FORCA_VENDA
 alter table TBOD_FORCA_VENDA
 	add constraint "FK_TBOD_FORCA_VENDA_STATUS" FOREIGN key (cd_status_forca_vendas)
 		references TBOD_STATUS_FORCA_VENDA (cd_status_forca_vendas);
+		
+alter table TBOD_FORCA_VENDA
+	add constraint "FK_TBOD_FORCA_VENDA_LOGIN" FOREIGN key (cd_login)
+		references TBOD_LOGIN (cd_login);
 
 ----------------------------------------------------------------------------------------------------------
 
@@ -407,7 +411,8 @@ create table TBOD_CORRETORA
 	nome_representante_legal2	varchar2(200),
 	celular						varchar2(9)		not null, 
 	email						varchar2(80),
-	cnae						varchar2(50)
+	cnae						varchar2(50),
+	cd_login					numeric (10)
 );
 
 alter table TBOD_CORRETORA
@@ -417,6 +422,10 @@ alter table TBOD_CORRETORA
 	add constraint "FK_TBOD_CORRETORA_ENDERECO" FOREIGN key (cd_endereco)
 		references TBOD_ENDERECO (cd_endereco);
 		
+alter table TBOD_CORRETORA
+	add constraint "FK_TBOD_CORRETORA_LOGIN" FOREIGN key (cd_login)
+		references TBOD_LOGIN (cd_login);
+		
 	
 ----------------------------------------------------------------------------------------------------------
 
@@ -425,7 +434,6 @@ create sequence SEQ_TBOD_LOGIN start with 1 increment by 1;
 create table TBOD_LOGIN 
 (
 	cd_login					numeric (10)	not null,
-	cd_forca_venda_corretora	numeric (10)	not null,
 	cd_tipo_login				numeric (10)	not null,
 	senha						VARCHAR2(20) 	not null,
 	foto_perfil_b64				varchar2(4000)
@@ -433,14 +441,6 @@ create table TBOD_LOGIN
 
 alter table TBOD_LOGIN
 	add constraint "PK_TBOD_LOGIN" primary key (cd_login);
-	
-alter table TBOD_LOGIN
-	add constraint "FK_TBOD_LOGIN_FORCA" FOREIGN key (cd_forca_venda_corretora)
-		references TBOD_FORCA_VENDA (cd_forca_venda);
-		
-alter table TBOD_LOGIN
-	add constraint "FK_TBOD_LOGIN_CORRETORA" FOREIGN key (cd_forca_venda_corretora)
-		references TBOD_CORRETORA (cd_corretora);
 		
 ----------------------------------------------------------------------------------------------------------
 

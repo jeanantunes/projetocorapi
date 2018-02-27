@@ -18,92 +18,96 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 /**
  * The persistent class for the TBOD_CORRETORA database table.
  * 
  */
 @Entity
-@Table(name="TBOD_CORRETORA")
-@NamedQuery(name="TbodCorretora.findAll", query="SELECT t FROM TbodCorretora t")
+@Table(name = "TBOD_CORRETORA")
+@NamedQuery(name = "TbodCorretora.findAll", query = "SELECT t FROM TbodCorretora t")
 public class TbodCorretora implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "SEQ_TBOD_CORRETORA", sequenceName = "SEQ_TBOD_CORRETORA",  allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEQ_TBOD_CORRETORA", sequenceName = "SEQ_TBOD_CORRETORA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_CORRETORA")
-	@Column(name="CD_CORRETORA")
+	@Column(name = "CD_CORRETORA")
 	private Long cdCorretora;
 
-	@Column(name="ATIVO")
+	@Column(name = "ATIVO")
 	private String ativo;
 
-	@Column(name="CELULAR")
+	@Column(name = "CELULAR")
 	private String celular;
 
-	@Column(name="CNPJ")
+	@Column(name = "CNPJ")
 	private String cnpj;
 
-	@Column(name="CODIGO")
+	@Column(name = "CODIGO")
 	private String codigo;
 
-	@Column(name="CPF_RESPONSAVEL")
+	@Column(name = "CPF_RESPONSAVEL")
 	private String cpfResponsavel;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="DATA_ABERTURA")
+	@Column(name = "DATA_ABERTURA")
 	private Date dataAbertura;
 
-	@Column(name="EMAIL")
+	@Column(name = "EMAIL")
 	private String email;
 
-	@Column(name="NOME")
+	@Column(name = "NOME")
 	private String nome;
 
-	@Column(name="NOME_REPRESENTANTE_LEGAL1")
+	@Column(name = "NOME_REPRESENTANTE_LEGAL1")
 	private String nomeRepresentanteLegal1;
 
-	@Column(name="NOME_REPRESENTANTE_LEGAL2")
+	@Column(name = "NOME_REPRESENTANTE_LEGAL2")
 	private String nomeRepresentanteLegal2;
 
-	@Column(name="RAZAO_SOCIAL")
+	@Column(name = "RAZAO_SOCIAL")
 	private String razaoSocial;
 
-	@Column(name="REGIONAL")
+	@Column(name = "REGIONAL")
 	private String regional;
 
-	@Column(name="SIMPLES_NACIONAL")
+	@Column(name = "SIMPLES_NACIONAL")
 	private String simplesNacional;
 
-	@Column(name="STATUS_CNPJ")
+	@Column(name = "STATUS_CNPJ")
 	private String statusCnpj;
 
-	@Column(name="TELEFONE")
+	@Column(name = "TELEFONE")
 	private String telefone;
-	
-	@Column(name="CNAE")
+
+	@Column(name = "CNAE")
 	private String cnae;
 
-	//bi-directional many-to-one association to TbodEndereco
+	// bi-directional many-to-one association to TbodEndereco
 	@ManyToOne
-	@JoinColumn(name="CD_ENDERECO")
+	@JoinColumn(name = "CD_ENDERECO")
 	private TbodEndereco tbodEndereco;
 
-	//bi-directional many-to-one association to TbodCorretoraBanco
-	@OneToMany(mappedBy="tbodCorretora")
+	// bi-directional many-to-one association to TbodCorretoraBanco
+	@OneToMany(mappedBy = "tbodCorretora")
 	private List<TbodCorretoraBanco> tbodCorretoraBancos;
 
-	//bi-directional many-to-one association to TbodDocumentoAssociado
-	@OneToMany(mappedBy="tbodCorretora")
+	// bi-directional many-to-one association to TbodDocumentoAssociado
+	@OneToMany(mappedBy = "tbodCorretora")
 	private List<TbodDocumentoAssociado> tbodDocumentoAssociados;
 
-	//bi-directional many-to-one association to TbodForcaVenda
-	@OneToMany(mappedBy="tbodCorretora")
+	// bi-directional many-to-one association to TbodForcaVenda
+	@OneToMany(mappedBy = "tbodCorretora")
 	private List<TbodForcaVenda> tbodForcaVendas;
 
-	//bi-directional many-to-one association to TbodLogin
-	@OneToMany(mappedBy="tbodCorretora")
-	private List<TbodLogin> tbodLogins;
+	// bi-directional many-to-one association to TbodLogin
+	@ManyToOne
+	@JoinColumn(name = "CD_LOGIN")
+	private TbodLogin tbodLogin;
+
+	// //bi-directional many-to-one association to TbodLogin
+	// @OneToMany(mappedBy="tbodCorretora")
+	// private List<TbodLogin> tbodLogins;
 
 	public TbodCorretora() {
 	}
@@ -310,7 +314,6 @@ public class TbodCorretora implements Serializable {
 		return tbodForcaVenda;
 	}
 
-
 	public String getCnae() {
 		return cnae;
 	}
@@ -319,26 +322,34 @@ public class TbodCorretora implements Serializable {
 		this.cnae = cnae;
 	}
 
-	public List<TbodLogin> getTbodLogins() {
-		return tbodLogins;
+	public TbodLogin getTbodLogin() {
+		return this.tbodLogin;
 	}
 
-	public void setTbodLogins(List<TbodLogin> tbodLogins) {
-		this.tbodLogins = tbodLogins;
+	public void setTbodLogin(TbodLogin tbodLogin) {
+		this.tbodLogin = tbodLogin;
 	}
 
-	public TbodLogin addTbodLogin(TbodLogin tbodLogin) {
-		getTbodLogins().add(tbodLogin);
-		tbodLogin.setTbodCorretora(this);
-
-		return tbodLogin;
-	}
-
-	public TbodLogin removeTbodLogin(TbodLogin tbodLogin) {
-		getTbodLogins().remove(tbodLogin);
-		tbodLogin.setTbodCorretora(null);
-
-		return tbodLogin;
-	}
+	// public List<TbodLogin> getTbodLogins() {
+	// return tbodLogins;
+	// }
+	//
+	// public void setTbodLogins(List<TbodLogin> tbodLogins) {
+	// this.tbodLogins = tbodLogins;
+	// }
+	//
+	// public TbodLogin addTbodLogin(TbodLogin tbodLogin) {
+	// getTbodLogins().add(tbodLogin);
+	// tbodLogin.setTbodCorretora(this);
+	//
+	// return tbodLogin;
+	// }
+	//
+	// public TbodLogin removeTbodLogin(TbodLogin tbodLogin) {
+	// getTbodLogins().remove(tbodLogin);
+	// tbodLogin.setTbodCorretora(null);
+	//
+	// return tbodLogin;
+	// }
 
 }

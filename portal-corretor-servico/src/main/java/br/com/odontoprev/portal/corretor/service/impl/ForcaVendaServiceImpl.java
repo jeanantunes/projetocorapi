@@ -99,17 +99,17 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
                 statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.AGUARDANDO_APRO.getCodigo());
             }
             tbForcaVenda.setTbodStatusForcaVenda(statusForcaVenda);
-            tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
             
             //Grava senha na tabela de login na tela de Aguardando Aprovacao
             if(forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
             	TbodLogin tbLogin = new TbodLogin();
-            	tbLogin.setTbodForcaVenda(tbForcaVenda);//TODO verificar gravando null na tabela de login
             	tbLogin.setCdTipoLogin((long)1); //TODO verificar
             	tbLogin.setSenha(forcaVenda.getSenha());
             	tbLogin = loginDao.save(tbLogin);
+            	tbForcaVenda.setTbodLogin(tbLogin);
             }
-
+            
+            tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 //            integracaoForcaDeVendaDcss(forcaVenda); //Chamar no PUT
 
         } catch (Exception e) {
