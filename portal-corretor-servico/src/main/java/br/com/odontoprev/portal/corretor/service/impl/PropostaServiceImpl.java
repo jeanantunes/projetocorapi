@@ -53,30 +53,36 @@ public class PropostaServiceImpl implements PropostaService {
 		// PME
 		long valorSomaPME = 0L;
 		int quantPME = 0;
+		long quantidadeVidasPME = 0L;
 		for(TbodVenda tbodVendaPME : vendasPME) {
 			TbodPlano plano = tbodVendaPME.getTbodPlano();
 			BigDecimal valor = plano.getValorMensal().add(plano.getValorAnual()); // FIXME - Retornar somente um valor
-			long valorLong = valor.longValueExact();
-			
-			valorSomaPME += valorLong;
+			long valorLong = valor.longValueExact();			
+			int qtdVidas = tbodVendaPME.getTbodVendaVidas().size();
+			quantidadeVidasPME+=qtdVidas;
+			valorSomaPME += valorLong*qtdVidas;
 			quantPME++;
 		}
 		propostaPME.setValor(new BigDecimal(valorSomaPME));
-		propostaPME.setQuantidade(quantPME);
+		propostaPME.setQuantidade(Long.valueOf(quantPME));
+		propostaPME.setQuantidadeVidas(quantidadeVidasPME);
 		
 		// PF
 		long valorSomaPF = 0L;
 		int quantPF = 0;
+		long quantidadeVidasPF = 0L;
 		for(TbodVenda tbodVendaPF : vendasPF) {
 			TbodPlano plano = tbodVendaPF.getTbodPlano();
 			BigDecimal valor = plano.getValorMensal().add(plano.getValorAnual()); // FIXME - Retornar somente um valor
 			long valorLong = valor.longValueExact();
-				
-			valorSomaPF += valorLong;
+			int qtdVidas = tbodVendaPF.getTbodVendaVidas().size();
+			quantidadeVidasPF+=qtdVidas;
+			valorSomaPF += valorLong*qtdVidas;
 			quantPF++;
 		}
 		propostaPF.setValor(new BigDecimal(valorSomaPF));
 		propostaPF.setQuantidade(quantPF);
+		propostaPF.setQuantidadeVidas(quantidadeVidasPF);
 		
 		propostasDashBoard.setPropostaPF(propostaPF);
 		propostasDashBoard.setPropostaPME(propostaPME);

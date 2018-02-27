@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 public class PropostaPF {
 
 	private BigDecimal valor;
-	private long quantidade;
+	private Long quantidade;
+	private Long quantidadeVidas;
 	
 	public BigDecimal getValor() {
 		return valor;
@@ -19,4 +20,11 @@ public class PropostaPF {
 	public void setQuantidade(long quantidade) {
 		this.quantidade = quantidade;
 	}
+	public Long getQuantidadeVidas() {
+		return quantidadeVidas;
+	}
+	public void setQuantidadeVidas(Long quantidadeVidas) {
+		this.quantidadeVidas = quantidadeVidas;
+	}
+	
 }

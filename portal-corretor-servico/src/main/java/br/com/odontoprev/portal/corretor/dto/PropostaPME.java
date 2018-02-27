@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 public class PropostaPME {
 
 	private BigDecimal valor;
-	private long quantidade;
+	private Long quantidade;
+	private Long quantidadeVidas;
 	
 	public BigDecimal getValor() {
 		return valor;
@@ -13,10 +14,18 @@ public class PropostaPME {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-	public long getQuantidade() {
+	public Long getQuantidade() {
 		return quantidade;
 	}
-	public void setQuantidade(long quantidade) {
+	public void setQuantidade(Long quantidade) {
 		this.quantidade = quantidade;
 	}
+	public Long getQuantidadeVidas() {
+		return quantidadeVidas;
+	}
+	public void setQuantidadeVidas(Long quantidadeVidas) {
+		this.quantidadeVidas = quantidadeVidas;
+	}
+	
+	
 }

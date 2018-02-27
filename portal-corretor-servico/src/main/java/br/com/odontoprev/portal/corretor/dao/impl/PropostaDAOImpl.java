@@ -29,25 +29,23 @@ public class PropostaDAOImpl implements PropostaDAO {
 		
 		log.info("[PropostaDAOImpl::propostasByFiltro]");
 		
-		String sQuery = "SELECT V.* FROM TBOD_VENDA V, TBOD_FORCA_VENDA F, TBOD_CORRETORA C "
-				+ " WHERE V.CD_FORCA_VENDAS = F.CD_FORCA_VENDA "
-				+ " AND F.CD_CORRETORA = C.CD_CORRETORA ";
+		String squery = "SELECT v FROM TbodVenda v WHERE  ";
 				
 		if(dtInicio != null && dtFim != null) {
-			sQuery += " AND V.DT_VENDA >= :dtInicio AND V.DT_VENDA < :dtFim ";
+			squery += "v.dtVenda >= :dtInicio AND v.dtVenda < :dtFim ";
 		}
 		
 		if(cdCorretora > 0L) {
-			sQuery += " AND C.CD_CORRETORA = :cdCorretora ";
+			squery += " and v.tbodForcaVenda.tbodCorretora.cdCorretora = :cdCorretora ";
 		}
 		
 		if(cdForcaVenda > 0L) {
-			sQuery += " AND F.CD_FORCA_VENDA = :cdForcaVenda ";
+			squery += " and v.tbodForcaVenda.cdForcaVenda = :cdForcaVenda ";
 		}
 		
-		sQuery += " AND V.CD_STATUS_VENDA = 1";
+		squery += " and v.tbodStatusVenda.cdStatusVenda = 1";
 		
-		Query query = entityManager.createNativeQuery(sQuery, TbodVenda.class);
+		Query query = entityManager.createQuery(squery, TbodVenda.class);
 		
 		if(dtInicio != null && dtFim != null) {
 			query.setParameter("dtInicio", dtInicio);			
