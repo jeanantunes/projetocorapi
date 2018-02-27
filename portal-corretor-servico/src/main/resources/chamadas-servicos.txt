@@ -40,7 +40,6 @@ FORCAVENDA
 EMPRESA
 
 	PUT /empresa-dcms - atualiza empDcms da empresa
-	PUT /empresa-dcms - atualiza empDcms da empresa
 	{
 		"cdEmpresa":42,
 		"cnpj":"12311200003",

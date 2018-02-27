@@ -23,13 +23,13 @@ import br.com.odontoprev.portal.corretor.util.XlsVidas;
 public class EmpresaServiceImpl implements EmpresaService {
 
 	private static final Log log = LogFactory.getLog(EmpresaServiceImpl.class);
-	
+
 	@Autowired
 	EmpresaDAO empresaDao;
-	
+
 	@Autowired
 	EmpresaBusiness empresaBusiness;
-	
+
 	@Autowired
 	BeneficiarioBusiness beneficiarioBusiness;
 
@@ -47,10 +47,16 @@ public class EmpresaServiceImpl implements EmpresaService {
 	public EmpresaResponse updateEmpresa(EmpresaDcms empresaDcms) {
 
 		log.info("[EmpresaServiceImpl::updateEmpresa]");
-
+		
 		TbodEmpresa tbEmpresa = new TbodEmpresa();
 
 		try {
+			
+			if((empresaDcms.getCdEmpresa() == null)
+					|| (empresaDcms.getCnpj() == null || empresaDcms.getCnpj().isEmpty()) 
+					|| (empresaDcms.getEmpDcms() == null || empresaDcms.getEmpDcms().isEmpty())) {
+				throw new Exception("Os parametros sao obrigatorios!");
+			}
 
 			tbEmpresa = empresaDao.findBycdEmpresaAndCnpj(empresaDcms.getCdEmpresa(), empresaDcms.getCnpj());
 
@@ -71,7 +77,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		} catch (Exception e) {
 			log.error("EmpresaServiceImpl :: Erro ao atualizar empresaDcms. Detalhe: [" + e.getMessage() + "]");
-			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte.");
+			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [" + e.getMessage() + "]");
 		}
 
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");

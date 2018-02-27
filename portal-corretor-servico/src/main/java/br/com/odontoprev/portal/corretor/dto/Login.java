@@ -1,7 +1,6 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class Login implements Serializable {
 

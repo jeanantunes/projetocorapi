@@ -16,7 +16,7 @@ import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 
 public class XlsVidas {
-	
+
 	private static final Log log = LogFactory.getLog(XlsVidas.class);
 
 	public String Data() {
@@ -34,10 +34,10 @@ public class XlsVidas {
 	}
 
 	public void gerarVidasXLS(List<TbodVida> vidas, TbodEmpresa tbEmpresa) {
-		
+
 		String dataStr = "00/00/0000";
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
+
 		String pathVidas = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_VIDAS);
 
 		try {
@@ -102,14 +102,13 @@ public class XlsVidas {
 				// T titular D Dependente Obrigatorio
 				vidasArr[1] = isTitular ? "T" : "D";
 				// Obrigatorio TBOD_VENDA_VIDA.CD_PLANO
-				
+
 				vidasArr[2] = tbVida.getDescricaoPlano();
 				// Obrigatorio dd/MM/yyyy
 				try {
 					dataStr = sdf.format(tbVida.getDataNascimento());
 				} catch (Exception e) {
-					log.error("XlsVidas :: Erro ao formatar data de nascimento. Detalhe: [" + e.getMessage()
-							+ "]");
+					log.error("XlsVidas :: Erro ao formatar data de nascimento. Detalhe: [" + e.getMessage() + "]");
 				}
 				vidasArr[3] = dataStr;
 				// Sempre 1
@@ -124,8 +123,10 @@ public class XlsVidas {
 							? tbEmpresa.getTbodEndereco().getBairro().substring(0, 20)
 							: "";
 					// 20 caract
-					vidasArr[8] = tbEmpresa.getTbodEndereco().getComplemento().length() > 20
-							? tbEmpresa.getTbodEndereco().getComplemento().substring(0, 20)
+					vidasArr[8] = tbEmpresa.getTbodEndereco().getComplemento() != null
+							? tbEmpresa.getTbodEndereco().getComplemento().length() > 20
+									? tbEmpresa.getTbodEndereco().getComplemento().substring(0, 20)
+									: tbEmpresa.getTbodEndereco().getComplemento()
 							: "";
 					// Obrigatorio
 					vidasArr[9] = tbEmpresa.getTbodEndereco().getCep();
@@ -182,11 +183,11 @@ public class XlsVidas {
 			fileOut.close();
 			// workbook.close();
 
-			System.out.println("Sucesso!");
+			log.info("Sucesso!");
 		} catch (Exception e) {
-			System.out.println("Fracasso!");
+			log.error("Fracasso!");
 
 		}
-		System.out.println("Escreveu Planilha Vidas");
+		log.info("Escreveu Planilha Vidas");
 	}
 }

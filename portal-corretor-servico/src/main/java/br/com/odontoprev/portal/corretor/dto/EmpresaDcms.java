@@ -10,11 +10,11 @@ public class EmpresaDcms implements Serializable {
 	private String cnpj;
 	private String empDcms;
 
-	public long getCdEmpresa() {
+	public Long getCdEmpresa() {
 		return cdEmpresa;
 	}
 
-	public void setCdEmpresa(long cdEmpresa) {
+	public void setCdEmpresa(Long cdEmpresa) {
 		this.cdEmpresa = cdEmpresa;
 	}
 
