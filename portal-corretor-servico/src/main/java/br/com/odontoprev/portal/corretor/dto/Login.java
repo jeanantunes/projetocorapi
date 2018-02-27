@@ -8,7 +8,7 @@ public class Login implements Serializable {
 	private static final long serialVersionUID = -5493233987085523214L;
 
 	private Long cdLogin;
-	private BigDecimal cdTipoLogin;
+	private Long cdTipoLogin;
 	private String fotoPerfilB64;
 	private String senha;
 	private String usuario;
@@ -37,11 +37,11 @@ public class Login implements Serializable {
 		this.cdLogin = cdLogin;
 	}
 
-	public BigDecimal getCdTipoLogin() {
+	public Long getCdTipoLogin() {
 		return cdTipoLogin;
 	}
 
-	public void setCdTipoLogin(BigDecimal cdTipoLogin) {
+	public void setCdTipoLogin(Long cdTipoLogin) {
 		this.cdTipoLogin = cdTipoLogin;
 	}
 

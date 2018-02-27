@@ -32,7 +32,7 @@ public class TbodForcaVenda implements Serializable {
 	@SequenceGenerator(name = "SEQ_TBOD_FORCA_VENDA", sequenceName = "SEQ_TBOD_FORCA_VENDA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_FORCA_VENDA")
 	@Column(name = "CD_FORCA_VENDA")
-	private long cdForcaVenda;
+	private Long cdForcaVenda;
 
 	@Column(name = "ATIVO")
 	private String ativo;
@@ -80,11 +80,11 @@ public class TbodForcaVenda implements Serializable {
 	public TbodForcaVenda() {
 	}
 
-	public long getCdForcaVenda() {
-		return this.cdForcaVenda;
+	public Long getCdForcaVenda() {
+		return cdForcaVenda;
 	}
 
-	public void setCdForcaVenda(long cdForcaVenda) {
+	public void setCdForcaVenda(Long cdForcaVenda) {
 		this.cdForcaVenda = cdForcaVenda;
 	}
 

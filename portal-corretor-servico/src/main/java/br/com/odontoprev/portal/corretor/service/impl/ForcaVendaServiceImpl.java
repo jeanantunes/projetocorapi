@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.LoginDAO;
 import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
@@ -9,6 +10,7 @@ import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
 import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
+import br.com.odontoprev.portal.corretor.model.TbodLogin;
 import br.com.odontoprev.portal.corretor.model.TbodStatusForcaVenda;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
@@ -37,6 +39,9 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
     @Autowired
     private ForcaVendaDAO forcaVendaDao;
+    
+    @Autowired
+    private LoginDAO loginDao;
 
     @Value("${DCSS_URL}")
     private String dcssUrl;
@@ -82,22 +87,30 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
             tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
             tbForcaVenda.setCelular(forcaVenda.getCelular());
             tbForcaVenda.setEmail(forcaVenda.getEmail());
-            tbForcaVenda.setAtivo(forcaVenda.isAtivo() == true ? "S" : "N");
+            tbForcaVenda.setAtivo("N");
             tbForcaVenda.setCargo(forcaVenda.getCargo());
             tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
             TbodStatusForcaVenda statusForcaVenda = new TbodStatusForcaVenda();
             if (forcaVenda.getCorretora() != null && forcaVenda.getCorretora().getCdCorretora() > 0) {
                 TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
                 tbForcaVenda.setTbodCorretora(tbCorretora);
-                statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.ATIVO.getCodigo());
+                statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.PRE_CADASTRO.getCodigo());
             } else {
-                statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.PENDENTE.getCodigo());
+                statusForcaVenda = statusForcaVendaDao.findOne(StatusForcaVendaEnum.AGUARDANDO_APRO.getCodigo());
             }
             tbForcaVenda.setTbodStatusForcaVenda(statusForcaVenda);
-
-
             tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
-            integracaoForcaDeVendaDcss(forcaVenda);
+            
+            //Grava senha na tabela de login na tela de Aguardando Aprovacao
+            if(forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
+            	TbodLogin tbLogin = new TbodLogin();
+            	tbLogin.setTbodForcaVenda(tbForcaVenda);//TODO verificar gravando null na tabela de login
+            	tbLogin.setCdTipoLogin((long)1); //TODO verificar
+            	tbLogin.setSenha(forcaVenda.getSenha());
+            	tbLogin = loginDao.save(tbLogin);
+            }
+
+//            integracaoForcaDeVendaDcss(forcaVenda); //Chamar no PUT
 
         } catch (Exception e) {
             log.error(e);

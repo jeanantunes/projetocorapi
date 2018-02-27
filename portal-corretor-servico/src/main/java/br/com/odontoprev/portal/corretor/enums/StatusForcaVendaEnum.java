@@ -2,7 +2,7 @@ package br.com.odontoprev.portal.corretor.enums;
 
 public enum StatusForcaVendaEnum {
 
-	PENDENTE(1, "Aguardando Aprovação"), ATIVO(2, "Ativo"), INATIVO(3, "Inativo");
+	AGUARDANDO_APRO(1, "Aguardando Aprovação"), ATIVO(2, "Ativo"), INATIVO(3, "Inativo"), PENDENTE(4, "Pendente"), PRE_CADASTRO(5, "Pre Cadastro");
 
 	private StatusForcaVendaEnum(int codigo, String descricao) {
 		this.codigo = codigo;
