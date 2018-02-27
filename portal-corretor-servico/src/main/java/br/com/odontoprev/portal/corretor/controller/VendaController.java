@@ -36,4 +36,7 @@ public class VendaController {
 		
 		return vendaPFService.addVendaPME(vendaPME.getEmpresas(), vendaPME.getTitulares());
 	}
+	
+	
+	
 }
