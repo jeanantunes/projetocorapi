@@ -5,8 +5,6 @@ import br.com.odontoprev.portal.corretor.dto.LoginResponse;
 
 public interface LoginService {
 
-    LoginResponse login(Login login);
+	LoginResponse login(Login login);
 
 }
-
-
