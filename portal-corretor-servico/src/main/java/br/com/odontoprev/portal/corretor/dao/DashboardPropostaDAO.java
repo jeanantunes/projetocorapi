@@ -34,13 +34,20 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 			, nativeQuery=true)
 	public List<Object[]> findAllDashboardPropostasPF(@Param("cpf") String cpf);
 	
-	@Query(value="SELECT distinct venda.cd_venda, vida.cpf, venda.proposta_dcms, vida.nome, status.descricao " + 
-			"FROM   tbod_venda venda, tbod_status_venda status, tbod_venda_vida vv, tbod_vida vida, tbod_forca_venda forca " + 
-			"WHERE  1 = 1 AND venda.cd_venda = vv.cd_venda AND vv.cd_vida = vida.cd_vida AND vida.cd_titular IS NULL " + 
-			"AND venda.cd_empresa IS NULL AND venda.cd_venda = vv.cd_venda AND status.cd_status_venda = venda.cd_status_venda " +
-			"AND venda.CD_FORCA_VENDAS = forca.CD_FORCA_VENDA AND status.cd_status_venda = :status AND forca.CPF = :cpf " + 
-			"GROUP  BY venda.cd_venda, vida.cpf, venda.proposta_dcms, vida.nome, status.descricao" 
-			, nativeQuery=true)
+	@Query(value=" select distinct forca.cpf forca_cpf, venda.cd_venda," + 
+			"        vida.cpf," + 
+			"        venda.proposta_dcms," + 
+			"        vida.nome," + 
+			"        status.descricao " + 
+			" from tbod_venda venda   " + 
+			" inner join tbod_venda_vida vv        on venda.cd_venda = vv.cd_venda " + 
+			" inner join tbod_vida vida            on vv.cd_vida = vida.cd_vida " + 
+			" inner join tbod_status_venda status  on status.cd_status_venda = venda.cd_status_venda " + 
+			" inner join tbod_forca_venda forca   on venda.CD_FORCA_VENDAS = forca.CD_FORCA_VENDA " + 
+			" where" + 
+			"        vida.cd_titular IS NULL " + 
+			"        AND venda.cd_empresa IS NULL " + 
+			"        and forca.CPF = :cpf and status.CD_STATUS_VENDA = :status "	, nativeQuery=true)
 	public List<Object[]> findDashboardPropostaPFByStatus(@Param("status") Long status, @Param("cpf") String cpf);
 	
 	
