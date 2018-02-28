@@ -48,7 +48,7 @@ public class VendaPMEBusiness {
 					venda.setCdPlano(plano.getCdPlano());
 					venda.setDataVenda(new Date()); //TODO
 					venda.setCdStatusVenda(null); //TODO
-					venda.setFaturaVencimento(32); //TODO
+					venda.setFaturaVencimento(empresa.getVencimentoFatura()); //TODO
 					
 					for (Beneficiario titular : vendaPME.getTitulares()) {
 					
