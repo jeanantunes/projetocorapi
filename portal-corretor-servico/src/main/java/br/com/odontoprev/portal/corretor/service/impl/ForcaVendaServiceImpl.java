@@ -174,7 +174,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 				forcaVenda.setCorretora(corretora);
 			}
-			
+
 			String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
 			forcaVenda.setSenha(senha);
 		}
@@ -337,7 +337,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		corretora.setStatusCnpj(tbForcaVenda.getTbodCorretora().getStatusCnpj() == "S" ? true : false);
 		corretora.setSimplesNacional(tbForcaVenda.getTbodCorretora().getSimplesNacional() == "S" ? true : false);
 		corretora.setDataAbertura(tbForcaVenda.getTbodCorretora().getDataAbertura());
-		
+
 		Endereco enderecoCorretora = new Endereco();
 		enderecoCorretora.setLogradouro(tbForcaVenda.getTbodCorretora().getTbodEndereco().getLogradouro());
 		enderecoCorretora.setNumero(tbForcaVenda.getTbodCorretora().getTbodEndereco().getNumero());
@@ -347,11 +347,50 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		enderecoCorretora.setEstado(tbForcaVenda.getTbodCorretora().getTbodEndereco().getUf());
 		enderecoCorretora.setCep(tbForcaVenda.getTbodCorretora().getTbodEndereco().getCep());
 		corretora.setEnderecoCorretora(enderecoCorretora);
-		
+
 		String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
 		forcaVenda.setSenha(senha);
-		
+
 		forcaVenda.setCorretora(corretora);
 		return forcaVenda;
+	}
+
+	@Override
+	public ForcaVendaResponse updateForcaVendaStatusByCpf(ForcaVenda forcaVenda) {
+
+		log.info("[updateForcaVendaStatusByCpf]");
+
+		List<TbodForcaVenda> tbForcaVendas = new ArrayList<TbodForcaVenda>();
+		TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
+
+		try {
+
+			if (forcaVenda == null || forcaVenda.getCpf() == null || forcaVenda.getCpf().isEmpty()) {
+				throw new Exception("CPF ForcaVenda nao informado. Atualizacao nao realizada!");
+			}
+
+			// O retorno eh uma lista, mas nao deve existir mais de uma forca de venda na
+			// base com o mesmo cpf
+			tbForcaVendas = forcaVendaDao.findByCpf(forcaVenda.getCpf());
+
+			if (tbForcaVendas.isEmpty()) {
+				throw new Exception("ForcaVenda nao encontrada. Atualizacao nao realizada!");
+			}
+			
+			tbForcaVenda = tbForcaVendas.get(0);
+
+			//Ativando ForcaVenda
+			tbForcaVenda.setAtivo("S");
+			TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(ATIVO.getCodigo());
+			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
+
+			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
+			
+		} catch (Exception e) {
+			log.error("Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "]");
+			return new ForcaVendaResponse(0, "Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "].");
+		}
+
+		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado! [" + tbForcaVenda.getCpf() + "]");
 	}
 }

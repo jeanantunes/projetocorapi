@@ -38,6 +38,14 @@ public class ForcaVendaController {
 
 		return forcaVendaService.updateForcaVendaLogin(forcaVenda);
 	}
+	
+	@RequestMapping(value = "/forcavenda/status-ativo", method = { RequestMethod.PUT })
+	public ForcaVendaResponse updateForcaVendaStatus(@RequestBody ForcaVenda forcaVenda) {
+
+		log.info(forcaVenda);
+
+		return forcaVendaService.updateForcaVendaStatusByCpf(forcaVenda);
+	}
 
 	@RequestMapping(value = "/forcavenda/{cpf}", method = { RequestMethod.GET })
 	public ForcaVenda findForcaVendaByCpf(@PathVariable String cpf) {

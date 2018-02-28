@@ -17,4 +17,6 @@ public interface ForcaVendaService {
 
 	public List<ForcaVenda> findForcaVendasByCdStatusForcaCdCorretora(Long cdStatusForcaVenda, Long cdCorretora);
 
+	public ForcaVendaResponse updateForcaVendaStatusByCpf(ForcaVenda forcaVenda);
+
 }
