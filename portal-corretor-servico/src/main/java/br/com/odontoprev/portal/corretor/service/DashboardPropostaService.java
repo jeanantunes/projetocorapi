@@ -5,8 +5,8 @@ import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPMEResponse;
 
 public interface DashboardPropostaService {
 
-	DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status);
+	DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status, String cnpj);
 
-	DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status);
+	DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status, String cpf);
 
 }

@@ -495,3 +495,67 @@ CORRETORA
     "login": null,
     "representantes": null
 	}
+
+	
+	
+	
+	SELECT
+        distinct venda.cd_venda,
+        vida.cpf,
+        venda.proposta_dcms,
+        vida.nome,
+        status.descricao 
+    FROM
+        tbod_venda venda,
+        tbod_status_venda status,
+        tbod_venda_vida vv,
+        tbod_vida vida,
+        tbod_forca_venda forca 
+    WHERE
+        1 = 1 
+        AND venda.cd_venda = vv.cd_venda 
+        AND vv.cd_vida = vida.cd_vida 
+        AND vida.cd_titular IS NULL 
+        AND venda.cd_empresa IS NULL 
+        AND venda.cd_venda = vv.cd_venda 
+        AND status.cd_status_venda = venda.cd_status_venda 
+        AND venda.CD_FORCA_VENDAS = forca.CD_FORCA_VENDA 
+        AND forca.CPF = 34353425234 
+    GROUP  BY
+        venda.cd_venda,
+        vida.cpf,
+        venda.proposta_dcms,
+        vida.nome,
+        status.descricao;
+        
+        
+        
+SELECT
+        distinct venda.cd_venda,
+        vida.cpf,
+        venda.proposta_dcms,
+        vida.nome,
+        status.descricao 
+    FROM
+        tbod_venda venda,
+        tbod_status_venda status,
+        tbod_venda_vida vv,
+        tbod_vida vida,
+        tbod_forca_venda forca 
+    WHERE
+        1 = 1 
+        AND venda.cd_venda = vv.cd_venda 
+        AND vv.cd_vida = vida.cd_vida 
+        AND vida.cd_titular IS NULL 
+        AND venda.cd_empresa IS NULL 
+        AND venda.cd_venda = vv.cd_venda 
+        AND status.cd_status_venda = venda.cd_status_venda 
+        AND venda.CD_FORCA_VENDAS = forca.CD_FORCA_VENDA 
+        AND status.cd_status_venda = ? 
+        AND forca.CPF = ? 
+    GROUP  BY
+        venda.cd_venda,
+        vida.cpf,
+        venda.proposta_dcms,
+        vida.nome,
+        status.descricao;
