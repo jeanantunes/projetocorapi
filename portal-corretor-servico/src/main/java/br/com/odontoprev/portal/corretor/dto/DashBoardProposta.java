@@ -11,6 +11,8 @@ public class DashBoardProposta implements Serializable {
 	private Date dtFim;
 	private long cdCorretora;
 	private long cdForcaVenda;
+	private long cpf;
+	private long cnpj;
 
 	public Date getDtInicio() {
 		return dtInicio;
@@ -42,6 +44,22 @@ public class DashBoardProposta implements Serializable {
 
 	public void setCdForcaVenda(long cdForcaVenda) {
 		this.cdForcaVenda = cdForcaVenda;
+	}
+
+	public long getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(long cpf) {
+		this.cpf = cpf;
+	}
+
+	public long getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(long cnpj) {
+		this.cnpj = cnpj;
 	}
 
 	@Override

@@ -8,15 +8,18 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.dao.PropostaDAO;
+import br.com.odontoprev.portal.corretor.dao.ViewCorSumarioVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.DashBoardProposta;
 import br.com.odontoprev.portal.corretor.dto.PropostaPF;
 import br.com.odontoprev.portal.corretor.dto.PropostaPME;
 import br.com.odontoprev.portal.corretor.dto.PropostasDashBoard;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.model.ViewCorSumarioVenda;
 import br.com.odontoprev.portal.corretor.service.PropostaService;
 
 @Service
@@ -26,6 +29,10 @@ public class PropostaServiceImpl implements PropostaService {
 
 	@Autowired
 	PropostaDAO propostaDAO;
+	
+	@Autowired
+//	@Qualifier("ViewCorSumarioVendaDAOImpl")
+	ViewCorSumarioVendaDAO vendaDAO;
 
 	@Override
 	public PropostasDashBoard findPropostasByFiltro(DashBoardProposta dashBoardProposta) throws ParseException {
@@ -85,6 +92,11 @@ public class PropostaServiceImpl implements PropostaService {
 		propostasDashBoard.setPropostaPF(propostaPF);
 		propostasDashBoard.setPropostaPME(propostaPME);
 		return propostasDashBoard;
+	}
+	
+	
+	public List<ViewCorSumarioVenda> findViewCorSumarioByFiltro(DashBoardProposta dashBoardProposta) throws ParseException {
+		return vendaDAO.viewCorSumarioVendasByFiltro(dashBoardProposta.getDtInicio(), dashBoardProposta.getDtFim(), dashBoardProposta.getCdCorretora(), dashBoardProposta.getCdForcaVenda(), dashBoardProposta.getCpf(), dashBoardProposta.getCnpj());		
 	}
 
 }

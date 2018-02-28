@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.controller;
 
 import java.text.ParseException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.DashBoardProposta;
-import br.com.odontoprev.portal.corretor.dto.PropostasDashBoard;
+import br.com.odontoprev.portal.corretor.model.ViewCorSumarioVenda;
 import br.com.odontoprev.portal.corretor.service.PropostaService;
 
 @RestController
@@ -22,11 +23,13 @@ public class PropostaController {
 	@Autowired
 	PropostaService propostaService;
 	
+	
+	
 	@RequestMapping(value = "/propostasDashBoard", method = { RequestMethod.POST })
-	public PropostasDashBoard findPropostasByFiltro(@RequestBody DashBoardProposta dashBoardProposta) throws ParseException {
+	public List<ViewCorSumarioVenda> findPropostasByFiltro(@RequestBody DashBoardProposta dashBoardProposta) throws ParseException {
 		
 		log.info(dashBoardProposta);
 		
-		return propostaService.findPropostasByFiltro(dashBoardProposta);
+		return propostaService.findViewCorSumarioByFiltro(dashBoardProposta);
 	}
 }
