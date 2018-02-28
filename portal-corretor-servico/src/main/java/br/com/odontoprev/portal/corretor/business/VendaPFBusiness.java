@@ -115,18 +115,27 @@ public class VendaPFBusiness {
 			tbVenda.setFaturaVencimento(venda.getFaturaVencimento());
 			
 			//Dados Bancarios
-			tbVenda.setTipoConta(venda.getTipoConta());
-			tbVenda.setBanco(venda.getBanco());
-			String ag = (venda.getAgencia().replace("-", "")).substring(0,venda.getAgencia().length()-1);
-			String agDV = (venda.getAgencia().replace("-", "")).substring(venda.getAgencia().length()-1);
-			tbVenda.setAgencia(ag);
-			tbVenda.setAgenciaDv(agDV);
-			String c = (venda.getConta().replace("-", "")).substring(0,venda.getConta().length()-1);
-			String cDv = (venda.getConta().replace("-", "")).substring(venda.getConta().length()-1);
-			tbVenda.setConta(c);
-			tbVenda.setContaDv(cDv);
-			tbVenda.setTipoPagamento(venda.getTipoPagamento());
-			
+			if(venda.getTipoConta() != null) {
+				tbVenda.setTipoConta(venda.getTipoConta());
+			}
+			if(venda.getBanco() != null) {
+				tbVenda.setBanco(venda.getBanco());
+			}
+			if(venda.getAgencia() != null) {
+				String ag = (venda.getAgencia().replace("-", "")).substring(0,venda.getAgencia().length()-1);
+				String agDV = (venda.getAgencia().replace("-", "")).substring(venda.getAgencia().length()-1);
+				tbVenda.setAgencia(ag);
+				tbVenda.setAgenciaDv(agDV);
+			}
+			if(venda.getConta() != null) {
+				String c = (venda.getConta().replace("-", "")).substring(0,venda.getConta().length()-1);
+				String cDv = (venda.getConta().replace("-", "")).substring(venda.getConta().length()-1);
+				tbVenda.setConta(c);
+				tbVenda.setContaDv(cDv);
+			}
+			if(venda.getTipoPagamento() != null) {
+				tbVenda.setTipoPagamento(venda.getTipoPagamento());
+			}
 			tbVenda = vendaDao.save(tbVenda);
 			
 			for (Beneficiario titular : venda.getTitulares()) {
@@ -199,16 +208,22 @@ public class VendaPFBusiness {
 		proposta.getTipoCobranca().setSigla("BO"); //BO = Boleto / DA = Debito automatico
 		
 		proposta.setDadosBancarios(new DadosBancariosProposta());
-		proposta.getDadosBancarios().setCodigoBanco(venda.getBanco());
-		String ag = (venda.getAgencia().replace("-", "")).substring(0,venda.getAgencia().length()-1);
-		String agDV = (venda.getAgencia().replace("-", "")).substring(venda.getAgencia().length()-1);
-		proposta.getDadosBancarios().setAgencia(ag); 
-		proposta.getDadosBancarios().setAgenciaDV(agDV); 
-		proposta.getDadosBancarios().setTipoConta(venda.getTipoConta());
-		String c = (venda.getConta().replace("-", "")).substring(0,venda.getConta().length()-1);
-		String cDv = (venda.getConta().replace("-", "")).substring(venda.getConta().length()-1);
-		proposta.getDadosBancarios().setConta(c);
-		proposta.getDadosBancarios().setContaDV(cDv);
+		if(venda.getBanco() != null) {
+			proposta.getDadosBancarios().setCodigoBanco(venda.getBanco());
+		}
+		if(venda.getAgencia() != null) {
+			String ag = (venda.getAgencia().replace("-", "")).substring(0,venda.getAgencia().length()-1);
+			String agDV = (venda.getAgencia().replace("-", "")).substring(venda.getAgencia().length()-1);
+			proposta.getDadosBancarios().setAgencia(ag); 
+			proposta.getDadosBancarios().setAgenciaDV(agDV); 
+		}
+		if(venda.getTipoConta() != null) {
+			proposta.getDadosBancarios().setTipoConta(venda.getTipoConta());
+			String c = (venda.getConta().replace("-", "")).substring(0,venda.getConta().length()-1);
+			String cDv = (venda.getConta().replace("-", "")).substring(venda.getConta().length()-1);
+			proposta.getDadosBancarios().setConta(c);
+			proposta.getDadosBancarios().setContaDV(cDv);
+		}
 
 		proposta.setBeneficiarios(new ArrayList<>());
 		
