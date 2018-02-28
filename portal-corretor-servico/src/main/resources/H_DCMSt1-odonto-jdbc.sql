@@ -114,7 +114,8 @@ create table TBOD_VENDA
 	agencia_dv				varchar(10)		,
 	conta					varchar(10)		,
 	conta_dv				varchar(10)		,
-	tipo_pagamento			varchar(10)
+	tipo_pagamento			varchar(10)		,
+	proposta_dcms			varchar(20)
 	
 );
 

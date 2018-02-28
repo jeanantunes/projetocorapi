@@ -48,6 +48,9 @@ public class TbodVenda implements Serializable {
 
 	@Column(name = "TIPO_PAGAMENTO")
 	private String tipoPagamento;
+	
+	@Column(name = "PROPOSTA_DCMS")
+	private String propostaDcms;
 
 	// bi-directional many-to-one association to TbodEmpresa
 	@ManyToOne
@@ -159,6 +162,14 @@ public class TbodVenda implements Serializable {
 
 	public void setTipoPagamento(String tipoPagamento) {
 		this.tipoPagamento = tipoPagamento;
+	}
+	
+	public String getPropostaDcms() {
+		return propostaDcms;
+	}
+
+	public void setPropostaDcms(String propostaDcms) {
+		this.propostaDcms = propostaDcms;
 	}
 
 	public TbodEmpresa getTbodEmpresa() {

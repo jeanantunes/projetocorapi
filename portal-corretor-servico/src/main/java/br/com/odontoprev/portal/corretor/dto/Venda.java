@@ -20,6 +20,7 @@ public class Venda implements Serializable {
 	private String agencia;
 	private String conta;
 	private String tipoPagamento;
+	private String propostaDcms;
 
 	private List<Beneficiario> titulares;
 
@@ -125,6 +126,23 @@ public class Venda implements Serializable {
 
 	public void setTitulares(List<Beneficiario> titulares) {
 		this.titulares = titulares;
+	}
+
+	public String getPropostaDcms() {
+		return propostaDcms;
+	}
+
+	public void setPropostaDcms(String propostaDcms) {
+		this.propostaDcms = propostaDcms;
+	}
+
+	@Override
+	public String toString() {
+		return "Venda [cdVenda=" + cdVenda + ", cdEmpresa=" + cdEmpresa + ", cdPlano=" + cdPlano + ", cdForcaVenda="
+				+ cdForcaVenda + ", dataVenda=" + dataVenda + ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento="
+				+ faturaVencimento + ", tipoConta=" + tipoConta + ", banco=" + banco + ", agencia=" + agencia
+				+ ", conta=" + conta + ", tipoPagamento=" + tipoPagamento + ", propostaDcms=" + propostaDcms
+				+ ", titulares=" + titulares + "]";
 	}
 
 }
