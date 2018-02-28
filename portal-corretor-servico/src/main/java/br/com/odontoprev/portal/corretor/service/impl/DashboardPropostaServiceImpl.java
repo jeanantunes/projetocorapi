@@ -19,49 +19,59 @@ import br.com.odontoprev.portal.corretor.service.DashboardPropostaService;
 
 @Service
 public class DashboardPropostaServiceImpl implements DashboardPropostaService {
-	
+
 	private static final Log log = LogFactory.getLog(DashboardPropostaServiceImpl.class);
 
 	@Autowired
 	private DashboardPropostaDAO dashboardPropostaDAO;
-	
+
 	@Override
 	public DashboardPropostaResponse buscaPropostaPorStatusPME(long status) {
-		
+
 		log.info("[buscaPropostaPorStatusPME]");
-		
+
 		DashboardPropostaResponse response = new DashboardPropostaResponse();
 		List<DashboardPropostaPME> propostasPME = new ArrayList<DashboardPropostaPME>();
 		try {
+
 			List<Object[]> objects = new ArrayList<Object[]>();
-			objects = dashboardPropostaDAO.dashboardPropostaByStatus(status);
+
+			// findAll
+			if (status == 0) {
+
+				objects = dashboardPropostaDAO.findAllDashboardPropostas();
+				
+			} else {
+				
+				objects = dashboardPropostaDAO.findDashboardPropostaByStatus(status);
+			}
 			
 			for (Object object : objects) {
 				Object[] obj = (Object[]) object;
-				
+
 				Timestamp ts = (Timestamp) obj[3];
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(ts.getTime());
 				Date d = cal.getTime();
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				
+
 				DashboardPropostaPME dashboardPropostaPME = new DashboardPropostaPME();
 				dashboardPropostaPME.setCdEmpresa(obj[0] != null ? new Long(String.valueOf(obj[0])) : null);
 				dashboardPropostaPME.setCnpj(obj[1] != null ? String.valueOf(obj[1]) : "");
 				dashboardPropostaPME.setNome(obj[2] != null ? String.valueOf(obj[2]) : "");
 				dashboardPropostaPME.setDataVenda(sdf.format(d));
 				dashboardPropostaPME.setStatusVenda(obj[4] != null ? String.valueOf(obj[4]) : "");
-				
+
 				propostasPME.add(dashboardPropostaPME);
 			}
-			
+
 			response.setDashboardPropostasPME(propostasPME);
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			log.error("Erro ao buscar Propostas PME por status :: Detalhe: [" + e.getMessage() + "]");
 			return new DashboardPropostaResponse();
 		}
-		
+
 		return response;
 	}
 
@@ -69,7 +79,5 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 	public DashboardPropostaResponse buscaPropostaPorStatusPF(long status) {
 		return null;
 	}
-	
-	
 
 }
