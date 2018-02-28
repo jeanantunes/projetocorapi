@@ -273,6 +273,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaVenda.setAtivo(tbForcaVenda.getAtivo() == "S" ? true : false);
 		forcaVenda.setDepartamento(tbForcaVenda.getDepartamento());
 		forcaVenda.setCargo(tbForcaVenda.getCargo());
+		forcaVenda.setSenha(tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "");
 
 		return forcaVenda;
 	}
