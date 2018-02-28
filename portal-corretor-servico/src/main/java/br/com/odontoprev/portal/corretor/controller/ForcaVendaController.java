@@ -55,12 +55,12 @@ public class ForcaVendaController {
 		return forcaVendaService.findAssocForcaVendaCorretora(cdForcaVenda, cnpj);
 	}
 	
-	@RequestMapping(value = "/forcavenda-aprovacao/corretora/{cdCorretora}", method = { RequestMethod.GET })
-	public List<ForcaVenda> findForcaVendasByCdCorretoraStatusAprovacao(@PathVariable Long cdCorretora) {
+	@RequestMapping(value = "/forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}", method = { RequestMethod.GET })
+	public List<ForcaVenda> findForcaVendasByCdCorretoraStatusAprovacao(@PathVariable Long cdStatusForcaVenda, @PathVariable Long cdCorretora) {
 
-		log.info("cdCorretora [" + cdCorretora + "]");
+		log.info("cdStatusForcaVenda [" + cdStatusForcaVenda + "], cdCorretora [" + cdCorretora + "]");
 
-		return forcaVendaService.findForcaVendasByCdCorretoraStatusAprovacao(cdCorretora);
+		return forcaVendaService.findForcaVendasByCdStatusForcaCdCorretora(cdStatusForcaVenda, cdCorretora);
 	}
 
 }

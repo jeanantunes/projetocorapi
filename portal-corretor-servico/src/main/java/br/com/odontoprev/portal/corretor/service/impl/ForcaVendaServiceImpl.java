@@ -279,7 +279,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	}
 
 	@Override
-	public List<ForcaVenda> findForcaVendasByCdCorretoraStatusAprovacao(Long cdCorretora) {
+	public List<ForcaVenda> findForcaVendasByCdStatusForcaCdCorretora(Long cdStatusForcaVenda, Long cdCorretora) {
 
 		log.info("[findForcaVendasByCdCorretoraStatusAprovacao]");
 
@@ -287,8 +287,6 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		List<ForcaVenda> forcasVendas = new ArrayList<ForcaVenda>();
 
 		try {
-			Long cdStatusForcaVenda = AGUARDANDO_APRO.getCodigo();
-
 			forcaVendasEmAprovacao = forcaVendaDao
 					.findByTbodStatusForcaVendaCdStatusForcaVendasAndTbodCorretoraCdCorretora(cdStatusForcaVenda,
 							cdCorretora);
@@ -350,6 +348,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		enderecoCorretora.setCep(tbForcaVenda.getTbodCorretora().getTbodEndereco().getCep());
 		corretora.setEnderecoCorretora(enderecoCorretora);
 		
+		String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
+		forcaVenda.setSenha(senha);
 		
 		forcaVenda.setCorretora(corretora);
 		return forcaVenda;
