@@ -9,6 +9,8 @@ public interface ForcaVendaService {
 
 	public ForcaVendaResponse addForcaVenda(ForcaVenda forcaVenda);
 
+	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda);
+
 	public ForcaVenda findForcaVendaByCpf(String cpf);
 
 	public ForcaVendaResponse findAssocForcaVendaCorretora(Long cdForcaVenda, String cnpj);

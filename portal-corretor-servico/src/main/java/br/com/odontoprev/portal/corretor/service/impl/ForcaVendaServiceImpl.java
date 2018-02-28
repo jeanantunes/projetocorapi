@@ -75,6 +75,12 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	}
 
 	@Override
+	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) {
+		return this.addForcaVenda(forcaVenda);
+	}
+
+
+	@Override
 	public ForcaVendaResponse addForcaVenda(ForcaVenda forcaVenda) {
 
 		log.info("[addForcaVenda]");
