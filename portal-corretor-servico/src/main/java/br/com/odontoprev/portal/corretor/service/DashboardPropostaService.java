@@ -1,11 +1,12 @@
 package br.com.odontoprev.portal.corretor.service;
 
-import br.com.odontoprev.portal.corretor.dto.DashboardPropostaResponse;
+import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPFResponse;
+import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPMEResponse;
 
 public interface DashboardPropostaService {
 
-	DashboardPropostaResponse buscaPropostaPorStatusPME(long status);
+	DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status);
 
-	DashboardPropostaResponse buscaPropostaPorStatusPF(long status);
+	DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status);
 
 }

@@ -3,12 +3,12 @@ package br.com.odontoprev.portal.corretor.dto;
 import java.io.Serializable;
 import java.util.List;
 
-public class DashboardPropostaResponse implements Serializable {
+public class DashboardPropostaPMEResponse implements Serializable {
 
 	private static final long serialVersionUID = 5125576325689105242L;
 
 	private List<DashboardPropostaPME> dashboardPropostasPME;
-	private List<DashboardPropostaPF> dashboardPropostasPF;
+//	private List<DashboardPropostaPF> dashboardPropostasPF;
 
 	public List<DashboardPropostaPME> getDashboardPropostasPME() {
 		return dashboardPropostasPME;
@@ -18,12 +18,12 @@ public class DashboardPropostaResponse implements Serializable {
 		this.dashboardPropostasPME = dashboardPropostasPME;
 	}
 
-	public List<DashboardPropostaPF> getDashboardPropostasPF() {
-		return dashboardPropostasPF;
-	}
-
-	public void setDashboardPropostasPF(List<DashboardPropostaPF> dashboardPropostasPF) {
-		this.dashboardPropostasPF = dashboardPropostasPF;
-	}
+//	public List<DashboardPropostaPF> getDashboardPropostasPF() {
+//		return dashboardPropostasPF;
+//	}
+//
+//	public void setDashboardPropostasPF(List<DashboardPropostaPF> dashboardPropostasPF) {
+//		this.dashboardPropostasPF = dashboardPropostasPF;
+//	}
 
 }

@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.odontoprev.portal.corretor.dto.DashboardPropostaResponse;
+import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPFResponse;
+import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPMEResponse;
 import br.com.odontoprev.portal.corretor.service.DashboardPropostaService;
 
 @RestController
@@ -19,7 +20,7 @@ public class DashboardPropostaController {
 	DashboardPropostaService dashboardService;
 	
 	@RequestMapping(value = "/dashboardPropostaPME/{status}", method = { RequestMethod.GET })
-	public DashboardPropostaResponse buscaPorStatusPME(@PathVariable long status) {
+	public DashboardPropostaPMEResponse buscaPorStatusPME(@PathVariable long status) {
 		
 		log.info(status);
 		
@@ -28,7 +29,7 @@ public class DashboardPropostaController {
 	
 	
 	@RequestMapping(value = "/dashboardPropostaPF/{status}", method = { RequestMethod.GET })
-	public DashboardPropostaResponse buscaPorStatusPF(@PathVariable long status) {
+	public DashboardPropostaPFResponse buscaPorStatusPF(@PathVariable long status) {
 		
 		log.info(status);
 		

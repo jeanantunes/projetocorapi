@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.dao.DashboardPropostaDAO;
+import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPF;
+import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPFResponse;
 import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPME;
-import br.com.odontoprev.portal.corretor.dto.DashboardPropostaResponse;
+import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPMEResponse;
 import br.com.odontoprev.portal.corretor.service.DashboardPropostaService;
 
 @Service
@@ -26,12 +28,13 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 	private DashboardPropostaDAO dashboardPropostaDAO;
 
 	@Override
-	public DashboardPropostaResponse buscaPropostaPorStatusPME(long status) {
+	public DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status) {
 
 		log.info("[buscaPropostaPorStatusPME]");
 
-		DashboardPropostaResponse response = new DashboardPropostaResponse();
+		DashboardPropostaPMEResponse response = new DashboardPropostaPMEResponse();
 		List<DashboardPropostaPME> propostasPME = new ArrayList<DashboardPropostaPME>();
+		
 		try {
 
 			List<Object[]> objects = new ArrayList<Object[]>();
@@ -39,13 +42,13 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			// findAll
 			if (status == 0) {
 
-				objects = dashboardPropostaDAO.findAllDashboardPropostas();
-				
+				objects = dashboardPropostaDAO.findAllDashboardPropostasPME();
+
 			} else {
-				
-				objects = dashboardPropostaDAO.findDashboardPropostaByStatus(status);
+
+				objects = dashboardPropostaDAO.findDashboardPropostaPMEByStatus(status);
 			}
-			
+
 			for (Object object : objects) {
 				Object[] obj = (Object[]) object;
 
@@ -69,15 +72,55 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 		} catch (Exception e) {
 			log.error("Erro ao buscar Propostas PME por status :: Detalhe: [" + e.getMessage() + "]");
-			return new DashboardPropostaResponse();
+			return new DashboardPropostaPMEResponse();
 		}
 
 		return response;
 	}
 
 	@Override
-	public DashboardPropostaResponse buscaPropostaPorStatusPF(long status) {
-		return null;
+	public DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status) {
+
+		log.info("[buscaPropostaPorStatusPF]");
+
+		DashboardPropostaPFResponse response = new DashboardPropostaPFResponse();
+		List<DashboardPropostaPF> propostasPF = new ArrayList<DashboardPropostaPF>();
+		
+		try {
+			
+			List<Object[]> objects = new ArrayList<Object[]>();
+
+			// findAll
+			if (status == 0) {
+
+				objects = dashboardPropostaDAO.findAllDashboardPropostasPF();
+
+			} else {
+
+				objects = dashboardPropostaDAO.findDashboardPropostaPFByStatus(status);
+			}
+
+			for (Object object : objects) {
+				Object[] obj = (Object[]) object;
+
+				DashboardPropostaPF dashboardPropostaPF = new DashboardPropostaPF();
+				dashboardPropostaPF.setCdVenda(obj[0] != null ? new Long(String.valueOf(obj[0])) : null);
+				dashboardPropostaPF.setCpf(obj[1] != null ? String.valueOf(obj[1]) : "");
+				dashboardPropostaPF.setPropostaDcms(obj[2] != null ? String.valueOf(obj[2]) : "");
+				dashboardPropostaPF.setNome(obj[3] != null ? String.valueOf(obj[3]) : "");
+				dashboardPropostaPF.setStatusVenda(obj[4] != null ? String.valueOf(obj[4]) : "");
+
+				propostasPF.add(dashboardPropostaPF);
+			}
+
+			response.setDashboardPropostasPF(propostasPF);
+
+		} catch (Exception e) {
+			log.error("Erro ao buscar Propostas PF por status :: Detalhe: [" + e.getMessage() + "]");
+			return new DashboardPropostaPFResponse();
+		}
+
+		return response;
 	}
 
 }
