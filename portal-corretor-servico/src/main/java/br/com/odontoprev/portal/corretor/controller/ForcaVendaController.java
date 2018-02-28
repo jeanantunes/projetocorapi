@@ -30,6 +30,14 @@ public class ForcaVendaController {
 
 		return forcaVendaService.addForcaVenda(forcaVenda);
 	}
+
+	@RequestMapping(value = "/forcavenda", method = { RequestMethod.PUT })
+	public ForcaVendaResponse updateForcaVenda(@RequestBody ForcaVenda forcaVenda) {
+
+		log.info(forcaVenda);
+
+		return forcaVendaService.addForcaVenda(forcaVenda);
+	}
 	
 	@RequestMapping(value = "/forcavenda/login", method = { RequestMethod.PUT })
 	public ForcaVendaResponse updateForcaVendaLogin(@RequestBody ForcaVenda forcaVenda) {
