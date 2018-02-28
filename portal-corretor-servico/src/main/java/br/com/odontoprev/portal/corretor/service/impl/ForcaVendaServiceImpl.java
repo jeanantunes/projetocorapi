@@ -174,6 +174,9 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 				forcaVenda.setCorretora(corretora);
 			}
+			
+			String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
+			forcaVenda.setSenha(senha);
 		}
 
 		return forcaVenda;
