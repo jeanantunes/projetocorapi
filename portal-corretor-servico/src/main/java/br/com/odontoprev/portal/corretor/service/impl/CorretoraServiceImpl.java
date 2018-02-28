@@ -48,6 +48,11 @@ public class CorretoraServiceImpl implements CorretoraService {
 	}
 
 	@Override
+	public CorretoraResponse updateCorretora(Corretora corretora) {
+		return this.saveCorretora(corretora);
+	}
+
+	@Override
 	public CorretoraResponse addCorretor(Corretora corretora) {
 		return this.saveCorretora(corretora);
 	}

@@ -21,6 +21,11 @@ public class CorretoraController {
 	public CorretoraResponse addCorretora(@RequestBody Corretora corretora) {
 		return corretoraService.addCorretora(corretora);
 	}
+
+	@RequestMapping(value = "/corretora", method = { RequestMethod.PUT })
+	public CorretoraResponse updateCorretora(@RequestBody Corretora corretora) {
+		return corretoraService.updateCorretora(corretora);
+	}
 	
 	@RequestMapping(value = "/corretor", method = { RequestMethod.POST })
 	public CorretoraResponse addCorretor(@RequestBody Corretora corretora) {
