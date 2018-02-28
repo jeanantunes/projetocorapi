@@ -6,39 +6,75 @@ public class LoginResponse implements Serializable {
 
     private static final long serialVersionUID = -5493233987085523214L;
 
-    private String usuario;
+    private long codigoUsuario;
+    private String nomeUsuario;
+    private String documento;
+    private long codigoCorretora;
+    private String nomeCorretora;
+    private String perfil;
 
-    private Boolean sucesso;
-    private Long cdLogin;
+    public LoginResponse() {
 
-
-    public LoginResponse(String usuario, Boolean sucesso, Long cdLogin) {
-        this.usuario = usuario;
-        this.sucesso = sucesso;
-        this.cdLogin = cdLogin;
     }
 
-    public Long getCdLogin() {
-        return cdLogin;
+    public long getCodigoUsuario() {
+        return codigoUsuario;
     }
 
-    public void setCdLogin(Long cdLogin) {
-        this.cdLogin = cdLogin;
+    public void setCodigoUsuario(long codigoUsuario) {
+        this.codigoUsuario = codigoUsuario;
     }
 
-    public Boolean getSucesso() {
-        return sucesso;
+    public String getNomeUsuario() {
+        return nomeUsuario;
     }
 
-    public void setSucesso(Boolean sucesso) {
-        this.sucesso = sucesso;
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public String getDocumento() {
+        return documento;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
+
+    public long getCodigoCorretora() {
+        return codigoCorretora;
+    }
+
+    public String getNomeCorretora() {
+        return nomeCorretora;
+    }
+
+    public void setNomeCorretora(String nomeCorretora) {
+        this.nomeCorretora = nomeCorretora;
+    }
+
+    public void setCodigoCorretora(long codigoCorretora) {
+        this.codigoCorretora = codigoCorretora;
+    }
+
+    public String getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(String perfil) {
+        this.perfil = perfil;
+    }
+
+    public LoginResponse(long codigoUsuario, String nomeUsuario, String documento, long codigoCorretora, String nomeCorretora, String perfil) {
+        this.codigoUsuario = codigoUsuario;
+        this.nomeUsuario = nomeUsuario;
+        this.documento = documento;
+        this.codigoCorretora = codigoCorretora;
+        this.nomeCorretora = nomeCorretora;
+        this.perfil = perfil;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 }

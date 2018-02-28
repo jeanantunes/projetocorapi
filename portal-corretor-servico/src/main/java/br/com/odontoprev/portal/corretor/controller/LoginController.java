@@ -21,10 +21,29 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = {RequestMethod.POST})
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid Login login) {
-        LoginResponse res = loginService.login(login);
 
-        return res.getSucesso() ? ResponseEntity.ok(res) : ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
+        try {
+
+            if (login.getUsuario() == null || login.getUsuario() == "" ||
+                    login.getSenha() == null || login.getSenha() == "") {
+                return ResponseEntity.badRequest().build();
+            }
+
+            LoginResponse res = loginService.login(login);
+
+            if (res != null && res.getCodigoUsuario() == 0) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            if (res == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            return ResponseEntity.ok(res);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
-
-
 }
