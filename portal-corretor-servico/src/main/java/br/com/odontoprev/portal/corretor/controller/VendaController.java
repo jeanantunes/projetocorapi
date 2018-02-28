@@ -34,9 +34,7 @@ public class VendaController {
 		
 		log.info(vendaPME);
 		
-		return vendaPFService.addVendaPME(vendaPME.getEmpresas(), vendaPME.getTitulares());
+		return vendaPFService.addVendaPME(vendaPME);
 	}
-	
-	
 	
 }

@@ -2,7 +2,6 @@ package br.com.odontoprev.portal.corretor.business;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.ManagedBean;
 
@@ -15,6 +14,7 @@ import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.dto.Venda;
+import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 
 @ManagedBean
@@ -28,7 +28,7 @@ public class VendaPMEBusiness {
 	@Autowired
 	VendaPFBusiness vendaPFBusiness;
 	
-	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(List<Empresa> empresas, List<Beneficiario> titulares) {
+	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(VendaPME vendaPME) {
 
 		log.info("[salvarVendaPMEComEmpresasPlanosTitularesDependentes]");
 
@@ -36,7 +36,7 @@ public class VendaPMEBusiness {
 
 		try {		
 
-			for (Empresa empresa : empresas) {
+			for (Empresa empresa : vendaPME.getEmpresas()) {
 				
 				EmpresaResponse empresaResponse = empresaBusiness.salvarEmpresaEndereco(empresa);
 
@@ -50,7 +50,7 @@ public class VendaPMEBusiness {
 					venda.setCdStatusVenda(null); //TODO
 					venda.setFaturaVencimento(32); //TODO
 					
-					for (Beneficiario titular : titulares) {
+					for (Beneficiario titular : vendaPME.getTitulares()) {
 					
 						if(
 							titular.getCnpj().equals(empresa.getCnpj())

@@ -22,7 +22,6 @@ public class LoginServiceImpl implements LoginService {
 
     private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
 
-
     @Autowired
     LoginDAO loginDAO;
 
@@ -32,6 +31,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginResponse login(Login login) {
+    	
+    	log.info("login [" + login + "]");
 
         if (login.getUsuario() != null && login.getSenha() != null) {
             if (login.getUsuario().length() == 11) {
