@@ -24,6 +24,9 @@ public class PropostaController {
 	
 	@RequestMapping(value = "/propostasDashBoard", method = { RequestMethod.POST })
 	public PropostasDashBoard findPropostasByFiltro(@RequestBody DashBoardProposta dashBoardProposta) throws ParseException {
+		
+		log.info(dashBoardProposta);
+		
 		return propostaService.findPropostasByFiltro(dashBoardProposta);
 	}
 }
