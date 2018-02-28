@@ -28,7 +28,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 	private DashboardPropostaDAO dashboardPropostaDAO;
 
 	@Override
-	public DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status) {
+	public DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status, String cnpj) {
 
 		log.info("[buscaPropostaPorStatusPME]");
 
@@ -42,11 +42,11 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			// findAll
 			if (status == 0) {
 
-				objects = dashboardPropostaDAO.findAllDashboardPropostasPME();
+				objects = dashboardPropostaDAO.findAllDashboardPropostasPME(cnpj);
 
 			} else {
 
-				objects = dashboardPropostaDAO.findDashboardPropostaPMEByStatus(status);
+				objects = dashboardPropostaDAO.findDashboardPropostaPMEByStatus(status, cnpj);
 			}
 
 			for (Object object : objects) {
@@ -79,7 +79,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 	}
 
 	@Override
-	public DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status) {
+	public DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status, String cpf) {
 
 		log.info("[buscaPropostaPorStatusPF]");
 
@@ -93,11 +93,11 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			// findAll
 			if (status == 0) {
 
-				objects = dashboardPropostaDAO.findAllDashboardPropostasPF();
+				objects = dashboardPropostaDAO.findAllDashboardPropostasPF(cpf);
 
 			} else {
 
-				objects = dashboardPropostaDAO.findDashboardPropostaPFByStatus(status);
+				objects = dashboardPropostaDAO.findDashboardPropostaPFByStatus(status, cpf);
 			}
 
 			for (Object object : objects) {

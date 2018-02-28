@@ -19,21 +19,21 @@ public class DashboardPropostaController {
 	@Autowired
 	DashboardPropostaService dashboardService;
 	
-	@RequestMapping(value = "/dashboardPropostaPME/{status}", method = { RequestMethod.GET })
-	public DashboardPropostaPMEResponse buscaPorStatusPME(@PathVariable long status) {
+	@RequestMapping(value = "/dashboardPropostaPME/{status}/{cnpj}", method = { RequestMethod.GET })
+	public DashboardPropostaPMEResponse buscaPorStatusPME(@PathVariable long status, @PathVariable String cnpj) {
 		
 		log.info(status);
 		
-		return dashboardService.buscaPropostaPorStatusPME(status);
+		return dashboardService.buscaPropostaPorStatusPME(status, cnpj);
 	}
 	
 	
-	@RequestMapping(value = "/dashboardPropostaPF/{status}", method = { RequestMethod.GET })
-	public DashboardPropostaPFResponse buscaPorStatusPF(@PathVariable long status) {
+	@RequestMapping(value = "/dashboardPropostaPF/{status}/{cpf}", method = { RequestMethod.GET })
+	public DashboardPropostaPFResponse buscaPorStatusPF(@PathVariable long status, @PathVariable String cpf) {
 		
 		log.info(status);
 		
-		return dashboardService.buscaPropostaPorStatusPF(status);
+		return dashboardService.buscaPropostaPorStatusPF(status, cpf);
 	}
 	
 	
