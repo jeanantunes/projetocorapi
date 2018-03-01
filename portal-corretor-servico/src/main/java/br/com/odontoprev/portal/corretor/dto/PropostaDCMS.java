@@ -8,7 +8,7 @@ public class PropostaDCMS {
 	
 	private String codigoEmpresaDCMS;
 	
-	private Long codigoCanalVendas;
+	private String codigoCanalVendas;
 	
 	private Long codigoUsuario; //Codigo identificador do usuario
 	
@@ -34,11 +34,11 @@ public class PropostaDCMS {
 		this.codigoEmpresaDCMS = codigoEmpresaDCMS;
 	}
 
-	public Long getCodigoCanalVendas() {
+	public String getCodigoCanalVendas() {
 		return codigoCanalVendas;
 	}
 
-	public void setCodigoCanalVendas(Long codigoCanalVendas) {
+	public void setCodigoCanalVendas(String codigoCanalVendas) {
 		this.codigoCanalVendas = codigoCanalVendas;
 	}
 
