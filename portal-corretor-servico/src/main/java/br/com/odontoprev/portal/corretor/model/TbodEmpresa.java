@@ -53,6 +53,9 @@ public class TbodEmpresa implements Serializable {
 	@Column(name = "EMP_DCMS")
 	private String empDcms;
 
+	@Column(name = "CNAE")
+	private String cnae;
+
 	// bi-directional many-to-one association to TbodEndereco
 	@ManyToOne
 	@JoinColumn(name = "CD_ENDERECO")
@@ -159,6 +162,14 @@ public class TbodEmpresa implements Serializable {
 
 	public void setEmpDcms(String empDcms) {
 		this.empDcms = empDcms;
+	}
+
+	public String getCnae() {
+		return cnae;
+	}
+
+	public void setCnae(String cnae) {
+		this.cnae = cnae;
 	}
 
 	public TbodEndereco getTbodEndereco() {

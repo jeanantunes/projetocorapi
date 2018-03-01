@@ -30,7 +30,7 @@ public class XlsEmpresa {
 
 		try {
 
-			String[] empresa = new String[19];
+			String[] empresa = new String[20];
 			empresa[0] = emp.getCnpj();
 			empresa[1] = emp.getIncEstadual();
 			empresa[2] = emp.getRamoAtividade();
@@ -50,15 +50,18 @@ public class XlsEmpresa {
 			empresa[15] = tbEndereco.getCidade();
 			empresa[16] = tbEndereco.getUf();
 			// empresa[17] = String.valueOf(emp.isMesmo_endereco_correspondencia());
+			empresa[17] = "";
 			empresa[18] = String.valueOf(dataFatura);
+			empresa[19] = emp.getCnae();
 
 			// Tratamento de CNPJ
 			String newcnpj = empresa[0].replaceAll("[.]", "").replaceAll("/", "");
 			
 			String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA);
 
-			String filename = pathEmpresa + empresa[16] + "_" + newcnpj + "_" + Data()
-					+ ".xls";
+//			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + empresa[16] + "_" + newcnpj + "_" + Data() + ".xls";
+			
+			String filename = pathEmpresa + empresa[16] + "_" + newcnpj + "_" + Data() + ".xls";
 
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Empresa");
@@ -78,14 +81,15 @@ public class XlsEmpresa {
 			rowhead.createCell(11).setCellValue("ENDERECO");
 			rowhead.createCell(12).setCellValue("NUMERO");
 			rowhead.createCell(13).setCellValue("COMPLEMENTO");
-			rowhead.createCell(14).setCellValue("");
+			rowhead.createCell(14).setCellValue("BAIRRO");
 			rowhead.createCell(15).setCellValue("CIDADE");
 			rowhead.createCell(16).setCellValue("ESTADO");
 			rowhead.createCell(17).setCellValue("MESMO ENDERECO CORRESPONDENCIA?");
 			rowhead.createCell(18).setCellValue("VENCIMENTO DA FATURA");
+			rowhead.createCell(19).setCellValue("CNAE");
 
 			HSSFRow row = sheet.createRow((short) 1);
-			for (int i = 0; i < 19; i++) {
+			for (int i = 0; i < 20; i++) {
 				row.createCell(i).setCellValue(empresa[i]);
 			}
 

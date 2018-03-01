@@ -18,6 +18,7 @@ public class Empresa implements Serializable {
 	private String celular;
 	private String email;
 	private long vencimentoFatura;
+	private String cnae;
 	private String dataVencimentoFatura;
 	private Endereco enderecoEmpresa;
 	private List<Plano> planos;
@@ -102,6 +103,14 @@ public class Empresa implements Serializable {
 		this.email = email;
 	}
 
+	public String getCnae() {
+		return cnae;
+	}
+
+	public void setCnae(String cnae) {
+		this.cnae = cnae;
+	}
+
 	public String getDataVencimentoFatura() {
 		return dataVencimentoFatura;
 	}
@@ -139,8 +148,9 @@ public class Empresa implements Serializable {
 		return "Empresa [cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", incEstadual=" + incEstadual
 				+ ", ramoAtividade=" + ramoAtividade + ", nomeFantasia=" + nomeFantasia + ", representanteLegal="
 				+ representanteLegal + ", contatoEmpresa=" + contatoEmpresa + ", telefone=" + telefone + ", celular="
-				+ celular + ", email=" + email + ", enderecoEmpresa=" + enderecoEmpresa + ", vencimentoFatura="
-				+ vencimentoFatura + ", planos=" + planos + "]";
+				+ celular + ", email=" + email + ", vencimentoFatura=" + vencimentoFatura + ", cnae=" + cnae
+				+ ", dataVencimentoFatura=" + dataVencimentoFatura + ", enderecoEmpresa=" + enderecoEmpresa
+				+ ", planos=" + planos + "]";
 	}
 
 }

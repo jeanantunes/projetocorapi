@@ -79,6 +79,7 @@ public class EmpresaBusiness {
 			tbEmpresa.setTelefone(empresa.getTelefone());
 			tbEmpresa.setCelular(empresa.getCelular());
 			tbEmpresa.setEmail(empresa.getEmail());
+			tbEmpresa.setCnae(empresa.getCnae());
 			tbEmpresa.setTbodEndereco(tbEndereco);
 			tbEmpresa = empresaDao.save(tbEmpresa);
 
@@ -140,6 +141,7 @@ public class EmpresaBusiness {
 			tbEmpresa.setCelular(empresa.getCelular());
 			tbEmpresa.setEmail(empresa.getEmail());
 			tbEmpresa.setTbodEndereco(tbEndereco);
+			tbEmpresa.setCnae(empresa.getCnae());
 			tbEmpresa = empresaDao.save(tbEmpresa);
 		
 			XlsEmpresa xlsEmpresa = new XlsEmpresa();
