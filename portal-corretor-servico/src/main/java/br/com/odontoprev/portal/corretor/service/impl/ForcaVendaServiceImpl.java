@@ -25,6 +25,7 @@ import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
@@ -135,7 +136,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
 		}
 
-		return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(), "ForcaVenda cadastrada.");
+		return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(), "ForcaVenda cadastrada. CPF [" + forcaVenda.getCpf() + "]");
 	}
 
 	@Override
@@ -374,6 +375,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		List<TbodForcaVenda> tbForcaVendas = new ArrayList<TbodForcaVenda>();
 		TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
+		String ativoAnterior = "";
+		String statusAnterior = "";
 
 		try {
 
@@ -388,11 +391,21 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			if (tbForcaVendas.isEmpty()) {
 				throw new Exception("ForcaVenda nao encontrada. Atualizacao nao realizada!");
 			}
+			else if(tbForcaVendas.size() > 1) {
+				throw new Exception("CPF duplicado. Atualizacao nao realizada!");
+			}
 
 			tbForcaVenda = tbForcaVendas.get(0);
+			ativoAnterior = tbForcaVenda.getAtivo();
+			statusAnterior = tbForcaVenda.getTbodStatusForcaVenda().getDescricao();
+			
+			if(Constantes.ATIVO.equals(ativoAnterior) 
+					&& StatusForcaVendaEnum.ATIVO.getCodigo() == tbForcaVenda.getTbodStatusForcaVenda().getCdStatusForcaVendas()) {
+				throw new Exception("CPF ja esta ativo! Nenhuma acao realizada!");
+			}
 
 			// Ativando ForcaVenda
-			tbForcaVenda.setAtivo("S");
+			tbForcaVenda.setAtivo(Constantes.ATIVO);
 			final TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(ATIVO.getCodigo());
 			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
 
@@ -400,10 +413,11 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "]");
-			return new ForcaVendaResponse(0,
-					"Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "].");
+			return new ForcaVendaResponse(0, "Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "].");
 		}
 
-		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado! [" + tbForcaVenda.getCpf() + "]");
+		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado! [CPF: " + tbForcaVenda.getCpf() + 
+				" - De: " + ativoAnterior +"-"+ statusAnterior + 
+				" - Para: " + tbForcaVenda.getAtivo() +"-"+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "]");
 	}
 }

@@ -58,6 +58,11 @@ FORCAVENDA
 		"dataNascimento":"20-06-1980",
         "senha": "44455566"
 	}
+	
+	PUT /forcavenda/status-ativo - Ativar forca de venda
+	{
+ 		"cpf":"78945612312"
+	}
 
 	
 EMPRESA
