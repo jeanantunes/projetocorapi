@@ -2,7 +2,6 @@ package br.com.odontoprev.portal.corretor.business;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.ManagedBean;
 
@@ -46,12 +45,7 @@ public class VendaPMEBusiness {
 					venda = new Venda();
 					venda.setTitulares(new ArrayList<Beneficiario>());
 					venda.setCdEmpresa(empresaResponse.getId());
-					
 					venda.setCdPlano(plano.getCdPlano());
-//					List<Plano> planos = new ArrayList<Plano>();
-//					planos.add(plano);
-//					venda.setPlanos(planos);
-					
 					venda.setDataVenda(new Date()); //TODO
 					venda.setCdStatusVenda(null); //TODO
 					venda.setFaturaVencimento(empresa.getVencimentoFatura()); //TODO

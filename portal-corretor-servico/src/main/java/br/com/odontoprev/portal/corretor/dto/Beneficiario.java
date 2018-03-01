@@ -20,7 +20,11 @@ public class Beneficiario implements Serializable {
 	private String sexo;
 	private long cdPlano;
 	private long cdVenda;
+		
+	private DadosBancariosVenda dadosBancarios;
+
 	private Endereco endereco;
+	
 	List<Beneficiario> dependentes;
 
 	public long getCdVida() {
@@ -126,6 +130,14 @@ public class Beneficiario implements Serializable {
 	public void setCdVenda(long cdVenda) {
 		this.cdVenda = cdVenda;
 	}
+	
+	public DadosBancariosVenda getDadosBancarios() {
+		return dadosBancarios;
+	}
+
+	public void setDadosBancarios(DadosBancariosVenda dadosBancarios) {
+		this.dadosBancarios = dadosBancarios;
+	}
 
 	public Endereco getEndereco() {
 		return endereco;
@@ -148,7 +160,8 @@ public class Beneficiario implements Serializable {
 		return "Beneficiario [cdVida=" + cdVida + ", cdTitular=" + cdTitular + ", celular=" + celular + ", cpf=" + cpf
 				+ ", cnpj=" + cnpj + ", dataNascimento=" + dataNascimento + ", email=" + email + ", nome=" + nome
 				+ ", nomeMae=" + nomeMae + ", pfPj=" + pfPj + ", sexo=" + sexo + ", cdPlano=" + cdPlano + ", cdVenda="
-				+ cdVenda + ", endereco=" + endereco + ", dependentes=" + dependentes + "]";
+				+ cdVenda + ", dadosBancarios=" + dadosBancarios + ", endereco=" + endereco + ", dependentes="
+				+ dependentes + "]";
 	}
 
 }

@@ -10,17 +10,16 @@ public class Venda implements Serializable {
 
 	private Long cdVenda;
 	private Long cdEmpresa;
+	
+	//private List<Plano> planos;
 	private Long cdPlano;
+	
 	private Long cdForcaVenda;
 	private Date dataVenda;
 	private Long cdStatusVenda;
 	private Long faturaVencimento;
-	private String tipoConta;
-	private String banco;
-	private String agencia;
-	private String conta;
+	
 	private String tipoPagamento;
-	private String propostaDcms;
 
 	private List<Beneficiario> titulares;
 
@@ -40,13 +39,14 @@ public class Venda implements Serializable {
 		this.cdEmpresa = cdEmpresa;
 	}
 
-	public Long getCdPlano() {
-		return cdPlano;
-	}
-
-	public void setCdPlano(long cdPlano) {
-		this.cdPlano = cdPlano;
-	}
+	
+//	public List<Plano> getPlanos() {
+//		return planos;
+//	}
+//
+//	public void setPlanos(List<Plano> planos) {
+//		this.planos = planos;
+//	}
 
 	public Long getCdForcaVenda() {
 		return cdForcaVenda;
@@ -80,38 +80,6 @@ public class Venda implements Serializable {
 		this.faturaVencimento = faturaVencimento;
 	}
 
-	public String getTipoConta() {
-		return tipoConta;
-	}
-
-	public void setTipoConta(String tipoConta) {
-		this.tipoConta = tipoConta;
-	}
-
-	public String getBanco() {
-		return banco;
-	}
-
-	public void setBanco(String banco) {
-		this.banco = banco;
-	}
-
-	public String getAgencia() {
-		return agencia;
-	}
-
-	public void setAgencia(String agencia) {
-		this.agencia = agencia;
-	}
-
-	public String getConta() {
-		return conta;
-	}
-
-	public void setConta(String conta) {
-		this.conta = conta;
-	}
-
 	public String getTipoPagamento() {
 		return tipoPagamento;
 	}
@@ -128,21 +96,19 @@ public class Venda implements Serializable {
 		this.titulares = titulares;
 	}
 
-	public String getPropostaDcms() {
-		return propostaDcms;
+	public Long getCdPlano() {
+		return cdPlano;
 	}
 
-	public void setPropostaDcms(String propostaDcms) {
-		this.propostaDcms = propostaDcms;
+	public void setCdPlano(Long cdPlano) {
+		this.cdPlano = cdPlano;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Venda [cdVenda=" + cdVenda + ", cdEmpresa=" + cdEmpresa + ", cdPlano=" + cdPlano + ", cdForcaVenda="
 				+ cdForcaVenda + ", dataVenda=" + dataVenda + ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento="
-				+ faturaVencimento + ", tipoConta=" + tipoConta + ", banco=" + banco + ", agencia=" + agencia
-				+ ", conta=" + conta + ", tipoPagamento=" + tipoPagamento + ", propostaDcms=" + propostaDcms
-				+ ", titulares=" + titulares + "]";
+				+ faturaVencimento + ", tipoPagamento=" + tipoPagamento + ", titulares=" + titulares + "]";
 	}
 
 }
