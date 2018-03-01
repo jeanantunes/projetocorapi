@@ -29,10 +29,10 @@ public class PropostaDAOImpl implements PropostaDAO {
 		
 		log.info("[PropostaDAOImpl::propostasByFiltro]");
 		
-		String squery = "SELECT v FROM TbodVenda v WHERE  ";
+		String squery = "SELECT v FROM TbodVenda v WHERE 1=1 ";
 				
 		if(dtInicio != null && dtFim != null) {
-			squery += "v.dtVenda >= :dtInicio AND v.dtVenda < :dtFim ";
+			squery += " and v.dtVenda >= :dtInicio AND v.dtVenda < :dtFim ";
 		}
 		
 		if(cdCorretora > 0L) {

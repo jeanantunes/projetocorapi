@@ -24,14 +24,14 @@ public class ViewCorSumarioVendaDAOImpl implements ViewCorSumarioVendaDAO {
 	
 	@Override
 	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda, String cpf, String cnpj) {
-		String squery = "from ViewCorSumarioVenda v where  ";
+		String squery = "from ViewCorSumarioVenda v where 1=1 ";
 		
 	/*	if(dtInicio != null && dtFim != null) {
 			squery += "v.dtVenda >= :dtInicio AND v.dtVenda < :dtFim ";
 		}*/
 		
 		if(cdCorretora > 0L) {
-			squery += " v.codigoCorretora = :cdCorretora ";
+			squery += " and v.codigoCorretora = :cdCorretora ";
 		}
 		
 		if(cdForcaVenda > 0L) {
@@ -39,7 +39,7 @@ public class ViewCorSumarioVendaDAOImpl implements ViewCorSumarioVendaDAO {
 		}
 		
 		if(cpf!= null) {
-			squery += " v.cpf = :cpf ";
+			squery += " and v.cpf = :cpf ";
 		}
 		
 		if(cnpj != null) {
