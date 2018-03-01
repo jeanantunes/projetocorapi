@@ -23,8 +23,8 @@ public class ViewCorSumarioVendaDAOImpl implements ViewCorSumarioVendaDAO {
 	private EntityManager entityManager;
 	
 	@Override
-	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda, long cpf, long cnpj) {
-		String squery = "SELECT v FROM ViewCorSumarioVenda v WHERE  ";
+	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda, String cpf, String cnpj) {
+		String squery = "from ViewCorSumarioVenda v where  ";
 		
 	/*	if(dtInicio != null && dtFim != null) {
 			squery += "v.dtVenda >= :dtInicio AND v.dtVenda < :dtFim ";
@@ -38,11 +38,11 @@ public class ViewCorSumarioVendaDAOImpl implements ViewCorSumarioVendaDAO {
 			squery += " and v.codigoForcaVenda = :cdForcaVenda ";
 		}
 		
-		if(cpf > 0L) {
+		if(cpf!= null) {
 			squery += " v.cpf = :cpf ";
 		}
 		
-		if(cnpj > 0L) {
+		if(cnpj != null) {
 			squery += " and v.cnpj = :cnpj ";
 		}
 		
@@ -59,10 +59,10 @@ public class ViewCorSumarioVendaDAOImpl implements ViewCorSumarioVendaDAO {
 		if(cdForcaVenda > 0L) {			
 			query.setParameter("cdForcaVenda", cdForcaVenda);
 		}
-		if(cnpj > 0L) {			
+		if(cnpj !=null) {			
 			query.setParameter("cnpj", cnpj);
 		}
-		if(cpf > 0L) {			
+		if(cpf != null) {			
 			query.setParameter("cpf", cpf);
 		}
 		
