@@ -47,7 +47,7 @@ public class TbodVida implements Serializable {
 	private String sexo;
 
 	@Transient
-	private String descricaoPlano;
+	private String siglaPlano;
 
 	// bi-directional many-to-one association to TbodDocumentoAssociado
 	@OneToMany(mappedBy = "tbodVida")
@@ -150,12 +150,12 @@ public class TbodVida implements Serializable {
 		this.sexo = sexo;
 	}
 
-	public String getDescricaoPlano() {
-		return descricaoPlano;
+	public String getSiglaPlano() {
+		return siglaPlano;
 	}
 
-	public void setDescricaoPlano(String descricaoPlano) {
-		this.descricaoPlano = descricaoPlano;
+	public void setSiglaPlano(String siglaPlano) {
+		this.siglaPlano = siglaPlano;
 	}
 
 	public List<TbodDocumentoAssociado> getTbodDocumentoAssociados() {

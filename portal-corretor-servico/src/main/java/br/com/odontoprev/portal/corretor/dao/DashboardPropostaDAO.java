@@ -34,7 +34,7 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 			, nativeQuery=true)
 	public List<Object[]> findAllDashboardPropostasPF(@Param("cpf") String cpf);
 	
-	@Query(value=" select distinct forca.cpf forca_cpf, venda.cd_venda," + 
+	@Query(value=" select distinct venda.cd_venda," + 
 			"        vida.cpf," + 
 			"        venda.proposta_dcms," + 
 			"        vida.nome," + 
@@ -46,7 +46,8 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 			" where " + 
 			"        vida.cd_titular IS NULL " + 
 			"        AND venda.cd_empresa IS NULL " + 
-			"        and vida.CPF = :cpf and status.CD_STATUS_VENDA = :status "	, nativeQuery=true)
+			"        and vida.CPF = :cpf " + 
+			"		 and status.CD_STATUS_VENDA = :status "	, nativeQuery=true)
 	public List<Object[]> findDashboardPropostaPFByStatus(@Param("status") Long status, @Param("cpf") String cpf);
 	
 	@Query(value=" select * from vwod_cor_critica_pf where cnpj = :cnpj and cpf = :cpf " , nativeQuery=true)

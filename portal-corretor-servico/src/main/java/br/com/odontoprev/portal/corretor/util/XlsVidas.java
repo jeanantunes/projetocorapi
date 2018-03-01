@@ -42,7 +42,8 @@ public class XlsVidas {
 
 		try {
 
-			String filename = pathVidas + Data() + ".xls";
+//			String filename = pathVidas + Data() + ".xls";
+			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + Data() + ".xls";
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Vidas");
 
@@ -103,7 +104,7 @@ public class XlsVidas {
 				vidasArr[1] = isTitular ? "T" : "D";
 				// Obrigatorio TBOD_VENDA_VIDA.CD_PLANO
 
-				vidasArr[2] = tbVida.getDescricaoPlano();
+				vidasArr[2] = tbVida.getSiglaPlano();
 				// Obrigatorio dd/MM/yyyy
 				try {
 					dataStr = sdf.format(tbVida.getDataNascimento());

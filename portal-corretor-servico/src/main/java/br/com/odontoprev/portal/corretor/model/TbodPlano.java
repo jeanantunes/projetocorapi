@@ -13,50 +13,52 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 /**
  * The persistent class for the TBOD_PLANO database table.
  * 
  */
 @Entity
-@Table(name="TBOD_PLANO")
-@NamedQuery(name="TbodPlano.findAll", query="SELECT t FROM TbodPlano t")
+@Table(name = "TBOD_PLANO")
+@NamedQuery(name = "TbodPlano.findAll", query = "SELECT t FROM TbodPlano t")
 public class TbodPlano implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="CD_PLANO")
+	@Column(name = "CD_PLANO")
 	private long cdPlano;
 
-	@Column(name="ATIVO")
+	@Column(name = "ATIVO")
 	private BigDecimal ativo;
 
-	@Column(name="CODIGO")
+	@Column(name = "CODIGO")
 	private String codigo;
 
-	@Column(name="NOME_PLANO")
+	@Column(name = "NOME_PLANO")
 	private String nomePlano;
 
-	@Column(name="TITULO")
+	@Column(name = "TITULO")
 	private String titulo;
 
-	@Column(name="VALOR_ANUAL")
+	@Column(name = "VALOR_ANUAL")
 	private BigDecimal valorAnual;
 
-	@Column(name="VALOR_MENSAL")
+	@Column(name = "VALOR_MENSAL")
 	private BigDecimal valorMensal;
 
-	//bi-directional many-to-one association to TbodTipoPlano
+	@Column(name = "SIGLA")
+	private String sigla;
+
+	// bi-directional many-to-one association to TbodTipoPlano
 	@ManyToOne
-	@JoinColumn(name="CD_TIPO_PLANO")
+	@JoinColumn(name = "CD_TIPO_PLANO")
 	private TbodTipoPlano tbodTipoPlano;
 
-	//bi-directional many-to-one association to TbodPlanoCobertura
-	@OneToMany(mappedBy="tbodPlano")
+	// bi-directional many-to-one association to TbodPlanoCobertura
+	@OneToMany(mappedBy = "tbodPlano")
 	private List<TbodPlanoCobertura> tbodPlanoCoberturas;
 
-	//bi-directional many-to-one association to TbodVenda
-	@OneToMany(mappedBy="tbodPlano")
+	// bi-directional many-to-one association to TbodVenda
+	@OneToMany(mappedBy = "tbodPlano")
 	private List<TbodVenda> tbodVendas;
 
 	public TbodPlano() {
@@ -116,6 +118,14 @@ public class TbodPlano implements Serializable {
 
 	public void setValorMensal(BigDecimal valorMensal) {
 		this.valorMensal = valorMensal;
+	}
+
+	public String getSigla() {
+		return sigla;
+	}
+
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
 	}
 
 	public TbodTipoPlano getTbodTipoPlano() {

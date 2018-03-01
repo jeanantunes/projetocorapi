@@ -3,38 +3,93 @@
 PLANOS
 
 	GET /plano - Retorna lista de planos
+	Response OK
+	[
+	    {
+	        "cdPlano": 1,
+	        "titulo": "PLANO TOP",
+	        "descricao": "MENSAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    },
+	    {
+	        "cdPlano": 2,
+	        "titulo": "TESTE",
+	        "descricao": "MENSAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    },
+	    {
+	        "cdPlano": 3,
+	        "titulo": "Teste2",
+	        "descricao": "ANUAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    }
+	]
+	
+	Response Erro
+	[] 
+
 
 	GET /plano-empresa/{cdEmpresa} - Retorna lista de planos da empresa x
+	Response OK
+	[
+	    {
+	        "cdPlano": 2,
+	        "titulo": null,
+	        "descricao": "INDIVIDUAL",
+	        "sigla": null,
+	        "valor": null,
+	        "tipo": null,
+	        "cdVenda": 5
+	    }
+	]
+	
+	Response Erro
+	[]
+
 
 	
 	
 FORCAVENDA
 
 	GET /forcavenda/{cpf} - Retorna forcavenda por cpf
+	Response OK
+	
+	Response Erro
+	
+	
 
 	GET /forcavenda/{cdForcaVenda}/corretora/{cnpj} - Busca associacao forcavenda/corretora
-
+	
 	POST /forcavenda
 	{  
-	   "nome":"joana da silva",
-	   "celular":"1234564585",
-	   "email":"teste@teste.com",
+	   "nome":"JAQUELINE ALVES TESTE3",
+	   "celular":"1144445555",
+	   "email":"jaque3@teste.com",
 	   "corretora":{  
-		  "cdCorretora":"1"
+		  "cdCorretora":"25"
 		},
-		"cpf":"85347874",
-		"ativo":true,
-		"departamento":"ABC",
+		"cpf":"45125235539",
+		"departamento":"TI",
 		"cargo":"Analista de Sistemas",
-		"dataNascimento":"20-06-1980"
-		"nomeEmpresa": ""
-        "nomeGerente": ""
-        "responsavel": ""
-        "rg": ""
-        "senha": ""
-
+		"dataNascimento":"20-06-1980",
+        "senha": "44455566" //Com senha - forcavenda sem pre-cadastro //Sem senha - pre-cadastro forca pela tela corretora
 	}
 	
+	PUT /forcavenda/login - Ativar forca de venda pela tela de login (forca de venda pre-cadastrada)
+	
+	PUT /forcavenda/status-ativo - Ativar forca de venda pela corretora
+	{
+ 		"cpf":"78945612312"
+	}
 
 	
 EMPRESA
@@ -495,67 +550,3 @@ CORRETORA
     "login": null,
     "representantes": null
 	}
-
-	
-	
-	
-	SELECT
-        distinct venda.cd_venda,
-        vida.cpf,
-        venda.proposta_dcms,
-        vida.nome,
-        status.descricao 
-    FROM
-        tbod_venda venda,
-        tbod_status_venda status,
-        tbod_venda_vida vv,
-        tbod_vida vida,
-        tbod_forca_venda forca 
-    WHERE
-        1 = 1 
-        AND venda.cd_venda = vv.cd_venda 
-        AND vv.cd_vida = vida.cd_vida 
-        AND vida.cd_titular IS NULL 
-        AND venda.cd_empresa IS NULL 
-        AND venda.cd_venda = vv.cd_venda 
-        AND status.cd_status_venda = venda.cd_status_venda 
-        AND venda.CD_FORCA_VENDAS = forca.CD_FORCA_VENDA 
-        AND forca.CPF = 34353425234 
-    GROUP  BY
-        venda.cd_venda,
-        vida.cpf,
-        venda.proposta_dcms,
-        vida.nome,
-        status.descricao;
-        
-        
-        
-SELECT
-        distinct venda.cd_venda,
-        vida.cpf,
-        venda.proposta_dcms,
-        vida.nome,
-        status.descricao 
-    FROM
-        tbod_venda venda,
-        tbod_status_venda status,
-        tbod_venda_vida vv,
-        tbod_vida vida,
-        tbod_forca_venda forca 
-    WHERE
-        1 = 1 
-        AND venda.cd_venda = vv.cd_venda 
-        AND vv.cd_vida = vida.cd_vida 
-        AND vida.cd_titular IS NULL 
-        AND venda.cd_empresa IS NULL 
-        AND venda.cd_venda = vv.cd_venda 
-        AND status.cd_status_venda = venda.cd_status_venda 
-        AND venda.CD_FORCA_VENDAS = forca.CD_FORCA_VENDA 
-        AND status.cd_status_venda = ? 
-        AND forca.CPF = ? 
-    GROUP  BY
-        venda.cd_venda,
-        vida.cpf,
-        venda.proposta_dcms,
-        vida.nome,
-        status.descricao;
