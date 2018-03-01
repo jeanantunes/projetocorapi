@@ -39,7 +39,6 @@ import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
-import oracle.sql.DATE;
 
 @ManagedBean
 public class VendaPFBusiness {
