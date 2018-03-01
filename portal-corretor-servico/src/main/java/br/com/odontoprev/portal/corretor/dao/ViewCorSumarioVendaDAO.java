@@ -8,5 +8,5 @@ import br.com.odontoprev.portal.corretor.model.ViewCorSumarioVenda;
 public interface ViewCorSumarioVendaDAO  {
 
 	
-	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda, long cpf, long cnpj);
+	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda, String cpf, String cnpj);
 }

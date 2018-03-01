@@ -96,6 +96,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>portal-corretor-servico</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
