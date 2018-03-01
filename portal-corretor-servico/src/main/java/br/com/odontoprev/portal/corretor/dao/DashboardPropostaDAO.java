@@ -26,10 +26,10 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 	public List<Object[]> findDashboardPropostaPMEByStatus(@Param("status") Long status, @Param("cnpj") String cnpj);
 
 	@Query(value="SELECT distinct venda.cd_venda, vida.cpf, venda.proposta_dcms, vida.nome, status.descricao " + 
-			"FROM   tbod_venda venda, tbod_status_venda status, tbod_venda_vida vv, tbod_vida vida, tbod_forca_venda forca " + 
+			"FROM   tbod_venda venda, tbod_status_venda status, tbod_venda_vida vv, tbod_vida vida " + 
 			"WHERE  1 = 1 AND venda.cd_venda = vv.cd_venda AND vv.cd_vida = vida.cd_vida AND vida.cd_titular IS NULL " + 
 			"AND venda.cd_empresa IS NULL AND venda.cd_venda = vv.cd_venda AND status.cd_status_venda = venda.cd_status_venda " +
-			"AND venda.CD_FORCA_VENDAS = forca.CD_FORCA_VENDA AND forca.CPF = :cpf " + 
+			"AND vida.CPF = :cpf " + 
 			"GROUP  BY venda.cd_venda, vida.cpf, venda.proposta_dcms, vida.nome, status.descricao" 
 			, nativeQuery=true)
 	public List<Object[]> findAllDashboardPropostasPF(@Param("cpf") String cpf);
@@ -43,12 +43,27 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 			" inner join tbod_venda_vida vv        on venda.cd_venda = vv.cd_venda " + 
 			" inner join tbod_vida vida            on vv.cd_vida = vida.cd_vida " + 
 			" inner join tbod_status_venda status  on status.cd_status_venda = venda.cd_status_venda " + 
-			" inner join tbod_forca_venda forca   on venda.CD_FORCA_VENDAS = forca.CD_FORCA_VENDA " + 
-			" where" + 
+			" where " + 
 			"        vida.cd_titular IS NULL " + 
 			"        AND venda.cd_empresa IS NULL " + 
-			"        and forca.CPF = :cpf and status.CD_STATUS_VENDA = :status "	, nativeQuery=true)
+			"        and vida.CPF = :cpf and status.CD_STATUS_VENDA = :status "	, nativeQuery=true)
 	public List<Object[]> findDashboardPropostaPFByStatus(@Param("status") Long status, @Param("cpf") String cpf);
 	
+	@Query(value=" select * from vwod_cor_critica_pf where cnpj = :cnpj and cpf = :cpf " , nativeQuery=true)
+	public List<Object[]> buscaTodasPorCriticaPF(@Param("cnpj") String cnpj, @Param("cpf") String cpf);
 	
+	@Query(value=" select * from vwod_cor_critica_pf where cpf = :cpf " , nativeQuery=true)
+	public List<Object[]> buscaPorCriticaPFporCPF(@Param("cpf") String cpf);
+	
+	@Query(value=" select * from vwod_cor_critica_pf where cnpj = :cnpj " , nativeQuery=true)
+	public List<Object[]> buscaPorCriticaPFporCNPJ(@Param("cnpj") String cnpj);
+	
+	@Query(value=" select * from vwod_cor_critica_pme where cnpj = :cnpj and cpf = :cpf " , nativeQuery=true)
+	public List<Object[]> buscaTodasPorCriticaPME(@Param("cnpj") String cnpj, @Param("cpf") String cpf);
+	
+	@Query(value=" select * from vwod_cor_critica_pme where cpf = :cpf " , nativeQuery=true)
+	public List<Object[]> buscaPorCriticaPMEporCPF(@Param("cpf") String cpf);
+	
+	@Query(value=" select * from vwod_cor_critica_pme where cnpj = :cnpj " , nativeQuery=true)
+	public List<Object[]> buscaPorCriticaPMEporCNPJ(@Param("cnpj") String cnpj);
 }

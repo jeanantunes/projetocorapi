@@ -9,4 +9,11 @@ public interface DashboardPropostaService {
 
 	DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status, String cpf);
 
+	DashboardPropostaPFResponse buscaPorCriticaPF(String cnpj, String cpf);
+
+	DashboardPropostaPMEResponse buscaPorCriticaPME(String cnpj, String cpf);
+
+	
+	
+
 }

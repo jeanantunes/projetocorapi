@@ -7,6 +7,81 @@ public class DashboardPropostaPF {
 	private String propostaDcms;
 	private String nome;
 	private String statusVenda;
+	private Long atendimento;
+	private String empresa;
+	private String codOdonto;
+	private String nrImportacao;
+	private String forca;
+	private String corretora;
+	private String dsErroRegistro;
+	private String criticas;
+	private String cnpj;
+	private Long cdEmpresa;
+	
+	
+	public Long getCdEmpresa() {
+		return cdEmpresa;
+	}
+
+	public void setCdEmpresa(Long cdEmpresa) {
+		this.cdEmpresa = cdEmpresa;
+	}
+	
+	public Long getAtendimento() {
+		return atendimento;
+	}
+
+	public void setAtendimento(Long atendimento) {
+		this.atendimento = atendimento;
+	}
+
+	public String getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(String empresa) {
+		this.empresa = empresa;
+	}
+
+	public String getCodOdonto() {
+		return codOdonto;
+	}
+
+	public void setCodOdonto(String codOdonto) {
+		this.codOdonto = codOdonto;
+	}
+
+	public String getNrImportacao() {
+		return nrImportacao;
+	}
+
+	public void setNrImportacao(String nrImportacao) {
+		this.nrImportacao = nrImportacao;
+	}
+
+	public String getForca() {
+		return forca;
+	}
+
+	public void setForca(String forca) {
+		this.forca = forca;
+	}
+
+	public String getCorretora() {
+		return corretora;
+	}
+
+	public void setCorretora(String corretora) {
+		this.corretora = corretora;
+	}
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
 
 	public Long getCdVenda() {
 		return cdVenda;
@@ -46,6 +121,23 @@ public class DashboardPropostaPF {
 
 	public void setStatusVenda(String statusVenda) {
 		this.statusVenda = statusVenda;
+	}
+
+
+	public String getDsErroRegistro() {
+		return dsErroRegistro;
+	}
+
+	public void setDsErroRegistro(String dsErroRegistro) {
+		this.dsErroRegistro = dsErroRegistro;
+	}
+
+	public String getCriticas() {
+		return criticas;
+	}
+
+	public void setCriticas(String criticas) {
+		this.criticas = criticas;
 	}
 
 }

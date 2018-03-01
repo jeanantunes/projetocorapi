@@ -6,7 +6,12 @@ public class DashboardPropostaPME {
 	private String statusVenda;
 	private String dataVenda;
 	private String cnpj;
-
+	private String corretora;
+	private String cpf;
+	private String empDcms;
+	private String forca;
+	private String criticas;
+	
 	public String getNome() {
 		return nome;
 	}
@@ -45,5 +50,45 @@ public class DashboardPropostaPME {
 
 	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
+	}
+
+	public String getCorretora() {
+		return corretora;
+	}
+
+	public void setCorretora(String corretora) {
+		this.corretora = corretora;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
+	}
+
+	public String getEmpDcms() {
+		return empDcms;
+	}
+
+	public void setEmpDcms(String empDcms) {
+		this.empDcms = empDcms;
+	}
+
+	public String getForca() {
+		return forca;
+	}
+
+	public void setForca(String forca) {
+		this.forca = forca;
+	}
+
+	public String getCriticas() {
+		return criticas;
+	}
+
+	public void setCriticas(String criticas) {
+		this.criticas = criticas;
 	}
 }

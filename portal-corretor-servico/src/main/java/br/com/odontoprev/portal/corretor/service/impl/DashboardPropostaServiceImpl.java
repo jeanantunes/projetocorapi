@@ -122,5 +122,99 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 		return response;
 	}
+	@Override
+	public DashboardPropostaPFResponse buscaPorCriticaPF(String cnpj, String cpf) {
+
+		log.info("[buscaPorCriticaPF]");
+
+		DashboardPropostaPFResponse response = new DashboardPropostaPFResponse();
+		List<DashboardPropostaPF> propostasPF = new ArrayList<DashboardPropostaPF>();
+		
+		try {
+			
+			List<Object[]> objects = new ArrayList<Object[]>();
+
+			// findAll
+			if(cnpj!= null && cpf != null) {
+				log.info("[buscaTodasPorCriticaPF]");
+				objects = dashboardPropostaDAO.buscaTodasPorCriticaPF(cnpj, cpf);
+			}if(cnpj == null && cpf != null) {
+				log.info("[buscaPorCriticaPFporCPF]");
+				objects = dashboardPropostaDAO.buscaPorCriticaPFporCPF(cpf);
+			}if(cnpj!= null && cpf == null) {
+				log.info("[buscaPorCriticaPFporCNPJ]");
+				objects = dashboardPropostaDAO.buscaPorCriticaPFporCNPJ(cnpj);
+			}
+			
+			for (Object object : objects) {
+				Object[] obj = (Object[]) object;
+
+				DashboardPropostaPF dashboardPropostaPF = new DashboardPropostaPF();
+				dashboardPropostaPF.setAtendimento(obj[0] != null ? new Long(String.valueOf(obj[0])) : null);
+				dashboardPropostaPF.setDsErroRegistro(obj[1] != null ? String.valueOf(obj[1]) : "");
+				dashboardPropostaPF.setCodOdonto(obj[2] != null ? String.valueOf(obj[2]) : "");
+				dashboardPropostaPF.setNome(obj[3] != null ? String.valueOf(obj[3]) : "");
+				dashboardPropostaPF.setNrImportacao(obj[4] != null ? String.valueOf(obj[4]) : "");
+				dashboardPropostaPF.setForca(obj[5] != null ? String.valueOf(obj[5]) : "");
+				dashboardPropostaPF.setCpf(obj[6] != null ? String.valueOf(obj[6]) : "");
+				dashboardPropostaPF.setCorretora(obj[7] != null ? String.valueOf(obj[7]) : "");
+				dashboardPropostaPF.setCnpj(obj[8] != null ? String.valueOf(obj[8]) : "");
+
+				propostasPF.add(dashboardPropostaPF);
+			}
+
+			response.setDashboardPropostasPF(propostasPF);
+
+		} catch (Exception e) {
+			log.error("Erro ao buscar Critica PF por status :: Detalhe: [" + e.getMessage() + "]");
+			return new DashboardPropostaPFResponse();
+		}
+
+		return response;
+	}
+
+	@Override
+	public DashboardPropostaPMEResponse buscaPorCriticaPME(String cnpj, String cpf) {
+		log.info("[buscaPorCriticaPF]");
+
+		DashboardPropostaPMEResponse response = new DashboardPropostaPMEResponse();
+		List<DashboardPropostaPME> propostasPME = new ArrayList<DashboardPropostaPME>();
+		
+		try {
+			
+			List<Object[]> objects = new ArrayList<Object[]>();
+
+			// findAll
+			if(cnpj!= null && cpf != null) {
+				objects = dashboardPropostaDAO.buscaTodasPorCriticaPME(cnpj, cpf);
+			}if(cnpj == null && cpf != null) {
+				objects = dashboardPropostaDAO.buscaPorCriticaPMEporCPF(cpf);
+			}if(cnpj!= null && cpf == null) {
+				objects = dashboardPropostaDAO.buscaPorCriticaPMEporCNPJ(cnpj);
+			}
+			
+			for (Object object : objects) {
+				Object[] obj = (Object[]) object;
+				DashboardPropostaPME dashboardPropostaPME = new DashboardPropostaPME();
+				dashboardPropostaPME.setCnpj(obj[0] != null ? String.valueOf(obj[0]) : "");
+				dashboardPropostaPME.setCorretora(obj[1] != null ? String.valueOf(obj[1]) : "");
+				dashboardPropostaPME.setCpf(obj[2] != null ? String.valueOf(obj[2]) : "");
+				dashboardPropostaPME.setForca(obj[3] != null ? String.valueOf(obj[3]) : "");
+				dashboardPropostaPME.setCdEmpresa(obj[4] != null ? new Long(String.valueOf(obj[4])) : null);
+				dashboardPropostaPME.setEmpDcms(obj[5] != null ? String.valueOf(obj[5]) : "");
+				dashboardPropostaPME.setNome(obj[6] != null ? String.valueOf(obj[6]) : "");
+				dashboardPropostaPME.setCriticas(obj[7] != null ? String.valueOf(obj[7]) : "");
+				propostasPME.add(dashboardPropostaPME);
+			}
+
+			response.setDashboardPropostasPME(propostasPME);
+
+		} catch (Exception e) {
+			log.error("Erro ao buscar Critica PF por status :: Detalhe: [" + e.getMessage() + "]");
+			return new DashboardPropostaPMEResponse();
+		}
+
+		return response;
+	}
 
 }
