@@ -250,6 +250,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			if (forcaVenda.getSenha() != null && !forcaVenda.getSenha().isEmpty()) {
 				TbodLogin tbLogin = new TbodLogin();
+				tbLogin.setCdLogin(tbForcaVenda.getTbodLogin().getCdLogin());
 				tbLogin.setCdTipoLogin((long) 1); // TODO
 				tbLogin.setSenha(forcaVenda.getSenha());
 				tbLogin = loginDao.save(tbLogin);
