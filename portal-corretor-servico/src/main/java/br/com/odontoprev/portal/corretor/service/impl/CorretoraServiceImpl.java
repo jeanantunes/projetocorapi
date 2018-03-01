@@ -1,5 +1,9 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import static br.com.odontoprev.portal.corretor.util.Constantes.ATIVO;
+import static br.com.odontoprev.portal.corretor.util.Constantes.NAO;
+import static br.com.odontoprev.portal.corretor.util.Constantes.SIM;
+
 import java.math.BigDecimal;
 
 import javax.persistence.NonUniqueResultException;
@@ -78,12 +82,12 @@ public class CorretoraServiceImpl implements CorretoraService {
 		conta = bancoContaDAO.save(conta);
 
 		TbodCorretora tbCorretora = new TbodCorretora();
-		tbCorretora.setAtivo("S"); // TODO Onde pega esse campo?
+		tbCorretora.setAtivo(ATIVO); // TODO Onde pega esse campo?
 		tbCorretora.setCpfResponsavel("0000000"); // TODO Onde pega esse campo?
 		tbCorretora.setDataAbertura(corretora.getDataAbertura());
 		tbCorretora.setRazaoSocial(corretora.getRazaoSocial() == null ? " " : corretora.getRazaoSocial());
-		tbCorretora.setSimplesNacional(corretora.isSimplesNacional() == true ? "S" : "N");
-		tbCorretora.setStatusCnpj(corretora.isStatusCnpj() == true ? "S" : "N");
+		tbCorretora.setSimplesNacional(corretora.isSimplesNacional() == true ? SIM : NAO);
+		tbCorretora.setStatusCnpj(corretora.isStatusCnpj() == true ? SIM : NAO);
 		tbCorretora.setNome(corretora.getRazaoSocial() == null ? " " : corretora.getRazaoSocial()); // TODO Nome do
 																									// Corretor?
 		tbCorretora.setCodigo("000"); // TODO Onde pega esse codigo?
@@ -139,10 +143,10 @@ public class CorretoraServiceImpl implements CorretoraService {
 			corretora.setCelular(tbodCorretora.getCelular());
 			corretora.setEmail(tbodCorretora.getEmail());
 			if(tbodCorretora.getStatusCnpj() != null) {			
-				corretora.setStatusCnpj(tbodCorretora.getStatusCnpj().equals("S") ? true : false);
+				corretora.setStatusCnpj(tbodCorretora.getStatusCnpj().equals(ATIVO) ? true : false);
 			}
 			if(tbodCorretora.getSimplesNacional() != null) {				
-				corretora.setSimplesNacional(tbodCorretora.getSimplesNacional().equals("S") ? true : false);
+				corretora.setSimplesNacional(tbodCorretora.getSimplesNacional().equals(ATIVO) ? true : false);
 			}
 			corretora.setDataAbertura(tbodCorretora.getDataAbertura());
 			// Endereço

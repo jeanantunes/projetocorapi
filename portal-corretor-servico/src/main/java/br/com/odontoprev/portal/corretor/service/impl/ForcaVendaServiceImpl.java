@@ -30,6 +30,7 @@ import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
 import br.com.odontoprev.portal.corretor.model.TbodStatusForcaVenda;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 
 @Service
@@ -79,13 +80,13 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		return this.addForcaVenda(forcaVenda);
 	}
 
-
 	@Override
 	public ForcaVendaResponse addForcaVenda(ForcaVenda forcaVenda) {
 
 		log.info("[addForcaVenda]");
 
 		TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
+		TbodStatusForcaVenda tbStatusForcaVenda = new TbodStatusForcaVenda();
 
 		try {
 
@@ -99,18 +100,15 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
 			tbForcaVenda.setCelular(forcaVenda.getCelular());
 			tbForcaVenda.setEmail(forcaVenda.getEmail());
-			tbForcaVenda.setAtivo("N");
+			// Nas telas de pre-cadastro forca e pre-cadastro forca pela corretora o status
+			// eh inativo
+			tbForcaVenda.setAtivo(Constantes.INATIVO);
 			tbForcaVenda.setCargo(forcaVenda.getCargo());
 			tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
-			TbodStatusForcaVenda tbStatusForcaVenda = new TbodStatusForcaVenda();
 			if (forcaVenda.getCorretora() != null && forcaVenda.getCorretora().getCdCorretora() > 0) {
-				final TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
+				TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
 				tbForcaVenda.setTbodCorretora(tbCorretora);
-				tbStatusForcaVenda = statusForcaVendaDao.findOne(PRE_CADASTRO.getCodigo());
-			} else {
-				tbStatusForcaVenda = statusForcaVendaDao.findOne(AGUARDANDO_APRO.getCodigo());
 			}
-			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
 
 			// Grava senha na tabela de login na tela de Aguardando Aprovacao
 			if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
@@ -119,13 +117,20 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				tbLogin.setSenha(forcaVenda.getSenha());
 				tbLogin = loginDao.save(tbLogin);
 				tbForcaVenda.setTbodLogin(tbLogin);
+
+				// Se vier o campo senha, eh pre-cadastro forca
+				tbStatusForcaVenda = statusForcaVendaDao.findOne(AGUARDANDO_APRO.getCodigo());
+			} else {
+				// Sem senha, pre-cadastro forca pela corretora
+				tbStatusForcaVenda = statusForcaVendaDao.findOne(PRE_CADASTRO.getCodigo());
 			}
 
+			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
 			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 			// integracaoForcaDeVendaDcss(forcaVenda); //Chamar no PUT
 
 		} catch (final Exception e) {
-			// log.error(e);
+			log.error(e);
 			log.error("Erro ao cadastrar forcaVenda :: Detalhe: [" + e.getMessage() + "]");
 			return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
 		}
@@ -166,23 +171,23 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			final String statusForca = tbForcaVenda.getTbodStatusForcaVenda() != null
 					? tbForcaVenda.getTbodStatusForcaVenda().getDescricao()
-							: "";
-					forcaVenda.setStatusForcaVenda(statusForca);
+					: "";
+			forcaVenda.setStatusForcaVenda(statusForca);
 
-					if (tbForcaVenda.getTbodCorretora() != null) {
+			if (tbForcaVenda.getTbodCorretora() != null) {
 
-						final TbodCorretora tbCorretora = tbForcaVenda.getTbodCorretora();
-						final Corretora corretora = new Corretora();
+				final TbodCorretora tbCorretora = tbForcaVenda.getTbodCorretora();
+				final Corretora corretora = new Corretora();
 
-						corretora.setCdCorretora(tbCorretora.getCdCorretora());
-						corretora.setCnpj(tbCorretora.getCnpj());
-						corretora.setRazaoSocial(tbCorretora.getRazaoSocial());
+				corretora.setCdCorretora(tbCorretora.getCdCorretora());
+				corretora.setCnpj(tbCorretora.getCnpj());
+				corretora.setRazaoSocial(tbCorretora.getRazaoSocial());
 
-						forcaVenda.setCorretora(corretora);
-					}
+				forcaVenda.setCorretora(corretora);
+			}
 
-					final String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
-					forcaVenda.setSenha(senha);
+			final String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
+			forcaVenda.setSenha(senha);
 		}
 
 		return forcaVenda;
@@ -386,7 +391,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			tbForcaVenda = tbForcaVendas.get(0);
 
-			//Ativando ForcaVenda
+			// Ativando ForcaVenda
 			tbForcaVenda.setAtivo("S");
 			final TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(ATIVO.getCodigo());
 			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
@@ -395,7 +400,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "]");
-			return new ForcaVendaResponse(0, "Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "].");
+			return new ForcaVendaResponse(0,
+					"Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "].");
 		}
 
 		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado! [" + tbForcaVenda.getCpf() + "]");

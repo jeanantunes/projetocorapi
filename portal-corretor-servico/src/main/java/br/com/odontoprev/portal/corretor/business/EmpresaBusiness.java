@@ -1,5 +1,8 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import static br.com.odontoprev.portal.corretor.util.Constantes.NAO;
+import static br.com.odontoprev.portal.corretor.util.Constantes.SIM;
+
 import java.util.Date;
 
 import javax.annotation.ManagedBean;
@@ -72,7 +75,7 @@ public class EmpresaBusiness {
 			tbEmpresa.setRazaoSocial(empresa.getRazaoSocial());
 			tbEmpresa.setNomeFantasia(empresa.getNomeFantasia());
 			tbEmpresa.setRepresentanteLegal(empresa.getRepresentanteLegal());
-			tbEmpresa.setContatoEmpresa(empresa.isContatoEmpresa() == true ? "S" : "N");
+			tbEmpresa.setContatoEmpresa(empresa.isContatoEmpresa() == true ? SIM : NAO);
 			tbEmpresa.setTelefone(empresa.getTelefone());
 			tbEmpresa.setCelular(empresa.getCelular());
 			tbEmpresa.setEmail(empresa.getEmail());
@@ -132,7 +135,7 @@ public class EmpresaBusiness {
 			tbEmpresa.setRazaoSocial(empresa.getRazaoSocial());
 			tbEmpresa.setNomeFantasia(empresa.getNomeFantasia());
 			tbEmpresa.setRepresentanteLegal(empresa.getRepresentanteLegal());
-			tbEmpresa.setContatoEmpresa(empresa.isContatoEmpresa() == true ? "S" : "N");
+			tbEmpresa.setContatoEmpresa(empresa.isContatoEmpresa() == true ? SIM : NAO);
 			tbEmpresa.setTelefone(empresa.getTelefone());
 			tbEmpresa.setCelular(empresa.getCelular());
 			tbEmpresa.setEmail(empresa.getEmail());

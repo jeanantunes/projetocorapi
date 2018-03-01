@@ -46,25 +46,18 @@ FORCAVENDA
 
 	POST /forcavenda
 	{  
-	   "nome":"joana da silva",
-	   "celular":"1234564585",
-	   "email":"teste@teste.com",
+	   "nome":"JAQUELINE ALVES TESTE3",
+	   "celular":"1144445555",
+	   "email":"jaque3@teste.com",
 	   "corretora":{  
-		  "cdCorretora":"1"
+		  "cdCorretora":"25"
 		},
-		"cpf":"85347874",
-		"ativo":true,
-		"departamento":"ABC",
+		"cpf":"45125235539",
+		"departamento":"TI",
 		"cargo":"Analista de Sistemas",
-		"dataNascimento":"20-06-1980"
-		"nomeEmpresa": ""
-        "nomeGerente": ""
-        "responsavel": ""
-        "rg": ""
-        "senha": ""
-
+		"dataNascimento":"20-06-1980",
+        "senha": "44455566"
 	}
-	
 
 	
 EMPRESA
