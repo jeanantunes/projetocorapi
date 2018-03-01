@@ -12,7 +12,8 @@ create table TBOD_PLANO
 	valor_mensal		numeric (5,2)	, 
 	valor_anual			numeric	(5,2)	,
 	ativo				numeric (1)		,
-	codigo				varchar2(10)	not null
+	codigo				varchar2(10)	not null,
+	sigla				varchar2(3)
 	
 );
 
@@ -89,7 +90,8 @@ create table TBOD_EMPRESA
 	celular					varchar2(15)	not null,
 	email					varchar2(50)	not null,
 	cd_endereco				numeric (10)	not null,
-	emp_dcms				varchar2(6)
+	emp_dcms				varchar2(6),
+	cnae					varchar2(50)
 );
 
 alter table TBOD_EMPRESA

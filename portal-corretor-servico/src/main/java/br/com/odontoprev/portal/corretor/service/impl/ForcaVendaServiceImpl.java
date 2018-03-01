@@ -252,7 +252,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			final TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(ATIVO.getCodigo());
 			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
-			tbForcaVenda.setAtivo("S");
+			tbForcaVenda.setAtivo(Constantes.ATIVO);
 
 			if (forcaVenda.getSenha() != null && !forcaVenda.getSenha().isEmpty()) {
 				TbodLogin tbLogin = new TbodLogin();

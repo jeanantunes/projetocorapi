@@ -13,10 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.dao.DashboardPropostaDAO;
+import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPF;
 import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPFResponse;
 import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPME;
 import br.com.odontoprev.portal.corretor.dto.DashboardPropostaPMEResponse;
+import br.com.odontoprev.portal.corretor.dto.DashboardResponse;
+import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
+import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.service.DashboardPropostaService;
 
 @Service
@@ -26,6 +30,9 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 	@Autowired
 	private DashboardPropostaDAO dashboardPropostaDAO;
+	
+	@Autowired
+	private ForcaVendaDAO forcaVendaDao;
 
 	@Override
 	public DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status, String cnpj) {
@@ -175,6 +182,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 	@Override
 	public DashboardPropostaPMEResponse buscaPorCriticaPME(String cnpj, String cpf) {
+		
 		log.info("[buscaPorCriticaPF]");
 
 		DashboardPropostaPMEResponse response = new DashboardPropostaPMEResponse();
@@ -215,6 +223,35 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 		}
 
 		return response;
+	}
+
+	@Override
+	public DashboardResponse buscarForcaVendaAguardandoAprovacaoByCdEmpresa(long cdCorretora) {
+		
+		log.info("[buscarForcaVendaAguardandoAprovacaoByCdEmpresa]");
+		
+		DashboardResponse dashboardResponse = new DashboardResponse();
+
+		try {
+			
+			long cdStatusForcaVenda = StatusForcaVendaEnum.AGUARDANDO_APRO.getCodigo();
+			
+			List<TbodForcaVenda> forcaVendas = forcaVendaDao.findByTbodStatusForcaVendaCdStatusForcaVendasAndTbodCorretoraCdCorretora(cdStatusForcaVenda, cdCorretora);
+			
+			if(forcaVendas == null) {
+				dashboardResponse.setCountForcaVendaAprovacao(0);
+			}
+			else {
+				dashboardResponse.setCountForcaVendaAprovacao(forcaVendas.size());
+			}
+			
+		} catch (Exception e) {
+			log.error("Erro ao buscar quantidade ForcaVenda Aguardando Aprovacao por Corretora :: Detalhe: [" + e.getMessage() + "]");
+			return new DashboardResponse();
+		}
+		
+		return dashboardResponse;
+		
 	}
 
 }
