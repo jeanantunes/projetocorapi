@@ -154,7 +154,7 @@ public class BeneficiarioBusiness {
 			for (TbodVendaVida tbVendaVida : tbVendaVidas) {
 				if (tbVendaVida.getTbodVida() != null) {
 					TbodPlano tbPlano = planoDao.findByCdPlano(tbVendaVida.getCdPlano());
-					tbVendaVida.getTbodVida().setDescricaoPlano(tbPlano.getNomePlano());
+					tbVendaVida.getTbodVida().setSiglaPlano(tbPlano.getSigla());
 					tbVidas.add(tbVendaVida.getTbodVida());
 				}
 			}
