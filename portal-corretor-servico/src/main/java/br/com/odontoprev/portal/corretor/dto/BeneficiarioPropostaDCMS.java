@@ -17,12 +17,13 @@ public class BeneficiarioPropostaDCMS {
 
 	private String email; //E-mail do dependente
 
-	private String codigoPlano; //Codigo do plano
+	private PlanoDCMS plano; //Codigo do plano
 
 	private Boolean titular; //Flag indicativa se dependente é titular
 	
 	private EnderecoProposta endereco;
 
+	
 	public String getNome() {
 		return nome;
 	}
@@ -79,14 +80,14 @@ public class BeneficiarioPropostaDCMS {
 		this.email = email;
 	}
 
-	public String getCodigoPlano() {
-		return codigoPlano;
+	public PlanoDCMS getPlano() {
+		return plano;
 	}
 
-	public void setCodigoPlano(String codigoPlano) {
-		this.codigoPlano = codigoPlano;
+	public void setPlano(PlanoDCMS plano) {
+		this.plano = plano;
 	}
-
+	
 	public Boolean getTitular() {
 		return titular;
 	}
@@ -105,18 +106,8 @@ public class BeneficiarioPropostaDCMS {
 
 	@Override
 	public String toString() {
-		return "BeneficiarioProposta [" 
-				+ "nome=" + nome 
-				+ ", cpf=" + cpf 
-				+ ", sexo=" + sexo 
-				+ ", dataNascimento=" + dataNascimento 
-				+ ", nomeMae=" + nomeMae 
-				+ ", celular=" + celular 
-				+ ", email=" + email
-				+ ", codigoPlano=" + codigoPlano 
-				+ ", eTitular=" + titular 
-				+ ", enderecoProposta=" + endereco
-				+ "]";
+		return "BeneficiarioPropostaDCMS [nome=" + nome + ", cpf=" + cpf + ", sexo=" + sexo + ", dataNascimento="
+				+ dataNascimento + ", nomeMae=" + nomeMae + ", celular=" + celular + ", email=" + email + ", plano="
+				+ plano + ", titular=" + titular + ", endereco=" + endereco + "]";
 	}
-		
 }

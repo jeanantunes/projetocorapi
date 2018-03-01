@@ -29,6 +29,7 @@ import br.com.odontoprev.portal.corretor.dto.CorretoraPropostaDCMS;
 import br.com.odontoprev.portal.corretor.dto.DadosBancariosPropostaDCMS;
 import br.com.odontoprev.portal.corretor.dto.DadosBancariosVenda;
 import br.com.odontoprev.portal.corretor.dto.EnderecoProposta;
+import br.com.odontoprev.portal.corretor.dto.PlanoDCMS;
 import br.com.odontoprev.portal.corretor.dto.PropostaDCMS;
 import br.com.odontoprev.portal.corretor.dto.PropostaDCMSResponse;
 import br.com.odontoprev.portal.corretor.dto.TipoCobrancaPropostaDCMS;
@@ -39,7 +40,6 @@ import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
-import oracle.sql.DATE;
 
 @ManagedBean
 public class VendaPFBusiness {
@@ -101,8 +101,9 @@ public class VendaPFBusiness {
 //				TbodPlano tbodPlano = planoDao.findByCdPlano(venda.getPlanos().get(0).getCdPlano());
 //				tbVenda.setTbodPlano(tbodPlano);
 //			}
+			TbodPlano tbodPlano = null;
 			if(venda.getCdPlano() != null) {
-				TbodPlano tbodPlano = planoDao.findByCdPlano(venda.getCdPlano());
+				tbodPlano = planoDao.findByCdPlano(venda.getCdPlano());
 				tbVenda.setTbodPlano(tbodPlano);
 			}
 
@@ -191,7 +192,8 @@ public class VendaPFBusiness {
 			}
 			
 			if(!flagNumero.equals("0") && !flagNumero.equals("1")) {
-				PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda);
+				
+				PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
 							
 				Gson gson = new Gson();
 				String propostaJson = gson.toJson(propostaDCMS);			
@@ -255,7 +257,7 @@ public class VendaPFBusiness {
 		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"]; NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "].");
 	}
 
-	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda) {
+	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda, TbodPlano tbodPlano) {
 		PropostaDCMS propostaDCMS = new PropostaDCMS();
 
 		TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
@@ -266,7 +268,8 @@ public class VendaPFBusiness {
 		propostaDCMS.getCorretora().setNome(tbodForcaVenda.getTbodCorretora().getNome());
 
 		propostaDCMS.setCodigoEmpresaDCMS("997692"); //codigoEmpresaDCMS: 997692
-		propostaDCMS.setCodigoCanalVendas((long)57); //codigoCanalVendas: 57
+		//propostaDCMS.setCodigoCanalVendas((long)57); //codigoCanalVendas: 57
+		propostaDCMS.setCodigoCanalVendas("46"); //201802010449 RODRIGAO 
 		propostaDCMS.setCodigoUsuario(venda.getCdForcaVenda());
 		
 		propostaDCMS.setTipoCobranca(new TipoCobrancaPropostaDCMS());
@@ -348,28 +351,30 @@ public class VendaPFBusiness {
 			beneficiarioPropostaTitular.setSexo(titular.getSexo());
 			
 			beneficiarioPropostaTitular.setDataNascimento(titular.getDataNascimento());
-			SimpleDateFormat sdfApp = new SimpleDateFormat("dd/MM/YYYY");
+			SimpleDateFormat sdfApp = new SimpleDateFormat("dd/MM/yyyy");
 			Date dateDataNascimento = null;
 			try {
 				dateDataNascimento = sdfApp.parse(titular.getDataNascimento());
 			} catch (ParseException e) {
 				log.info("atribuirVendaPFParaPropostaDCMS; titular.getDataNascimento(String):[" + titular.getDataNascimento() + "]; e.getMessage():[" + e.getMessage() + "];");
 			}
-			SimpleDateFormat sdfJsonString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento);
+			SimpleDateFormat sdfJsonString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000-0300");
 			beneficiarioPropostaTitular.setDataNascimento(stringDataNascimentoJSON);
 			
-			beneficiarioPropostaTitular.setDataNascimento(titular.getDataNascimento());
-			
 			beneficiarioPropostaTitular.setNomeMae(titular.getNomeMae());
-			beneficiarioPropostaTitular.setCelular(titular.getCelular().replace(".", "").replace("-", "").replace(" ", ""));
+			beneficiarioPropostaTitular.setCelular(titular.getCelular().replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", ""));
 			beneficiarioPropostaTitular.setEmail(titular.getEmail());
 			
 //			if(venda.getPlanos() != null && !venda.getPlanos().isEmpty()) {
 //				beneficiarioPropostaTitular.setCodigoPlano(String.valueOf(venda.getPlanos().get(0).getCdPlano()));
 //			}
-			if(venda.getCdPlano() != null) {
-				beneficiarioPropostaTitular.setCodigoPlano(String.valueOf(venda.getCdPlano()));
+			if(tbodPlano != null) {
+				//beneficiarioPropostaTitular.setCodigoPlano(String.valueOf(venda.getCdPlano()));
+				beneficiarioPropostaTitular.setPlano(new PlanoDCMS());
+				beneficiarioPropostaTitular.getPlano().setCodigoPlano(tbodPlano.getCdPlano());
+				beneficiarioPropostaTitular.getPlano().setTipoNegociacao(tbodPlano.getTbodTipoPlano().getDescricao());
+				beneficiarioPropostaTitular.getPlano().setValorPlano(Float.parseFloat(tbodPlano.getValorMensal().toString()));
 			}
 			
 			beneficiarioPropostaTitular.setTitular(true); //TRUE PARA DEPENDENTE
@@ -400,19 +405,26 @@ public class VendaPFBusiness {
 				} catch (ParseException e) {
 					log.info("atribuirVendaPFParaPropostaDCMS; dependente.getDataNascimento(String):[" + titular.getDataNascimento() + "]; e.getMessage():[" + e.getMessage() + "];");
 				}
-				SimpleDateFormat sdfJsonStringDep = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-				String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep);
+				SimpleDateFormat sdfJsonStringDep = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000-0300");
 				beneficiarioPropostaTitular.setDataNascimento(stringDataNascimentoJSONDep);
 				
 				beneficiarioPropostaDependente.setNomeMae(dependente.getNomeMae());
-				beneficiarioPropostaDependente.setCelular(dependente.getCelular());
+				beneficiarioPropostaDependente.setCelular(dependente.getCelular().replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", ""));
 				beneficiarioPropostaDependente.setEmail(dependente.getEmail());
 				
 //				if(venda.getPlanos() != null && !venda.getPlanos().isEmpty()) {
 //					beneficiarioPropostaDependente.setCodigoPlano(String.valueOf(venda.getPlanos().get(0).getCdPlano()));
 //				}
-				if(venda.getCdPlano() != null) {
-					beneficiarioPropostaDependente.setCodigoPlano(String.valueOf(venda.getCdPlano()));
+//				if(venda.getCdPlano() != null) {
+//					beneficiarioPropostaDependente.setCodigoPlano(String.valueOf(venda.getCdPlano()));
+//				}
+				if(tbodPlano != null) {
+					//beneficiarioPropostaTitular.setCodigoPlano(String.valueOf(venda.getCdPlano()));
+					beneficiarioPropostaDependente.setPlano(new PlanoDCMS());
+					beneficiarioPropostaDependente.getPlano().setCodigoPlano(tbodPlano.getCdPlano());
+					beneficiarioPropostaDependente.getPlano().setTipoNegociacao(tbodPlano.getTbodTipoPlano().getDescricao());
+					beneficiarioPropostaDependente.getPlano().setValorPlano(Float.parseFloat(tbodPlano.getValorMensal().toString()));
 				}
 				
 				beneficiarioPropostaDependente.setTitular(false); //FALSE PARA DEPENDENTE
