@@ -3,6 +3,36 @@
 PLANOS
 
 	GET /plano - Retorna lista de planos
+	Response
+	[
+	    {
+	        "cdPlano": 1,
+	        "titulo": "PLANO TOP",
+	        "descricao": "MENSAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    },
+	    {
+	        "cdPlano": 2,
+	        "titulo": "TESTE",
+	        "descricao": "MENSAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    },
+	    {
+	        "cdPlano": 3,
+	        "titulo": "Teste2",
+	        "descricao": "ANUAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    }
+	]
 
 	GET /plano-empresa/{cdEmpresa} - Retorna lista de planos da empresa x
 
