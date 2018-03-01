@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -147,18 +148,22 @@ public class VendaPFBusiness {
 				
 				if(beneficiarioTitular.getDadosBancarios().getAgencia() != null) {
 					beneficiarioTitular.getDadosBancarios().setAgencia(beneficiarioTitular.getDadosBancarios().getAgencia().replace("-", ""));
-					String ag = beneficiarioTitular.getDadosBancarios().getAgencia().substring(0,beneficiarioTitular.getDadosBancarios().getAgencia().length()-1);
-					String agDV = beneficiarioTitular.getDadosBancarios().getAgencia().substring(beneficiarioTitular.getDadosBancarios().getAgencia().length()-1);
-					tbVenda.setAgencia(ag);
-					tbVenda.setAgenciaDv(agDV);
+					if(!beneficiarioTitular.getDadosBancarios().getAgencia().isEmpty()) {
+						String ag = beneficiarioTitular.getDadosBancarios().getAgencia().substring(0,beneficiarioTitular.getDadosBancarios().getAgencia().length()-1);
+						String agDV = beneficiarioTitular.getDadosBancarios().getAgencia().substring(beneficiarioTitular.getDadosBancarios().getAgencia().length()-1);
+						tbVenda.setAgencia(ag);
+						tbVenda.setAgenciaDv(agDV);
+					}
 				}
 				
 				if(beneficiarioTitular.getDadosBancarios().getConta() != null) {
 					beneficiarioTitular.getDadosBancarios().setConta(beneficiarioTitular.getDadosBancarios().getConta().replace("-", ""));
-					String cc = beneficiarioTitular.getDadosBancarios().getConta().substring(0,beneficiarioTitular.getDadosBancarios().getConta().length()-1);
-					String ccDv = beneficiarioTitular.getDadosBancarios().getConta().substring(beneficiarioTitular.getDadosBancarios().getConta().length()-1);
-					tbVenda.setConta(cc);
-					tbVenda.setContaDv(ccDv);
+					if(!beneficiarioTitular.getDadosBancarios().getConta().isEmpty()) {
+						String cc = beneficiarioTitular.getDadosBancarios().getConta().substring(0,beneficiarioTitular.getDadosBancarios().getConta().length()-1);
+						String ccDv = beneficiarioTitular.getDadosBancarios().getConta().substring(beneficiarioTitular.getDadosBancarios().getConta().length()-1);
+						tbVenda.setConta(cc);
+						tbVenda.setContaDv(ccDv);
+					}
 				}
 			}
 			
@@ -180,6 +185,7 @@ public class VendaPFBusiness {
 				throw new Exception(beneficiarioResponse.getMensagem());
 			}
 			
+			//QG TESTE APP SYNC 201802282300
 			String flagNumero = "";
 			if(venda.getTitulares() != null
 				&& !venda.getTitulares().isEmpty()
@@ -191,34 +197,19 @@ public class VendaPFBusiness {
 				flagNumero = venda.getTitulares().get(0).getEndereco().getNumero();
 			}
 			
+			//QG TESTE APP SYNC 201802282300
 			if(!flagNumero.equals("0") && !flagNumero.equals("1")) {
 				
-				PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
-							
-				Gson gson = new Gson();
-				String propostaJson = gson.toJson(propostaDCMS);			
-				log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
-	
-				propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
-				
-				if(propostaDCMSResponse != null) {
-					log.info("chamarWSLegadoPropostaPOST; propostaResponse:[" + propostaDCMSResponse.getNumeroProposta() + "]");
-				}
+				propostaDCMSResponse = chamarWsDcssLegado(venda, tbodPlano);
 				
 			} else {
 				Integer cod = Integer.parseInt(flagNumero);
-				String msg = "Venda cadastrada CdVenda:[" + cod + "]; NumeroProposta:[" + cod + "].";
+				String msg = "Venda cadastrada CdVenda:[" + tbVenda.getCdVenda() + "]; NumeroProposta:[" + cod + "].";
 				return new VendaResponse(cod, msg);
 			}
 			
-			//tbVenda = vendaDao.save(tbVenda);
+			atualizarNumeroPropostaVenda(venda, tbVenda, propostaDCMSResponse);
 
-//			if(tbVenda != null) {
-//				if(tbVenda.getCdVenda() != null) {
-//					tbVenda = vendaDao.findOne(venda.getCdVenda());					
-//				}
-//			}
-			
 		} catch (Exception e) {
 			log.error("salvarVendaPFComTitularesComDependentes :: Erro ao cadastrar venda CdVenda:[" + venda.getCdVenda() + "], Detalhe: [" + e.getMessage() + "], Causa: [" + e.getCause() != null ? e.getCause().getMessage() : "null" + "]");
 			
@@ -257,6 +248,58 @@ public class VendaPFBusiness {
 		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"]; NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "].");
 	}
 
+	public void atualizarNumeroPropostaVenda(Venda venda, TbodVenda tbVenda, PropostaDCMSResponse propostaDCMSResponse) throws Exception 
+	{
+		TbodStatusVenda tbodStatusVenda;
+		TbodVenda tbodVendaUpdate = vendaDao.findOne(tbVenda.getCdVenda());
+		try {
+			if(tbodVendaUpdate != null) {
+				
+				if(propostaDCMSResponse.getNumeroProposta() != null 
+					&& !propostaDCMSResponse.getNumeroProposta().isEmpty()
+				) {
+					tbodVendaUpdate.setPropostaDcms(propostaDCMSResponse.getNumeroProposta());
+					tbodStatusVenda = statusVendaDao.findOne(new Long(1)); //1=Aprovado
+					if(tbodStatusVenda == null) {
+						throw new Exception("atualizarNumeroPropostaVenda; Não achou tbodStatusVenda.getCdStatusVenda(1)");
+					}
+				} else {
+					tbodVendaUpdate.setPropostaDcms(null);
+					tbodStatusVenda = statusVendaDao.findOne(new Long(2)); //2=Criticado
+					if(tbodStatusVenda == null) {
+						throw new Exception("atualizarNumeroPropostaVenda; Não achou tbodStatusVenda.getCdStatusVenda(1)");
+					}
+				}
+				
+				tbodVendaUpdate.setTbodStatusVenda(tbodStatusVenda);
+				
+				tbodVendaUpdate = vendaDao.save(tbodVendaUpdate);
+				
+			} else {
+				throw new Exception("atualizarNumeroPropostaVenda; Não achou tbVenda.getCdVenda():["+ tbVenda.getCdVenda() +"]");
+			}
+		} catch (Exception e) {
+			throw new Exception("atualizarNumeroPropostaVenda; e.getMessage():["+ e.getMessage() +"]; e.getCause().getMessage():["+ e.getCause() != null ? e.getCause().getMessage() : "null" +"]");
+		}
+	}
+
+	public PropostaDCMSResponse chamarWsDcssLegado(Venda venda, TbodPlano tbodPlano) {
+								
+		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
+					
+		Gson gson = new Gson();
+		String propostaJson = gson.toJson(propostaDCMS);			
+		log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
+
+		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
+		
+		if(propostaDCMSResponse != null) {
+			log.info("chamarWSLegadoPropostaPOST; propostaResponse:[" + propostaDCMSResponse.getNumeroProposta() + "]");
+		}
+			
+		return propostaDCMSResponse;
+	}
+
 	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda, TbodPlano tbodPlano) {
 		PropostaDCMS propostaDCMS = new PropostaDCMS();
 
@@ -269,7 +312,8 @@ public class VendaPFBusiness {
 
 		propostaDCMS.setCodigoEmpresaDCMS("997692"); //codigoEmpresaDCMS: 997692
 		//propostaDCMS.setCodigoCanalVendas((long)57); //codigoCanalVendas: 57
-		propostaDCMS.setCodigoCanalVendas("46"); //201802010449 RODRIGAO 
+		//propostaDCMS.setCodigoCanalVendas("46"); //201803010449 RODRIGAO 
+		propostaDCMS.setCodigoCanalVendas("57"); //201803011730 ROBERTO 
 		propostaDCMS.setCodigoUsuario(venda.getCdForcaVenda());
 		
 		propostaDCMS.setTipoCobranca(new TipoCobrancaPropostaDCMS());
@@ -450,27 +494,38 @@ public class VendaPFBusiness {
 	@SuppressWarnings({ })
 	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS proposta){
 
-		String URLAPI = "https://api-it1.odontoprev.com.br:8243/dcss/vendas/1.0/proposta";
+		ResponseEntity<PropostaDCMSResponse> propostaRet = null;
+		try {
+			String URLAPI = "https://api-it1.odontoprev.com.br:8243/dcss/vendas/1.0/proposta";
+					
+			propostaRet = new RestTemplate().postForEntity(
+				URLAPI, 
+				proposta, 
+				PropostaDCMSResponse.class
+			);
+			
+			if(propostaRet != null) {
+				log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + propostaRet.getStatusCode() + "];");
+			}
+	
+			if(propostaRet == null 
+				|| (propostaRet.getStatusCode() == HttpStatus.FORBIDDEN)
+				|| (propostaRet.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR)
+				|| (propostaRet.getStatusCode() == HttpStatus.BAD_REQUEST)
+			) {
+				return null;
+			}
 				
-		ResponseEntity<PropostaDCMSResponse> propostaRet = new RestTemplate().postForEntity(
-			URLAPI, 
-			proposta, 
-			PropostaDCMSResponse.class
-		);
-		
-		if(propostaRet != null) {
-			log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + propostaRet.getStatusCode() + "];");
+		} catch (RestClientException e) {
+			log.info("chamarWSLegadoPropostaPOST; RestClientException.getMessage():[" + e.getMessage() + "];");
+			//e.printStackTrace();
+		} catch (Exception e) {
+			log.info("chamarWSLegadoPropostaPOST; Exception.getMessage():[" + e.getMessage() + "];");
+			//e.printStackTrace();
 		}
-
-		if(propostaRet == null 
-			|| (propostaRet.getStatusCode() == HttpStatus.FORBIDDEN)
-			|| (propostaRet.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR)
-			|| (propostaRet.getStatusCode() == HttpStatus.BAD_REQUEST)
-		) {
-			return null;
-		}
-				
+					
 		return propostaRet.getBody();
+			
 	}
 
 }
