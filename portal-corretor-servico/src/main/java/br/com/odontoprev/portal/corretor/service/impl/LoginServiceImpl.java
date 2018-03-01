@@ -1,9 +1,8 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import br.com.odontoprev.portal.corretor.dao.LoginDAO;
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.model.TbodLogin;
-import br.com.odontoprev.portal.corretor.service.LoginService;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.bytecode.buildtime.spi.ExecutionException;
@@ -12,77 +11,92 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import java.util.HashMap;
-import java.util.Map;
+
+import br.com.odontoprev.portal.corretor.dao.LoginDAO;
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
+import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.dto.LoginResponse;
+import br.com.odontoprev.portal.corretor.dto.LoginRetorno;
+import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.service.LoginService;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
-    private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
+	private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
 
-    @Autowired
-    LoginDAO loginDAO;
+	@Autowired
+	private LoginDAO loginDAO;
+	@Autowired
+	private ForcaVendaServiceImpl serviceFV;
+	@Autowired
+	private CorretoraServiceImpl serviceCorretora;
 
-    @Value("${DCSS_URL}")
-    private String dcssUrl;
+	@Value("${DCSS_URL}")
+	private String dcssUrl;
 
-    private LoginResponse responseNotFound = new LoginResponse();
+	private final LoginResponse responseNotFound = new LoginResponse();
 
-    @Override
-    public LoginResponse login(Login login) {
+	@Override
+	public LoginResponse login(Login login) {
 
-        String perfil = "Corretora";
-        if (login.getUsuario() != null && !login.getUsuario().isEmpty()) {
-            return null;
-        }
+		log.info("[login]");
 
-        if (login.getUsuario().length() == 11) {
-            perfil = "Corretor";
-            ForcaVendaServiceImpl serviceFV = new ForcaVendaServiceImpl();
-            ForcaVenda forcaVenda = serviceFV.findForcaVendaByCpf(login.getUsuario());
+		String perfil = "Corretora";
+		if (login.getUsuario() == null && login.getUsuario().isEmpty()) {
+			return null;
+		}
 
-            if (forcaVenda == null) {
-                return responseNotFound;
-            }
+		if (login.getUsuario().length() == 11) {
+			perfil = "Corretor";
+			final ForcaVenda forcaVenda = serviceFV.findForcaVendaByCpf(login.getUsuario());
 
-            RestTemplate restTemplate = new RestTemplate();
-            Map<String, String> loginMap = new HashMap<>();
-            loginMap.put("login", login.getUsuario());
-            loginMap.put("senha", login.getSenha());
-            try {
+			if (forcaVenda == null) {
+				return responseNotFound;
+			}
 
-                ResponseEntity<LoginRetorno> loginRetorno = restTemplate.postForEntity((dcssUrl + "/login/1.0/?"), loginMap, LoginRetorno.class);
+			final RestTemplate restTemplate = new RestTemplate();
+			final Map<String, String> loginMap = new HashMap<>();
+			loginMap.put("login", login.getUsuario());
+			loginMap.put("senha", login.getSenha());
+			try {
 
-                return new LoginResponse(loginRetorno.getBody().getCodigoUsuario(),
-                        loginRetorno.getBody().getNomeUsuario(),
-                        loginRetorno.getBody().getDocumento(),
-                        forcaVenda.getCorretora().getCdCorretora(),
-                        forcaVenda.getCorretora().getRazaoSocial(),
-                        perfil);
+				final ResponseEntity<LoginRetorno> loginRetorno = restTemplate
+						.postForEntity((dcssUrl + "/login/1.0/"), loginMap,
+								LoginRetorno.class);
 
-            } catch (Exception e) {
-                throw e;
-            }
-        } else {
-            TbodLogin loginCorretora = loginDAO.findByTbodCorretoras(login.getUsuario());
-            if (loginCorretora != null && login.getSenha() != null && loginCorretora.getSenha().equals(login.getSenha())) {
+				return new LoginResponse(
+						forcaVenda.getCdForcaVenda(),
+						loginRetorno.getBody().getNomeUsuario(),
+						loginRetorno.getBody().getDocumento(),
+						forcaVenda.getCorretora().getCdCorretora(),
+						forcaVenda.getCorretora().getRazaoSocial(), perfil);
 
-                CorretoraServiceImpl serviceCorretora = new CorretoraServiceImpl();
-                Corretora corretora = serviceCorretora.buscaCorretoraPorCnpj(login.getUsuario());
+			} catch (final Exception e) {
+				throw e;
+			}
+		} else {
+			final TbodLogin loginCorretora = loginDAO
+					.findByTbodCorretoras(login.getUsuario());
+			if (loginCorretora != null && login.getSenha() != null
+					&& loginCorretora.getSenha().equals(login.getSenha())) {
 
-                if (corretora.getCdCorretora() == 0) {
-                    throw new ExecutionException("Dono de corretora sem corretora atrelada.");
-                }
+				final Corretora corretora = serviceCorretora
+						.buscaCorretoraPorCnpj(login.getUsuario());
 
-                return new LoginResponse(loginCorretora.getCdLogin(),
-                        corretora.getRazaoSocial(),
-                        login.getUsuario(),
-                        corretora.getCdCorretora(),
-                        corretora.getRazaoSocial(),
-                        perfil);
-            } else {
-                return responseNotFound;
-            }
-        }
-    }
+				if (corretora.getCdCorretora() == 0) {
+					throw new ExecutionException(
+							"Dono de corretora sem corretora atrelada.");
+				}
+
+				return new LoginResponse(loginCorretora.getCdLogin(),
+						corretora.getRazaoSocial(), login.getUsuario(),
+						corretora.getCdCorretora(), corretora.getRazaoSocial(),
+						perfil);
+			} else {
+				return responseNotFound;
+			}
+		}
+	}
 }
