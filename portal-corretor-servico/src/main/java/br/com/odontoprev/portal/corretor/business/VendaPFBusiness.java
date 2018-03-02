@@ -55,6 +55,7 @@ public class VendaPFBusiness {
 		if(restTemplate  == null)
 			restTemplate = new RestTemplate();
 	}
+	
 	@Autowired
 	VendaDAO vendaDao;
 	
@@ -81,6 +82,9 @@ public class VendaPFBusiness {
 	
 	@Value("${DCSS_CODIGO_CANAL_VENDAS}")
 	private String dcss_codigo_canal_vendas; //201803021328 esertorio para moliveira
+	
+	@Value("${DCSS_CODIGO_EMPRESA_DCMS}")
+	private String dcss_codigo_empresa_dcms; //201803021538 esertorio para moliveira
 	
 	public VendaResponse salvarVendaComTitularesComDependentes(Venda venda) {
 
@@ -210,7 +214,7 @@ public class VendaPFBusiness {
 			//QG TESTE APP SYNC 201802282300
 			if(!flagNumero.equals("0") && !flagNumero.equals("1")) {
 				
-				propostaDCMSResponse = chamarWsDcssLegado(venda, tbodPlano, dcssUrl, dcss_venda_propostaPath, dcss_codigo_canal_vendas);
+				propostaDCMSResponse = chamarWsDcssLegado(venda, tbodPlano);
 				
 			} else {
 				Integer cod = Integer.parseInt(flagNumero);
@@ -294,15 +298,15 @@ public class VendaPFBusiness {
 		}
 	}
 
-	public PropostaDCMSResponse chamarWsDcssLegado(Venda venda, TbodPlano tbodPlano, String dcssUrl, String dcss_venda_propostaPath, String codigoCanalVendas) {
+	public PropostaDCMSResponse chamarWsDcssLegado(Venda venda, TbodPlano tbodPlano) {
 								
-		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano, dcss_codigo_canal_vendas);
+		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
 					
 		Gson gson = new Gson();
 		String propostaJson = gson.toJson(propostaDCMS);			
 		log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
 
-		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS, dcssUrl, dcss_venda_propostaPath);
+		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
 		
 		if(propostaDCMSResponse != null) {
 			log.info("chamarWSLegadoPropostaPOST; propostaResponse:[" + propostaDCMSResponse.getNumeroProposta() + "]");
@@ -311,7 +315,7 @@ public class VendaPFBusiness {
 		return propostaDCMSResponse;
 	}
 
-	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda, TbodPlano tbodPlano, String dcss_codigo_canal_vendas) {
+	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda, TbodPlano tbodPlano) {
 		PropostaDCMS propostaDCMS = new PropostaDCMS();
 
 		TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
@@ -322,7 +326,8 @@ public class VendaPFBusiness {
 		propostaDCMS.getCorretora().setNome(tbodForcaVenda.getTbodCorretora().getNome());
 
 		//propostaDCMS.setCodigoEmpresaDCMS("997692"); //codigoEmpresaDCMS: 997692
-		propostaDCMS.setCodigoEmpresaDCMS(venda.getCdEmpresaDCMS()); //201803021320 esertorio para moliveira
+		//propostaDCMS.setCodigoEmpresaDCMS(venda.getCdEmpresaDCMS()); //201803021320 esertorio para moliveira
+		propostaDCMS.setCodigoEmpresaDCMS(dcss_codigo_empresa_dcms); //201803021538 esertorio para moliveira
 
 		//propostaDCMS.setCodigoCanalVendas((long)57); //codigoCanalVendas: 57
 		//propostaDCMS.setCodigoCanalVendas("46"); //201803010449 RODRIGAO 
@@ -507,7 +512,7 @@ public class VendaPFBusiness {
 	}
 
 	@SuppressWarnings({ })
-	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS proposta, String dcssUrl, String dcss_venda_propostaPath){
+	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS proposta){
 
 		ResponseEntity<PropostaDCMSResponse> propostaRet = null;
 		try {
