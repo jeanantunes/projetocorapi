@@ -255,7 +255,8 @@ public class VendaPFBusiness {
 		try {
 			if(tbodVendaUpdate != null) {
 				
-				if(propostaDCMSResponse.getNumeroProposta() != null 
+				if(propostaDCMSResponse!=null 
+				    && propostaDCMSResponse.getNumeroProposta() != null 
 					&& !propostaDCMSResponse.getNumeroProposta().isEmpty()
 				) {
 					tbodVendaUpdate.setPropostaDcms(propostaDCMSResponse.getNumeroProposta());
@@ -403,7 +404,7 @@ public class VendaPFBusiness {
 				log.info("atribuirVendaPFParaPropostaDCMS; titular.getDataNascimento(String):[" + titular.getDataNascimento() + "]; e.getMessage():[" + e.getMessage() + "];");
 			}
 			SimpleDateFormat sdfJsonString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000-0300");
+			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000Z");
 			beneficiarioPropostaTitular.setDataNascimento(stringDataNascimentoJSON);
 			
 			beneficiarioPropostaTitular.setNomeMae(titular.getNomeMae());
@@ -424,7 +425,7 @@ public class VendaPFBusiness {
 			beneficiarioPropostaTitular.setTitular(true); //TRUE PARA DEPENDENTE
 			
 			beneficiarioPropostaTitular.setEndereco(new EnderecoProposta());
-			beneficiarioPropostaTitular.getEndereco().setCep(titular.getEndereco().getCep());
+			beneficiarioPropostaTitular.getEndereco().setCep(titular.getEndereco().getCep().replaceAll("-", ""));
 			beneficiarioPropostaTitular.getEndereco().setLogradouro(titular.getEndereco().getLogradouro());
 			beneficiarioPropostaTitular.getEndereco().setNumero(titular.getEndereco().getNumero());
 			beneficiarioPropostaTitular.getEndereco().setComplemento(titular.getEndereco().getComplemento());
@@ -450,7 +451,7 @@ public class VendaPFBusiness {
 					log.info("atribuirVendaPFParaPropostaDCMS; dependente.getDataNascimento(String):[" + titular.getDataNascimento() + "]; e.getMessage():[" + e.getMessage() + "];");
 				}
 				SimpleDateFormat sdfJsonStringDep = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000-0300");
+				String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000Z");
 				beneficiarioPropostaTitular.setDataNascimento(stringDataNascimentoJSONDep);
 				
 				beneficiarioPropostaDependente.setNomeMae(dependente.getNomeMae());
@@ -474,7 +475,7 @@ public class VendaPFBusiness {
 				beneficiarioPropostaDependente.setTitular(false); //FALSE PARA DEPENDENTE
 				
 				beneficiarioPropostaDependente.setEndereco(new EnderecoProposta());
-				beneficiarioPropostaDependente.getEndereco().setCep(titular.getEndereco().getCep());
+				beneficiarioPropostaDependente.getEndereco().setCep(titular.getEndereco().getCep().replaceAll("-", ""));
 				beneficiarioPropostaDependente.getEndereco().setLogradouro(titular.getEndereco().getLogradouro());
 				beneficiarioPropostaDependente.getEndereco().setNumero(titular.getEndereco().getNumero());
 				beneficiarioPropostaDependente.getEndereco().setComplemento(titular.getEndereco().getComplemento());
@@ -496,6 +497,7 @@ public class VendaPFBusiness {
 
 		ResponseEntity<PropostaDCMSResponse> propostaRet = null;
 		try {
+			//TODO: Deixar parametrizavel
 			String URLAPI = "https://api-it1.odontoprev.com.br:8243/dcss/vendas/1.0/proposta";
 					
 			propostaRet = new RestTemplate().postForEntity(
@@ -509,19 +511,21 @@ public class VendaPFBusiness {
 			}
 	
 			if(propostaRet == null 
-				|| (propostaRet.getStatusCode() == HttpStatus.FORBIDDEN)
-				|| (propostaRet.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR)
+				|| (propostaRet.getStatusCode() == HttpStatus.FORBIDDEN)				
 				|| (propostaRet.getStatusCode() == HttpStatus.BAD_REQUEST)
 			) {
+				log.info("chamarWSLegadoPropostaPOST; HTTP_STATUS "+propostaRet.getStatusCode());
 				return null;
 			}
 				
 		} catch (RestClientException e) {
 			log.info("chamarWSLegadoPropostaPOST; RestClientException.getMessage():[" + e.getMessage() + "];");
+			return null;
 			//e.printStackTrace();
 		} catch (Exception e) {
 			log.info("chamarWSLegadoPropostaPOST; Exception.getMessage():[" + e.getMessage() + "];");
 			//e.printStackTrace();
+			return null;
 		}
 					
 		return propostaRet.getBody();
