@@ -328,6 +328,30 @@ FORCAVENDA
 	}
 	
 	PUT /forcavenda/login - Ativar forca de venda pela tela de login (forca de venda pre-cadastrada)
+	{
+	   "cdForcaVenda": 352,
+	   "nome":"FERNANDO SETAI",
+	   "celular":"11912341235",
+	   "email":"fernando.mota@odontoprev.com.br",
+	   "senha":"12312344",
+	   "nomeEmpresa": "Teste Login",
+	   "nomeGerente": "Teste Login",
+	   "responsavel": "Teste Login",
+	   "rg": 0,
+	   "canalVenda":1
+	}
+	Response OK
+	{
+	    "id": 1,
+	    "mensagem": "ForcaVendaLogin atualizado! [38330982876]"
+	}
+	Response Erro
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao atualizar ForcaVendaLogin :: Detalhe: [cdForcaVenda nao informado. Atualizacao nao realizada!]."
+	    Detalhe: [cdForcaVenda nao encontrado. Atualizacao nao realizada!]
+	}
+	
 	
 	
 	

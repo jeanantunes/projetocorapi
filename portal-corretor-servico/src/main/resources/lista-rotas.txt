@@ -21,7 +21,7 @@
 {[/forcavenda],methods=[POST]}
 {[/forcavenda],methods=[PUT]}
 {[/forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}],methods=[GET]}
-{[/forcavenda/login],methods=[PUT]}
+* {[/forcavenda/login],methods=[PUT]}
 * {[/forcavenda/{cpf}],methods=[GET]} 
 * {[/forcavenda/status-ativo],methods=[PUT]}
 * {[/forcavenda/{cdForcaVenda}/corretora/{cnpj}],methods=[GET]} 
