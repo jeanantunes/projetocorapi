@@ -417,7 +417,7 @@ public class VendaPFBusiness {
 			if(tbodPlano != null) {
 				//beneficiarioPropostaTitular.setCodigoPlano(String.valueOf(venda.getCdPlano()));
 				beneficiarioPropostaTitular.setPlano(new PlanoDCMS());
-				beneficiarioPropostaTitular.getPlano().setCodigoPlano(tbodPlano.getCdPlano());
+				beneficiarioPropostaTitular.getPlano().setCodigoPlano(Long.valueOf(tbodPlano.getCodigo()));
 				beneficiarioPropostaTitular.getPlano().setTipoNegociacao(tbodPlano.getTbodTipoPlano().getDescricao());
 				beneficiarioPropostaTitular.getPlano().setValorPlano(Float.parseFloat(tbodPlano.getValorMensal().toString()));
 			}
