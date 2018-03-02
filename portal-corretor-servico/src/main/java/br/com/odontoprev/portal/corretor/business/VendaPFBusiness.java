@@ -147,39 +147,43 @@ public class VendaPFBusiness {
 				tbVenda.setFaturaVencimento((long)0);				
 			}
 			
-			if(venda.getTitulares() != null && venda.getTitulares().size() > 0) {
-				
-				Beneficiario beneficiarioTitular = venda.getTitulares().get(0);
+			if(venda.getTitulares() != null 
+				&& !venda.getTitulares().isEmpty()
+				&& venda.getTitulares().get(0) != null
+				&& venda.getTitulares().get(0).getDadosBancarios() != null
+			) {
+					
+				DadosBancariosVenda dadosBancariosVenda = venda.getTitulares().get(0).getDadosBancarios();
 				
 				//Dados Bancarios
-				if(beneficiarioTitular.getDadosBancarios().getTipoConta() != null) {
-					tbVenda.setTipoConta(beneficiarioTitular.getDadosBancarios().getTipoConta());
+				if(dadosBancariosVenda.getTipoConta() != null) {
+					tbVenda.setTipoConta(dadosBancariosVenda.getTipoConta());
 				}
 				
-				if(beneficiarioTitular.getDadosBancarios().getCodigoBanco() != null) {
-					tbVenda.setBanco(beneficiarioTitular.getDadosBancarios().getCodigoBanco());
+				if(dadosBancariosVenda.getCodigoBanco() != null) {
+					tbVenda.setBanco(dadosBancariosVenda.getCodigoBanco());
 				}
 				
-				if(beneficiarioTitular.getDadosBancarios().getAgencia() != null) {
-					beneficiarioTitular.getDadosBancarios().setAgencia(beneficiarioTitular.getDadosBancarios().getAgencia().replace("-", ""));
-					if(!beneficiarioTitular.getDadosBancarios().getAgencia().isEmpty()) {
-						String ag = beneficiarioTitular.getDadosBancarios().getAgencia().substring(0,beneficiarioTitular.getDadosBancarios().getAgencia().length()-1);
-						String agDV = beneficiarioTitular.getDadosBancarios().getAgencia().substring(beneficiarioTitular.getDadosBancarios().getAgencia().length()-1);
+				if(dadosBancariosVenda.getAgencia() != null) {
+					dadosBancariosVenda.setAgencia(dadosBancariosVenda.getAgencia().replace("-", ""));
+					if(!dadosBancariosVenda.getAgencia().isEmpty()) {
+						String ag = dadosBancariosVenda.getAgencia().substring(0,dadosBancariosVenda.getAgencia().length()-1);
+						String agDV = dadosBancariosVenda.getAgencia().substring(dadosBancariosVenda.getAgencia().length()-1);
 						tbVenda.setAgencia(ag);
 						tbVenda.setAgenciaDv(agDV);
 					}
-				}
+				} //if(dadosBancariosVenda.getAgencia() != null)
 				
-				if(beneficiarioTitular.getDadosBancarios().getConta() != null) {
-					beneficiarioTitular.getDadosBancarios().setConta(beneficiarioTitular.getDadosBancarios().getConta().replace("-", ""));
-					if(!beneficiarioTitular.getDadosBancarios().getConta().isEmpty()) {
-						String cc = beneficiarioTitular.getDadosBancarios().getConta().substring(0,beneficiarioTitular.getDadosBancarios().getConta().length()-1);
-						String ccDv = beneficiarioTitular.getDadosBancarios().getConta().substring(beneficiarioTitular.getDadosBancarios().getConta().length()-1);
+				if(dadosBancariosVenda.getConta() != null) {
+					dadosBancariosVenda.setConta(dadosBancariosVenda.getConta().replace("-", ""));
+					if(!dadosBancariosVenda.getConta().isEmpty()) {
+						String cc = dadosBancariosVenda.getConta().substring(0,dadosBancariosVenda.getConta().length()-1);
+						String ccDv = dadosBancariosVenda.getConta().substring(dadosBancariosVenda.getConta().length()-1);
 						tbVenda.setConta(cc);
 						tbVenda.setContaDv(ccDv);
 					}
-				}
-			}
+				} //if(dadosBancariosVenda.getConta() != null)
+			} //if(beneficiarioTitular.getDadosBancarios() != null)
 			
 			if(venda.getTipoPagamento() != null) {
 				tbVenda.setTipoPagamento(venda.getTipoPagamento());
@@ -298,7 +302,7 @@ public class VendaPFBusiness {
 		}
 	}
 
-	public PropostaDCMSResponse chamarWsDcssLegado(Venda venda, TbodPlano tbodPlano) {
+	public PropostaDCMSResponse chamarWsDcssLegado(Venda venda, TbodPlano tbodPlano) throws Exception {
 								
 		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
 					
@@ -315,13 +319,24 @@ public class VendaPFBusiness {
 		return propostaDCMSResponse;
 	}
 
-	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda, TbodPlano tbodPlano) {
+	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda, TbodPlano tbodPlano) throws Exception {
+		
 		PropostaDCMS propostaDCMS = new PropostaDCMS();
 
 		TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
 				
 		propostaDCMS.setCorretora(new CorretoraPropostaDCMS());
-		propostaDCMS.getCorretora().setCodigo(tbodForcaVenda.getTbodCorretora().getCdCorretora());
+		
+		//propostaDCMS.getCorretora().setCodigo(tbodForcaVenda.getTbodCorretora().getCdCorretora());
+		Long corretoraCodigo = -1L;
+		try {
+			corretoraCodigo = Long.parseLong(tbodForcaVenda.getTbodCorretora().getCodigo());
+		} catch (NumberFormatException e1) {
+			// TODO Auto-generated catch block
+			throw new Exception("atribuirVendaPFParaPropostaDCMS(); Impossível converter tbodForcaVenda.getTbodCorretora().getCodigo():[" + tbodForcaVenda.getTbodCorretora().getCodigo() + "] para Long.");
+		}
+		propostaDCMS.getCorretora().setCodigo(corretoraCodigo);
+
 		propostaDCMS.getCorretora().setCnpj(tbodForcaVenda.getTbodCorretora().getCnpj());
 		propostaDCMS.getCorretora().setNome(tbodForcaVenda.getTbodCorretora().getNome());
 
