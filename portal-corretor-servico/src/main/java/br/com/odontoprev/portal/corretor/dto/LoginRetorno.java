@@ -2,27 +2,18 @@ package br.com.odontoprev.portal.corretor.dto;
 
 public class LoginRetorno {
 
-	private long codigo;
 	private String nomeUsuario;
+	private String documento;
+	private long codigo;
 
 	public LoginRetorno() {
 		super();
 	}
 
-	private String documento;
-
-	public LoginRetorno(long codigoUsuario, String nomeUsuario, String documento) {
-		this.codigo = codigoUsuario;
+	public LoginRetorno(String nomeUsuario, String documento, long codigo) {
 		this.nomeUsuario = nomeUsuario;
 		this.documento = documento;
-	}
-
-	public long getCodigoUsuario() {
-		return codigo;
-	}
-
-	public void setCodigoUsuario(long codigoUsuario) {
-		this.codigo = codigoUsuario;
+		this.codigo = codigo;
 	}
 
 	public String getNomeUsuario() {
@@ -40,4 +31,13 @@ public class LoginRetorno {
 	public void setDocumento(String documento) {
 		this.documento = documento;
 	}
+
+	public long getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(long codigo) {
+		this.codigo = codigo;
+	}
+
 }
