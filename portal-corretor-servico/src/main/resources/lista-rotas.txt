@@ -1,12 +1,14 @@
 09 POST
 05 PUT
 15 GET
+------
+29 tot
 
-{[/beneficiario],methods=[POST]}
-{[/corretor],methods=[POST]} 
-{[/corretora/{cnpj}],methods=[GET]} 
-{[/corretora],methods=[PUT]} 
-{[/corretora],methods=[POST]} 
+* {[/beneficiario],methods=[POST]}; ok; esert; 201803012346;
+{[/corretor],methods=[POST]}
+{[/corretora/{cnpj}],methods=[GET]}; ok; esert; 201803021839;
+* {[/corretora],methods=[PUT]}; nok; esert; 201803021807; moliveira@odpv: desprezar erro post/corretora pq nao sera usado agora; 
+* {[/corretora],methods=[POST]}; nok; esert; 201803012355; ORA-01400: cannot insert NULL into ("CORRET"."TBOD_CORRETORA_BANCO"."CPF_RESPONSAVEL_LEGAL1"); 201803021807; moliveira@odpv: desprezar erro post/corretora pq nao sera usado agora;  
 {[/dashboard/forcavenda/aguardando-aprovacao/{cdCorretora}],methods=[GET]}
 {[/dashboardPropostaPF/{status}/{cpf}],methods=[GET]} 
 {[/dashboardPropostaPF/buscaPorCriticaPF_CNPJ_CPF/{cnpj}/{cpf}],methods=[GET]} 
@@ -16,19 +18,19 @@
 {[/dashboardPropostaPF/buscaPorCriticaPF_CPF/{cpf}],methods=[GET]}
 {[/dashboardPropostaPF/buscaPorCriticaPF_CNPJ/{cnpj}],methods=[GET]} 
 {[/dashboardPropostaPME/buscaPorCriticaPME_CPF/{cpf}],methods=[GET]} 
-* {[/empresa-dcms],methods=[PUT]}
-* {[/empresa],methods=[POST]} 
-* {[/forcavenda],methods=[POST]}
+* {[/empresa-dcms],methods=[PUT]}; ok; 20180302; jaqueline;
+* {[/empresa],methods=[POST]}; ok; 20180302; jaqueline;
+* {[/forcavenda],methods=[POST]}; ok; 20180302; jaqueline;
 {[/forcavenda],methods=[PUT]}
-* {[/forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}],methods=[GET]}
-* {[/forcavenda/login],methods=[PUT]}
-* {[/forcavenda/{cpf}],methods=[GET]} 
-* {[/forcavenda/status-ativo],methods=[PUT]}
-* {[/forcavenda/{cdForcaVenda}/corretora/{cnpj}],methods=[GET]} 
-* {[/login],methods=[POST]}
-* {[/plano],methods=[GET]}
-* {[/plano-empresa/{cdEmpresa}],methods=[GET]} 
-* {[/propostasDashBoard],methods=[POST]}
+* {[/forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}],methods=[GET]}; ok; 20180302; jaqueline;
+* {[/forcavenda/login],methods=[PUT]}; ok; 20180302; jaqueline;
+* {[/forcavenda/{cpf}],methods=[GET]}; ok; 20180302; jaqueline;
+* {[/forcavenda/status-ativo],methods=[PUT]}; ok; 20180302; jaqueline;
+* {[/forcavenda/{cdForcaVenda}/corretora/{cnpj}],methods=[GET]}; ok; 20180302; jaqueline; 
+* {[/login],methods=[POST]}; 20180302; jaqueline;
+* {[/plano],methods=[GET]}; 20180302; jaqueline;
+* {[/plano-empresa/{cdEmpresa}],methods=[GET]}; ok; 20180302; jaqueline; 
+* {[/propostasDashBoard],methods=[POST]}; ok; 20180302; jaqueline;
 {[/vendapme],methods=[POST]}
 {[/vendapf],methods=[POST]}
 

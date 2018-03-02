@@ -263,7 +263,7 @@ public class VendaPFBusiness {
 			return new VendaResponse(0, msg);
 		}
 
-		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"]; NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "].");
+		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"]; NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; DtVenda:["+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) +"];");
 	}
 
 	public void atualizarNumeroPropostaVenda(Venda venda, TbodVenda tbVenda, PropostaDCMSResponse propostaDCMSResponse) throws Exception 

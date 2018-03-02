@@ -134,6 +134,11 @@ public class CorretoraServiceImpl implements CorretoraService {
 		 try {
 			TbodCorretora tbodCorretora = corretoraDao.findByCnpj(cnpj);
 			
+			if(tbodCorretora == null) {
+	            log.error("buscaCorretoraPorCnpj :: cnpj:[" + cnpj + "] len:["+ cnpj.length() +"] não encontrado.");
+	            return new Corretora();
+			}
+			
 			// Corretora
 			corretora.setCdCorretora(tbodCorretora.getCdCorretora());
 			corretora.setCnpj(tbodCorretora.getCnpj());
