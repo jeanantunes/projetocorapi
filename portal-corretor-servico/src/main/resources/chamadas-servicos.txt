@@ -241,9 +241,60 @@ FORCAVENDA
 
 	GET /forcavenda/{cpf} - Retorna forcavenda por cpf
 	Response OK
-	
+	{
+	    "cdForcaVenda": 249,
+	    "nome": "JORGE DA SILVA",
+	    "celular": "1155559999",
+	    "email": "jorge@teste.com",
+	    "corretora": {
+	        "cdCorretora": 1,
+	        "cnpj": "1111111",
+	        "razaoSocial": "Teste",
+	        "cnae": null,
+	        "telefone": null,
+	        "celular": null,
+	        "email": null,
+	        "statusCnpj": false,
+	        "simplesNacional": false,
+	        "dataAbertura": null,
+	        "enderecoCorretora": null,
+	        "conta": null,
+	        "login": null,
+	        "representantes": null
+	    },
+	    "statusForcaVenda": "Ativo",
+	    "cpf": "11122233344",
+	    "ativo": true,
+	    "departamento": "ABC",
+	    "cargo": "Analista de Sistemas",
+	    "dataNascimento": "20/06/1980",
+	    "nomeEmpresa": null,
+	    "nomeGerente": null,
+	    "responsavel": null,
+	    "rg": null,
+	    "senha": "",
+	    "canalVenda": null
+	}
 	Response Erro
-	
+	{
+	    "cdForcaVenda": null,
+	    "nome": null,
+	    "celular": null,
+	    "email": null,
+	    "corretora": null,
+	    "statusForcaVenda": null,
+	    "cpf": null,
+	    "ativo": false,
+	    "departamento": null,
+	    "cargo": null,
+	    "dataNascimento": null,
+	    "nomeEmpresa": null,
+	    "nomeGerente": null,
+	    "responsavel": null,
+	    "rg": null,
+	    "senha": null,
+	    "canalVenda": null
+	}
 	
 
 	GET /forcavenda/{cdForcaVenda}/corretora/{cnpj} - Busca associacao forcavenda/corretora
@@ -293,7 +344,6 @@ FORCAVENDA
 	{
 	    "id": 0,
 	    "mensagem": "Erro ao atualizar ForcaVendaStatus :: Detalhe: [CPF ForcaVenda nao informado. Atualizacao nao realizada!]."
-	    Detalhe: [CPF ForcaVenda nao informado. Atualizacao nao realizada!]
 	    Detalhe: [ForcaVenda nao encontrada. Atualizacao nao realizada!]
 	    Detalhe: [CPF duplicado. Atualizacao nao realizada!]
 	    Detalhe: [CPF ja esta ativo! Nenhuma acao realizada!]
