@@ -16,7 +16,7 @@
 {[/dashboardPropostaPF/buscaPorCriticaPF_CPF/{cpf}],methods=[GET]}
 {[/dashboardPropostaPF/buscaPorCriticaPF_CNPJ/{cnpj}],methods=[GET]} 
 {[/dashboardPropostaPME/buscaPorCriticaPME_CPF/{cpf}],methods=[GET]} 
-{[/empresa-dcms],methods=[PUT]}
+* {[/empresa-dcms],methods=[PUT]}
 * {[/empresa],methods=[POST]} 
 {[/forcavenda],methods=[POST]}
 {[/forcavenda],methods=[PUT]}

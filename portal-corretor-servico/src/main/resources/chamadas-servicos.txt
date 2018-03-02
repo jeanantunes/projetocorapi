@@ -170,6 +170,25 @@ EMPRESA
 		"cnpj":"12311200003",
 		"empDcms":"B12345"
 	}
+	Resposta OK
+	{
+	    "id": 42,
+	    "mensagem": "Empresa atualizada."
+	}
+	Respostas Erro //Parametros nao informados
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [Os parametros sao obrigatorios!]"
+	}
+	OU
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [CdEmpresa nao relacionado com CNPJ!]"
+	}
+
+
+
+
 
 	POST /empresa
 	{  
