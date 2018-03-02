@@ -10,6 +10,7 @@ public class Venda implements Serializable {
 
 	private Long cdVenda;
 	private Long cdEmpresa;
+	private String cdEmpresaDCMS; //201803021253 marceloOliveira@odpv
 	
 	//private List<Plano> planos;
 	private Long cdPlano;
@@ -47,6 +48,14 @@ public class Venda implements Serializable {
 //	public void setPlanos(List<Plano> planos) {
 //		this.planos = planos;
 //	}
+
+	public String getCdEmpresaDCMS() {
+		return cdEmpresaDCMS;
+	}
+
+	public void setCdEmpresaDCMS(String cdEmpresaDCMS) {
+		this.cdEmpresaDCMS = cdEmpresaDCMS;
+	}
 
 	public Long getCdForcaVenda() {
 		return cdForcaVenda;
@@ -106,9 +115,10 @@ public class Venda implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Venda [cdVenda=" + cdVenda + ", cdEmpresa=" + cdEmpresa + ", cdPlano=" + cdPlano + ", cdForcaVenda="
-				+ cdForcaVenda + ", dataVenda=" + dataVenda + ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento="
-				+ faturaVencimento + ", tipoPagamento=" + tipoPagamento + ", titulares=" + titulares + "]";
+		return "Venda [cdVenda=" + cdVenda + ", cdEmpresa=" + cdEmpresa + ", cdEmpresaDCMS=" + cdEmpresaDCMS
+				+ ", cdPlano=" + cdPlano + ", cdForcaVenda=" + cdForcaVenda + ", dataVenda=" + dataVenda
+				+ ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento=" + faturaVencimento + ", tipoPagamento="
+				+ tipoPagamento + ", titulares=" + titulares + "]";
 	}
 
 }
