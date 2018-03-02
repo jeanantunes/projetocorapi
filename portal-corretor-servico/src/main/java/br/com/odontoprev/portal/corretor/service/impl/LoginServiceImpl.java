@@ -67,7 +67,8 @@ public class LoginServiceImpl implements LoginService {
 								LoginRetorno.class);
 
 				return new LoginResponse(
-						forcaVenda.getCdForcaVenda(),
+						loginRetorno.getBody().getCodigo(),  //codigoDcss
+						forcaVenda.getCdForcaVenda(),		 //codigoUsuario
 						loginRetorno.getBody().getNomeUsuario(),
 						loginRetorno.getBody().getDocumento(),
 						forcaVenda.getCorretora().getCdCorretora(),
@@ -90,7 +91,8 @@ public class LoginServiceImpl implements LoginService {
 							"Dono de corretora sem corretora atrelada.");
 				}
 
-				return new LoginResponse(loginCorretora.getCdLogin(),
+				return new LoginResponse(
+						loginCorretora.getCdLogin(),
 						corretora.getRazaoSocial(), login.getUsuario(),
 						corretora.getCdCorretora(), corretora.getRazaoSocial(),
 						perfil);

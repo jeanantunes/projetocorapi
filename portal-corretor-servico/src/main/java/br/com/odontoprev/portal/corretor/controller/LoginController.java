@@ -36,7 +36,7 @@ public class LoginController {
 
 			final LoginResponse res = loginService.login(login);
 
-			if (res != null && res.getCodigoUsuario() == 0) {
+			if (res != null && res.getCodigoUsuario() == 0 && res.getCodigoDcss() == 0) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 
