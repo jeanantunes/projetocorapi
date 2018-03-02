@@ -1,0 +1,34 @@
+09 POST
+05 PUT
+15 GET
+
+{[/beneficiario],methods=[POST]}
+{[/corretor],methods=[POST]} 
+{[/corretora/{cnpj}],methods=[GET]} 
+{[/corretora],methods=[PUT]} 
+{[/corretora],methods=[POST]} 
+{[/dashboard/forcavenda/aguardando-aprovacao/{cdCorretora}],methods=[GET]}
+{[/dashboardPropostaPF/{status}/{cpf}],methods=[GET]} 
+{[/dashboardPropostaPF/buscaPorCriticaPF_CNPJ_CPF/{cnpj}/{cpf}],methods=[GET]} 
+{[/dashboardPropostaPME/buscaPorCriticaPME_CNPJ/{cnpj}],methods=[GET]}
+{[/dashboardPropostaPME/buscaPorCriticaPME_CNPJ_CPF/{cnpj}/{cpf}],methods=[GET]} 
+{[/dashboardPropostaPME/{status}/{cnpj}],methods=[GET]}
+{[/dashboardPropostaPF/buscaPorCriticaPF_CPF/{cpf}],methods=[GET]}
+{[/dashboardPropostaPF/buscaPorCriticaPF_CNPJ/{cnpj}],methods=[GET]} 
+{[/dashboardPropostaPME/buscaPorCriticaPME_CPF/{cpf}],methods=[GET]} 
+{[/empresa-dcms],methods=[PUT]}
+{[/empresa],methods=[POST]} 
+{[/forcavenda],methods=[POST]}
+{[/forcavenda],methods=[PUT]}
+{[/forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}],methods=[GET]}
+{[/forcavenda/login],methods=[PUT]}
+{[/forcavenda/{cpf}],methods=[GET]} 
+{[/forcavenda/status-ativo],methods=[PUT]}
+{[/forcavenda/{cdForcaVenda}/corretora/{cnpj}],methods=[GET]} 
+{[/login],methods=[POST]} 
+{[/plano],methods=[GET]}
+{[/plano-empresa/{cdEmpresa}],methods=[GET]} 
+{[/propostasDashBoard],methods=[POST]}
+{[/vendapme],methods=[POST]}
+{[/vendapf],methods=[POST]}
+
