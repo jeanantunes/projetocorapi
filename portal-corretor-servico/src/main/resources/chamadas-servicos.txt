@@ -1,142 +1,6 @@
 172.16.20.30:7001/portal-corretor-servico-0.0.1-SNAPSHOT
 
-PLANOS
 
-	GET /plano - Retorna lista de planos
-	Response OK
-	[
-	    {
-	        "cdPlano": 1,
-	        "titulo": "PLANO TOP",
-	        "descricao": "MENSAL",
-	        "sigla": "TOP",
-	        "valor": "2.5",
-	        "tipo": null,
-	        "cdVenda": 0
-	    },
-	    {
-	        "cdPlano": 2,
-	        "titulo": "TESTE",
-	        "descricao": "MENSAL",
-	        "sigla": "TOP",
-	        "valor": "2.5",
-	        "tipo": null,
-	        "cdVenda": 0
-	    },
-	    {
-	        "cdPlano": 3,
-	        "titulo": "Teste2",
-	        "descricao": "ANUAL",
-	        "sigla": "TOP",
-	        "valor": "2.5",
-	        "tipo": null,
-	        "cdVenda": 0
-	    }
-	]
-	
-	Response Erro
-	[] 
-
-
-	GET /plano-empresa/{cdEmpresa} - Retorna lista de planos da empresa x
-	Response OK
-	[
-	    {
-	        "cdPlano": 2,
-	        "titulo": null,
-	        "descricao": "INDIVIDUAL",
-	        "sigla": null,
-	        "valor": null,
-	        "tipo": null,
-	        "cdVenda": 5
-	    }
-	]
-	
-	Response Erro
-	[]
-
-
-	
-	
-FORCAVENDA
-
-	GET /forcavenda/{cpf} - Retorna forcavenda por cpf
-	Response OK
-	
-	Response Erro
-	
-	
-
-	GET /forcavenda/{cdForcaVenda}/corretora/{cnpj} - Busca associacao forcavenda/corretora
-	
-	POST /forcavenda
-	{  
-	   "nome":"JAQUELINE ALVES TESTE3",
-	   "celular":"1144445555",
-	   "email":"jaque3@teste.com",
-	   "corretora":{  
-		  "cdCorretora":"25"
-		},
-		"cpf":"45125235539",
-		"departamento":"TI",
-		"cargo":"Analista de Sistemas",
-		"dataNascimento":"20-06-1980",
-        "senha": "44455566" //Com senha - forcavenda sem pre-cadastro //Sem senha - pre-cadastro forca pela tela corretora
-	}
-	
-	PUT /forcavenda/login - Ativar forca de venda pela tela de login (forca de venda pre-cadastrada)
-	
-	PUT /forcavenda/status-ativo - Ativar forca de venda pela corretora
-	{
- 		"cpf":"78945612312"
-	}
-
-	
-EMPRESA
-
-	PUT /empresa-dcms - atualiza empDcms da empresa
-	{
-		"cdEmpresa":42,
-		"cnpj":"12311200003",
-		"empDcms":"B12345"
-	}
-
-	POST /empresa
-	{  
-	   "cnpj":"74617381000199",
-	   "razaoSocial":"Empresa Teste Jaque",
-	   "incEstadual":"0987654",
-	   "ramoAtividade":"XPTO",
-	   "nomeFantasia":"XPTO",
-	   "representanteLegal":"teste xpto representante legal",
-	   "contatoEmpresa":true,
-	   "telefone":"1144442222",
-	   "celular":"11944445555",
-	   "email":"empresa@teste.com",
-	   "vencimentoFatura":1,
-	   "cnae":"ABC123DDDQWE444",
-	   "enderecoEmpresa":{  
-		  "cep":"06111060",
-		  "logradouro":"Rua empresa",
-		  "numero":"10",
-		  "complemento":"c2",
-		  "bairro":"Jardim Paulista",
-		  "cidade":"Sao Paulo",
-		  "estado":"SP",
-		  "tipoEndereco":1
-		},
-		"planos":[
-			{
-				"cdPlano": 2
-			},
-			{
-				"cdPlano": 3
-			}
-		]	
-	}
-
-	
-	
 BENEFICIARIO
 
 	POST /beneficiario
@@ -190,6 +54,255 @@ BENEFICIARIO
 			}
 		]
 	}]
+	
+	
+CORRETORA
+	GET /corretora{cnpj}
+	
+	resposta OK 
+	{
+	    "cdCorretora": 0,
+	    "cnpj": "123",
+	    "razaoSocial": "Teste",
+	    "cnae": null,
+	    "telefone": "11111111",
+	    "celular": "1221321",
+	    "email": "teste@teste.com",
+	    "statusCnpj": true,
+	    "simplesNacional": true,
+	    "dataAbertura": "2018-02-18",
+		"enderecoCorretora": {
+		        "cep": "00000000",
+		        "logradouro": "Rua teste",
+		        "numero": "123",
+		        "complemento": null,
+		        "bairro": "Bairro Teste",
+		        "cidade": "Cidade Teste",
+		        "estado": "TE",
+		        "tipoEndereco": null
+		    },
+	    "conta": null,
+	    "login": null,
+	    "representantes": null
+	}
+
+	resposta Erro
+	{
+	    "cdCorretora": 0,
+	    "cnpj": null,
+	    "razaoSocial": null,
+	    "cnae": null,
+	    "telefone": null,
+	    "celular": null,
+	    "email": null,
+	    "statusCnpj": false,
+	    "simplesNacional": false,
+	    "dataAbertura": null,
+	    "enderecoCorretora": null,
+	    "conta": null,
+	    "login": null,
+	    "representantes": null
+	}	
+	
+	
+
+DASHBOARDPROPOSTA	
+	POST /propostasDashBoard
+	{
+		"cdCorretora":"",
+		"cdForcaVenda":"",
+		"cnpj":"",
+		"cpf":""
+	}	
+	Response OK
+	[
+	    {
+	        "codigoEmpresa": 204,
+	        "empresaDCMS": "997536",
+	        "totalVidas": 3,
+	        "valorTotal": 358.44,
+	        "codigoForcaVenda": 102,
+	        "nomeForca": "Marcelo de Oliveira",
+	        "cpf": "29888405822",
+	        "codigoCorretora": 28,
+	        "nomeCorretora": "Teste 123",
+	        "cnpj": "12345670001",
+	        "tipoVenda": "PME"
+	    },
+	    {
+	        "codigoEmpresa": null,
+	        "empresaDCMS": null,
+	        "totalVidas": 72,
+	        "valorTotal": 0,
+	        "codigoForcaVenda": 102,
+	        "nomeForca": "Marcelo de Oliveira",
+	        "cpf": "29888405822",
+	        "codigoCorretora": 28,
+	        "nomeCorretora": "Teste 123",
+	        "cnpj": "12345670001",
+	        "tipoVenda": "PF"
+	    },
+	    {
+	        "codigoEmpresa": 204,
+	        "empresaDCMS": "997536",
+	        "totalVidas": 3,
+	        "valorTotal": 358.44,
+	        "codigoForcaVenda": 102,
+	        "nomeForca": "Marcelo de Oliveira",
+	        "cpf": "29888405822",
+	        "codigoCorretora": 28,
+	        "nomeCorretora": "Teste 123",
+	        "cnpj": "12345670001",
+	        "tipoVenda": "PME"
+	    }
+	]
+	Response Erro
+	[]
+	
+	
+	
+	
+EMPRESA
+
+	PUT /empresa-dcms - atualiza empDcms da empresa
+	{
+		"cdEmpresa":42,
+		"cnpj":"12311200003",
+		"empDcms":"B12345"
+	}
+
+	POST /empresa
+	{  
+	   "cnpj":"74617381000199",
+	   "razaoSocial":"Empresa Teste Jaque",
+	   "incEstadual":"0987654",
+	   "ramoAtividade":"XPTO",
+	   "nomeFantasia":"XPTO",
+	   "representanteLegal":"teste xpto representante legal",
+	   "contatoEmpresa":true,
+	   "telefone":"1144442222",
+	   "celular":"11944445555",
+	   "email":"empresa@teste.com",
+	   "vencimentoFatura":1,
+	   "cnae":"ABC123DDDQWE444",
+	   "enderecoEmpresa":{  
+		  "cep":"06111060",
+		  "logradouro":"Rua empresa",
+		  "numero":"10",
+		  "complemento":"c2",
+		  "bairro":"Jardim Paulista",
+		  "cidade":"Sao Paulo",
+		  "estado":"SP",
+		  "tipoEndereco":1
+		},
+		"planos":[
+			{
+				"cdPlano": 2
+			},
+			{
+				"cdPlano": 3
+			}
+		]	
+	}	
+	
+	
+	
+	
+FORCAVENDA
+
+	GET /forcavenda/{cpf} - Retorna forcavenda por cpf
+	Response OK
+	
+	Response Erro
+	
+	
+
+	GET /forcavenda/{cdForcaVenda}/corretora/{cnpj} - Busca associacao forcavenda/corretora
+	
+	POST /forcavenda
+	{  
+	   "nome":"JAQUELINE ALVES TESTE3",
+	   "celular":"1144445555",
+	   "email":"jaque3@teste.com",
+	   "corretora":{  
+		  "cdCorretora":"25"
+		},
+		"cpf":"45125235539",
+		"departamento":"TI",
+		"cargo":"Analista de Sistemas",
+		"dataNascimento":"20-06-1980",
+        "senha": "44455566" //Com senha - forcavenda sem pre-cadastro //Sem senha - pre-cadastro forca pela tela corretora
+	}
+	
+	PUT /forcavenda/login - Ativar forca de venda pela tela de login (forca de venda pre-cadastrada)
+	
+	PUT /forcavenda/status-ativo - Ativar forca de venda pela corretora
+	{
+ 		"cpf":"78945612312"
+	}
+		
+	
+	
+
+PLANOS
+
+	GET /plano - Retorna lista de planos
+	Response OK
+	[
+	    {
+	        "cdPlano": 1,
+	        "titulo": "PLANO TOP",
+	        "descricao": "MENSAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    },
+	    {
+	        "cdPlano": 2,
+	        "titulo": "TESTE",
+	        "descricao": "MENSAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    },
+	    {
+	        "cdPlano": 3,
+	        "titulo": "Teste2",
+	        "descricao": "ANUAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    }
+	]
+	
+	Response Erro
+	[] 
+
+
+
+
+	GET /plano-empresa/{cdEmpresa} - Retorna lista de planos da empresa x
+	Response OK
+	[
+	    {
+	        "cdPlano": 2,
+	        "titulo": null,
+	        "descricao": "INDIVIDUAL",
+	        "sigla": null,
+	        "valor": null,
+	        "tipo": null,
+	        "cdVenda": 5
+	    }
+	]
+	
+	Response Erro
+	[]
+
+
+	
 
 
 VENDA
@@ -511,50 +624,4 @@ Login
     }
 
 
-CORRETORA
-	GET /corretora{cnpj}
-	
-	resposta OK 
-	{
-    "cdCorretora": 0,
-    "cnpj": "123",
-    "razaoSocial": "Teste",
-    "cnae": null,
-    "telefone": "11111111",
-    "celular": "1221321",
-    "email": "teste@teste.com",
-    "statusCnpj": true,
-    "simplesNacional": true,
-    "dataAbertura": "2018-02-18",
-	"enderecoCorretora": {
-	        "cep": "00000000",
-	        "logradouro": "Rua teste",
-	        "numero": "123",
-	        "complemento": null,
-	        "bairro": "Bairro Teste",
-	        "cidade": "Cidade Teste",
-	        "estado": "TE",
-	        "tipoEndereco": null
-	    },
-    "conta": null,
-    "login": null,
-    "representantes": null
-	}
 
-	resposta Erro
-	{
-    "cdCorretora": 0,
-    "cnpj": null,
-    "razaoSocial": null,
-    "cnae": null,
-    "telefone": null,
-    "celular": null,
-    "email": null,
-    "statusCnpj": false,
-    "simplesNacional": false,
-    "dataAbertura": null,
-    "enderecoCorretora": null,
-    "conta": null,
-    "login": null,
-    "representantes": null
-	}
