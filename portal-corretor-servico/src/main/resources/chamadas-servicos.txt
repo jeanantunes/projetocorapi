@@ -278,11 +278,26 @@ FORCAVENDA
 	
 	PUT /forcavenda/login - Ativar forca de venda pela tela de login (forca de venda pre-cadastrada)
 	
+	
+	
 	PUT /forcavenda/status-ativo - Ativar forca de venda pela corretora
 	{
  		"cpf":"78945612312"
 	}
-		
+	Resposta OK
+	{
+	    "id": 1,
+	    "mensagem": "ForcaVendaLogin atualizado! [CPF: 11122233344 - De: N-Pré-cadastro - Para: S-Ativo]"
+	}
+	Resposta Erro
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao atualizar ForcaVendaStatus :: Detalhe: [CPF ForcaVenda nao informado. Atualizacao nao realizada!]."
+	    Detalhe: [CPF ForcaVenda nao informado. Atualizacao nao realizada!]
+	    Detalhe: [ForcaVenda nao encontrada. Atualizacao nao realizada!]
+	    Detalhe: [CPF duplicado. Atualizacao nao realizada!]
+	    Detalhe: [CPF ja esta ativo! Nenhuma acao realizada!]
+	}
 	
 	
 
