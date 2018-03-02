@@ -24,7 +24,7 @@
 {[/forcavenda/login],methods=[PUT]}
 {[/forcavenda/{cpf}],methods=[GET]} 
 {[/forcavenda/status-ativo],methods=[PUT]}
-{[/forcavenda/{cdForcaVenda}/corretora/{cnpj}],methods=[GET]} 
+* {[/forcavenda/{cdForcaVenda}/corretora/{cnpj}],methods=[GET]} 
 * {[/login],methods=[POST]}
 * {[/plano],methods=[GET]}
 * {[/plano-empresa/{cdEmpresa}],methods=[GET]} 
