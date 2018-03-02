@@ -173,16 +173,16 @@ EMPRESA
 
 	POST /empresa
 	{  
-	   "cnpj":"74617381000199",
-	   "razaoSocial":"Empresa Teste Jaque",
+	   "cnpj":"13021741000109",
+	   "razaoSocial":"Empresa Teste Jaque 2",
 	   "incEstadual":"0987654",
-	   "ramoAtividade":"XPTO",
-	   "nomeFantasia":"XPTO",
+	   "ramoAtividade":"XPTOOO",
+	   "nomeFantasia":"XPTOOO",
 	   "representanteLegal":"teste xpto representante legal",
 	   "contatoEmpresa":true,
 	   "telefone":"1144442222",
 	   "celular":"11944445555",
-	   "email":"empresa@teste.com",
+	   "email":"empresa2@teste.com",
 	   "vencimentoFatura":1,
 	   "cnae":"ABC123DDDQWE444",
 	   "enderecoEmpresa":{  
@@ -203,7 +203,17 @@ EMPRESA
 				"cdPlano": 3
 			}
 		]	
-	}	
+	}
+	Response OK
+	{
+	    "id": 427,
+	    "mensagem": "Empresa cadastrada."
+	}
+	Response Erro	
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao cadastrar empresa. Favor, entre em contato com o suporte."
+	}
 	
 	
 	
