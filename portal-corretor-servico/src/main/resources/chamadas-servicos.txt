@@ -247,6 +247,19 @@ FORCAVENDA
 	
 
 	GET /forcavenda/{cdForcaVenda}/corretora/{cnpj} - Busca associacao forcavenda/corretora
+	/forcavenda/102/corretora/12345670001
+	Response OK
+	{
+	    "id": 1,
+	    "mensagem": "ForcaVenda [29888405822] esta associada a corretora [12345670001]"
+	}
+	/forcavenda/102/corretora/12345670002
+	Response Erro
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao verificar associacao ForcaVendaCorretora. Detalhe: [ForcaVenda e Corretora nao associadas!]."
+	}
+	
 	
 	POST /forcavenda
 	{  
