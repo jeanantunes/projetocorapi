@@ -312,6 +312,103 @@ FORCAVENDA
 	}
 	
 	
+	
+	GET /forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}
+	/forcavendastatus/2/corretora/184
+	Resposta OK
+	[
+	    {
+	        "cdForcaVenda": 201,
+	        "nome": "YAGO",
+	        "celular": "11912341234",
+	        "email": "yago@vector.com.br",
+	        "corretora": {
+	            "cdCorretora": 184,
+	            "cnpj": "14324635000159",
+	            "razaoSocial": "JC Luz Volta Redonda  Corretora e Adm de Seguros",
+	            "cnae": "6622300",
+	            "telefone": "2138031",
+	            "celular": "22998878",
+	            "email": "celsolima@jcluz.com.br",
+	            "statusCnpj": false,
+	            "simplesNacional": false,
+	            "dataAbertura": "2011-09-20",
+	            "enderecoCorretora": {
+	                "cep": "00000000",
+	                "logradouro": "Rua teste",
+	                "numero": "123",
+	                "complemento": null,
+	                "bairro": "Bairro Teste",
+	                "cidade": "Cidade Teste",
+	                "estado": "TE",
+	                "tipoEndereco": null
+	            },
+	            "conta": null,
+	            "login": null,
+	            "representantes": null
+	        },
+	        "statusForcaVenda": "Ativo",
+	        "cpf": "46809897852",
+	        "ativo": false,
+	        "departamento": "TI",
+	        "cargo": "TI",
+	        "dataNascimento": "11/11/1989",
+	        "nomeEmpresa": null,
+	        "nomeGerente": null,
+	        "responsavel": null,
+	        "rg": null,
+	        "senha": "12345678",
+	        "canalVenda": null
+	    },
+	    {
+	        "cdForcaVenda": 410,
+	        "nome": "Robert Wieselberg",
+	        "celular": "952523505",
+	        "email": "robert.wieselberg@odontoprev.com.br",
+	        "corretora": {
+	            "cdCorretora": 184,
+	            "cnpj": "14324635000159",
+	            "razaoSocial": "JC Luz Volta Redonda  Corretora e Adm de Seguros",
+	            "cnae": "6622300",
+	            "telefone": "2138031",
+	            "celular": "22998878",
+	            "email": "celsolima@jcluz.com.br",
+	            "statusCnpj": false,
+	            "simplesNacional": false,
+	            "dataAbertura": "2011-09-20",
+	            "enderecoCorretora": {
+	                "cep": "00000000",
+	                "logradouro": "Rua teste",
+	                "numero": "123",
+	                "complemento": null,
+	                "bairro": "Bairro Teste",
+	                "cidade": "Cidade Teste",
+	                "estado": "TE",
+	                "tipoEndereco": null
+	            },
+	            "conta": null,
+	            "login": null,
+	            "representantes": null
+	        },
+	        "statusForcaVenda": "Ativo",
+	        "cpf": "66536456734",
+	        "ativo": false,
+	        "departamento": "ESTEIRA",
+	        "cargo": "FORÇA DE VENDA",
+	        "dataNascimento": "08/06/1963",
+	        "nomeEmpresa": null,
+	        "nomeGerente": null,
+	        "responsavel": null,
+	        "rg": null,
+	        "senha": "Prodigio",
+	        "canalVenda": null
+	    }
+	]
+	Resposta Erro
+	[]
+	
+	
+	
 	POST /forcavenda
 	{  
 	   "nome":"JAQUELINE ALVES TESTE3",

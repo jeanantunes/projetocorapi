@@ -20,7 +20,7 @@
 * {[/empresa],methods=[POST]} 
 {[/forcavenda],methods=[POST]}
 {[/forcavenda],methods=[PUT]}
-{[/forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}],methods=[GET]}
+* {[/forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}],methods=[GET]}
 * {[/forcavenda/login],methods=[PUT]}
 * {[/forcavenda/{cpf}],methods=[GET]} 
 * {[/forcavenda/status-ativo],methods=[PUT]}
