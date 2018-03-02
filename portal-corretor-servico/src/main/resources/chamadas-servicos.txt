@@ -423,6 +423,19 @@ FORCAVENDA
 		"dataNascimento":"20-06-1980",
         "senha": "44455566" //Com senha - forcavenda sem pre-cadastro //Sem senha - pre-cadastro forca pela tela corretora
 	}
+	Resposta OK
+	{
+	    "id": 493,
+	    "mensagem": "ForcaVenda cadastrada. CPF [45125235544]"
+	}
+	Resposta erro
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao cadastrar forcaVenda. Detalhe: [CPF [45125235544] já existe!]"
+	}
+	
+	
+	
 	
 	PUT /forcavenda/login - Ativar forca de venda pela tela de login (forca de venda pre-cadastrada)
 	{

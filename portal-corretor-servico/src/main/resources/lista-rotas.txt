@@ -18,7 +18,7 @@
 {[/dashboardPropostaPME/buscaPorCriticaPME_CPF/{cpf}],methods=[GET]} 
 * {[/empresa-dcms],methods=[PUT]}
 * {[/empresa],methods=[POST]} 
-{[/forcavenda],methods=[POST]}
+* {[/forcavenda],methods=[POST]}
 {[/forcavenda],methods=[PUT]}
 * {[/forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}],methods=[GET]}
 * {[/forcavenda/login],methods=[PUT]}
