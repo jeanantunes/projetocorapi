@@ -487,14 +487,21 @@ VENDA
 
 Login
     POST /login
-    {"usuario":"1234", "senha": "123"}
+    {
+		"usuario":"38330982874",
+		"senha":"odonto2018"
+	}
 
     Resposta 200
     {
-        "usuario": "1234",
-        "sucesso": true,
-        "cdLogin": 2
-    }
+	    "codigoDcss": 580,
+	    "codigoUsuario": 350,
+	    "nomeUsuario": "Fernando Setai",
+	    "documento": "38330982874",
+	    "codigoCorretora": 142,
+	    "nomeCorretora": "Teste 123",
+	    "perfil": "Corretor"
+	}
 
     403
     {
