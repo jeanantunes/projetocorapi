@@ -28,7 +28,7 @@ public class TbodPlano implements Serializable {
 	private long cdPlano;
 
 	@Column(name = "ATIVO")
-	private BigDecimal ativo;
+	private String ativo; //201803031736 trocado de BigInteger para String seguindo padrao outras tabelas Corretora e ForcaVenda (esertorio@vector)(moliveira@odpv)
 
 	@Column(name = "CODIGO")
 	private String codigo;
@@ -72,11 +72,11 @@ public class TbodPlano implements Serializable {
 		this.cdPlano = cdPlano;
 	}
 
-	public BigDecimal getAtivo() {
+	public String getAtivo() {
 		return this.ativo;
 	}
 
-	public void setAtivo(BigDecimal ativo) {
+	public void setAtivo(String ativo) {
 		this.ativo = ativo;
 	}
 
