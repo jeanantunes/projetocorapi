@@ -273,7 +273,12 @@ public class VendaPFBusiness {
 			return new VendaResponse(0, msg);
 		}
 
-		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada CdVenda:["+ tbVenda.getCdVenda() +"]; NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; DtVenda:["+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) +"];");
+		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada." 
+		+ " CdVenda:[" + tbVenda.getCdVenda() + "];" 
+		+ " NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "];" 
+		+ " DtVenda:[" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) + "];"
+		+ " MensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "];"
+		);
 	}
 
 	public void atualizarNumeroPropostaVenda(Venda venda, TbodVenda tbVenda, PropostaDCMSResponse propostaDCMSResponse) throws Exception 
@@ -323,7 +328,7 @@ public class VendaPFBusiness {
 		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
 		
 		if(propostaDCMSResponse != null) {
-			log.info("chamarWSLegadoPropostaPOST; propostaResponse:[" + propostaDCMSResponse.getNumeroProposta() + "]");
+			log.info("chamarWSLegadoPropostaPOST; propostaResponse.getNumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; getMensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "]");
 		}
 			
 		return propostaDCMSResponse;
@@ -539,11 +544,12 @@ public class VendaPFBusiness {
 	@SuppressWarnings({ })
 	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS proposta){
 		log.info("chamarWSLegadoPropostaPOST; ini;");
-
+		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse(); 
 		ApiManagerToken apiManager = null;
 		ApiToken apiToken = null;
-		ResponseEntity<PropostaDCMSResponse> response = null;
+		ResponseEntity<PropostaDCMSResponse> response;
 		RestTemplate restTemplate = new RestTemplate();
+		String msgErro = "";
 
 		try {
 			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
@@ -579,28 +585,40 @@ public class VendaPFBusiness {
 				|| (response.getStatusCode() == HttpStatus.FORBIDDEN)				
 				|| (response.getStatusCode() == HttpStatus.BAD_REQUEST)
 			) {
-				log.info("chamarWSLegadoPropostaPOST; HTTP_STATUS "+response.getStatusCode());
-				return null;
+				msgErro = "chamarWSLegadoPropostaPOST; HTTP_STATUS "+response.getStatusCode();
+				log.error(msgErro);
+				propostaDCMSResponse.setMensagemErro(msgErro);
+				return propostaDCMSResponse;
 			}
 
 		} catch (CredentialsInvalidException e1) {
-			log.info("chamarWSLegadoPropostaPOST; CredentialsInvalidException.getMessage():[" + e1.getMessage() + "];");
-			return null;
+			msgErro = "chamarWSLegadoPropostaPOST; CredentialsInvalidException.getMessage():[" + e1.getMessage() + "];";
+			log.error(msgErro);
+			propostaDCMSResponse.setMensagemErro(msgErro);
+			return propostaDCMSResponse;
 		} catch (URLEndpointNotFound e1) {
-			log.info("chamarWSLegadoPropostaPOST; URLEndpointNotFound.getMessage():[" + e1.getMessage() + "];");
-			return null;
+			msgErro = "chamarWSLegadoPropostaPOST; URLEndpointNotFound.getMessage():[" + e1.getMessage() + "];";
+			log.error(msgErro);
+			propostaDCMSResponse.setMensagemErro(msgErro);
+			return propostaDCMSResponse;
 		} catch (ConnectionApiException e1) {
-			log.info("chamarWSLegadoPropostaPOST; ConnectionApiException.getMessage():[" + e1.getMessage() + "];");
-			return null;
+			msgErro = "chamarWSLegadoPropostaPOST; ConnectionApiException.getMessage():[" + e1.getMessage() + "];";
+			log.error(msgErro);
+			propostaDCMSResponse.setMensagemErro(msgErro);
+			return propostaDCMSResponse;
 			
 		} catch (RestClientException e) {
-			log.info("chamarWSLegadoPropostaPOST; RestClientException.getMessage():[" + e.getMessage() + "];");
-			return null;
+			msgErro = "chamarWSLegadoPropostaPOST; RestClientException.getMessage():[" + e.getMessage() + "];";
+			log.error(msgErro);
+			propostaDCMSResponse.setMensagemErro(msgErro);
+			return propostaDCMSResponse;
 			//e.printStackTrace();
 		} catch (Exception e) {
-			log.info("chamarWSLegadoPropostaPOST; Exception.getMessage():[" + e.getMessage() + "];");
+			msgErro = "chamarWSLegadoPropostaPOST; Exception.getMessage():[" + e.getMessage() + "];";
+			log.error(msgErro);
 			//e.printStackTrace();
-			return null;
+			propostaDCMSResponse.setMensagemErro(msgErro);
+			return propostaDCMSResponse;
 		}
 					
 		log.info("chamarWSLegadoPropostaPOST; fim;");
