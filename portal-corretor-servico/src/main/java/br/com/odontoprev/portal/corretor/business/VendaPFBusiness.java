@@ -12,6 +12,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
@@ -19,6 +22,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 
+import br.com.odontoprev.api.manager.client.token.ApiManagerToken;
+import br.com.odontoprev.api.manager.client.token.ApiManagerTokenFactory;
+import br.com.odontoprev.api.manager.client.token.ApiToken;
+import br.com.odontoprev.api.manager.client.token.enumerator.ApiManagerTokenEnum;
+import br.com.odontoprev.api.manager.client.token.exception.ConnectionApiException;
+import br.com.odontoprev.api.manager.client.token.exception.CredentialsInvalidException;
+import br.com.odontoprev.api.manager.client.token.exception.URLEndpointNotFound;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
@@ -528,30 +538,61 @@ public class VendaPFBusiness {
 
 	@SuppressWarnings({ })
 	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS proposta){
+		log.info("chamarWSLegadoPropostaPOST; ini;");
 
-		ResponseEntity<PropostaDCMSResponse> propostaRet = null;
+		ApiManagerToken apiManager = null;
+		ApiToken apiToken = null;
+		ResponseEntity<PropostaDCMSResponse> response = null;
+		RestTemplate restTemplate = new RestTemplate();
+
 		try {
-			//TODO: Deixar parametrizavel
+			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
+			apiToken = apiManager.generateToken();
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization", "Bearer " + apiToken.getAccessToken());
+			headers.add("Cache-Control", "no-cache");
+			//headers.add("Content-Type", "application/x-www-form-urlencoded");
+			headers.add("Content-Type", "application/json");
+
+			HttpEntity<?> request = new HttpEntity<PropostaDCMS>(proposta, headers);
+
 			String URLAPI = dcssUrl + dcss_venda_propostaPath;
-					
-			propostaRet = new RestTemplate().postForEntity(
-				URLAPI, 
-				proposta, 
-				PropostaDCMSResponse.class
-			);
+
+			response = restTemplate.exchange(
+					URLAPI, 
+					HttpMethod.POST, 
+					request, 
+					PropostaDCMSResponse.class);
 			
-			if(propostaRet != null) {
-				log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + propostaRet.getStatusCode() + "];");
+//			response = restTemplate.postForEntity(
+//				URLAPI, 
+//				proposta, 
+//				PropostaDCMSResponse.class
+//			);
+			
+			if(response != null) {
+				log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + response.getStatusCode() + "];");
 			}
 	
-			if(propostaRet == null 
-				|| (propostaRet.getStatusCode() == HttpStatus.FORBIDDEN)				
-				|| (propostaRet.getStatusCode() == HttpStatus.BAD_REQUEST)
+			if(response == null 
+				|| (response.getStatusCode() == HttpStatus.FORBIDDEN)				
+				|| (response.getStatusCode() == HttpStatus.BAD_REQUEST)
 			) {
-				log.info("chamarWSLegadoPropostaPOST; HTTP_STATUS "+propostaRet.getStatusCode());
+				log.info("chamarWSLegadoPropostaPOST; HTTP_STATUS "+response.getStatusCode());
 				return null;
 			}
-				
+
+		} catch (CredentialsInvalidException e1) {
+			log.info("chamarWSLegadoPropostaPOST; CredentialsInvalidException.getMessage():[" + e1.getMessage() + "];");
+			return null;
+		} catch (URLEndpointNotFound e1) {
+			log.info("chamarWSLegadoPropostaPOST; URLEndpointNotFound.getMessage():[" + e1.getMessage() + "];");
+			return null;
+		} catch (ConnectionApiException e1) {
+			log.info("chamarWSLegadoPropostaPOST; ConnectionApiException.getMessage():[" + e1.getMessage() + "];");
+			return null;
+			
 		} catch (RestClientException e) {
 			log.info("chamarWSLegadoPropostaPOST; RestClientException.getMessage():[" + e.getMessage() + "];");
 			return null;
@@ -562,7 +603,8 @@ public class VendaPFBusiness {
 			return null;
 		}
 					
-		return propostaRet.getBody();
+		log.info("chamarWSLegadoPropostaPOST; fim;");
+		return response.getBody();
 			
 	}
 
