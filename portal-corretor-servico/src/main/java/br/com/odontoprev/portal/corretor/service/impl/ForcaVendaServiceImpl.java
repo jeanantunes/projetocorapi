@@ -43,6 +43,7 @@ import br.com.odontoprev.portal.corretor.util.DataUtil;
 @Service
 public class ForcaVendaServiceImpl implements ForcaVendaService {
 
+
 	private static final Log log = LogFactory.getLog(ForcaVendaServiceImpl.class);
 
 	@Autowired
@@ -443,6 +444,32 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		return forcasVendas;
 	}
+	
+	 @Override
+	 public List<ForcaVenda> findForcaVendasByForcaCdCorretora(Long cdCorretora) {
+	        log.info("[findForcaVendasByCdStatusForcaCdCorretora]");
+
+	        List<TbodForcaVenda> forcaVendastbod = new ArrayList<TbodForcaVenda>();
+	        final List<ForcaVenda> forcasVendas = new ArrayList<ForcaVenda>();
+
+	        try {
+	            forcaVendastbod = forcaVendaDao.findByTbodForcaVendaAndTbodCorretoraCdCorretora(cdCorretora);
+
+	            if (!forcaVendastbod.isEmpty()) {
+	                for (final TbodForcaVenda tbodForcaVenda : forcaVendastbod) {
+	                    final ForcaVenda forcaVenda = new ForcaVenda();
+	                    forcasVendas.add(adaptEntityToDto(tbodForcaVenda, forcaVenda));
+	                }
+	            }
+
+
+	        } catch (final Exception e) {
+	            log.error("Erro ao buscar ForcaVenda pelo codigo corretora :: Detalhe: [" + e.getMessage() + "]");
+	            return new ArrayList<ForcaVenda>();
+	        }
+
+	        return forcasVendas;
+	    }
 
 	public ForcaVenda adaptEntityToDtoUpdated(TbodForcaVenda tbForcaVenda, ForcaVenda forcaVenda) {
 		forcaVenda.setCdForcaVenda(tbForcaVenda.getCdForcaVenda());

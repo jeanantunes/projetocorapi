@@ -87,4 +87,12 @@ public class ForcaVendaController {
 		return forcaVendaService.findForcaVendasByCdStatusForcaCdCorretora(cdStatusForcaVenda, cdCorretora);
 	}
 
+	@RequestMapping(value = "/forcavenda/corretora/{cdCorretora}", method = { RequestMethod.GET })
+	public List<ForcaVenda> findForcaVendasByCdCorretora(@PathVariable Long cdCorretora) {
+
+		log.info("cdCorretora [" + cdCorretora + "]");
+
+		return forcaVendaService.findForcaVendasByForcaCdCorretora(cdCorretora);
+	}
+
 }
