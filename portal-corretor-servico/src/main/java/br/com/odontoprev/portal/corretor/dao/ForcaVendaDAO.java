@@ -14,7 +14,7 @@ public interface ForcaVendaDAO extends CrudRepository<TbodForcaVenda, Long> {
 	
 	public TbodForcaVenda findByCdForcaVendaAndTbodCorretoraCnpj(Long cdForcaVenda, String cnpj);
 
-	public List<TbodForcaVenda> findByTbodCorretora(Long cdCorretora);
+	public List<TbodForcaVenda> findByTbodCorretoraCdCorretora(Long cdCorretora);
 
 	public List<TbodForcaVenda> findByTbodStatusForcaVendaCdStatusForcaVendasAndTbodCorretoraCdCorretora(Long cdStatusForcaVenda, Long cdCorretora);
 	

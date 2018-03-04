@@ -447,16 +447,16 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	
 	 @Override
 	 public List<ForcaVenda> findForcaVendasByForcaCdCorretora(Long cdCorretora) {
-	        log.info("[findForcaVendasByCdStatusForcaCdCorretora]");
+	        log.info("[findForcaVendasByForcaCdCorretora]");
 
-	        List<TbodForcaVenda> forcaVendastbod = new ArrayList<TbodForcaVenda>();
+	        List<TbodForcaVenda> listTbodForcaVenda = new ArrayList<TbodForcaVenda>();
 	        final List<ForcaVenda> forcasVendas = new ArrayList<ForcaVenda>();
 
 	        try {
-	            forcaVendastbod = forcaVendaDao.findByTbodCorretora(cdCorretora);
+	            listTbodForcaVenda = forcaVendaDao.findByTbodCorretoraCdCorretora(cdCorretora);
 
-	            if (!forcaVendastbod.isEmpty()) {
-	                for (final TbodForcaVenda tbodForcaVenda : forcaVendastbod) {
+	            if (!listTbodForcaVenda.isEmpty()) {
+	                for (final TbodForcaVenda tbodForcaVenda : listTbodForcaVenda) {
 	                    final ForcaVenda forcaVenda = new ForcaVenda();
 	                    forcasVendas.add(adaptEntityToDto(tbodForcaVenda, forcaVenda));
 	                }
@@ -552,9 +552,10 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			ativoAnterior = tbForcaVenda.getAtivo();
 			statusAnterior = tbForcaVenda.getTbodStatusForcaVenda().getDescricao();
 
-			if (Constantes.ATIVO.equals(ativoAnterior) && StatusForcaVendaEnum.ATIVO.getCodigo() == tbForcaVenda
-					.getTbodStatusForcaVenda().getCdStatusForcaVendas()) {
-				throw new Exception("CPF ja esta ativo! Nenhuma acao realizada!");
+			if(Constantes.ATIVO.equals(ativoAnterior) 
+					&& StatusForcaVendaEnum.ATIVO.getCodigo() == tbForcaVenda.getTbodStatusForcaVenda().getCdStatusForcaVendas()) {
+				//throw new Exception("CPF ja esta ativo! Nenhuma acao realizada!");
+				log.info("CPF [" + tbForcaVenda.getCpf() + "] ja esta ativo! Nenhuma acao realizada!");
 			}
 
 			// Ativando ForcaVenda
@@ -564,15 +565,17 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 
+			//TODO //201803041824 tratar erro no dcss e fazer rollback da alteracao de status
+			ForcaVenda forcaVendaParaDCSS = this.adaptEntityToDto(tbForcaVenda, forcaVenda); //201803041824 inc esert para fernando
+			this.postIntegracaoForcaDeVendaDcss(forcaVendaParaDCSS); //201803041824 inc esert para fernando
+
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "]");
-			return new ForcaVendaResponse(0,
-					"Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "].");
+			return new ForcaVendaResponse(0, "Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "].");
 		}
 
-		return new ForcaVendaResponse(1,
-				"ForcaVendaLogin atualizado! [CPF: " + tbForcaVenda.getCpf() + " - De: " + ativoAnterior + "-"
-						+ statusAnterior + " - Para: " + tbForcaVenda.getAtivo() + "-"
-						+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "]");
+		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado! [CPF: " + tbForcaVenda.getCpf() + 
+				" - De: " + ativoAnterior +"-"+ statusAnterior + 
+				" - Para: " + tbForcaVenda.getAtivo() +"-"+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "]");
 	}
 }
