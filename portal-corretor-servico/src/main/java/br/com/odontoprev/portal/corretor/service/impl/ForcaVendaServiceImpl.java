@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,6 +26,7 @@ import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.LoginDAO;
 import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.DCSSLoginResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
@@ -61,7 +63,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
 
-	private void postIntegracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
+	private DCSSLoginResponse postIntegracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
@@ -82,7 +84,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaMap.put("senha", forca.getSenha());
 		forcaMap.put("canalVenda", forca.getCdForcaVenda());		
 		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
-		restTemplate.postForEntity((dcssUrl + "/usuario/1.0/"), request, ForcaVenda.class);
+		ResponseEntity<DCSSLoginResponse> response = restTemplate.postForEntity((dcssUrl + "/usuario/1.0/"), request, DCSSLoginResponse.class);
+		return response.getBody();
 
 	}
 	
@@ -114,7 +117,51 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	@Override
 	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) throws ApiTokenException {
 		this.putIntegracaoForcaDeVendaDcss(forcaVenda);
-		return this.updateForcaVenda(forcaVenda);
+		
+		TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
+		TbodStatusForcaVenda tbStatusForcaVenda = new TbodStatusForcaVenda();
+		
+		tbForcaVenda.setNome(forcaVenda.getNome());
+		tbForcaVenda.setCpf(forcaVenda.getCpf());
+		tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
+		tbForcaVenda.setCelular(forcaVenda.getCelular());
+		tbForcaVenda.setEmail(forcaVenda.getEmail());				
+		tbForcaVenda.setCargo(forcaVenda.getCargo());
+		tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
+		if (forcaVenda.getCorretora() != null && forcaVenda.getCorretora().getCdCorretora() > 0) {
+			TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
+			tbForcaVenda.setTbodCorretora(tbCorretora);
+		}
+
+		// Grava senha na tabela de login na tela de Aguardando Aprovacao
+		if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
+			TbodLogin tbLogin = null;
+			//tbLogin.setCdLogin(tbForcaVenda.getTbodLogin().getCdLogin());
+			
+			if(tbForcaVenda.getTbodLogin() == null) {
+				log.info("updateForcaVenda -criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():[" + tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf() + "] pq TbodLogin() == null.");
+				tbLogin = new TbodLogin();					
+			} else {
+				if(tbForcaVenda.getTbodLogin().getCdLogin() == null) {
+					log.info(" updateForcaVenda -criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():[" + tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf() + "] pq TbodLogin().getCdLogin() == null.");
+					tbLogin = new TbodLogin();					
+				} else {
+					tbLogin = loginDao.findOne(tbForcaVenda.getTbodLogin().getCdLogin());
+					if(tbLogin == null) {
+						log.info("updateForcaVenda - criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():[" + tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf() + "] pq TbodLogin().getCdLogin():[" + tbForcaVenda.getTbodLogin().getCdLogin() + "] NAO ENCONTRADO.");
+						tbLogin = new TbodLogin();
+					}
+				}
+			}
+							
+			tbLogin.setCdTipoLogin((long) 1); // TODO
+			tbLogin.setSenha(forcaVenda.getSenha());
+			tbLogin = loginDao.save(tbLogin);
+			tbForcaVenda.setTbodLogin(tbLogin);
+		}
+
+		tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
+		return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(), "ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");
 	}
 
 	@Override
@@ -316,9 +363,10 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				tbForcaVenda.setTbodLogin(tbLogin);
 			}
 			// Atualiza forcaVenda e associa login
-			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 			forcaVenda = this.adaptEntityToDto(tbForcaVenda, forcaVenda);
-			this.postIntegracaoForcaDeVendaDcss(forcaVenda);
+			DCSSLoginResponse reponseDCSSLogin = this.postIntegracaoForcaDeVendaDcss(forcaVenda);
+			tbForcaVenda.setCodigoDcssUsuario(reponseDCSSLogin.getCodigo());
+			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaLogin :: Detalhe: [" + e.getMessage() + "]");

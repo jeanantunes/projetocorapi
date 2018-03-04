@@ -73,6 +73,10 @@ public class TbodForcaVenda implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "CD_LOGIN")
 	private TbodLogin tbodLogin;
+	
+	@ManyToOne
+	@JoinColumn(name = "CD_DCSS_USUARIO")
+	private Long codigoDcssUsuario;
 
 	// // bi-directional many-to-one association to TbodLogin
 	// @OneToMany(mappedBy = "tbodForcaVenda")
@@ -224,5 +228,15 @@ public class TbodForcaVenda implements Serializable {
 
 		return tbodVenda;
 	}
+
+	public Long getCodigoDcssUsuario() {
+		return codigoDcssUsuario;
+	}
+
+	public void setCodigoDcssUsuario(Long codigoDcssUsuario) {
+		this.codigoDcssUsuario = codigoDcssUsuario;
+	}
+	
+	
 
 }

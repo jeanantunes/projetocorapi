@@ -41,7 +41,7 @@ public class ForcaVendaController {
 			ForcaVendaResponse forcaVendaResponse = forcaVendaService.updateForcaVenda(forcaVenda);
 			return ResponseEntity.ok(forcaVendaResponse);
 		} catch (final Exception e) {
-			log.error("ERROR",e);
+			log.error("ERROR: ",e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}		
 		

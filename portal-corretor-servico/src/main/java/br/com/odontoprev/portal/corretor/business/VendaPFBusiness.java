@@ -132,6 +132,7 @@ public class VendaPFBusiness {
 			if(venda.getCdForcaVenda() != null) {
 				TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
 				tbVenda.setTbodForcaVenda(tbodForcaVenda);
+				venda.setCdDCSSUsuario(tbodForcaVenda.getCodigoDcssUsuario());
 			}
 			
 			if(venda.getDataVenda() != null) {
@@ -361,7 +362,7 @@ public class VendaPFBusiness {
 		//propostaDCMS.setCodigoCanalVendas("57"); //201803011730 ROBERTO
 		propostaDCMS.setCodigoCanalVendas(dcss_codigo_canal_vendas); //201803021328 esertorio para moliveira
 		
-		propostaDCMS.setCodigoUsuario(venda.getCdForcaVenda());
+		propostaDCMS.setCodigoUsuario(venda.getCdDCSSUsuario());
 		
 		propostaDCMS.setTipoCobranca(new TipoCobrancaPropostaDCMS());
 				

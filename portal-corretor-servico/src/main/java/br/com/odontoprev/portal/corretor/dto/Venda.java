@@ -23,6 +23,8 @@ public class Venda implements Serializable {
 
 	private List<Beneficiario> titulares;
 
+	private Long cdDCSSUsuario;
+
 	public Long getCdVenda() {
 		return cdVenda;
 	}
@@ -101,4 +103,14 @@ public class Venda implements Serializable {
 				+ cdForcaVenda + ", dataVenda=" + dataVenda + ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento="
 				+ faturaVencimento + ", tipoPagamento=" + tipoPagamento + ", titulares=" + titulares + "]";
 	}
+
+	public Long getCdDCSSUsuario() {		
+		return cdDCSSUsuario;
+	}
+
+	public void setCdDCSSUsuario(Long cdDCSSUsuario) {
+		this.cdDCSSUsuario = cdDCSSUsuario;
+	}
+	
+	
 }
