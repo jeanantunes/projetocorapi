@@ -73,9 +73,9 @@ public class TbodForcaVenda implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "CD_LOGIN")
 	private TbodLogin tbodLogin;
+
 	
-	@ManyToOne
-	@JoinColumn(name = "CD_DCSS_USUARIO")
+	@Column(name = "CD_DCSS_USUARIO")
 	private Long codigoDcssUsuario;
 
 	// // bi-directional many-to-one association to TbodLogin
