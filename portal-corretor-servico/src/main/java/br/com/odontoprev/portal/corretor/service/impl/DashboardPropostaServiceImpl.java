@@ -157,7 +157,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				Object[] obj = (Object[]) object;
 
 				DashboardPropostaPF dashboardPropostaPF = new DashboardPropostaPF();
-				dashboardPropostaPF.setAtendimento(obj[0] != null ? new Long(String.valueOf(obj[0])) : null);
+				dashboardPropostaPF.setAtendimento(obj[0] != null ? (String) obj[0] : "");
 				dashboardPropostaPF.setDsErroRegistro(obj[1] != null ? String.valueOf(obj[1]) : "");
 				dashboardPropostaPF.setCodOdonto(obj[2] != null ? String.valueOf(obj[2]) : "");
 				dashboardPropostaPF.setNome(obj[3] != null ? String.valueOf(obj[3]) : "");

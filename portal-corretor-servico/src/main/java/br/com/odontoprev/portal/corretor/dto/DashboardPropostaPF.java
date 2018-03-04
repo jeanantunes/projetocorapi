@@ -7,7 +7,7 @@ public class DashboardPropostaPF {
 	private String propostaDcms;
 	private String nome;
 	private String statusVenda;
-	private Long atendimento;
+	private String atendimento;
 	private String empresa;
 	private String codOdonto;
 	private String nrImportacao;
@@ -26,12 +26,13 @@ public class DashboardPropostaPF {
 	public void setCdEmpresa(Long cdEmpresa) {
 		this.cdEmpresa = cdEmpresa;
 	}
+
 	
-	public Long getAtendimento() {
+	public String getAtendimento() {
 		return atendimento;
 	}
 
-	public void setAtendimento(Long atendimento) {
+	public void setAtendimento(String atendimento) {
 		this.atendimento = atendimento;
 	}
 
@@ -140,4 +141,12 @@ public class DashboardPropostaPF {
 		this.criticas = criticas;
 	}
 
+	@Override
+	public String toString() {
+		return "DashboardPropostaPF [cdVenda=" + cdVenda + ", cpf=" + cpf + ", propostaDcms=" + propostaDcms + ", nome="
+				+ nome + ", statusVenda=" + statusVenda + ", atendimento=" + atendimento + ", empresa=" + empresa
+				+ ", codOdonto=" + codOdonto + ", nrImportacao=" + nrImportacao + ", forca=" + forca + ", corretora="
+				+ corretora + ", dsErroRegistro=" + dsErroRegistro + ", criticas=" + criticas + ", cnpj=" + cnpj
+				+ ", cdEmpresa=" + cdEmpresa + "]";
+	}
 }
