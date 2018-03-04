@@ -453,7 +453,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	        final List<ForcaVenda> forcasVendas = new ArrayList<ForcaVenda>();
 
 	        try {
-	            forcaVendastbod = forcaVendaDao.findByTbodForcaVendaAndTbodCorretoraCdCorretora(cdCorretora);
+	            forcaVendastbod = forcaVendaDao.findByTbodCorretora(cdCorretora);
 
 	            if (!forcaVendastbod.isEmpty()) {
 	                for (final TbodForcaVenda tbodForcaVenda : forcaVendastbod) {
