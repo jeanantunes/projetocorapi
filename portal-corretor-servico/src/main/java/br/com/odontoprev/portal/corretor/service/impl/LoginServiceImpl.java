@@ -8,6 +8,8 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.bytecode.buildtime.spi.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +20,7 @@ import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.Login;
 import br.com.odontoprev.portal.corretor.dto.LoginResponse;
 import br.com.odontoprev.portal.corretor.dto.LoginRetorno;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
 import br.com.odontoprev.portal.corretor.service.LoginService;
 
@@ -32,6 +35,8 @@ public class LoginServiceImpl implements LoginService {
 	private ForcaVendaServiceImpl serviceFV;
 	@Autowired
 	private CorretoraServiceImpl serviceCorretora;
+	@Autowired
+	private ApiManagerTokenServiceImpl apiManagerTokenService;
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
@@ -62,9 +67,18 @@ public class LoginServiceImpl implements LoginService {
 			loginMap.put("senha", login.getSenha());
 			try {
 
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
+
+				HttpEntity<?> request = new HttpEntity<Map<String, String>>(loginMap, headers);
+				
 				final ResponseEntity<LoginRetorno> loginRetorno = restTemplate
-						.postForEntity((dcssUrl + "/login/1.0/"), loginMap,
-								LoginRetorno.class);
+						.postForEntity(
+								(dcssUrl + "/login/1.0/"), 
+								//loginMap,
+								request,
+								LoginRetorno.class
+								);
 
 				return new LoginResponse(
 						loginRetorno.getBody().getCodigo(),  //codigoDcss
@@ -74,8 +88,15 @@ public class LoginServiceImpl implements LoginService {
 						forcaVenda.getCorretora().getCdCorretora(),
 						forcaVenda.getCorretora().getRazaoSocial(), perfil);
 
+			} catch (final ApiTokenException e) {
+				//throw e;
+				log.error("ApiTokenException:["+ e.getMessage() +"]");
+				return null;
+
 			} catch (final Exception e) {
-				throw e;
+				//throw e;
+				log.error("Exception:["+ e.getMessage() +"]");
+				return null;
 			}
 		} else {
 			final TbodLogin loginCorretora = loginDAO

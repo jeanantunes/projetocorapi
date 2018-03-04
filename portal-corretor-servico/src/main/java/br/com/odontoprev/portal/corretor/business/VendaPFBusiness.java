@@ -22,13 +22,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 
-import br.com.odontoprev.api.manager.client.token.ApiManagerToken;
-import br.com.odontoprev.api.manager.client.token.ApiManagerTokenFactory;
-import br.com.odontoprev.api.manager.client.token.ApiToken;
-import br.com.odontoprev.api.manager.client.token.enumerator.ApiManagerTokenEnum;
-import br.com.odontoprev.api.manager.client.token.exception.ConnectionApiException;
-import br.com.odontoprev.api.manager.client.token.exception.CredentialsInvalidException;
-import br.com.odontoprev.api.manager.client.token.exception.URLEndpointNotFound;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
@@ -52,6 +45,7 @@ import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
 
 @ManagedBean
 public class VendaPFBusiness {
@@ -83,6 +77,9 @@ public class VendaPFBusiness {
 	
 	@Autowired
 	BeneficiarioBusiness beneficiarioBusiness;
+	
+	@Autowired
+	ApiManagerTokenServiceImpl apiManagerTokenService;
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
@@ -545,18 +542,18 @@ public class VendaPFBusiness {
 	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS proposta){
 		log.info("chamarWSLegadoPropostaPOST; ini;");
 		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse(); 
-		ApiManagerToken apiManager = null;
-		ApiToken apiToken = null;
+//		ApiManagerToken apiManager = null;
+//		ApiToken apiToken = null;
 		ResponseEntity<PropostaDCMSResponse> response;
 		RestTemplate restTemplate = new RestTemplate();
 		String msgErro = "";
 
 		try {
-			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
-			apiToken = apiManager.generateToken();
+//			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
+//			apiToken = apiManager.generateToken();
 
 			HttpHeaders headers = new HttpHeaders();
-			headers.add("Authorization", "Bearer " + apiToken.getAccessToken());
+			headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
 			headers.add("Cache-Control", "no-cache");
 			//headers.add("Content-Type", "application/x-www-form-urlencoded");
 			headers.add("Content-Type", "application/json");
@@ -591,21 +588,21 @@ public class VendaPFBusiness {
 				return propostaDCMSResponse;
 			}
 
-		} catch (CredentialsInvalidException e1) {
-			msgErro = "chamarWSLegadoPropostaPOST; CredentialsInvalidException.getMessage():[" + e1.getMessage() + "];";
-			log.error(msgErro);
-			propostaDCMSResponse.setMensagemErro(msgErro);
-			return propostaDCMSResponse;
-		} catch (URLEndpointNotFound e1) {
-			msgErro = "chamarWSLegadoPropostaPOST; URLEndpointNotFound.getMessage():[" + e1.getMessage() + "];";
-			log.error(msgErro);
-			propostaDCMSResponse.setMensagemErro(msgErro);
-			return propostaDCMSResponse;
-		} catch (ConnectionApiException e1) {
-			msgErro = "chamarWSLegadoPropostaPOST; ConnectionApiException.getMessage():[" + e1.getMessage() + "];";
-			log.error(msgErro);
-			propostaDCMSResponse.setMensagemErro(msgErro);
-			return propostaDCMSResponse;
+//		} catch (CredentialsInvalidException e1) {
+//			msgErro = "chamarWSLegadoPropostaPOST; CredentialsInvalidException.getMessage():[" + e1.getMessage() + "];";
+//			log.error(msgErro);
+//			propostaDCMSResponse.setMensagemErro(msgErro);
+//			return propostaDCMSResponse;
+//		} catch (URLEndpointNotFound e1) {
+//			msgErro = "chamarWSLegadoPropostaPOST; URLEndpointNotFound.getMessage():[" + e1.getMessage() + "];";
+//			log.error(msgErro);
+//			propostaDCMSResponse.setMensagemErro(msgErro);
+//			return propostaDCMSResponse;
+//		} catch (ConnectionApiException e1) {
+//			msgErro = "chamarWSLegadoPropostaPOST; ConnectionApiException.getMessage():[" + e1.getMessage() + "];";
+//			log.error(msgErro);
+//			propostaDCMSResponse.setMensagemErro(msgErro);
+//			return propostaDCMSResponse;
 			
 		} catch (RestClientException e) {
 			msgErro = "chamarWSLegadoPropostaPOST; RestClientException.getMessage():[" + e.getMessage() + "];";
