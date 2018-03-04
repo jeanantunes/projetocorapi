@@ -14,6 +14,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,6 +28,7 @@ import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
 import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
@@ -50,12 +53,18 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	@Autowired
 	private LoginDAO loginDao;
+	
+	@Autowired
+	private ApiManagerTokenServiceImpl apiManagerTokenService;
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
 
-	private void integracaoForcaDeVendaDcss(ForcaVenda forca) {
+	private void integracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
 
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
+		
 		final Map<String, Object> forcaMap = new HashMap<>();
 
 		final RestTemplate restTemplate = new RestTemplate();
@@ -70,9 +79,9 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaMap.put("responsavel", forca.getResponsavel());
 		forcaMap.put("nomeGerente", forca.getNomeGerente());
 		forcaMap.put("senha", forca.getSenha());
-		forcaMap.put("canalVenda", forca.getCdForcaVenda());
-		log.error(forcaMap);
-		restTemplate.postForEntity((dcssUrl + "/usuario/1.0/"), forcaMap, ForcaVenda.class);
+		forcaMap.put("canalVenda", forca.getCdForcaVenda());		
+		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
+		restTemplate.postForEntity((dcssUrl + "/usuario/1.0/"), request, ForcaVenda.class);
 
 	}
 
