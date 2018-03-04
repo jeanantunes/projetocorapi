@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.dto.LoginResponse;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 
 @RestController
@@ -32,11 +35,16 @@ public class ForcaVendaController {
 	}
 
 	@RequestMapping(value = "/forcavenda", method = { RequestMethod.PUT })
-	public ForcaVendaResponse updateForcaVenda(@RequestBody ForcaVenda forcaVenda) {
-
-		log.info(forcaVenda);
-
-		return forcaVendaService.addForcaVenda(forcaVenda);
+	public ResponseEntity<ForcaVendaResponse> updateForcaVenda(@RequestBody ForcaVenda forcaVenda) {
+		log.info(forcaVenda);		
+		try {
+			ForcaVendaResponse forcaVendaResponse = forcaVendaService.updateForcaVenda(forcaVenda);
+			return ResponseEntity.ok(forcaVendaResponse);
+		} catch (final Exception e) {
+			log.error("ERROR",e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}		
+		
 	}
 	
 	@RequestMapping(value = "/forcavenda/login", method = { RequestMethod.PUT })

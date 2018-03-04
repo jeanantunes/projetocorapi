@@ -60,7 +60,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
 
-	private void integracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
+	private void postIntegracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
@@ -84,10 +84,36 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		restTemplate.postForEntity((dcssUrl + "/usuario/1.0/"), request, ForcaVenda.class);
 
 	}
+	
+	private void putIntegracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
+		
+		final Map<String, Object> forcaMap = new HashMap<>();
+
+		final RestTemplate restTemplate = new RestTemplate();		
+		forcaMap.put("nome", forca.getNome());
+		forcaMap.put("email", forca.getEmail());
+		forcaMap.put("telefone", forca.getCelular());
+		forcaMap.put("nomeEmpresa", forca.getNomeEmpresa());
+		forcaMap.put("login", forca.getCpf());
+		forcaMap.put("rg", forca.getRg());
+		forcaMap.put("cpf", forca.getCpf());
+		forcaMap.put("cargo", forca.getCargo());
+		forcaMap.put("responsavel", forca.getResponsavel());
+		forcaMap.put("nomeGerente", forca.getNomeGerente());
+		forcaMap.put("senha", forca.getSenha());
+		forcaMap.put("canalVenda", forca.getCdForcaVenda());		
+		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
+		restTemplate.put((dcssUrl + "/usuario/1.0/"), request, ForcaVenda.class);
+
+	}
 
 	@Override
-	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) {
-		return this.addForcaVenda(forcaVenda);
+	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) throws ApiTokenException {
+		this.putIntegracaoForcaDeVendaDcss(forcaVenda);
+		return this.updateForcaVenda(forcaVenda);
 	}
 
 	@Override
@@ -274,7 +300,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			// Atualiza forcaVenda e associa login
 			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 			forcaVenda = this.adaptEntityToDto(tbForcaVenda, forcaVenda);
-			this.integracaoForcaDeVendaDcss(forcaVenda);
+			this.postIntegracaoForcaDeVendaDcss(forcaVenda);
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaLogin :: Detalhe: [" + e.getMessage() + "]");

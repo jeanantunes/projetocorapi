@@ -9,7 +9,7 @@ public interface ForcaVendaService {
 
 	public ForcaVendaResponse addForcaVenda(ForcaVenda forcaVenda);
 
-	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda);
+	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) throws Exception;
 
 	public ForcaVenda findForcaVendaByCpf(String cpf);
 
