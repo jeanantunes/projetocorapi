@@ -98,4 +98,12 @@ public class LoginResponse implements Serializable {
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}
+
+	@Override
+	public String toString() {
+		return "LoginResponse [codigoDcss=" + codigoDcss + ", codigoUsuario=" + codigoUsuario + ", nomeUsuario="
+				+ nomeUsuario + ", documento=" + documento + ", codigoCorretora=" + codigoCorretora + ", nomeCorretora="
+				+ nomeCorretora + ", perfil=" + perfil + "]";
+	}
+	
 }

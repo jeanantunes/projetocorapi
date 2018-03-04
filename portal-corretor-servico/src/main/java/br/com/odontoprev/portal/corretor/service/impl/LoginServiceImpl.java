@@ -80,13 +80,16 @@ public class LoginServiceImpl implements LoginService {
 								LoginRetorno.class
 								);
 
-				return new LoginResponse(
+				LoginResponse loginResponse = new LoginResponse(
 						loginRetorno.getBody().getCodigo(),  //codigoDcss
 						forcaVenda.getCdForcaVenda(),		 //codigoUsuario
 						loginRetorno.getBody().getNomeUsuario(),
 						loginRetorno.getBody().getDocumento(),
 						forcaVenda.getCorretora().getCdCorretora(),
 						forcaVenda.getCorretora().getRazaoSocial(), perfil);
+				
+				log.info("loginResponse:["+ loginResponse +"]");
+				return loginResponse;
 
 			} catch (final ApiTokenException e) {
 				//throw e;

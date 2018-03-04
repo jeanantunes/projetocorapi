@@ -51,4 +51,10 @@ public class Login implements Serializable {
 	public void setFotoPerfilB64(String fotoPerfilB64) {
 		this.fotoPerfilB64 = fotoPerfilB64;
 	}
+
+	@Override
+	public String toString() {
+		return "Login [cdLogin=" + cdLogin + ", cdTipoLogin=" + cdTipoLogin + ", fotoPerfilB64=" + fotoPerfilB64
+				+ ", senha=" + senha + ", usuario=" + usuario + "]";
+	}
 }
