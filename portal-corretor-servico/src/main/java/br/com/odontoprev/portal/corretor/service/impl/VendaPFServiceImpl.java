@@ -28,7 +28,7 @@ public class VendaPFServiceImpl implements VendaPFService {
 
 		log.info("[VendaPFServiceImpl::addVenda]");
 
-		return vendaPFBusiness.salvarVendaComTitularesComDependentes(venda);
+		return vendaPFBusiness.salvarVendaComTitularesComDependentes(venda, Boolean.TRUE);
 	}
 
 	@Override

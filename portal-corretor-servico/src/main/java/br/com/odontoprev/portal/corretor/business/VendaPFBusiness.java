@@ -93,7 +93,7 @@ public class VendaPFBusiness {
 	@Value("${DCSS_CODIGO_EMPRESA_DCMS}")
 	private String dcss_codigo_empresa_dcms; //201803021538 esertorio para moliveira
 	
-	public VendaResponse salvarVendaComTitularesComDependentes(Venda venda) {
+	public VendaResponse salvarVendaComTitularesComDependentes(Venda venda, Boolean isIntegraDCSS) {
 
 		log.info("[salvarVendaPFComTitularesComDependentes]");
 
@@ -211,30 +211,12 @@ public class VendaPFBusiness {
 				throw new Exception(beneficiarioResponse.getMensagem());
 			}
 			
-			//QG TESTE APP SYNC 201802282300
-			String flagNumero = "";
-			if(venda.getTitulares() != null
-				&& !venda.getTitulares().isEmpty()
-				&& venda.getTitulares().get(0) != null
-				&& venda.getTitulares().get(0).getEndereco() != null
-				&& venda.getTitulares().get(0).getEndereco().getNumero() != null
-				&& !venda.getTitulares().get(0).getEndereco().getNumero().isEmpty()
-			) {
-				flagNumero = venda.getTitulares().get(0).getEndereco().getNumero();
-			}
-			
-			//QG TESTE APP SYNC 201802282300
-			if(!flagNumero.equals("0") && !flagNumero.equals("1")) {
-				
+
+			if(isIntegraDCSS) {
 				propostaDCMSResponse = chamarWsDcssLegado(venda, tbodPlano);
-				
-			} else {
-				Integer cod = Integer.parseInt(flagNumero);
-				String msg = "Venda cadastrada CdVenda:[" + tbVenda.getCdVenda() + "]; NumeroProposta:[" + cod + "].";
-				return new VendaResponse(cod, msg);
+				atualizarNumeroPropostaVenda(venda, tbVenda, propostaDCMSResponse);
 			}
 			
-			atualizarNumeroPropostaVenda(venda, tbVenda, propostaDCMSResponse);
 
 		} catch (Exception e) {
 			log.error("salvarVendaPFComTitularesComDependentes :: Erro ao cadastrar venda CdVenda:[" + venda.getCdVenda() + "], Detalhe: [" + e.getMessage() + "], Causa: [" + e.getCause() != null ? e.getCause().getMessage() : "null" + "]");

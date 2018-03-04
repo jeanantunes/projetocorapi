@@ -33,6 +33,7 @@ public class VendaPMEBusiness {
 		log.info("[salvarVendaPMEComEmpresasPlanosTitularesDependentes]");
 
 		Venda venda = new Venda();
+		VendaResponse vendaResponse = null;
 
 		try {		
 
@@ -67,7 +68,7 @@ public class VendaPMEBusiness {
 						
 					} //for (Beneficiario titular : titulares)
 
-					VendaResponse vendaResponse = vendaPFBusiness.salvarVendaComTitularesComDependentes(venda);
+					vendaResponse = vendaPFBusiness.salvarVendaComTitularesComDependentes(venda,Boolean.FALSE);
 					
 					log.info("salvarVendaPMEComEmpresasPlanosTitularesDependentes :: cadastrada vendaResponse.getId:[" + vendaResponse.getId() + "].");
 					
@@ -82,7 +83,7 @@ public class VendaPMEBusiness {
 			return new VendaResponse(0, msg);
 		}
 
-		return new VendaResponse(1, "Venda PME cadastrada CdVenda:["+ 1 +"].");
+		return vendaResponse;
 	}
 
 }
