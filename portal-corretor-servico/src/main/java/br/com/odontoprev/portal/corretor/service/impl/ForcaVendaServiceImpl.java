@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -106,7 +107,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaMap.put("senha", forca.getSenha());
 		forcaMap.put("canalVenda", forca.getCdForcaVenda());		
 		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
-		restTemplate.put((dcssUrl + "/usuario/1.0/"), request, ForcaVenda.class);
+		restTemplate.exchange((dcssUrl + "/usuario/1.0/"),HttpMethod.PUT, request, ForcaVenda.class);
 
 	}
 
