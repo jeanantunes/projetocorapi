@@ -290,8 +290,25 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			tbForcaVenda.setAtivo(Constantes.ATIVO);
 
 			if (forcaVenda.getSenha() != null && !forcaVenda.getSenha().isEmpty()) {
-				TbodLogin tbLogin = new TbodLogin();
-				tbLogin.setCdLogin(tbForcaVenda.getTbodLogin().getCdLogin());
+				TbodLogin tbLogin = null;
+				//tbLogin.setCdLogin(tbForcaVenda.getTbodLogin().getCdLogin());
+				
+				if(tbForcaVenda.getTbodLogin() == null) {
+					log.info("criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():[" + tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf() + "] pq TbodLogin() == null.");
+					tbLogin = new TbodLogin();					
+				} else {
+					if(tbForcaVenda.getTbodLogin().getCdLogin() == null) {
+						log.info("criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():[" + tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf() + "] pq TbodLogin().getCdLogin() == null.");
+						tbLogin = new TbodLogin();					
+					} else {
+						tbLogin = loginDao.findOne(tbForcaVenda.getTbodLogin().getCdLogin());
+						if(tbLogin == null) {
+							log.info("criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():[" + tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf() + "] pq TbodLogin().getCdLogin():[" + tbForcaVenda.getTbodLogin().getCdLogin() + "] NAO ENCONTRADO.");
+							tbLogin = new TbodLogin();
+						}
+					}
+				}
+								
 				tbLogin.setCdTipoLogin((long) 1); // TODO
 				tbLogin.setSenha(forcaVenda.getSenha());
 				tbLogin = loginDao.save(tbLogin);
