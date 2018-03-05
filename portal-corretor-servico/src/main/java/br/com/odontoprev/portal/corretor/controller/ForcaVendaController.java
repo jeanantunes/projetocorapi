@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
-import br.com.odontoprev.portal.corretor.dto.LoginResponse;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 
 @RestController
@@ -92,7 +91,8 @@ public class ForcaVendaController {
 
 		log.info("cdCorretora [" + cdCorretora + "]");
 
-		return forcaVendaService.findForcaVendasByCdStatusForcaCdCorretora(cdCorretora);
+		//return forcaVendaService.findForcaVendasByCdStatusForcaCdCorretora(cdCorretora);
+		return forcaVendaService.findForcaVendasByForcaCdCorretora(cdCorretora);
 	}
 
 }
