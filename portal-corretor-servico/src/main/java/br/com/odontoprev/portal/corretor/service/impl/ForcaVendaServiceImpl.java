@@ -66,28 +66,39 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	private DCSSLoginResponse postIntegracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
 
+		DCSSLoginResponse dCSSLoginResponse = null;
+		
 		HttpHeaders headers = new HttpHeaders();
+		
 		headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
 
 		final Map<String, Object> forcaMap = new HashMap<>();
 
 		final RestTemplate restTemplate = new RestTemplate();
-		forcaMap.put("nome", forca.getNome());
-		forcaMap.put("email", forca.getEmail());
-		forcaMap.put("telefone", forca.getCelular());
-		forcaMap.put("nomeEmpresa", forca.getNomeEmpresa());
-		forcaMap.put("login", forca.getCpf());
-		forcaMap.put("rg", forca.getRg());
-		forcaMap.put("cpf", forca.getCpf());
-		forcaMap.put("cargo", forca.getCargo());
-		forcaMap.put("responsavel", forca.getResponsavel());
-		forcaMap.put("nomeGerente", forca.getNomeGerente());
-		forcaMap.put("senha", forca.getSenha());
-		forcaMap.put("canalVenda", forca.getCdForcaVenda());
+		
+		forcaMap.put("nome", forca.getNome() == null ? "n/a" : forca.getNome());
+		forcaMap.put("email", forca.getEmail() == null ? "n/a" : forca.getEmail());
+		forcaMap.put("telefone", forca.getCelular() == null ? "n/a" : forca.getCelular());
+		forcaMap.put("nomeEmpresa", forca.getNomeEmpresa() == null ? "n/a" : forca.getNomeEmpresa());
+		forcaMap.put("login", forca.getCpf() == null ? "n/a" : forca.getCpf());
+		forcaMap.put("rg", forca.getRg() == null ? "n/a" : forca.getRg());
+		forcaMap.put("cpf", forca.getCpf() == null ? "n/a" : forca.getCpf());
+		forcaMap.put("cargo", forca.getCargo() == null ? "n/a" : forca.getCargo());
+		forcaMap.put("responsavel", forca.getResponsavel() == null ? "n/a" : forca.getResponsavel());
+		forcaMap.put("nomeGerente", forca.getNomeGerente() == null ? "n/a" : forca.getNomeGerente());
+		forcaMap.put("senha", forca.getSenha() == null ? "n/a" : forca.getSenha());
+		forcaMap.put("canalVenda", forca.getCdForcaVenda() == null ? "n/a" : forca.getCdForcaVenda());
+		
 		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
+		
 		ResponseEntity<DCSSLoginResponse> response = restTemplate.postForEntity((dcssUrl + "/usuario/1.0/"), request,
 				DCSSLoginResponse.class);
-		return response.getBody();
+		
+		dCSSLoginResponse = response.getBody();
+		
+		log.info("postIntegracaoForcaDeVendaDcss; DCSSLoginResponse.getCodigo():["+ dCSSLoginResponse.getCodigo() +"];");
+		
+		return dCSSLoginResponse;
 
 	}
 
