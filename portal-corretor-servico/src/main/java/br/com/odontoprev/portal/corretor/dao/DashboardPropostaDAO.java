@@ -11,100 +11,100 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 @org.springframework.stereotype.Repository
 public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 
-    @Query(value = "SELECT emp.CD_EMPRESA, emp.CNPJ, emp.NOME_FANTASIA, venda.DT_VENDA, status.DESCRICAO, SUM(plano.valor_anual + plano.valor_mensal) valor\n" +
-            "from tbod_corretora corretora\n" +
-            "inner join tbod_forca_venda forca on forca.CD_CORRETORA = corretora.CD_CORRETORA\n" +
-            "inner join tbod_venda venda on venda.cd_forca_vendas = forca.cd_forca_venda\n" +
-            "inner join tbod_plano plano on plano.cd_plano = venda.cd_plano\n" +
-            "inner JOIN tbod_empresa emp ON venda.cd_empresa = emp.cd_empresa\n" +
-            "inner JOIN tbod_status_venda status ON status.cd_status_venda = venda.cd_status_venda \n" +
-            "where corretora.cnpj = :cnpj \n" +
-            "GROUP BY emp.CD_EMPRESA, emp.CNPJ, emp.NOME_FANTASIA, venda.DT_VENDA, status.DESCRICAO\n" +
-            "ORDER BY venda.dt_venda DESC", nativeQuery = true)
+    @Query(value = "SELECT emp.CD_EMPRESA, emp.CNPJ, emp.NOME_FANTASIA, venda.DT_VENDA, status.DESCRICAO, SUM(plano.valor_anual + plano.valor_mensal) valor " +
+            "from tbod_corretora corretora " +
+            "inner join tbod_forca_venda forca on forca.CD_CORRETORA = corretora.CD_CORRETORA " +
+            "inner join tbod_venda venda on venda.cd_forca_vendas = forca.cd_forca_venda " +
+            "inner join tbod_plano plano on plano.cd_plano = venda.cd_plano " +
+            "inner JOIN tbod_empresa emp ON venda.cd_empresa = emp.cd_empresa " +
+            "inner JOIN tbod_status_venda status ON status.cd_status_venda = venda.cd_status_venda " +
+            "where corretora.cnpj = :cnpj " +
+            "GROUP BY emp.CD_EMPRESA, emp.CNPJ, emp.NOME_FANTASIA, venda.DT_VENDA, status.DESCRICAO " +
+            "ORDER BY venda.dt_venda DESC ", nativeQuery = true)
     public List<Object[]> findAllDashboardPropostasPME(@Param("cnpj") String cnpj);
 
-    @Query(value = "SELECT emp.cd_empresa, \n" +
-            "       emp.cnpj, \n" +
-            "       emp.nome_fantasia, \n" +
-            "       venda.dt_venda, \n" +
-            "       status.descricao, \n" +
-            "       Sum(plano.valor_anual + plano.valor_mensal) valor \n" +
-            "FROM   tbod_corretora corretora \n" +
-            "       INNER JOIN tbod_forca_venda forca \n" +
-            "               ON forca.cd_corretora = corretora.cd_corretora \n" +
-            "       INNER JOIN tbod_venda venda \n" +
-            "               ON venda.cd_forca_vendas = forca.cd_forca_venda \n" +
-            "       INNER JOIN tbod_plano plano \n" +
-            "               ON plano.cd_plano = venda.cd_plano \n" +
-            "       INNER JOIN tbod_empresa emp \n" +
-            "               ON venda.cd_empresa = emp.cd_empresa \n" +
-            "       INNER JOIN tbod_status_venda status \n" +
-            "               ON status.cd_status_venda = venda.cd_status_venda \n" +
-            "WHERE  corretora.cnpj = :cnpj \n" +
-            "       AND status.cd_status_venda = :status \n" +
-            "GROUP  BY emp.cd_empresa, \n" +
-            "          emp.cnpj, \n" +
-            "          emp.nome_fantasia, \n" +
-            "          venda.dt_venda, \n" +
-            "          status.descricao \n" +
-            "ORDER  BY venda.dt_venda DESC"
+    @Query(value = "SELECT emp.cd_empresa, " +
+            "       emp.cnpj, " +
+            "       emp.nome_fantasia, " +
+            "       venda.dt_venda, " +
+            "       status.descricao, " +
+            "       Sum(plano.valor_anual + plano.valor_mensal) valor " +
+            "FROM   tbod_corretora corretora " +
+            "       INNER JOIN tbod_forca_venda forca " +
+            "               ON forca.cd_corretora = corretora.cd_corretora " +
+            "       INNER JOIN tbod_venda venda " +
+            "               ON venda.cd_forca_vendas = forca.cd_forca_venda " +
+            "       INNER JOIN tbod_plano plano " +
+            "               ON plano.cd_plano = venda.cd_plano " +
+            "       INNER JOIN tbod_empresa emp " +
+            "               ON venda.cd_empresa = emp.cd_empresa " +
+            "       INNER JOIN tbod_status_venda status " +
+            "               ON status.cd_status_venda = venda.cd_status_venda " +
+            "WHERE  corretora.cnpj = :cnpj " +
+            "       AND status.cd_status_venda = :status " +
+            "GROUP  BY emp.cd_empresa, " +
+            "          emp.cnpj, " +
+            "          emp.nome_fantasia, " +
+            "          venda.dt_venda, " +
+            "          status.descricao " +
+            "ORDER  BY venda.dt_venda DESC "
             , nativeQuery = true)
     public List<Object[]> findDashboardPropostaPMEByStatus(@Param("status") Long status, @Param("cnpj") String cnpj);
 
-    @Query(value = "SELECT DISTINCT venda.cd_venda, \n" +
-            "                vida.cpf, \n" +
-            "                venda.proposta_dcms, \n" +
-            "                vida.nome, \n" +
-            "                status.descricao,\n" +
-            "                Sum(p.valor_anual + p.valor_mensal) valor\n" +
-            "FROM   tbod_venda venda, \n" +
-            "       tbod_status_venda status, \n" +
-            "       tbod_venda_vida vv, \n" +
-            "       tbod_vida vida,\n" +
-            "       tbod_forca_venda f,\n" +
-            "       tbod_plano p\n" +
-            "WHERE  p.cd_plano = venda.cd_plano\n" +
-            "       AND venda.cd_venda = vv.cd_venda \n" +
-            "       AND vv.cd_vida = vida.cd_vida \n" +
-            "       AND venda.cd_empresa IS NULL \n" +
-            "       AND venda.cd_venda = vv.cd_venda \n" +
-            "       AND status.cd_status_venda = venda.cd_status_venda\n" +
-            "       and f.cd_forca_venda = venda.CD_FORCA_VENDAS\n" +
-            "       AND f.cpf = :cpf\n" +
-            "GROUP  BY venda.cd_venda, \n" +
-            "          vida.cpf, \n" +
-            "          venda.proposta_dcms, \n" +
-            "          vida.nome, \n" +
-            "          status.descricao; "
+    @Query(value = "SELECT DISTINCT venda.cd_venda, " +
+            "                vida.cpf, " +
+            "                venda.proposta_dcms, " +
+            "                vida.nome, " +
+            "                status.descricao, " +
+            "                Sum(p.valor_anual + p.valor_mensal) valor " +
+            "FROM   tbod_venda venda, " +
+            "       tbod_status_venda status, " +
+            "       tbod_venda_vida vv, " +
+            "       tbod_vida vida, " +
+            "       tbod_forca_venda f, " +
+            "       tbod_plano p " +
+            "WHERE  p.cd_plano = venda.cd_plano " +
+            "       AND venda.cd_venda = vv.cd_venda " +
+            "       AND vv.cd_vida = vida.cd_vida " +
+            "       AND venda.cd_empresa IS NULL " +
+            "       AND venda.cd_venda = vv.cd_venda " +
+            "       AND status.cd_status_venda = venda.cd_status_venda " +
+            "       and f.cd_forca_venda = venda.CD_FORCA_VENDAS " +
+            "       AND f.cpf = :cpf " +
+            "GROUP  BY venda.cd_venda, " +
+            "          vida.cpf, " +
+            "          venda.proposta_dcms, " +
+            "          vida.nome, " +
+            "          status.descricao "
             , nativeQuery = true)
     public List<Object[]> findAllDashboardPropostasPF(@Param("cpf") String cpf);
 
-    @Query(value = " ELECT DISTINCT venda.cd_venda, \n" +
-            "                vida.cpf, \n" +
-            "                venda.proposta_dcms, \n" +
-            "                vida.nome, \n" +
-            "                status.descricao,\n" +
-            "                Sum(p.valor_anual + p.valor_mensal) valor\n" +
-            "FROM   tbod_venda venda, \n" +
-            "       tbod_status_venda status, \n" +
-            "       tbod_venda_vida vv, \n" +
-            "       tbod_vida vida,\n" +
-            "       tbod_forca_venda f,\n" +
-            "       tbod_plano p\n" +
-            "WHERE  p.cd_plano = venda.cd_plano\n" +
-            "       AND venda.cd_venda = vv.cd_venda \n" +
-            "       AND vv.cd_vida = vida.cd_vida \n" +
-            "       AND venda.cd_empresa IS NULL \n" +
-            "       AND venda.cd_venda = vv.cd_venda \n" +
-            "       AND status.cd_status_venda = venda.cd_status_venda\n" +
-            "       and f.cd_forca_venda = venda.CD_FORCA_VENDAS\n" +
-            "       AND f.cpf = :cpf\n" +
-            "       AND status.cd_status_venda = :status\n" +
-            "GROUP  BY venda.cd_venda, \n" +
-            "          vida.cpf, \n" +
-            "          venda.proposta_dcms, \n" +
-            "          vida.nome, \n" +
-            "          status.descricao;", nativeQuery = true)
+    @Query(value = " ELECT DISTINCT venda.cd_venda, " +
+            "                vida.cpf, " +
+            "                venda.proposta_dcms, " +
+            "                vida.nome, " +
+            "                status.descricao, " +
+            "                Sum(p.valor_anual + p.valor_mensal) valor " +
+            "FROM   tbod_venda venda, " +
+            "       tbod_status_venda status, " +
+            "       tbod_venda_vida vv, " +
+            "       tbod_vida vida, " +
+            "       tbod_forca_venda f, " +
+            "       tbod_plano p " +
+            "WHERE  p.cd_plano = venda.cd_plano " +
+            "       AND venda.cd_venda = vv.cd_venda " +
+            "       AND vv.cd_vida = vida.cd_vida " +
+            "       AND venda.cd_empresa IS NULL " +
+            "       AND venda.cd_venda = vv.cd_venda " +
+            "       AND status.cd_status_venda = venda.cd_status_venda " +
+            "       and f.cd_forca_venda = venda.CD_FORCA_VENDAS " +
+            "       AND f.cpf = :cpf " +
+            "       AND status.cd_status_venda = :status " +
+            "GROUP  BY venda.cd_venda, " +
+            "          vida.cpf, " +
+            "          venda.proposta_dcms, " +
+            "          vida.nome, " +
+            "          status.descricao ", nativeQuery = true)
     public List<Object[]> findDashboardPropostaPFByStatus(@Param("status") Long status, @Param("cpf") String cpf);
 
     @Query(value = " select * from vwod_cor_critica_pf where cnpj = :cnpj and cpf = :cpf ", nativeQuery = true)
