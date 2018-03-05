@@ -56,9 +56,10 @@ public class VendaPMEBusiness {
 //					planos.add(plano);
 //					venda.setPlanos(planos);
 					
-					venda.setDataVenda(new Date()); //TODO
-					venda.setCdStatusVenda(null); //TODO
-					venda.setFaturaVencimento(empresa.getVencimentoFatura()); //TODO
+					venda.setDataVenda(new Date());
+					venda.setCdStatusVenda(1L); //TODO Alterar para status aguardando aprovacao para ser atualizado posteriormente 05.03.18 as 15:36
+					venda.setFaturaVencimento(empresa.getVencimentoFatura());
+					venda.setCdForcaVenda(vendaPME.getCdForcaVenda());
 					
 					for (Beneficiario titular : vendaPME.getTitulares()) {
 					
