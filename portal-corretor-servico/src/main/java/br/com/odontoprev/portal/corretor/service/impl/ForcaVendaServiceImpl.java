@@ -640,15 +640,23 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			//TODO //201803041824 tratar erro no dcss e fazer rollback da alteracao de status
 			ForcaVenda forcaVendaParaDCSS = this.adaptEntityToDto(tbForcaVenda, forcaVenda); //201803041824 inc esert para fernando
-			this.postIntegracaoForcaDeVendaDcss(forcaVendaParaDCSS); //201803041824 inc esert para fernando
+			DCSSLoginResponse reponseDCSSLogin = this.postIntegracaoForcaDeVendaDcss(forcaVendaParaDCSS); //201803041824 inc esert para fernando
+			if(reponseDCSSLogin != null && reponseDCSSLogin.getCodigo() != null) {
+				tbForcaVenda.setCodigoDcssUsuario(reponseDCSSLogin.getCodigo()); //201803052006 inc esert
+				tbForcaVenda = forcaVendaDao.save(tbForcaVenda); //201803052006 inc esert
+			} else {
+				throw new Exception("updateForcaVendaStatusByCpf: reponseDCSSLogin.getCodigo() == null."); //201803052006 inc esert
+			}
 
 		} catch (final Exception e) {
-			log.error("Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "]");
-			return new ForcaVendaResponse(0, "Erro ao atualizar ForcaVendaStatus :: Detalhe: [" + e.getMessage() + "].");
+			log.error("Erro ao atualizar ForcaVendaStatus :: Message: [" + e.getMessage() + "]");
+			return new ForcaVendaResponse(0, "Erro ao atualizar ForcaVendaStatus :: Message: [" + e.getMessage() + "].");
 		}
 
-		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado! [CPF: " + tbForcaVenda.getCpf() + 
-				" - De: " + ativoAnterior +"-"+ statusAnterior + 
-				" - Para: " + tbForcaVenda.getAtivo() +"-"+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "]");
+		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado!" 
+				+ " Cpf:[" + tbForcaVenda.getCpf() + "];"
+				+ " CodigoDcssUsuario:[" + tbForcaVenda.getCodigoDcssUsuario() + "];"
+				+ " De:[" + ativoAnterior +"-"+ statusAnterior + "];"
+				+ " Para:[ " + tbForcaVenda.getAtivo() +"-"+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "].");
 	}
 }
