@@ -11,7 +11,17 @@ public class DashboardPropostaPME {
 	private String empDcms;
 	private String forca;
 	private String criticas;
-	
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+
+	private Double valor;
+
 	public String getNome() {
 		return nome;
 	}

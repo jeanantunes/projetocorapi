@@ -71,12 +71,10 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				dashboardPropostaPME.setNome(obj[2] != null ? String.valueOf(obj[2]) : "");
 				dashboardPropostaPME.setDataVenda(sdf.format(d));
 				dashboardPropostaPME.setStatusVenda(obj[4] != null ? String.valueOf(obj[4]) : "");
-
+				dashboardPropostaPME.setValor(obj[5] != null ? Double.parseDouble(obj[5].toString()) : 0);
 				propostasPME.add(dashboardPropostaPME);
 			}
-
 			response.setDashboardPropostasPME(propostasPME);
-
 		} catch (Exception e) {
 			log.error("Erro ao buscar Propostas PME por status :: Detalhe: [" + e.getMessage() + "]");
 			return new DashboardPropostaPMEResponse();
@@ -116,7 +114,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				dashboardPropostaPF.setPropostaDcms(obj[2] != null ? String.valueOf(obj[2]) : "");
 				dashboardPropostaPF.setNome(obj[3] != null ? String.valueOf(obj[3]) : "");
 				dashboardPropostaPF.setStatusVenda(obj[4] != null ? String.valueOf(obj[4]) : "");
-
+				dashboardPropostaPF.setValor(obj[5] != null ? Double.parseDouble(obj[5].toString()) : 0);
 				propostasPF.add(dashboardPropostaPF);
 			}
 

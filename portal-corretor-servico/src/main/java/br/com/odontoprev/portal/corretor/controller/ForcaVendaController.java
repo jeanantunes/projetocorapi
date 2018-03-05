@@ -92,7 +92,7 @@ public class ForcaVendaController {
 
 		log.info("cdCorretora [" + cdCorretora + "]");
 
-		return forcaVendaService.findForcaVendasByForcaCdCorretora(cdCorretora);
+		return forcaVendaService.findForcaVendasByCdStatusForcaCdCorretora(cdCorretora);
 	}
 
 }
