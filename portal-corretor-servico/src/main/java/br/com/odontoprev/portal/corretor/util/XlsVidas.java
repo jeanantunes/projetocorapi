@@ -148,7 +148,7 @@ public class XlsVidas {
 				vidasArr[15] = ""; // nada
 				vidasArr[16] = ""; // nada
 				vidasArr[17] = ""; // nada
-				vidasArr[18] = "Outros"; // Fixo "Outros" Obrigat
+				vidasArr[18] = isTitular ? "" : "Outros"; // Fixo "Outros" Obrigat
 				vidasArr[19] = ""; // nada
 				vidasArr[20] = "I"; // Fixo "I" (Inclusao) Obrigatorio
 				// cpf do titular (para titular e seus dependentes) Obrig

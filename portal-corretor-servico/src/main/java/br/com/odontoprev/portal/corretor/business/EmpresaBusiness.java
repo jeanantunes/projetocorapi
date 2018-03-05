@@ -83,7 +83,7 @@ public class EmpresaBusiness {
 			tbEmpresa.setTbodEndereco(tbEndereco);
 			tbEmpresa = empresaDao.save(tbEmpresa);
 
-			if (!empresa.getPlanos().isEmpty()) {
+			if (empresa.getPlanos() != null && !empresa.getPlanos().isEmpty()) {
 				for (Plano plano : empresa.getPlanos()) {
 					TbodPlano tbPlano = new TbodPlano();
 					tbPlano = planoDao.findByCdPlano(plano.getCdPlano());

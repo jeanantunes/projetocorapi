@@ -70,9 +70,9 @@ public class XlsEmpresa {
 			String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA); //201803050304 2kill
 			//String pathEmpresa = PATH_XLS_EMPRESA;
 
-//			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + empresa[16] + "_" + newcnpj + "_" + Data() + ".xls";
+			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + empresa[16] + "_" + newcnpj + "_" + montaData_ddMMyyyy_HHmm() + ".xls";
 			
-			String filename = pathEmpresa + empresa[16] + "_" + newcnpj + "_" + montaData_ddMMyyyy_HHmm() + ".xls";
+//			String filename = pathEmpresa + empresa[16] + "_" + newcnpj + "_" + montaData_ddMMyyyy_HHmm() + ".xls";
 
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Empresa");

@@ -66,7 +66,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				
 				List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa());
 				
-				if(vidas != null) {
+				if(vidas != null && !vidas.isEmpty()) {
 					XlsVidas xlsVidas = new XlsVidas();
 					xlsVidas.gerarVidasXLS(vidas, tbEmpresa);
 				}
