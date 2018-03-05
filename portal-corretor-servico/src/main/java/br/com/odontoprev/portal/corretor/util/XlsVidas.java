@@ -11,12 +11,16 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.factory.annotation.Value;
 
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 
 public class XlsVidas {
 
+//	@Value("${server.path.vidas}")
+//	private String PATH_XLS_VIDAS; 
+			
 	private static final Log log = LogFactory.getLog(XlsVidas.class);
 
 	public String Data() {
@@ -33,12 +37,13 @@ public class XlsVidas {
 		return total;
 	}
 
-	public void gerarVidasXLS(List<TbodVida> vidas, TbodEmpresa tbEmpresa) {
+	public void gerarVidasXLS(List<TbodVida> vidas, TbodEmpresa tbEmpresa) throws Exception {
 
 		String dataStr = "00/00/0000";
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-		String pathVidas = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_VIDAS);
+		String pathVidas = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_VIDAS); //201803050304 2kill
+		//String pathVidas = PATH_XLS_VIDAS;
 
 		try {
 
@@ -184,10 +189,15 @@ public class XlsVidas {
 			fileOut.close();
 			// workbook.close();
 
-			log.info("Sucesso!");
-		} catch (Exception e) {
-			log.error("Fracasso!");
+			String msgOk = "GerarEmpresaXLS; OK; filename:["+ filename +"]";
+			log.info(msgOk);
 
+			//System.out.println("Sucesso!");
+
+		} catch (Exception e) {
+			//System.out.println("Fracasso!");
+			String msgErro = "GerarEmpresaXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
+			throw new Exception(msgErro, e);
 		}
 		log.info("Escreveu Planilha Vidas");
 	}

@@ -41,6 +41,10 @@ public class VendaPMEBusiness {
 				
 				EmpresaResponse empresaResponse = empresaBusiness.salvarEmpresaEndereco(empresa);
 
+				if(empresaResponse.getId() == 0) {
+					throw new Exception(empresaResponse.getMensagem());
+				}
+				
 				for (Plano plano : empresa.getPlanos()) {
 					
 					venda = new Venda();

@@ -127,7 +127,7 @@ public class BeneficiarioBusiness {
 			}
 		} catch (Exception e) {
 			log.error("salvarTitularComDependentes :: Erro ao cadastrar vidas. Detalhe: [" + e.getMessage() + "]");
-			return new BeneficiarioResponse(0, "Erro ao cadastrar vidas. Favor, entre em contato com o suporte.");
+			return new BeneficiarioResponse(0, "Erro ao cadastrar vidas. []");
 		}
 
 		return new BeneficiarioResponse(1, "Vidas cadastradas.");

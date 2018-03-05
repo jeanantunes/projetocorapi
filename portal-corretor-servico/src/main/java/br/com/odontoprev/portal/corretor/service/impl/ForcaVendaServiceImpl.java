@@ -25,6 +25,7 @@ import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.LoginDAO;
 import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dto.Conta;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.DCSSLoginResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
@@ -32,7 +33,9 @@ import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
 import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
+import br.com.odontoprev.portal.corretor.model.TbodBancoConta;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
+import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
 import br.com.odontoprev.portal.corretor.model.TbodStatusForcaVenda;
@@ -128,68 +131,74 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	}
 
 	@Override
-	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) throws ApiTokenException {
-		TbodForcaVenda tbForcaVenda = forcaVendaDao.findOne(forcaVenda.getCdForcaVenda());
-		if (tbForcaVenda != null) {
-			
-			if(forcaVenda.getCpf()==null) {
-				forcaVenda.setCpf(tbForcaVenda.getCpf());
-			}
-
-			tbForcaVenda.setNome(forcaVenda.getNome());
-			tbForcaVenda.setCpf(forcaVenda.getCpf());
-			tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
-			tbForcaVenda.setCelular(forcaVenda.getCelular());
-			tbForcaVenda.setEmail(forcaVenda.getEmail());
-			tbForcaVenda.setCargo(forcaVenda.getCargo());
-			tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
-			if (forcaVenda.getCorretora() != null && forcaVenda.getCorretora().getCdCorretora() > 0) {
-				TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
-				tbForcaVenda.setTbodCorretora(tbCorretora);
-			}
-
-			// Grava senha na tabela de login na tela de Aguardando Aprovacao
-			if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
-				TbodLogin tbLogin = null;
-				// tbLogin.setCdLogin(tbForcaVenda.getTbodLogin().getCdLogin());
-
-				if (tbForcaVenda.getTbodLogin() == null) {
-					log.info("updateForcaVenda - criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():["
-							+ tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf()
-							+ "] pq TbodLogin() == null.");
-					tbLogin = new TbodLogin();
-				} else {
-					if (tbForcaVenda.getTbodLogin().getCdLogin() == null) {
-						log.info(" updateForcaVenda - criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():["
+	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) {
+		try{
+			TbodForcaVenda tbForcaVenda = forcaVendaDao.findOne(forcaVenda.getCdForcaVenda());
+			if (tbForcaVenda != null) {
+				
+				if(forcaVenda.getCpf()==null) {
+					forcaVenda.setCpf(tbForcaVenda.getCpf());
+				}
+	
+				tbForcaVenda.setNome(forcaVenda.getNome());
+				tbForcaVenda.setCpf(forcaVenda.getCpf());
+				tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
+				tbForcaVenda.setCelular(forcaVenda.getCelular());
+				tbForcaVenda.setEmail(forcaVenda.getEmail());
+				tbForcaVenda.setCargo(forcaVenda.getCargo());
+				tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
+				if (forcaVenda.getCorretora() != null && forcaVenda.getCorretora().getCdCorretora() > 0) {
+					TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
+					tbForcaVenda.setTbodCorretora(tbCorretora);
+				}
+	
+				// Grava senha na tabela de login na tela de Aguardando Aprovacao
+				if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
+					TbodLogin tbLogin = null;
+					// tbLogin.setCdLogin(tbForcaVenda.getTbodLogin().getCdLogin());
+	
+					if (tbForcaVenda.getTbodLogin() == null) {
+						log.info("updateForcaVenda - criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():["
 								+ tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf()
-								+ "] pq TbodLogin().getCdLogin() == null.");
+								+ "] pq TbodLogin() == null.");
 						tbLogin = new TbodLogin();
 					} else {
-						tbLogin = loginDao.findOne(tbForcaVenda.getTbodLogin().getCdLogin());
-						if (tbLogin == null) {
-							log.info("updateForcaVenda - criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():["
+						if (tbForcaVenda.getTbodLogin().getCdLogin() == null) {
+							log.info(" updateForcaVenda - criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():["
 									+ tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf()
-									+ "] pq TbodLogin().getCdLogin():[" + tbForcaVenda.getTbodLogin().getCdLogin()
-									+ "] NAO ENCONTRADO.");
+									+ "] pq TbodLogin().getCdLogin() == null.");
 							tbLogin = new TbodLogin();
+						} else {
+							tbLogin = loginDao.findOne(tbForcaVenda.getTbodLogin().getCdLogin());
+							if (tbLogin == null) {
+								log.info("updateForcaVenda - criando novo TbodLogin para tbForcaVenda.getCdForcaVenda():["
+										+ tbForcaVenda.getCdForcaVenda() + "], getCpf():[" + tbForcaVenda.getCpf()
+										+ "] pq TbodLogin().getCdLogin():[" + tbForcaVenda.getTbodLogin().getCdLogin()
+										+ "] NAO ENCONTRADO.");
+								tbLogin = new TbodLogin();
+							}
 						}
 					}
+	
+					tbLogin.setCdTipoLogin((long) 1); // TODO
+					tbLogin.setSenha(forcaVenda.getSenha());
+					tbLogin = loginDao.save(tbLogin);
+					tbForcaVenda.setTbodLogin(tbLogin);
 				}
-
-				tbLogin.setCdTipoLogin((long) 1); // TODO
-				tbLogin.setSenha(forcaVenda.getSenha());
-				tbLogin = loginDao.save(tbLogin);
-				tbForcaVenda.setTbodLogin(tbLogin);
+	
+				tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
+				this.putIntegracaoForcaDeVendaDcss(forcaVenda);
+				return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
+						"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");
+	
+			} else {
+				return new ForcaVendaResponse(forcaVenda.getCdForcaVenda(),
+						"ForcaVenda não encontrada. cdForcaVenda [" + forcaVenda.getCdForcaVenda() + "]");
 			}
-
-			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
-			this.putIntegracaoForcaDeVendaDcss(forcaVenda);
-			return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
-					"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");
-
-		} else {
-			return new ForcaVendaResponse(forcaVenda.getCdForcaVenda(),
-					"ForcaVenda não encontrada. cdForcaVenda [" + forcaVenda.getCdForcaVenda() + "]");
+		}catch(Exception e) {
+			String msgErro = "updateForcaVenda; Erro:[" + e.getMessage() + "]"; 
+			log.error(msgErro);
+			return new ForcaVendaResponse(0, "updateForcaVenda; Erro:[" + msgErro + "]");
 		}
 	}
 
@@ -419,6 +428,58 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaVenda.setNome(tbForcaVenda.getNome());
 		forcaVenda.setCelular(tbForcaVenda.getCelular());
 		forcaVenda.setEmail(tbForcaVenda.getEmail());
+		
+		if(tbForcaVenda.getTbodCorretora() != null) {
+			TbodCorretora tbodCorretora = tbForcaVenda.getTbodCorretora();   
+			Corretora corretora = new Corretora();
+			corretora.setCnpj(tbodCorretora.getCnpj());			
+			corretora.setRazaoSocial(tbodCorretora.getRazaoSocial());
+			corretora.setCnae(tbodCorretora.getCnae());
+			corretora.setTelefone(tbodCorretora.getTelefone());
+			corretora.setCelular(tbodCorretora.getCelular());
+			corretora.setEmail(tbodCorretora.getEmail());
+			corretora.setStatusCnpj(tbodCorretora.getStatusCnpj().equals(Constantes.ATIVO));
+			corretora.setSimplesNacional(tbodCorretora.getSimplesNacional().equals(Constantes.ATIVO));
+			corretora.setDataAbertura(tbodCorretora.getDataAbertura());
+			
+			if(tbodCorretora.getTbodEndereco() != null) {
+				TbodEndereco tbodEndereco = tbodCorretora.getTbodEndereco();
+				Endereco endereco = new Endereco();
+				endereco.setCep(tbodEndereco.getCep());
+				endereco.setLogradouro(tbodEndereco.getLogradouro());
+				//TODO
+				corretora.setEnderecoCorretora(endereco);
+			}
+			
+			if(tbodCorretora.getTbodCorretoraBancos() != null
+			&& tbodCorretora.getTbodCorretoraBancos().get(0) != null 
+			&& tbodCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta() != null) {
+				TbodBancoConta tbodBancoConta = tbodCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta();
+				Conta conta = new Conta();
+				conta.setCodigoBanco(tbodBancoConta.getCodigoBanco().toString());
+				conta.setCodigoAgencia(tbodBancoConta.getAgencia());
+				conta.setNumeroConta(tbodBancoConta.getConta());
+				corretora.setConta(conta);
+			}
+			
+			String responsavel = null;
+			if(tbodCorretora.getNomeRepresentanteLegal1() != null 
+			&& !tbodCorretora.getNomeRepresentanteLegal1().isEmpty()) {
+				responsavel = tbodCorretora.getNomeRepresentanteLegal1();
+			} else if(tbodCorretora.getNomeRepresentanteLegal2() != null 
+			&& !tbodCorretora.getNomeRepresentanteLegal2().isEmpty()) {
+				responsavel = tbodCorretora.getNomeRepresentanteLegal2();
+			}
+			forcaVenda.setResponsavel(responsavel);
+			
+			forcaVenda.setCorretora(corretora);
+		}
+		
+		//TODO
+		//empresa
+		//gerente
+		//responsavel
+		
 		forcaVenda.setStatusForcaVenda(tbForcaVenda.getTbodStatusForcaVenda().getDescricao());
 		forcaVenda.setCpf(tbForcaVenda.getCpf());
 		forcaVenda.setAtivo(tbForcaVenda.getAtivo() == "S" ? true : false);

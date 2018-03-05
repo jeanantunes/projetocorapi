@@ -4,15 +4,25 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 
+import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 
 public class XlsEmpresa {
-	public String Data() {
+
+//	@Value("${server.path.empresa}")
+//	private String PATH_XLS_EMPRESA;
+	
+	private static final Log log = LogFactory.getLog(VendaPFBusiness.class);
+
+	public String montaData_ddMMyyyy_HHmm() {
 
 		Date data = new Date();
 		SimpleDateFormat formatador = new SimpleDateFormat("ddMMyyyy");
@@ -26,7 +36,7 @@ public class XlsEmpresa {
 		return total;
 	}
 
-	public void GerarEmpresaXLS(TbodEmpresa emp, long dataFatura) {
+	public void GerarEmpresaXLS(TbodEmpresa emp, long dataFatura) throws Exception {
 
 		try {
 
@@ -57,11 +67,12 @@ public class XlsEmpresa {
 			// Tratamento de CNPJ
 			String newcnpj = empresa[0].replaceAll("[.]", "").replaceAll("/", "");
 			
-			String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA);
+			String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA); //201803050304 2kill
+			//String pathEmpresa = PATH_XLS_EMPRESA;
 
 //			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + empresa[16] + "_" + newcnpj + "_" + Data() + ".xls";
 			
-			String filename = pathEmpresa + empresa[16] + "_" + newcnpj + "_" + Data() + ".xls";
+			String filename = pathEmpresa + empresa[16] + "_" + newcnpj + "_" + montaData_ddMMyyyy_HHmm() + ".xls";
 
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Empresa");
@@ -97,12 +108,16 @@ public class XlsEmpresa {
 			workbook.write(fileOut);
 			fileOut.close();
 //			workbook.close();
+			
+			String msgOk = "GerarEmpresaXLS; OK; filename:["+ filename +"]";
+			log.info(msgOk);
 
-			System.out.println("Sucesso!");
+			//System.out.println("Sucesso!");
 
 		} catch (Exception e) {
-			System.out.println("Fracasso!");
-
+			//System.out.println("Fracasso!");
+			String msgErro = "GerarEmpresaXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
+			throw new Exception(msgErro, e);
 		}
 	}
 }

@@ -148,8 +148,9 @@ public class EmpresaBusiness {
 			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa.getVencimentoFatura());
 	
 		} catch (Exception e) {
-			log.error("EmpresaServiceImpl :: Erro ao cadastrar empresa. Detalhe: [" + e.getMessage() + "]");
-			return new EmpresaResponse(0, "Erro ao cadastrar empresa. Favor, entre em contato com o suporte.");
+			String msgErro = "EmpresaBusiness.salvarEmpresaEndereco :: Erro ao cadastrar empresa; Message:[" + e.getMessage() + "]; Cause:[" + e.getCause() != null ? e.getCause().getMessage() : "NuLL" + "]";
+			log.error(msgErro);
+			return new EmpresaResponse(0, msgErro);
 		}
 	
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa cadastrada.");
