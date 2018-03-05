@@ -512,7 +512,7 @@ public class VendaPFBusiness {
 				beneficiarioPropostaDependente.getEndereco().setCidade(titular.getEndereco().getCidade());
 				beneficiarioPropostaDependente.getEndereco().setEstado(titular.getEndereco().getEstado());
 				
-				propostaDCMS.getBeneficiarios().add(beneficiarioPropostaTitular);
+				propostaDCMS.getBeneficiarios().add(beneficiarioPropostaDependente); //201803050437
 
 			} //for (Beneficiario dependente : titular.getDependentes())
 			
