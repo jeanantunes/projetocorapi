@@ -451,16 +451,17 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				corretora.setEnderecoCorretora(endereco);
 			}
 			
-			if(tbodCorretora.getTbodCorretoraBancos() != null
-			&& tbodCorretora.getTbodCorretoraBancos().get(0) != null 
-			&& tbodCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta() != null) {
-				TbodBancoConta tbodBancoConta = tbodCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta();
-				Conta conta = new Conta();
-				conta.setCodigoBanco(tbodBancoConta.getCodigoBanco().toString());
-				conta.setCodigoAgencia(tbodBancoConta.getAgencia());
-				conta.setNumeroConta(tbodBancoConta.getConta());
-				corretora.setConta(conta);
-			}
+			//201803051930 desligado
+//			if(tbodCorretora.getTbodCorretoraBancos() != null
+//			&& tbodCorretora.getTbodCorretoraBancos().get(0) != null 
+//			&& tbodCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta() != null) {
+//				TbodBancoConta tbodBancoConta = tbodCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta();
+//				Conta conta = new Conta();
+//				conta.setCodigoBanco(tbodBancoConta.getCodigoBanco().toString());
+//				conta.setCodigoAgencia(tbodBancoConta.getAgencia());
+//				conta.setNumeroConta(tbodBancoConta.getConta());
+//				corretora.setConta(conta);
+//			}
 			
 			String responsavel = null;
 			if(tbodCorretora.getNomeRepresentanteLegal1() != null 
