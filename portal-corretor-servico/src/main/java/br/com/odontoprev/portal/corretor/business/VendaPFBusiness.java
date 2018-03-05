@@ -481,7 +481,7 @@ public class VendaPFBusiness {
 				}
 				SimpleDateFormat sdfJsonStringDep = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000Z");
-				beneficiarioPropostaTitular.setDataNascimento(stringDataNascimentoJSONDep);
+				beneficiarioPropostaDependente.setDataNascimento(stringDataNascimentoJSONDep);
 				
 				beneficiarioPropostaDependente.setNomeMae(dependente.getNomeMae());
 				beneficiarioPropostaDependente.setCelular(dependente.getCelular().replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", ""));
