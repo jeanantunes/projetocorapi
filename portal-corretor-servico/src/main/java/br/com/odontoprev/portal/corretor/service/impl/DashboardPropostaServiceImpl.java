@@ -91,18 +91,30 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 		DashboardPropostaPFResponse response = new DashboardPropostaPFResponse();
 		List<DashboardPropostaPF> propostasPF = new ArrayList<DashboardPropostaPF>();
 		
+		
+		
+		
 		try {
 			
 			List<Object[]> objects = new ArrayList<Object[]>();
 
 			// findAll
 			if (status == 0) {
-
-				objects = dashboardPropostaDAO.findAllDashboardPropostasPF(cpf);
+				
+				if(cpf.length()>11) {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, null, cpf );
+				} else {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, cpf, null);
+				}
+				
 
 			} else {
-
-				objects = dashboardPropostaDAO.findDashboardPropostaPFByStatus(status, cpf);
+				
+				if(cpf.length()>11) {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, null, cpf);
+				} else {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, cpf, null);
+				}
 			}
 
 			for (Object object : objects) {

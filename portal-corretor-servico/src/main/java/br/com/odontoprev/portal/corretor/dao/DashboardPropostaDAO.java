@@ -51,7 +51,7 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
             , nativeQuery = true)
     public List<Object[]> findDashboardPropostaPMEByStatus(@Param("status") Long status, @Param("cnpj") String cnpj);
 
-    @Query(value = "SELECT DISTINCT venda.cd_venda, " +
+ /*   @Query(value = "SELECT DISTINCT venda.cd_venda, " +
             "                vida.cpf, " +
             "                venda.proposta_dcms, " +
             "                vida.nome, " +
@@ -78,34 +78,43 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
             "          status.descricao "
             , nativeQuery = true)
     public List<Object[]> findAllDashboardPropostasPF(@Param("cpf") String cpf);
+    */
+    
+        
 
-    @Query(value = "SELECT DISTINCT venda.cd_venda, " +
-            "                vida.cpf, " +
-            "                venda.proposta_dcms, " +
-            "                vida.nome, " +
-            "                status.descricao, " +
-            "                Sum(p.valor_anual + p.valor_mensal) valor " +
-            "FROM   tbod_venda venda, " +
-            "       tbod_status_venda status, " +
-            "       tbod_venda_vida vv, " +
-            "       tbod_vida vida, " +
-            "       tbod_forca_venda f, " +
-            "       tbod_plano p " +
-            "WHERE  p.cd_plano = venda.cd_plano " +
-            "       AND venda.cd_venda = vv.cd_venda " +
-            "       AND vv.cd_vida = vida.cd_vida " +
-            "       AND venda.cd_empresa IS NULL " +
-            "       AND venda.cd_venda = vv.cd_venda " +
-            "       AND status.cd_status_venda = venda.cd_status_venda " +
-            "       and f.cd_forca_venda = venda.CD_FORCA_VENDAS " +
-            "       AND f.cpf = :cpf " +
-            "       AND status.cd_status_venda = :status " +
-            "GROUP  BY venda.cd_venda, " +
-            "          vida.cpf, " +
-            "          venda.proposta_dcms, " +
-            "          vida.nome, " +
-            "          status.descricao ", nativeQuery = true)
-    public List<Object[]> findDashboardPropostaPFByStatus(@Param("status") Long status, @Param("cpf") String cpf);
+    @Query(value = "SELECT DISTINCT venda.cd_venda, "+
+    		"  vida.cpf, "+
+    		"  venda.proposta_dcms, "+
+    		"  vida.nome, "+
+    		"  status.descricao, "+
+    		"  SUM(p.valor_anual + p.valor_mensal) valor "+
+    		"FROM tbod_venda venda, "+
+    		"  tbod_status_venda status, "+
+    		"  tbod_venda_vida vv, "+
+    		"  tbod_vida vida, "+
+    		"  tbod_forca_venda f, "+
+    		"  tbod_corretora c, "+
+    		"  tbod_plano p "+
+    		"WHERE p.cd_plano           = venda.cd_plano "+
+    		"AND venda.cd_venda         = vv.cd_venda "+
+    		"AND vv.cd_vida             = vida.cd_vida "+
+    		"AND venda.cd_empresa      IS NULL "+
+    		"AND venda.cd_venda         = vv.cd_venda "+
+    		"AND status.cd_status_venda = venda.cd_status_venda "+
+    		"AND f.cd_forca_venda       = venda.cd_forca_vendas "+
+    		"AND c.cd_corretora         = f.cd_corretora "+
+    		"AND (:cpf                 IS NULL "+
+    		"OR f.cpf                   = :cpf) "+
+    		"AND (:cnpj                IS NULL "+
+    		"OR c.cnpj                  = :cnpj) "+
+    		"AND (:status           = 0 "+
+    		"OR status.cd_status_venda  = :status) "+
+    		"GROUP BY venda.cd_venda, "+
+    		"  vida.cpf, "+
+    		"  venda.proposta_dcms, "+
+    		"  vida.nome, "+
+    		"  status.descricao ", nativeQuery = true)
+    public List<Object[]> findDashboardPropostaPFByStatusCpfCnpj(@Param("status") Long status, @Param("cpf") String cpf, @Param("cnpj") String cnpj);            
 
     @Query(value = " select * from vwod_cor_critica_pf where cnpj = :cnpj and cpf = :cpf ", nativeQuery = true)
     public List<Object[]> buscaTodasPorCriticaPF(@Param("cnpj") String cnpj, @Param("cpf") String cpf);
