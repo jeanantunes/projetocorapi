@@ -80,6 +80,10 @@ public class LoginServiceImpl implements LoginService {
 								LoginRetorno.class
 								);
 
+				if(loginRetorno != null && loginRetorno.getBody().getCodigo() == 0) {
+					return null;
+				}
+				
 				LoginResponse loginResponse = new LoginResponse(
 						loginRetorno.getBody().getCodigo(),  //codigoDcss
 						forcaVenda.getCdForcaVenda(),		 //codigoUsuario
