@@ -11,44 +11,65 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 @org.springframework.stereotype.Repository
 public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 
-    @Query(value = "SELECT emp.CD_EMPRESA, emp.CNPJ, emp.NOME_FANTASIA, venda.DT_VENDA, status.DESCRICAO, SUM(plano.valor_anual + plano.valor_mensal) valor " +
-            "from tbod_corretora corretora " +
-            "inner join tbod_forca_venda forca on forca.CD_CORRETORA = corretora.CD_CORRETORA " +
-            "inner join tbod_venda venda on venda.cd_forca_vendas = forca.cd_forca_venda " +
-            "inner join tbod_plano plano on plano.cd_plano = venda.cd_plano " +
-            "inner JOIN tbod_empresa emp ON venda.cd_empresa = emp.cd_empresa " +
-            "inner JOIN tbod_status_venda status ON status.cd_status_venda = venda.cd_status_venda " +
-            "where corretora.cnpj = :cnpj " +
-            "GROUP BY emp.CD_EMPRESA, emp.CNPJ, emp.NOME_FANTASIA, venda.DT_VENDA, status.DESCRICAO " +
-            "ORDER BY venda.dt_venda DESC ", nativeQuery = true)
+    @Query(value = " SELECT emp.CD_EMPRESA, " +
+					"  emp.CNPJ, " +
+					"  emp.NOME_FANTASIA, " +
+					"  venda.DT_VENDA, " +
+					"  status.DESCRICAO, " +
+					"  SUM(plano.valor_anual + plano.valor_mensal) valor " +
+					"FROM tbod_corretora corretora " +
+						"INNER JOIN tbod_forca_venda forca " +
+						"ON forca.CD_CORRETORA = corretora.CD_CORRETORA " +
+						"INNER JOIN tbod_venda venda " +
+						"ON venda.cd_forca_vendas = forca.cd_forca_venda " +
+						"INNER JOIN tbod_plano plano " +
+						"ON plano.cd_plano = venda.cd_plano " +
+						"INNER JOIN tbod_empresa emp " +
+						"ON venda.cd_empresa = emp.cd_empresa " +
+						"INNER JOIN tbod_status_venda status " +
+						"ON status.cd_status_venda = venda.cd_status_venda " +
+						"INNER JOIN tbod_venda_vida vv " +
+						"ON venda.CD_VENDA = vv.CD_VENDA " +
+						"INNER JOIN tbod_vida vida " +
+				"ON vv.cd_vida        = vida.CD_VIDA " +
+				"WHERE corretora.cnpj = :cnpj " +
+				"GROUP BY emp.CD_EMPRESA, " +
+				"  emp.CNPJ, " +
+				"  emp.NOME_FANTASIA, " +
+				"  venda.DT_VENDA, " +
+				"  status.DESCRICAO " +
+"ORDER BY venda.dt_venda DESC ", nativeQuery = true)
     public List<Object[]> findAllDashboardPropostasPME(@Param("cnpj") String cnpj);
 
-    @Query(value = "SELECT emp.cd_empresa, " +
-            "       emp.cnpj, " +
-            "       emp.nome_fantasia, " +
-            "       venda.dt_venda, " +
-            "       status.descricao, " +
-            "       Sum(plano.valor_anual + plano.valor_mensal) valor " +
-            "FROM   tbod_corretora corretora " +
-            "       INNER JOIN tbod_forca_venda forca " +
-            "               ON forca.cd_corretora = corretora.cd_corretora " +
-            "       INNER JOIN tbod_venda venda " +
-            "               ON venda.cd_forca_vendas = forca.cd_forca_venda " +
-            "       INNER JOIN tbod_plano plano " +
-            "               ON plano.cd_plano = venda.cd_plano " +
-            "       INNER JOIN tbod_empresa emp " +
-            "               ON venda.cd_empresa = emp.cd_empresa " +
-            "       INNER JOIN tbod_status_venda status " +
-            "               ON status.cd_status_venda = venda.cd_status_venda " +
-            "WHERE  corretora.cnpj = :cnpj " +
-            "       AND status.cd_status_venda = :status " +
-            "GROUP  BY emp.cd_empresa, " +
-            "          emp.cnpj, " +
-            "          emp.nome_fantasia, " +
-            "          venda.dt_venda, " +
-            "          status.descricao " +
-            "ORDER  BY venda.dt_venda DESC "
-            , nativeQuery = true)
+    @Query(value = " SELECT emp.CD_EMPRESA, " +
+			"  emp.CNPJ, " +
+			"  emp.NOME_FANTASIA, " +
+			"  venda.DT_VENDA, " +
+			"  status.DESCRICAO, " +
+			"  SUM(plano.valor_anual + plano.valor_mensal) valor " +
+			"FROM tbod_corretora corretora " +
+				"INNER JOIN tbod_forca_venda forca " +
+				"ON forca.CD_CORRETORA = corretora.CD_CORRETORA " +
+				"INNER JOIN tbod_venda venda " +
+				"ON venda.cd_forca_vendas = forca.cd_forca_venda " +
+				"INNER JOIN tbod_plano plano " +
+				"ON plano.cd_plano = venda.cd_plano " +
+				"INNER JOIN tbod_empresa emp " +
+				"ON venda.cd_empresa = emp.cd_empresa " +
+				"INNER JOIN tbod_status_venda status " +
+				"ON status.cd_status_venda = venda.cd_status_venda " +
+				"INNER JOIN tbod_venda_vida vv " +
+				"ON venda.CD_VENDA = vv.CD_VENDA " +
+				"INNER JOIN tbod_vida vida " +
+		"ON vv.cd_vida        = vida.CD_VIDA " +
+		"WHERE corretora.cnpj = :cnpj "
+		+ "AND status.cd_status_venda = :status " +
+		"GROUP BY emp.CD_EMPRESA, " +
+		"  emp.CNPJ, " +
+		"  emp.NOME_FANTASIA, " +
+		"  venda.DT_VENDA, " +
+		"  status.DESCRICAO " +
+"ORDER BY venda.dt_venda DESC ", nativeQuery = true)
     public List<Object[]> findDashboardPropostaPMEByStatus(@Param("status") Long status, @Param("cnpj") String cnpj);
 
  /*   @Query(value = "SELECT DISTINCT venda.cd_venda, " +
