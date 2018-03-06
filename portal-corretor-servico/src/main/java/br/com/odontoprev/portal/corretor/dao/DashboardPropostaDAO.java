@@ -79,7 +79,7 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
             , nativeQuery = true)
     public List<Object[]> findAllDashboardPropostasPF(@Param("cpf") String cpf);
 
-    @Query(value = " ELECT DISTINCT venda.cd_venda, " +
+    @Query(value = "SELECT DISTINCT venda.cd_venda, " +
             "                vida.cpf, " +
             "                venda.proposta_dcms, " +
             "                vida.nome, " +
