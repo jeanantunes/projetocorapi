@@ -25,7 +25,6 @@ import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.LoginDAO;
 import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
-import br.com.odontoprev.portal.corretor.dto.Conta;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.DCSSLoginResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
@@ -33,7 +32,6 @@ import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
 import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
-import br.com.odontoprev.portal.corretor.model.TbodBancoConta;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
@@ -66,6 +64,10 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
+	
+	@Value("${DCSS_CODIGO_CANAL_VENDAS}")
+	private String dcss_codigo_canal_vendas;
+	
 
 	private DCSSLoginResponse postIntegracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
 
@@ -89,8 +91,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaMap.put("cargo", forca.getCargo() == null ? "n/a" : forca.getCargo());
 		forcaMap.put("responsavel", forca.getResponsavel() == null ? "n/a" : forca.getResponsavel());
 		forcaMap.put("nomeGerente", forca.getNomeGerente() == null ? "n/a" : forca.getNomeGerente());
-		forcaMap.put("senha", forca.getSenha() == null ? "n/a" : forca.getSenha());
-		forcaMap.put("canalVenda", forca.getCdForcaVenda() == null ? "n/a" : forca.getCdForcaVenda());
+		forcaMap.put("senha", forca.getSenha() == null ? "" : forca.getSenha());
+		forcaMap.put("canalVenda", dcss_codigo_canal_vendas);
 		
 		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
 		
@@ -441,6 +443,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			corretora.setStatusCnpj(tbodCorretora.getStatusCnpj().equals(Constantes.ATIVO));
 			corretora.setSimplesNacional(tbodCorretora.getSimplesNacional().equals(Constantes.ATIVO));
 			corretora.setDataAbertura(tbodCorretora.getDataAbertura());
+			forcaVenda.setNomeEmpresa(tbodCorretora.getNome());
 			
 			if(tbodCorretora.getTbodEndereco() != null) {
 				TbodEndereco tbodEndereco = tbodCorretora.getTbodEndereco();

@@ -1,0 +1,90 @@
+POST /beneficiario
+	addBeneficiario(@RequestBody List<Beneficiario> beneficiarios)
+	
+	
+	
+
+
+POST /empresa
+	addEmpresa(@RequestBody Empresa empresa) 
+		empresaService.add(empresa);
+			empresaBusiness.salvarEmpresaEnderecoVenda(empresa);
+				tipoEnderecoDao.findOne(endereco.getTipoEndereco());
+				enderecoDao.save(tbEndereco);
+				empresaDao.save(tbEmpresa);
+				
+				if (empresa.getPlanos() != null && !empresa.getPlanos().isEmpty()) {
+					for (Plano plano : empresa.getPlanos()) {
+						TbodPlano tbPlano = new TbodPlano();
+						tbPlano = planoDao.findByCdPlano(plano.getCdPlano());
+
+						TbodVenda tbVenda = new TbodVenda();
+						tbVenda.setDtVenda(new Date());
+						tbVenda.setFaturaVencimento(empresa.getVencimentoFatura());
+						tbVenda.setTbodEmpresa(tbEmpresa);
+						tbVenda.setTbodPlano(tbPlano);
+						vendaDao.save(tbVenda);
+					}
+				}
+				
+				xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa.getVencimentoFatura());
+				
+				return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa cadastrada.");
+			
+			
+			
+			
+PUT /empresa-dcms
+	updateEmpresa(@RequestBody EmpresaDcms empresaDcms)
+		empresaService.updateEmpresa(empresaDcms);
+			empresaDao.findBycdEmpresaAndCnpj(empresaDcms.getCdEmpresa(), empresaDcms.getCnpj());
+			empresaDao.save(tbEmpresa);
+			List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa());
+			
+			xlsVidas.gerarVidasXLS(vidas, tbEmpresa);
+			
+			return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
+			
+			
+
+
+POST /forcavenda
+	addForcaVenda(@RequestBody ForcaVenda forcaVenda)
+		forcaVendaService.addForcaVenda(forcaVenda);
+			forcaVendaDao.findByCpf(forcaVenda.getCpf());
+
+
+
+
+PUT /forcavenda/login
+	updateForcaVendaLogin(@RequestBody ForcaVenda forcaVenda)
+		forcaVendaService.updateForcaVendaLogin(forcaVenda);
+			forcaVendaDao.findOne(forcaVenda.getCdForcaVenda());
+			statusForcaVendaDao.findOne(ATIVO.getCodigo());
+			loginDao.findOne(tbForcaVenda.getTbodLogin().getCdLogin());
+			loginDao.save(tbLogin);
+			forcaVenda = this.adaptEntityToDto(tbForcaVenda, forcaVenda);
+			DCSSLoginResponse reponseDCSSLogin = this.postIntegracaoForcaDeVendaDcss(forcaVenda);
+			tbForcaVenda.setCodigoDcssUsuario(reponseDCSSLogin.getCodigo());
+			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
+			
+
+			
+PUT /forcavenda/status-ativo
+	updateForcaVendaStatus(@RequestBody ForcaVenda forcaVenda)
+		forcaVendaService.updateForcaVendaStatusByCpf(forcaVenda);
+			forcaVendaDao.findByCpf(forcaVenda.getCpf());
+			forcaVendaDao.save(tbForcaVenda);
+			
+			ForcaVenda forcaVendaParaDCSS = this.adaptEntityToDto(tbForcaVenda, forcaVenda); //201803041824 inc esert para fernando
+			DCSSLoginResponse reponseDCSSLogin = this.postIntegracaoForcaDeVendaDcss(forcaVendaParaDCSS); //201803041824 inc esert para fernando
+			if(reponseDCSSLogin != null && reponseDCSSLogin.getCodigo() != null) {
+				tbForcaVenda.setCodigoDcssUsuario(reponseDCSSLogin.getCodigo()); //201803052006 inc esert
+				tbForcaVenda = forcaVendaDao.save(tbForcaVenda); //201803052006 inc esert
+			}
+			
+			return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado!" 
+				+ " Cpf:[" + tbForcaVenda.getCpf() + "];"
+				+ " CodigoDcssUsuario:[" + tbForcaVenda.getCodigoDcssUsuario() + "];"
+				+ " De:[" + ativoAnterior +"-"+ statusAnterior + "];"
+				+ " Para:[ " + tbForcaVenda.getAtivo() +"-"+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "].");

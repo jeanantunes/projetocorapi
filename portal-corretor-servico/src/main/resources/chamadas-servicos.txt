@@ -61,28 +61,34 @@ CORRETORA
 	
 	resposta OK 
 	{
-	    "cdCorretora": 0,
-	    "cnpj": "123",
-	    "razaoSocial": "Teste",
-	    "cnae": null,
-	    "telefone": "11111111",
-	    "celular": "1221321",
-	    "email": "teste@teste.com",
-	    "statusCnpj": true,
-	    "simplesNacional": true,
-	    "dataAbertura": "2018-02-18",
-		"enderecoCorretora": {
-		        "cep": "00000000",
-		        "logradouro": "Rua teste",
-		        "numero": "123",
-		        "complemento": null,
-		        "bairro": "Bairro Teste",
-		        "cidade": "Cidade Teste",
-		        "estado": "TE",
-		        "tipoEndereco": null
-		    },
+	    "cdCorretora": 244,
+	    "cnpj": "03136742000137",
+	    "razaoSocial": "NATUSEG CORRETORA DE SEGUROS LTD",
+	    "cnae": "6622300",
+	    "telefone": "21050600",
+	    "celular": "981010600",
+	    "email": "MARCELO.GURGEL@NATUSEG.COM.BR",
+	    "statusCnpj": false,
+	    "simplesNacional": false,
+	    "dataAbertura": "1998-12-17",
+	    "enderecoCorretora": {
+	        "cep": "06434-090",
+	        "logradouro": "a",
+	        "numero": "12",
+	        "complemento": "q",
+	        "bairro": "a",
+	        "cidade": "A",
+	        "estado": "SP",
+	        "tipoEndereco": 1
+	    },
 	    "conta": null,
-	    "login": null,
+	    "login": {
+	        "cdLogin": 324,
+	        "cdTipoLogin": 1,
+	        "fotoPerfilB64": null,
+	        "senha": "odonto2018",
+	        "usuario": null
+	    },
 	    "representantes": null
 	}
 
@@ -102,7 +108,7 @@ CORRETORA
 	    "conta": null,
 	    "login": null,
 	    "representantes": null
-	}	
+	}
 	
 	
 
@@ -549,217 +555,44 @@ PLANOS
 VENDA
 	POST /vendapf 
 	{
-	"cdEmpresa":2, 
-	"cdPlano":3,
-	"cdForcaVenda":161,
-	"dataVenda":"2018-02-25T20:16:14.000-0300",
-	"cdStatusVenda":1,
-	"faturaVencimento":6,
-	"tipoConta":"CC",
-	"banco":"033",
-	"agencia":"00012",
-	"conta":"014200001",
-	"tipoPagamento":"BO",
-	"titulares":[
-		{  
-		   "cdVida":0,
-		   "cdTitular":0,
-		   "celular":"0987654",
-		   "cpf":"11111111",
-		   "dataNascimento":"2018-02-20",
-		   "email":"aaaaa@ddadadad",
-		   "nome":"JOAQUIM TIT 1",
-		   "nomeMae":"JOAQUINA TIT 1",
-		   "pfPj":"f",
-		   "sexo":"m",
-		   "cdPlano":1,
-		   "cdVenda":2,
-		   "cdTeste":123467,
-		   "endereco":{  
-		      "cep":"111111",
-		      "logradouro":"Rua teste",
-		      "numero":"11111",
-		      "complemento":"c2",
-		      "bairro":"Teste",
-		      "cidade":"Teste",
-		      "estado":"Sp",
-		      "tipoEndereco":1
-		   },
-		   "dependentes":[
-				{
-				"cdVida":0,
-				"cdTitular":0,
-				"celular":"0987654",
-				"cpf":"11111111",
-				"dataNascimento":"2018-02-20",
-				"email":"aaaaa@ddadadad",
-				"nome":"MARIO FILHO TIT 1",
-				"nomeMae":"ROSA ESPOSA TIT 1",
-				"pfPj":"f",
-				"sexo":"m"
-				},
-				{
-				"cdVida":0,
-				"cdTitular":0,
-				"celular":"0987654",
-				"cpf":"11111111",
-				"dataNascimento":"2018-02-20",
-				"email":"aaaaa@ddadadad",
-				"nome":"KARINA FILHA TIT 1",
-				"nomeMae":"ROSA ESPOSA TIT 1",
-				"pfPj":"f",
-				"sexo":"f"
-				}
-			]
-		},
-		{  
-		   "cdVida":0,
-		   "cdTitular":0,
-		   "celular":"0987654",
-		   "cpf":"11111111",
-		   "dataNascimento":"2018-02-20",
-		   "email":"aaaaa@ddadadad",
-		   "nome":"JOAQUIM TIT 2",
-		   "nomeMae":"JOAQUINA TIT 2",
-		   "pfPj":"f",
-		   "sexo":"m",
-		   "cdPlano":1,
-		   "cdVenda":2,
-		   "cdTeste":123467,
-		   "endereco":{  
-		      "cep":"111111",
-		      "logradouro":"Rua teste",
-		      "numero":"11111",
-		      "complemento":"c2",
-		      "bairro":"Teste",
-		      "cidade":"Teste",
-		      "estado":"Sp",
-		      "tipoEndereco":1
-		   },
-		   "dependentes":[
-				{
-				"cdVida":0,
-				"cdTitular":0,
-				"celular":"0987654",
-				"cpf":"11111111",
-				"dataNascimento":"2018-02-20",
-				"email":"aaaaa@ddadadad",
-				"nome":"MARIO FILHO TIT 2",
-				"nomeMae":"ROSA ESP TIT 2",
-				"pfPj":"f",
-				"sexo":"m"
-				},
-				{
-				"cdVida":0,
-				"cdTitular":0,
-				"celular":"0987654",
-				"cpf":"11111111",
-				"dataNascimento":"2018-02-20",
-				"email":"aaaaa@ddadadad",
-				"nome":"KARINA FILHA TIT 2",
-				"nomeMae":"ROSA ESP TIT 2",
-				"pfPj":"f",
-				"sexo":"f"
-				}
-			]
-		}
-	]}
-	
-	
-	POST /vendapme (APP - Sinc)
-	{
-	"empresas":[
-		{  
-		   "cnpj":"00880502000154",
-		   "razaoSocial":"Empresa 1",
-		   "incEstadual":"0987654",
-		   "ramoAtividade":"teste 1 ramo atividade",
-		   "nomeFantasia":"teste 1 nome fantasia",
-		   "representanteLegal":"teste 1 representante legal",
-		   "contatoEmpresa":true,
-		   "telefone":"123456789",
-		   "celular":"1234564545",
-		   "email":"teste@teste.com",
-		   "vencimentoFatura":30,
-		   "enderecoEmpresa":{  
-			  "cep":"111111",
-			  "logradouro":"Rua empresa 1",
-			  "numero":"11111",
-			  "complemento":"c2",
-			  "bairro":"Teste",
-			  "cidade":"Teste",
-			  "estado":"Sp",
-			  "tipoEndereco":1
-			},
-			"planos":[
-				{
-					"cdPlano": 2
-				},
-				{
-					"cdPlano": 3
-				}
-			]	
-		},
-		{  
-		   "cnpj":"00880502000254",
-		   "razaoSocial":"Empresa 2",
-		   "incEstadual":"0987654",
-		   "ramoAtividade":"teste 2 ramo atividade",
-		   "nomeFantasia":"teste 2 nome fantasia",
-		   "representanteLegal":"teste 2 representante legal",
-		   "contatoEmpresa":true,
-		   "telefone":"123456789",
-		   "celular":"1234564545",
-		   "email":"teste@teste.com",
-		   "vencimentoFatura":30,
-		   "enderecoEmpresa":{  
-			  "cep":"111111",
-			  "logradouro":"Rua empresa 2",
-			  "numero":"11111",
-			  "complemento":"c2",
-			  "bairro":"Teste",
-			  "cidade":"Teste",
-			  "estado":"Sp",
-			  "tipoEndereco":1
-			},
-			"planos":[
-				{
-					"cdPlano": 2
-				},
-				{
-					"cdPlano": 3
-				}
-			]	
-		}
-	],
-	"titulares":[
-		{  
-		   "cdVida":0,
-		   "cdTitular":0,
-		   "celular":"0987654",
-		   "cpf":"11111111",
-		   "cnpj":"00880502000154",
-		   "dataNascimento":"2018-02-20T00:00:00.000-0300",
-		   "email":"aaaaa@ddadadad",
-		   "nome":"JOAQUIM TIT 1",
-		   "nomeMae":"JOAQUINA TIT 1",
-		   "pfPj":"f",
-		   "sexo":"m",
-		   "cdPlano":1,
-		   "cdVenda":2,
-		   "cdTeste":123467,
-		   "endereco":{  
-			  "cep":"111111",
-			  "logradouro":"Rua teste",
-			  "numero":"11111",
-			  "complemento":"c2",
-			  "bairro":"Teste",
-			  "cidade":"Teste",
-			  "estado":"Sp",
-			  "tipoEndereco":1
-		   },
-		   "dependentes":[
-				{
+		"cdEmpresa":2, 
+		"cdPlano":3,
+		"cdForcaVenda":622,
+		"dataVenda":"2018-02-25T20:16:14.000-0300",
+		"cdStatusVenda":1,
+		"faturaVencimento":6,
+		"tipoConta":"CC",
+		"banco":"033",
+		"agencia":"00012",
+		"conta":"014200001",
+		"tipoPagamento":"BO",
+		"titulares":[
+			{  
+			   "cdVida":0,
+			   "cdTitular":0,
+			   "celular":"0987654",
+			   "cpf":"11111111",
+			   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+			   "email":"aaaaa@ddadadad",
+			   "nome":"JOAQUIM TIT 1",
+			   "nomeMae":"JOAQUINA TIT 1",
+			   "pfPj":"f",
+			   "sexo":"m",
+			   "cdPlano":1,
+			   "cdVenda":2,
+			   "cdTeste":123467,
+			   "endereco":{  
+			      "cep":"111111",
+			      "logradouro":"Rua teste",
+			      "numero":"11111",
+			      "complemento":"c2",
+			      "bairro":"Teste",
+			      "cidade":"Teste",
+			      "estado":"Sp",
+			      "tipoEndereco":1
+			   },
+			   "dependentes":[
+					{
 					"cdVida":0,
 					"cdTitular":0,
 					"celular":"0987654",
@@ -770,8 +603,8 @@ VENDA
 					"nomeMae":"ROSA ESPOSA TIT 1",
 					"pfPj":"f",
 					"sexo":"m"
-				},
-				{
+					},
+					{
 					"cdVida":0,
 					"cdTitular":0,
 					"celular":"0987654",
@@ -782,36 +615,35 @@ VENDA
 					"nomeMae":"ROSA ESPOSA TIT 1",
 					"pfPj":"f",
 					"sexo":"f"
-				}
-			]
-		},
-		{  
-		   "cdVida":0,
-		   "cdTitular":0,
-		   "celular":"0987654",
-		   "cpf":"11111111",
-		   "cnpj":"00880502000254",
-		   "dataNascimento":"2018-02-20T00:00:00.000-0300",
-		   "email":"aaaaa@ddadadad",
-		   "nome":"JOAQUIM TIT 2",
-		   "nomeMae":"JOAQUINA TIT 2",
-		   "pfPj":"f",
-		   "sexo":"m",
-		   "cdPlano":1,
-		   "cdVenda":2,
-		   "cdTeste":123467,
-		   "endereco":{  
-			  "cep":"111111",
-			  "logradouro":"Rua teste",
-			  "numero":"11111",
-			  "complemento":"c2",
-			  "bairro":"Teste",
-			  "cidade":"Teste",
-			  "estado":"Sp",
-			  "tipoEndereco":1
-		   },
-		   "dependentes":[
-				{
+					}
+				]
+			},
+			{  
+			   "cdVida":0,
+			   "cdTitular":0,
+			   "celular":"0987654",
+			   "cpf":"11111111",
+			   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+			   "email":"aaaaa@ddadadad",
+			   "nome":"JOAQUIM TIT 2",
+			   "nomeMae":"JOAQUINA TIT 2",
+			   "pfPj":"f",
+			   "sexo":"m",
+			   "cdPlano":1,
+			   "cdVenda":2,
+			   "cdTeste":123467,
+			   "endereco":{  
+			      "cep":"111111",
+			      "logradouro":"Rua teste",
+			      "numero":"11111",
+			      "complemento":"c2",
+			      "bairro":"Teste",
+			      "cidade":"Teste",
+			      "estado":"Sp",
+			      "tipoEndereco":1
+			   },
+			   "dependentes":[
+					{
 					"cdVida":0,
 					"cdTitular":0,
 					"celular":"0987654",
@@ -822,8 +654,8 @@ VENDA
 					"nomeMae":"ROSA ESP TIT 2",
 					"pfPj":"f",
 					"sexo":"m"
-				},
-				{
+					},
+					{
 					"cdVida":0,
 					"cdTitular":0,
 					"celular":"0987654",
@@ -834,10 +666,226 @@ VENDA
 					"nomeMae":"ROSA ESP TIT 2",
 					"pfPj":"f",
 					"sexo":"f"
-				}
-			]
-		}
-	]}
+					}
+				]
+			}
+		]
+	}
+	
+	
+	POST /vendapme (APP - Sinc)
+	{  
+   	   "cdForcaVenda":611,
+	   "empresas":[  
+	      {  
+	         "status":"PRONTA",
+	         "cnpj":"29.294.771/0001-10",
+	         "cnae":"6311900",
+	         "razaoSocial":"ANTONIO COLELLA DA SILVA - ME",
+	         "incEstadual":"",
+	         "ramoAtividade":"Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet",
+	         "nomeFantasia":"SYTRICS SOLUCOES EM AUTOMACAO E TESTES DE SOFTWARE",
+	         "representanteLegal":"Antonio",
+	         "contatoEmpresa":true,
+	         "telefone":"(11) 9578-9931",
+	         "celular":"(11) 55151-1515",
+	         "email":"almeida@hotmail.com",
+	         "vencimentoFatura":"10",
+	         "enderecoEmpresa":{  
+	            "cep":"05542-020",
+	            "logradouro":"Rua João José dos Santos",
+	            "numero":"307",
+	            "complemento":"",
+	            "bairro":"Jardim Olympia",
+	            "cidade":"São Paulo",
+	            "estado":"SP"
+	         },
+	         "planos":[  
+	            {  
+	               "cdPlano":9,
+	               "nome":"",
+	               "desc":"",
+	               "valor":"",
+	               "centavo":"",
+	               "tipo":"",
+	               "css":""
+	            },
+	            {  
+	               "cdPlano":10,
+	               "nome":"",
+	               "desc":"",
+	               "valor":"",
+	               "centavo":"",
+	               "tipo":"",
+	               "css":""
+	            }
+	         ],
+	         "cpfRepresentante":"468.098.978-52",
+	         "dependentes":[  
+	
+	         ]
+	      }
+	   ],
+	   "titulares":[  
+	      {  
+	         "cdVida":0,
+	         "cdTitular":0,
+	         "cnpj":"29.294.771/0001-10",
+	         "celular":"",
+	         "cpf":"468.098.978-52",
+	         "dataNascimento":"27/04/1998",
+	         "email":"",
+	         "nome":"teste teste teste",
+	         "nomeMae":"teste este etste",
+	         "pfPj":"f",
+	         "sexo":"m",
+	         "cdPlano":"9",
+	         "cdVenda":0,
+	         "endereco":{  
+	            "cep":"05542-020",
+	            "endereco":"",
+	            "numero":"",
+	            "complemento":"",
+	            "bairro":"",
+	            "cidade":"",
+	            "estado":""
+	         },
+	         "dependentes":[  
+	            {  
+	               "cdVida":0,
+	               "cdTitular":0,
+	               "celular":"",
+	               "cpf":"",
+	               "dataNascimento":"27/05/2006",
+	               "email":"",
+	               "nome":"teste teste",
+	               "nomeMae":"teste teste",
+	               "pfPj":"f",
+	               "sexo":"m",
+	               "enderecoTitular":false
+	            }
+	         ]
+	      },
+	      {  
+	         "cdVida":0,
+	         "cdTitular":0,
+	         "cnpj":"29.294.771/0001-10",
+	         "celular":"",
+	         "cpf":"019.352.926-25",
+	         "dataNascimento":"25/02/1998",
+	         "email":"",
+	         "nome":"teste teste",
+	         "nomeMae":"teste teste",
+	         "pfPj":"f",
+	         "sexo":"m",
+	         "cdPlano":"10",
+	         "cdVenda":0,
+	         "endereco":{  
+	            "cep":"05542-020",
+	            "endereco":"",
+	            "numero":"",
+	            "complemento":"",
+	            "bairro":"",
+	            "cidade":"",
+	            "estado":""
+	         },
+	         "dependentes":[  
+	
+	         ]
+	      },
+	      {  
+	         "cdVida":0,
+	         "cdTitular":0,
+	         "cnpj":"29.294.771/0001-10",
+	         "celular":"",
+	         "cpf":"666.153.881-38",
+	         "dataNascimento":"25/04/1998",
+	         "email":"",
+	         "nome":"teste teste teste",
+	         "nomeMae":"teste teste teste",
+	         "pfPj":"f",
+	         "sexo":"m",
+	         "cdPlano":"9",
+	         "cdVenda":0,
+	         "endereco":{  
+	            "cep":"05542-020",
+	            "endereco":"",
+	            "numero":"",
+	            "complemento":"",
+	            "bairro":"",
+	            "cidade":"",
+	            "estado":""
+	         },
+	         "dependentes":[  
+	            {  
+	               "cdVida":0,
+	               "cdTitular":0,
+	               "celular":"",
+	               "cpf":"682.550.463-05",
+	               "dataNascimento":"27/04/1998",
+	               "email":"",
+	               "nome":"teste teste teste",
+	               "nomeMae":"teste teste teste",
+	               "pfPj":"f",
+	               "sexo":"m",
+	               "enderecoTitular":false
+	            },
+	            {  
+	               "cdVida":0,
+	               "cdTitular":0,
+	               "celular":"",
+	               "cpf":"686.115.355-96",
+	               "dataNascimento":"25/08/2005",
+	               "email":"",
+	               "nome":"teste teste teste",
+	               "nomeMae":"teste teste teste",
+	               "pfPj":"f",
+	               "sexo":"m",
+	               "enderecoTitular":false
+	            }
+	         ]
+	      },
+	      {  
+	         "cdVida":0,
+	         "cdTitular":0,
+	         "cnpj":"29.294.771/0001-10",
+	         "celular":"",
+	         "cpf":"599.465.736-01",
+	         "dataNascimento":"28/05/1980",
+	         "email":"",
+	         "nome":"teste teste ",
+	         "nomeMae":"teste teste teste",
+	         "pfPj":"f",
+	         "sexo":"m",
+	         "cdPlano":"9",
+	         "cdVenda":0,
+	         "endereco":{  
+	            "cep":"05542-020",
+	            "endereco":"",
+	            "numero":"",
+	            "complemento":"",
+	            "bairro":"",
+	            "cidade":"",
+	            "estado":""
+	         },
+	         "dependentes":[  
+	            {  
+	               "cdVida":0,
+	               "cdTitular":0,
+	               "celular":"",
+	               "cpf":"",
+	               "dataNascimento":"27/08/2008",
+	               "email":"",
+	               "nome":"teste teste teste",
+	               "nomeMae":"testet eteste ",
+	               "pfPj":"f",
+	               "sexo":"m",
+	               "enderecoTitular":false
+	            }
+	         ]
+	      }
+	   ]
+	}
 
 Login
     POST /login
