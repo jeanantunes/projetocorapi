@@ -48,12 +48,23 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 			// findAll
 			if (status == 0) {
-
-				objects = dashboardPropostaDAO.findAllDashboardPropostasPME(cnpj);
+				
+					
+					if(cnpj.length()>11) {
+						objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L,cnpj,null);
+						
+					} else {
+						objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L,null,cnpj);
+					}
 
 			} else {
 
-				objects = dashboardPropostaDAO.findDashboardPropostaPMEByStatus(status, cnpj);
+				if(cnpj.length()>11) {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status,cnpj,null);
+					
+				} else {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status,null,cnpj);
+				}
 			}
 
 			for (Object object : objects) {
@@ -104,7 +115,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				if(cpf.length()>11) {
 					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, null, cpf );
 				} else {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, cpf, null);
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, cpf, null);
 				}
 				
 

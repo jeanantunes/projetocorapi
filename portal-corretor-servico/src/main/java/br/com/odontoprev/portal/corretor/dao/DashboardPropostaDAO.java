@@ -13,7 +13,7 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 
     @Query(value = " SELECT emp.CD_EMPRESA, " +
 					"  emp.CNPJ, " +
-					"  emp.NOME_FANTASIA, " +
+					"  emp.RAZAO_SOCIAL, " +
 					"  venda.DT_VENDA, " +
 					"  status.DESCRICAO, " +
 					"  SUM(plano.valor_anual + plano.valor_mensal) valor " +
@@ -31,46 +31,20 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 						"INNER JOIN tbod_venda_vida vv " +
 						"ON venda.CD_VENDA = vv.CD_VENDA " +
 						"INNER JOIN tbod_vida vida " +
-				"ON vv.cd_vida        = vida.CD_VIDA " +
-				"WHERE corretora.cnpj = :cnpj " +
-				"GROUP BY emp.CD_EMPRESA, " +
-				"  emp.CNPJ, " +
-				"  emp.NOME_FANTASIA, " +
-				"  venda.DT_VENDA, " +
-				"  status.DESCRICAO " +
-"ORDER BY venda.dt_venda DESC ", nativeQuery = true)
-    public List<Object[]> findAllDashboardPropostasPME(@Param("cnpj") String cnpj);
-
-    @Query(value = " SELECT emp.CD_EMPRESA, " +
-			"  emp.CNPJ, " +
-			"  emp.NOME_FANTASIA, " +
-			"  venda.DT_VENDA, " +
-			"  status.DESCRICAO, " +
-			"  SUM(plano.valor_anual + plano.valor_mensal) valor " +
-			"FROM tbod_corretora corretora " +
-				"INNER JOIN tbod_forca_venda forca " +
-				"ON forca.CD_CORRETORA = corretora.CD_CORRETORA " +
-				"INNER JOIN tbod_venda venda " +
-				"ON venda.cd_forca_vendas = forca.cd_forca_venda " +
-				"INNER JOIN tbod_plano plano " +
-				"ON plano.cd_plano = venda.cd_plano " +
-				"INNER JOIN tbod_empresa emp " +
-				"ON venda.cd_empresa = emp.cd_empresa " +
-				"INNER JOIN tbod_status_venda status " +
-				"ON status.cd_status_venda = venda.cd_status_venda " +
-				"INNER JOIN tbod_venda_vida vv " +
-				"ON venda.CD_VENDA = vv.CD_VENDA " +
-				"INNER JOIN tbod_vida vida " +
-		"ON vv.cd_vida        = vida.CD_VIDA " +
-		"WHERE corretora.cnpj = :cnpj "
-		+ "AND status.cd_status_venda = :status " +
-		"GROUP BY emp.CD_EMPRESA, " +
-		"  emp.CNPJ, " +
-		"  emp.NOME_FANTASIA, " +
-		"  venda.DT_VENDA, " +
-		"  status.DESCRICAO " +
-"ORDER BY venda.dt_venda DESC ", nativeQuery = true)
-    public List<Object[]> findDashboardPropostaPMEByStatus(@Param("status") Long status, @Param("cnpj") String cnpj);
+					"ON vv.cd_vida        = vida.CD_VIDA " +
+					"WHERE  (:cpf                 IS NULL "+
+		    		"OR forca.cpf                   = :cpf) "+
+		    		"AND (:cnpj                IS NULL "+
+		    		"OR corretora.cnpj                  = :cnpj) "+
+		    		"AND (:status           = 0 "+
+		    		"OR status.cd_status_venda  = :status) "+
+					"GROUP BY emp.CD_EMPRESA, " +
+					"  emp.CNPJ, " +
+					"  emp.RAZAO_SOCIAL, " +
+					"  venda.DT_VENDA, " +
+					"  status.DESCRICAO " +
+				"ORDER BY venda.dt_venda DESC ", nativeQuery = true)
+    public List<Object[]> findAllDashboardPropostasPMEByStatusCnpjCpf(@Param("status") Long status, @Param("cnpj") String cnpj, @Param("cpf") String cpf);
 
  /*   @Query(value = "SELECT DISTINCT venda.cd_venda, " +
             "                vida.cpf, " +
