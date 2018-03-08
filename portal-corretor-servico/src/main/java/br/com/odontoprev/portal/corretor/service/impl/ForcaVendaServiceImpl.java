@@ -225,8 +225,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			tbForcaVenda.setCelular(forcaVenda.getCelular());
 			tbForcaVenda.setEmail(forcaVenda.getEmail());
 			// Nas telas de pre-cadastro forca e pre-cadastro forca pela
-			// corretora o status
-			// eh inativo
+			// corretora o status eh inativo
 			tbForcaVenda.setAtivo(Constantes.INATIVO);
 			tbForcaVenda.setCargo(forcaVenda.getCargo());
 			tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
@@ -440,9 +439,14 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			corretora.setTelefone(tbodCorretora.getTelefone());
 			corretora.setCelular(tbodCorretora.getCelular());
 			corretora.setEmail(tbodCorretora.getEmail());
-			corretora.setStatusCnpj(tbodCorretora.getStatusCnpj().equals(Constantes.ATIVO));
-			corretora.setSimplesNacional(tbodCorretora.getSimplesNacional().equals(Constantes.ATIVO));
-			corretora.setDataAbertura(tbodCorretora.getDataAbertura());
+			corretora.setStatusCnpj(tbodCorretora.getStatusCnpj());
+			corretora.setSimplesNacional(tbodCorretora.getSimplesNacional());
+			try {
+				corretora.setDataAbertura(DataUtil.dateToStringParse(tbodCorretora.getDataAbertura()));
+			} catch (Exception e) {
+				log.error("Erro ao converter data. Detalhe: [" + e.getMessage() + "]");
+				corretora.setDataAbertura("00/00/0000");
+			}
 			forcaVenda.setNomeEmpresa(tbodCorretora.getNome());
 			
 			if(tbodCorretora.getTbodEndereco() != null) {
@@ -576,9 +580,14 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		corretora.setTelefone(tbForcaVenda.getTbodCorretora().getTelefone());
 		corretora.setCelular(tbForcaVenda.getTbodCorretora().getCelular());
 		corretora.setEmail(tbForcaVenda.getTbodCorretora().getEmail());
-		corretora.setStatusCnpj(tbForcaVenda.getTbodCorretora().getStatusCnpj() == "S" ? true : false);
-		corretora.setSimplesNacional(tbForcaVenda.getTbodCorretora().getSimplesNacional() == "S" ? true : false);
-		corretora.setDataAbertura(tbForcaVenda.getTbodCorretora().getDataAbertura());
+		corretora.setStatusCnpj(tbForcaVenda.getTbodCorretora().getStatusCnpj());
+		corretora.setSimplesNacional(tbForcaVenda.getTbodCorretora().getSimplesNacional());
+		try {
+			corretora.setDataAbertura(DataUtil.dateToStringParse(tbForcaVenda.getTbodCorretora().getDataAbertura()));
+		} catch (Exception e) {
+			corretora.setDataAbertura("00/00/0000");
+			log.error("Erro ao converter data. Detalhe: [" + e.getMessage() + "]");
+		}
 
 		final Endereco enderecoCorretora = new Endereco();
 		enderecoCorretora.setLogradouro(tbForcaVenda.getTbodCorretora().getTbodEndereco().getLogradouro());

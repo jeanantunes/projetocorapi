@@ -1,7 +1,6 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public class Corretora implements Serializable {
@@ -15,9 +14,9 @@ public class Corretora implements Serializable {
 	private String telefone;
 	private String celular;
 	private String email;
-	private boolean statusCnpj;
-	private boolean simplesNacional;
-	private Date dataAbertura;
+	private String statusCnpj;
+	private String simplesNacional;
+	private String dataAbertura;
 	private Endereco enderecoCorretora;
 	private Conta conta;
 	private Login login;
@@ -79,27 +78,27 @@ public class Corretora implements Serializable {
 		this.email = email;
 	}
 
-	public boolean isStatusCnpj() {
+	public String getStatusCnpj() {
 		return statusCnpj;
 	}
 
-	public void setStatusCnpj(boolean statusCnpj) {
+	public void setStatusCnpj(String statusCnpj) {
 		this.statusCnpj = statusCnpj;
 	}
 
-	public boolean isSimplesNacional() {
+	public String getSimplesNacional() {
 		return simplesNacional;
 	}
 
-	public void setSimplesNacional(boolean simplesNacional) {
+	public void setSimplesNacional(String simplesNacional) {
 		this.simplesNacional = simplesNacional;
 	}
 
-	public Date getDataAbertura() {
+	public String getDataAbertura() {
 		return dataAbertura;
 	}
 
-	public void setDataAbertura(Date dataAbertura) {
+	public void setDataAbertura(String dataAbertura) {
 		this.dataAbertura = dataAbertura;
 	}
 

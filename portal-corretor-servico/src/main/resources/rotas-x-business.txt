@@ -1,3 +1,34 @@
+GET /corretora/{cnpj}
+	buscaPorCnpj(@PathVariable String cnpj)
+		corretoraService.buscaCorretoraPorCnpj(cnpj);
+			TbodCorretora tbodCorretora = corretoraDao.findByCnpj(cnpj);
+			return corretora;
+			
+			
+			
+
+POST /corretora
+	addCorretora(@RequestBody Corretora corretora)
+		corretoraService.addCorretora(corretora);
+			this.saveCorretora(corretora);
+				tbEndereco = enderecoDao.save(tbEndereco);
+				conta = bancoContaDAO.save(conta);
+				tbCorretora = corretoraDao.save(tbCorretora);
+				corretoraBanco = corretoraBancoDAO.save(corretoraBanco);
+				return new CorretoraResponse(tbCorretora.getCdCorretora());
+		
+
+
+PUT /corretora
+	updateCorretora(@RequestBody Corretora corretora)
+		corretoraService.updateCorretora(corretora);
+			this.saveCorretora(corretora);
+
+
+
+
+
+
 POST /beneficiario
 	addBeneficiario(@RequestBody List<Beneficiario> beneficiarios)
 	

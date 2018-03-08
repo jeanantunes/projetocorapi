@@ -39,5 +39,24 @@ public class DataUtil {
 		return data;
 
 	}
+	
+	public static final String dateToStringParse(Date data) throws Exception {
+		
+		
+		String dataStr = "00/00/0000";
+		
+		if(data != null) {
+			final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				dataStr = sdf.format(data);
+			} catch (final Exception e) {
+				log.error("Erro ao converter data [" + dataStr + "]. Detalhe: [" + e.getMessage() + "]");
+				throw new Exception("Erro ao converter data [" + dataStr + "]. Detalhe: [" + e.getMessage() + "]");
+			}
+		}
+
+		return dataStr;
+
+	}
 
 }
