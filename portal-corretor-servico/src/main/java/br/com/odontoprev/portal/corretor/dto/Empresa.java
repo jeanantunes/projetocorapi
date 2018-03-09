@@ -22,6 +22,8 @@ public class Empresa implements Serializable {
 	private String dataVencimentoFatura;
 	private Endereco enderecoEmpresa;
 	private List<Plano> planos;
+	private String cnpjCorretora;
+	private String nomeCorretora;
 
 	public String getCnpj() {
 		return cnpj;
@@ -142,6 +144,22 @@ public class Empresa implements Serializable {
 	public void setPlanos(List<Plano> planos) {
 		this.planos = planos;
 	}
+	
+	public String getCnpjCorretora() {
+		return cnpjCorretora;
+	}
+
+	public void setCnpjCorretora(String cnpjCorretora) {
+		this.cnpjCorretora = cnpjCorretora;
+	}
+
+	public String getNomeCorretora() {
+		return nomeCorretora;
+	}
+
+	public void setNomeCorretora(String nomeCorretora) {
+		this.nomeCorretora = nomeCorretora;
+	}
 
 	@Override
 	public String toString() {
@@ -150,7 +168,7 @@ public class Empresa implements Serializable {
 				+ representanteLegal + ", contatoEmpresa=" + contatoEmpresa + ", telefone=" + telefone + ", celular="
 				+ celular + ", email=" + email + ", vencimentoFatura=" + vencimentoFatura + ", cnae=" + cnae
 				+ ", dataVencimentoFatura=" + dataVencimentoFatura + ", enderecoEmpresa=" + enderecoEmpresa
-				+ ", planos=" + planos + "]";
+				+ ", planos=" + planos + ", cnpjCorretora=" + cnpjCorretora + ", nomeCorretora=" + nomeCorretora + "]";
 	}
 
 }

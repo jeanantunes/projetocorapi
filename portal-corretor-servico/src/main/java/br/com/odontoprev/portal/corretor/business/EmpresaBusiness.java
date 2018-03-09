@@ -98,7 +98,7 @@ public class EmpresaBusiness {
 			}
 
 			XlsEmpresa xlsEmpresa = new XlsEmpresa();
-			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa.getVencimentoFatura());
+			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa);
 
 		} catch (Exception e) {
 			log.error("EmpresaServiceImpl :: Erro ao cadastrar empresa. Detalhe: [" + e.getMessage() + "]");
@@ -109,6 +109,7 @@ public class EmpresaBusiness {
 	}
 
 	public EmpresaResponse salvarEmpresaEndereco(Empresa empresa) {
+		
 		TbodEmpresa tbEmpresa = new TbodEmpresa();
 	
 		try {
@@ -145,7 +146,7 @@ public class EmpresaBusiness {
 			tbEmpresa = empresaDao.save(tbEmpresa);
 		
 			XlsEmpresa xlsEmpresa = new XlsEmpresa();
-			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa.getVencimentoFatura());
+			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa);
 	
 		} catch (Exception e) {
 			String msgErro = "EmpresaBusiness.salvarEmpresaEndereco :: Erro ao cadastrar empresa; Message:[" + e.getMessage() + "]; Cause:[" + e.getCause() != null ? e.getCause().getMessage() : "NuLL" + "]";

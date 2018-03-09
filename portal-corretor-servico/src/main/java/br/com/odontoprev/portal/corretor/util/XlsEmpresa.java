@@ -11,6 +11,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
+import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 
@@ -35,43 +36,45 @@ public class XlsEmpresa {
 		return total;
 	}
 
-	public void GerarEmpresaXLS(TbodEmpresa emp, long dataFatura) throws Exception {
+	public void GerarEmpresaXLS(TbodEmpresa tbEmpresa, Empresa empresaDto) throws Exception {
 
 		try {
 
-			String[] empresa = new String[20];
-			empresa[0] = emp.getCnpj();
-			empresa[1] = emp.getIncEstadual();
-			empresa[2] = emp.getRamoAtividade();
-			empresa[3] = emp.getRazaoSocial();
-			empresa[4] = emp.getNomeFantasia();
-			empresa[5] = emp.getRepresentanteLegal();
-			empresa[6] = String.valueOf(emp.getContatoEmpresa());
-			empresa[7] = emp.getTelefone();
-			empresa[8] = emp.getCelular();
-			empresa[9] = emp.getEmail();
-			TbodEndereco tbEndereco = emp.getTbodEndereco();
-			empresa[10] = tbEndereco.getCep();
-			empresa[11] = tbEndereco.getLogradouro();
-			empresa[12] = tbEndereco.getNumero();
-			empresa[13] = tbEndereco.getComplemento();
-			empresa[14] = tbEndereco.getBairro();
-			empresa[15] = tbEndereco.getCidade();
-			empresa[16] = tbEndereco.getUf();
+			String[] empresaArr = new String[22];
+			empresaArr[0] = tbEmpresa.getCnpj();
+			empresaArr[1] = tbEmpresa.getIncEstadual();
+			empresaArr[2] = tbEmpresa.getRamoAtividade();
+			empresaArr[3] = tbEmpresa.getRazaoSocial();
+			empresaArr[4] = tbEmpresa.getNomeFantasia();
+			empresaArr[5] = tbEmpresa.getRepresentanteLegal();
+			empresaArr[6] = String.valueOf(tbEmpresa.getContatoEmpresa());
+			empresaArr[7] = tbEmpresa.getTelefone();
+			empresaArr[8] = tbEmpresa.getCelular();
+			empresaArr[9] = tbEmpresa.getEmail();
+			TbodEndereco tbEndereco = tbEmpresa.getTbodEndereco();
+			empresaArr[10] = tbEndereco.getCep();
+			empresaArr[11] = tbEndereco.getLogradouro();
+			empresaArr[12] = tbEndereco.getNumero();
+			empresaArr[13] = tbEndereco.getComplemento();
+			empresaArr[14] = tbEndereco.getBairro();
+			empresaArr[15] = tbEndereco.getCidade();
+			empresaArr[16] = tbEndereco.getUf();
 			// empresa[17] = String.valueOf(emp.isMesmo_endereco_correspondencia());
-			empresa[17] = "";
-			empresa[18] = String.valueOf(dataFatura);
-			empresa[19] = emp.getCnae();
+			empresaArr[17] = "";
+			empresaArr[18] = String.valueOf(empresaDto.getVencimentoFatura());
+			empresaArr[19] = tbEmpresa.getCnae();
+			empresaArr[20] = empresaDto.getCnpjCorretora();
+			empresaArr[21] = empresaDto.getNomeCorretora();
 
 			// Tratamento de CNPJ
-			String newcnpj = empresa[0].replaceAll("[.]", "").replaceAll("/", "");
+			String newcnpj = empresaArr[0].replaceAll("[.]", "").replaceAll("/", "");
 			
 			String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA); //201803050304 2kill
 			//String pathEmpresa = PATH_XLS_EMPRESA;
 
-//			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + empresa[16] + "_" + newcnpj + "_" + montaData_ddMMyyyy_HHmm() + ".xls";
+//			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + empresaArr[16] + "_" + newcnpj + "_" + montaData_ddMMyyyy_HHmm() + ".xls";
 			
-			String filename = pathEmpresa + empresa[16] + "_" + newcnpj + "_" + montaData_ddMMyyyy_HHmm() + ".xls";
+			String filename = pathEmpresa + empresaArr[16] + "_" + newcnpj + "_" + montaData_ddMMyyyy_HHmm() + ".xls";
 
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Empresa");
@@ -97,10 +100,12 @@ public class XlsEmpresa {
 			rowhead.createCell(17).setCellValue("MESMO ENDERECO CORRESPONDENCIA?");
 			rowhead.createCell(18).setCellValue("VENCIMENTO DA FATURA");
 			rowhead.createCell(19).setCellValue("CNAE");
+			rowhead.createCell(20).setCellValue("CNPJ CORRETORA");
+			rowhead.createCell(21).setCellValue("NOME CORRETORA");
 
 			HSSFRow row = sheet.createRow((short) 1);
-			for (int i = 0; i < 20; i++) {
-				row.createCell(i).setCellValue(empresa[i]);
+			for (int i = 0; i < 22; i++) {
+				row.createCell(i).setCellValue(empresaArr[i]);
 			}
 
 			FileOutputStream fileOut = new FileOutputStream(filename);

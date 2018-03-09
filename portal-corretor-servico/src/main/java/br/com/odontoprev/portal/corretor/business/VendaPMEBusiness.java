@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.Plano;
@@ -28,6 +29,9 @@ public class VendaPMEBusiness {
 	@Autowired
 	VendaPFBusiness vendaPFBusiness;
 	
+	@Autowired
+	CorretoraBusiness corretoraBusiness;
+	
 	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(VendaPME vendaPME) {
 
 		log.info("[salvarVendaPMEComEmpresasPlanosTitularesDependentes]");
@@ -38,6 +42,8 @@ public class VendaPMEBusiness {
 		try {		
 
 			for (Empresa empresa : vendaPME.getEmpresas()) {
+				
+				this.buscarDadosCorretoraParaArquivoEmpresa(vendaPME.getCdForcaVenda(), empresa);
 				
 				EmpresaResponse empresaResponse = empresaBusiness.salvarEmpresaEndereco(empresa);
 
@@ -89,6 +95,19 @@ public class VendaPMEBusiness {
 		}
 
 		return vendaResponse;
+	}
+
+	private void buscarDadosCorretoraParaArquivoEmpresa(Long cdForcaVenda, Empresa empresa) {
+		
+		//Busca dados da corretora para arquivo de empresa - jalves 090320181011
+		if(cdForcaVenda != null && cdForcaVenda != 0) {
+			Corretora corretora = corretoraBusiness.buscarCorretoraPorForcaVenda(cdForcaVenda);
+			
+			if(corretora != null) {
+				empresa.setCnpjCorretora(corretora.getCnpj());
+				empresa.setNomeCorretora(corretora.getRazaoSocial());
+			}
+		}
 	}
 
 }
