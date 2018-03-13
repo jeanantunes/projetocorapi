@@ -112,6 +112,52 @@ CORRETORA
 	
 	
 
+POST /corretora
+	{
+	   "cnpj":"19434047000191",
+	   "razaoSocial":"Xpto e cia 3",
+	   "cnae":"abc",
+	   "simplesNacional":"N",
+	   "dataAbertura":"01/10/1990",
+	   "statusCnpj":"ATIVO",
+	   "telefone":"1134445866",
+	   "celular":"1196542522",
+	   "email":"xpto@teste.com",
+	   "enderecoCorretora":{
+	      "cep":"123456",
+	      "logradouro":"Rua teste",
+	      "numero":"1",
+	      "complemento":"c1",
+	      "bairro":"Bairro teste",
+	      "cidade":"SaoPaulo",
+	      "estado":"SP",
+	      "tipoEndereco":1
+	   },
+	   "conta":{
+	   		"codigoBanco":"033",
+			"codigoAgencia":"0001",
+			"numeroConta":"28832830"
+	   },
+	   "login":{
+	      "senha":"123456888"
+	   },
+	   "representantes":[
+	      {
+	         "nome":"Repres 1",
+	         "cpf":"2113213"
+	      }
+	   ]
+	}
+	
+	
+
+PUT /corretora
+
+
+
+	
+	
+
 DASHBOARDPROPOSTA	
 	POST /propostasDashBoard
 	{

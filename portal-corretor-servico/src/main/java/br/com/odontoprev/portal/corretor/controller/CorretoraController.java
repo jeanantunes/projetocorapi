@@ -42,11 +42,21 @@ public class CorretoraController {
 	}
 
 	@RequestMapping(value = "/corretora", method = { RequestMethod.PUT })
-	public CorretoraResponse updateCorretora(@RequestBody Corretora corretora) {
+	public ResponseEntity<CorretoraResponse> updateCorretora(@RequestBody Corretora corretora) {
 		
 		log.info(corretora);
 		
-		return corretoraService.updateCorretora(corretora);
+		try {
+			
+			CorretoraResponse corretoraResponse = corretoraService.updateCorretora(corretora);
+			
+			return ResponseEntity.ok(corretoraResponse);
+			
+		} catch (final Exception e) {
+			log.error("ERROR: ", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		
 	}
 	
 	@RequestMapping(value = "/corretora/{cnpj}", method = { RequestMethod.GET })

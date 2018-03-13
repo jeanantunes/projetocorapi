@@ -3,6 +3,8 @@ package br.com.odontoprev.portal.corretor.service.impl;
 import static br.com.odontoprev.portal.corretor.util.Constantes.ATIVO;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.NonUniqueResultException;
 
@@ -22,6 +24,7 @@ import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.CorretoraResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.dto.Representante;
 import br.com.odontoprev.portal.corretor.model.TbodBancoConta;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodCorretoraBanco;
@@ -141,10 +144,80 @@ public class CorretoraServiceImpl implements CorretoraService {
 		return new CorretoraResponse(tbCorretora.getCdCorretora(), "Corretora [" + tbCorretora.getCnpj() + "] cadastrada!");
 	}
 
-	@Override //rever update 
+	@Override
 	public CorretoraResponse updateCorretora(Corretora corretora) {
-		return null;
-		// return this.saveCorretora(corretora);
+		
+		log.info("[updateCorretora]");
+		
+		TbodCorretora tbCorretora;
+		
+		try {
+			
+			if(corretora.getCdCorretora() == 0) {
+				throw new Exception("CdCorretora nao informado. Corretora nao atualizada!");
+			}
+			
+			tbCorretora = corretoraDao.findOne(corretora.getCdCorretora());
+			
+			if(tbCorretora != null) {
+				
+				tbCorretora.setTelefone(corretora.getTelefone());
+				tbCorretora.setCelular(corretora.getCelular());
+				tbCorretora.setEmail(corretora.getEmail());
+				
+				//Update Login
+				if (corretora.getLogin() != null && corretora.getLogin().getSenha() != null && corretora.getLogin().getSenha() != "") {
+					
+					TbodLogin tbLogin = null;
+	
+					if (tbCorretora.getTbodLogin() == null) {
+						log.info("updateCorretora - criando novo TbodLogin para tbCorretora.getTbodLogin():["
+								+ tbCorretora.getCdCorretora() + "], getCpf():[" + tbCorretora.getCdCorretora()
+								+ "] pq TbodLogin() == null.");
+						tbLogin = new TbodLogin();
+					} else {
+						if (tbCorretora.getTbodLogin().getCdLogin() == null) {
+							log.info(" updateCorretora - criando novo TbodLogin para tbCorretora.getTbodLogin():["
+									+ tbCorretora.getCdCorretora() + "], getCnpj():[" + tbCorretora.getCnpj()
+									+ "] pq TbodLogin().getCdLogin() == null.");
+							tbLogin = new TbodLogin();
+						} else {
+							tbLogin = loginDao.findOne(tbCorretora.getTbodLogin().getCdLogin());
+							if (tbLogin == null) {
+								log.info("updateCorretora - criando novo TbodLogin para tbCorretora.getCdCorretora():["
+										+ tbCorretora.getCdCorretora() + "], getCnpj():[" + tbCorretora.getCnpj()
+										+ "] pq TbodLogin().getCdLogin():[" + tbCorretora.getTbodLogin().getCdLogin()
+										+ "] NAO ENCONTRADO.");
+								tbLogin = new TbodLogin();
+							}
+						}
+					}
+	
+					tbLogin.setCdTipoLogin((long) 1); // TODO
+					tbLogin.setSenha(corretora.getLogin().getSenha());
+					tbLogin = loginDao.save(tbLogin);
+					tbCorretora.setTbodLogin(tbLogin);
+				}
+				
+				//Update Dados Bancarios - Confirmar com Fernando os campos 
+//				if (corretora.getConta() != null && corretora.getConta().get != null && corretora.getLogin().getSenha() != "") {
+//				}
+	
+				tbCorretora = corretoraDao.save(tbCorretora);
+				
+				return new CorretoraResponse(tbCorretora.getCdCorretora(),
+						"ForcaVenda atualizada. CPF [" + tbCorretora.getCnpj() + "]");
+			}
+			else {
+				return new CorretoraResponse(corretora.getCdCorretora(),
+						"Corretora não encontrada. cdCorretora [" + corretora.getCdCorretora() + "]");
+			}
+			
+		} catch (Exception e) {
+			log.error("updateCorretora :: Detalhe: [" + e.getMessage() + "]");
+			return new CorretoraResponse(0, "updateCorretora; Erro:[" + e.getMessage() + "]");
+		}
+		
 	}
 
 	@Override
@@ -196,9 +269,28 @@ public class CorretoraServiceImpl implements CorretoraService {
 				}
 				corretora.setEnderecoCorretora(endereco);
 			}
+			
+			List<Representante> representantes = new ArrayList<Representante>();
+			Representante representante;
 
 			//Dados Bancarios
 			if(tbCorretora.getTbodCorretoraBancos() != null && !tbCorretora.getTbodCorretoraBancos().isEmpty()) {
+				//Representantes
+				//rever campos nas tabelas 201803091426
+				if(tbCorretora.getNomeRepresentanteLegal1() != null && !tbCorretora.getNomeRepresentanteLegal1().isEmpty()) {
+					representante = new Representante();
+					representante.setNome(tbCorretora.getNomeRepresentanteLegal1());
+					representante.setCpf(tbCorretora.getTbodCorretoraBancos().get(0).getCpfResponsavelLegal1());
+					representantes.add(representante);
+				}
+				if(tbCorretora.getNomeRepresentanteLegal2() != null && !tbCorretora.getNomeRepresentanteLegal2().isEmpty()) {
+					representante = new Representante();
+					representante.setNome(tbCorretora.getNomeRepresentanteLegal2());
+					representante.setCpf(tbCorretora.getTbodCorretoraBancos().get(0).getCpfResponsavelLegal2());
+					representantes.add(representante);
+				}
+				corretora.setRepresentantes(representantes);
+				
 				if(tbCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta() != null) {
 					Conta conta = new Conta();
 					conta.setCdBancoConta(tbCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta().getCdBancoConta());
