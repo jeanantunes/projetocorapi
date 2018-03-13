@@ -30,7 +30,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 	@Autowired
 	private DashboardPropostaDAO dashboardPropostaDAO;
-	
+
 	@Autowired
 	private ForcaVendaDAO forcaVendaDao;
 
@@ -41,29 +41,28 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 		DashboardPropostaPMEResponse response = new DashboardPropostaPMEResponse();
 		List<DashboardPropostaPME> propostasPME = new ArrayList<DashboardPropostaPME>();
-		
+
 		try {
 
 			List<Object[]> objects = new ArrayList<Object[]>();
 
 			// findAll
 			if (status == 0) {
-				
-					
-					if(cnpj.length()>11) {
-						objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L,cnpj,null);
-						
-					} else {
-						objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L,null,cnpj);
-					}
+
+				if (cnpj.length() > 11) {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L, cnpj, null);
+
+				} else {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L, null, cnpj);
+				}
 
 			} else {
 
-				if(cnpj.length()>11) {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status,cnpj,null);
-					
+				if (cnpj.length() > 11) {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status, cnpj, null);
+
 				} else {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status,null,cnpj);
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status, null, cnpj);
 				}
 			}
 
@@ -101,27 +100,23 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 		DashboardPropostaPFResponse response = new DashboardPropostaPFResponse();
 		List<DashboardPropostaPF> propostasPF = new ArrayList<DashboardPropostaPF>();
-		
-		
-		
-		
+
 		try {
-			
+
 			List<Object[]> objects = new ArrayList<Object[]>();
 
 			// findAll
 			if (status == 0) {
-				
-				if(cpf.length()>11) {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, null, cpf );
+
+				if (cpf.length() > 11) {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, null, cpf);
 				} else {
 					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, cpf, null);
 				}
-				
 
 			} else {
-				
-				if(cpf.length()>11) {
+
+				if (cpf.length() > 11) {
 					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, null, cpf);
 				} else {
 					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, cpf, null);
@@ -141,6 +136,10 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				propostasPF.add(dashboardPropostaPF);
 			}
 
+			// Muda status venda e monta lista de criticas retornadas do dcms
+			// 201803130907
+			this.mudarStatusVendaCriticado(propostasPF);
+
 			response.setDashboardPropostasPF(propostasPF);
 
 		} catch (Exception e) {
@@ -150,6 +149,44 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 		return response;
 	}
+
+	private void mudarStatusVendaCriticado(List<DashboardPropostaPF> propostasPF) {
+
+		log.info("atualizarStatusVenda");
+
+		List<Object[]> objects = new ArrayList<Object[]>();
+
+		for (DashboardPropostaPF proposta : propostasPF) {
+
+			if (proposta.getPropostaDcms() == null || "".equals(proposta.getPropostaDcms())) {
+				// Muda apenas o retorno, nao atualiza na base
+				proposta.setStatusVenda("Critida envio");
+			} else {
+
+				objects = dashboardPropostaDAO.buscaPorCriticaPFporNumeroAtendimento(proposta.getPropostaDcms());
+
+				if (objects != null && !objects.isEmpty()) {
+					
+//					proposta.setStatusVenda("Critica negocio");
+					
+					for (Object object : objects) {
+						proposta.setDsErroRegistro(object != null ? String.valueOf(object) : "");
+
+						if (proposta.getDsErroRegistro() != null && !"".equals(proposta.getDsErroRegistro())) {
+							List<String> criticas = new ArrayList<String>();
+							String[] criticasArr = proposta.getDsErroRegistro().split("/");
+							for (String critica : criticasArr) {
+								criticas.add(critica);
+							}
+							proposta.setCriticas(criticas);
+						}
+					}
+				}
+			}
+		}
+
+	}
+
 	@Override
 	public DashboardPropostaPFResponse buscaPorCriticaPF(String cnpj, String cpf) {
 
@@ -157,23 +194,25 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 		DashboardPropostaPFResponse response = new DashboardPropostaPFResponse();
 		List<DashboardPropostaPF> propostasPF = new ArrayList<DashboardPropostaPF>();
-		
+
 		try {
-			
+
 			List<Object[]> objects = new ArrayList<Object[]>();
 
 			// findAll
-			if(cnpj!= null && cpf != null) {
+			if (cnpj != null && cpf != null) {
 				log.info("[buscaTodasPorCriticaPF]");
 				objects = dashboardPropostaDAO.buscaTodasPorCriticaPF(cnpj, cpf);
-			}if(cnpj == null && cpf != null) {
+			}
+			if (cnpj == null && cpf != null) {
 				log.info("[buscaPorCriticaPFporCPF]");
 				objects = dashboardPropostaDAO.buscaPorCriticaPFporCPF(cpf);
-			}if(cnpj!= null && cpf == null) {
+			}
+			if (cnpj != null && cpf == null) {
 				log.info("[buscaPorCriticaPFporCNPJ]");
 				objects = dashboardPropostaDAO.buscaPorCriticaPFporCNPJ(cnpj);
 			}
-			
+
 			for (Object object : objects) {
 				Object[] obj = (Object[]) object;
 
@@ -203,25 +242,27 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 	@Override
 	public DashboardPropostaPMEResponse buscaPorCriticaPME(String cnpj, String cpf) {
-		
+
 		log.info("[buscaPorCriticaPF]");
 
 		DashboardPropostaPMEResponse response = new DashboardPropostaPMEResponse();
 		List<DashboardPropostaPME> propostasPME = new ArrayList<DashboardPropostaPME>();
-		
+
 		try {
-			
+
 			List<Object[]> objects = new ArrayList<Object[]>();
 
 			// findAll
-			if(cnpj!= null && cpf != null) {
+			if (cnpj != null && cpf != null) {
 				objects = dashboardPropostaDAO.buscaTodasPorCriticaPME(cnpj, cpf);
-			}if(cnpj == null && cpf != null) {
+			}
+			if (cnpj == null && cpf != null) {
 				objects = dashboardPropostaDAO.buscaPorCriticaPMEporCPF(cpf);
-			}if(cnpj!= null && cpf == null) {
+			}
+			if (cnpj != null && cpf == null) {
 				objects = dashboardPropostaDAO.buscaPorCriticaPMEporCNPJ(cnpj);
 			}
-			
+
 			for (Object object : objects) {
 				Object[] obj = (Object[]) object;
 				DashboardPropostaPME dashboardPropostaPME = new DashboardPropostaPME();
@@ -248,31 +289,33 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 	@Override
 	public DashboardResponse buscarForcaVendaAguardandoAprovacaoByCdEmpresa(long cdCorretora) {
-		
+
 		log.info("[buscarForcaVendaAguardandoAprovacaoByCdEmpresa]");
-		
+
 		DashboardResponse dashboardResponse = new DashboardResponse();
 
 		try {
-			
+
 			long cdStatusForcaVenda = StatusForcaVendaEnum.AGUARDANDO_APRO.getCodigo();
-			
-			List<TbodForcaVenda> forcaVendas = forcaVendaDao.findByTbodStatusForcaVendaCdStatusForcaVendasAndTbodCorretoraCdCorretora(cdStatusForcaVenda, cdCorretora);
-			
-			if(forcaVendas == null) {
+
+			List<TbodForcaVenda> forcaVendas = forcaVendaDao
+					.findByTbodStatusForcaVendaCdStatusForcaVendasAndTbodCorretoraCdCorretora(cdStatusForcaVenda,
+							cdCorretora);
+
+			if (forcaVendas == null) {
 				dashboardResponse.setCountForcaVendaAprovacao(0);
-			}
-			else {
+			} else {
 				dashboardResponse.setCountForcaVendaAprovacao(forcaVendas.size());
 			}
-			
+
 		} catch (Exception e) {
-			log.error("Erro ao buscar quantidade ForcaVenda Aguardando Aprovacao por Corretora :: Detalhe: [" + e.getMessage() + "]");
+			log.error("Erro ao buscar quantidade ForcaVenda Aguardando Aprovacao por Corretora :: Detalhe: ["
+					+ e.getMessage() + "]");
 			return new DashboardResponse();
 		}
-		
+
 		return dashboardResponse;
-		
+
 	}
 
 }

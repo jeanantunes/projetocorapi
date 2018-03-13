@@ -1,5 +1,7 @@
 package br.com.odontoprev.portal.corretor.dto;
 
+import java.util.List;
+
 public class DashboardPropostaPF {
 
 	private Long cdVenda;
@@ -14,7 +16,7 @@ public class DashboardPropostaPF {
 	private String forca;
 	private String corretora;
 	private String dsErroRegistro;
-	private String criticas;
+	private List<String> criticas;
 	private String cnpj;
 	private Long cdEmpresa;
 
@@ -27,7 +29,7 @@ public class DashboardPropostaPF {
 	}
 
 	private double valor;
-	
+
 	public Long getCdEmpresa() {
 		return cdEmpresa;
 	}
@@ -36,7 +38,6 @@ public class DashboardPropostaPF {
 		this.cdEmpresa = cdEmpresa;
 	}
 
-	
 	public String getAtendimento() {
 		return atendimento;
 	}
@@ -133,7 +134,6 @@ public class DashboardPropostaPF {
 		this.statusVenda = statusVenda;
 	}
 
-
 	public String getDsErroRegistro() {
 		return dsErroRegistro;
 	}
@@ -142,11 +142,11 @@ public class DashboardPropostaPF {
 		this.dsErroRegistro = dsErroRegistro;
 	}
 
-	public String getCriticas() {
+	public List<String> getCriticas() {
 		return criticas;
 	}
 
-	public void setCriticas(String criticas) {
+	public void setCriticas(List<String> criticas) {
 		this.criticas = criticas;
 	}
 
@@ -156,6 +156,7 @@ public class DashboardPropostaPF {
 				+ nome + ", statusVenda=" + statusVenda + ", atendimento=" + atendimento + ", empresa=" + empresa
 				+ ", codOdonto=" + codOdonto + ", nrImportacao=" + nrImportacao + ", forca=" + forca + ", corretora="
 				+ corretora + ", dsErroRegistro=" + dsErroRegistro + ", criticas=" + criticas + ", cnpj=" + cnpj
-				+ ", cdEmpresa=" + cdEmpresa + "]";
+				+ ", cdEmpresa=" + cdEmpresa + ", valor=" + valor + "]";
 	}
+
 }
