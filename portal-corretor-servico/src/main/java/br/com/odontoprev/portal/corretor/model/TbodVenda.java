@@ -80,6 +80,10 @@ public class TbodVenda implements Serializable {
 	// bi-directional many-to-one association to TbodVendaVida
 	@OneToMany(mappedBy = "tbodVenda")
 	private List<TbodVendaVida> tbodVendaVidas;
+	
+	//bi-directional many-to-one association to TbodTokenAceite
+	@OneToMany(mappedBy="tbodVenda")
+	private List<TbodTokenAceite> tbodTokenAceites;
 
 	public TbodVenda() {
 	}
@@ -232,6 +236,28 @@ public class TbodVenda implements Serializable {
 		tbodVendaVida.setTbodVenda(null);
 
 		return tbodVendaVida;
+	}
+
+	public List<TbodTokenAceite> getTbodTokenAceites() {
+		return this.tbodTokenAceites;
+	}
+
+	public void setTbodTokenAceites(List<TbodTokenAceite> tbodTokenAceites) {
+		this.tbodTokenAceites = tbodTokenAceites;
+	}
+
+	public TbodTokenAceite addTbodTokenAceite(TbodTokenAceite tbodTokenAceite) {
+		getTbodTokenAceites().add(tbodTokenAceite);
+		tbodTokenAceite.setTbodVenda(this);
+
+		return tbodTokenAceite;
+	}
+
+	public TbodTokenAceite removeTbodTokenAceite(TbodTokenAceite tbodTokenAceite) {
+		getTbodTokenAceites().remove(tbodTokenAceite);
+		tbodTokenAceite.setTbodVenda(null);
+
+		return tbodTokenAceite;
 	}
 
 }

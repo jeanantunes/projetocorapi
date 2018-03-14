@@ -11,5 +11,4 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 public interface VendaDAO extends CrudRepository<TbodVenda, Long> {
 	
 	public List<TbodVenda> findByTbodEmpresaCdEmpresa(Long cdEmpresa);
-
 }
