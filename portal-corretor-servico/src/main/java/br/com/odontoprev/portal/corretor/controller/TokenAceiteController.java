@@ -3,11 +3,14 @@ package br.com.odontoprev.portal.corretor.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
 import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
@@ -38,4 +41,21 @@ public class TokenAceiteController {
 		
 		return tokenAceiteService.addTokenAceite(tokenAceite);		
 	}
+	
+	@RequestMapping(value = "/token", method = { RequestMethod.PUT })
+	public ResponseEntity<TokenAceiteResponse> updateTokenAceite(@RequestBody TokenAceite tokenAceite) {		
+		
+		log.info(tokenAceite);
+		
+		try {
+			TokenAceiteResponse tokenAceiteResponse = tokenAceiteService.updateTokenAceite(tokenAceite);
+			return ResponseEntity.ok(tokenAceiteResponse);
+		} catch (final Exception e) {
+			log.error("ERROR: ",e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}	
+	}
+	
+	
+	
 }

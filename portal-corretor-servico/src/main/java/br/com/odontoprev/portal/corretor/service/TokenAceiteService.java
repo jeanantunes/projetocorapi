@@ -13,4 +13,7 @@ public interface TokenAceiteService {
 
 	/*Criptografa token*/
 	String gerarToken(String chave);
+
+	/*update token aceite*/
+	TokenAceiteResponse updateTokenAceite(TokenAceite tokenAceite);
 }

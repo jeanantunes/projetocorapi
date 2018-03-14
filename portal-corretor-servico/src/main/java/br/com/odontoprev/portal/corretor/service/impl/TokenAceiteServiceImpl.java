@@ -64,4 +64,20 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 	public String gerarToken(String chave) {
 		return GerarTokenUtils.gerarHashToken(chave);
 	}
+
+	@Override
+	public TokenAceiteResponse updateTokenAceite(TokenAceite tokenAceite) {
+		
+		log.info("updateTokenAceite");
+		
+		try {
+			
+		} catch (Exception e) {
+			log.error("");
+		}
+		
+		
+		return null;
+		
+	}
 }
