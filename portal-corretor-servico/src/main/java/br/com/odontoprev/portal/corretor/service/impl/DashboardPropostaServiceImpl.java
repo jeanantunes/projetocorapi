@@ -1,5 +1,7 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import static br.com.odontoprev.portal.corretor.enums.StatusVendaEnum.CRIT_ENVIO;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,13 +86,40 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				dashboardPropostaPME.setValor(obj[5] != null ? Double.parseDouble(obj[5].toString()) : 0);
 				propostasPME.add(dashboardPropostaPME);
 			}
+			
+			// Muda status venda e monta lista de criticas retornadas do dcms
+			// 201803131540
+			this.mudarStatusVendaPME(propostasPME);
+			
 			response.setDashboardPropostasPME(propostasPME);
+			
 		} catch (Exception e) {
 			log.error("Erro ao buscar Propostas PME por status :: Detalhe: [" + e.getMessage() + "]");
 			return new DashboardPropostaPMEResponse();
 		}
 
 		return response;
+	}
+
+	private void mudarStatusVendaPME(List<DashboardPropostaPME> propostasPME) {
+		
+		log.info("mudarStatusVendaPME");
+		
+		List<Object[]> objects = dashboardPropostaDAO.buscarCriticasPME();
+
+		for (DashboardPropostaPME proposta : propostasPME) {
+			
+			for (Object object : objects) {
+				Object[] obj = (Object[]) object;
+
+				Long cdEmpresaRetorno = obj[0] != null ? new Long(String.valueOf(obj[0])) : null;
+				
+				if(proposta.getCdEmpresa().equals(cdEmpresaRetorno)) {
+					proposta.setStatusVenda(obj[1] != null ? String.valueOf(obj[1]) : "");
+				}
+			}
+		}
+		
 	}
 
 	@Override
@@ -138,7 +167,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 			// Muda status venda e monta lista de criticas retornadas do dcms
 			// 201803130907
-			this.mudarStatusVendaCriticado(propostasPF);
+			this.mudarStatusVendaCriticadoPF(propostasPF);
 
 			response.setDashboardPropostasPF(propostasPF);
 
@@ -150,9 +179,9 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 		return response;
 	}
 
-	private void mudarStatusVendaCriticado(List<DashboardPropostaPF> propostasPF) {
+	private void mudarStatusVendaCriticadoPF(List<DashboardPropostaPF> propostasPF) {
 
-		log.info("atualizarStatusVenda");
+		log.info("mudarStatusVendaCriticadoPF");
 
 		List<Object[]> objects = new ArrayList<Object[]>();
 
@@ -160,15 +189,15 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 			if (proposta.getPropostaDcms() == null || "".equals(proposta.getPropostaDcms())) {
 				// Muda apenas o retorno, nao atualiza na base
-				proposta.setStatusVenda("Critida envio");
+				proposta.setStatusVenda(CRIT_ENVIO.getDescricao());
 			} else {
 
 				objects = dashboardPropostaDAO.buscaPorCriticaPFporNumeroAtendimento(proposta.getPropostaDcms());
 
 				if (objects != null && !objects.isEmpty()) {
-					
-//					proposta.setStatusVenda("Critica negocio");
-					
+
+					// proposta.setStatusVenda("Critica negocio");
+
 					for (Object object : objects) {
 						proposta.setDsErroRegistro(object != null ? String.valueOf(object) : "");
 

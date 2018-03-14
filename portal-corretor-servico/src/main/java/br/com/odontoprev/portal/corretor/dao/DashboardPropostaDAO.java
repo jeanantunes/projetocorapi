@@ -125,6 +125,13 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 
     @Query(value = " select * from vwod_cor_critica_pme where cnpj = :cnpj and cpf = :cpf ", nativeQuery = true)
     public List<Object[]> buscaTodasPorCriticaPME(@Param("cnpj") String cnpj, @Param("cpf") String cpf);
+    
+    @Query(value = " SELECT pme.CD_EMPRESA, " +
+    		" st.descricao " + 
+    		"FROM   vwod_cor_status_venda_pme pme, " + 
+    		"       tbod_status_venda st " + 
+    		"WHERE  pme.status = st.cd_status_venda ", nativeQuery = true)
+    public List<Object[]> buscarCriticasPME();
 
     @Query(value = " select * from vwod_cor_critica_pme where cpf = :cpf ", nativeQuery = true)
     public List<Object[]> buscaPorCriticaPMEporCPF(@Param("cpf") String cpf);
