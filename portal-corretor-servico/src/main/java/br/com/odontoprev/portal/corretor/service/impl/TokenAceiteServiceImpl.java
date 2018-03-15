@@ -6,6 +6,7 @@ import java.util.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
@@ -13,7 +14,9 @@ import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceitePK;
+import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
+import br.com.odontoprev.portal.corretor.service.VendaService;
 import br.com.odontoprev.portal.corretor.util.GerarTokenUtils;
 
 @Service
@@ -23,11 +26,22 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 	
 	@Autowired
 	TokenAceiteDAO tokenAceiteDAO;
+	
+	@Autowired
+	VendaService vendaService;
 		
 	@Override
 	public TokenAceiteResponse addTokenAceite(TokenAceite tokenAceite) {
+		
+		log.info("[addTokenAceite - validacao venda existe]");
+		
+		TbodVenda venda = vendaService.buscarVendaPorCodigo(tokenAceite.getCdVenda());
+		
+		if(venda == null) {
+			return new TokenAceiteResponse(204, "Código de venda não encontrado");
+		}
 
-		log.info("[addTokenAceite]");
+		log.info("[addTokenAceite - insert]");
 		
 		LocalDateTime dataHoraAtual = LocalDateTime.now();
 		
@@ -51,7 +65,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 			return new TokenAceiteResponse(0, "Erro ao cadastrar token de aceite. Detalhe: [" + e.getMessage() + "]");
 		}
 		
-		return new TokenAceiteResponse(200, "ok");
+		return new TokenAceiteResponse(200, HttpStatus.OK.toString());
 	}
 
 	@Override
@@ -72,12 +86,27 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 		
 		try {
 			
+			TbodTokenAceite tbodTokenAceite = new TbodTokenAceite();
+			tbodTokenAceite = tokenAceiteDAO.findTokenPorVendaToken(tokenAceite.getCdVenda(), tokenAceite.getToken(), tokenAceite.getEmail());
+			
+			if (tbodTokenAceite == null) {
+				return new TokenAceiteResponse(404, HttpStatus.NOT_FOUND.toString());
+			} 			
+			
+			//TODO: outras validaçoes
+			
+			tbodTokenAceite.setIp(tokenAceite.getIp());
+			tbodTokenAceite.setDtAceite(new Date());
+			
+			tbodTokenAceite = tokenAceiteDAO.save(tbodTokenAceite);
+			
+			return new TokenAceiteResponse(200, HttpStatus.OK.toString());
+			
 		} catch (Exception e) {
-			log.error("");
+			log.error(e);
+			log.error("Erro ao confirmar data de aceite :: Detalhe: [" + e.getMessage() + "]");
+			return new TokenAceiteResponse(0, "Erro ao confirmar data de aceite. Detalhe: [" + e.getMessage() + "]");
 		}
-		
-		
-		return null;
-		
+	
 	}
 }
