@@ -13,6 +13,7 @@ public class TokenAceite implements Serializable {
 	private String email;
 	private String dataEnvio;
 	private String dataExpiracao;
+	private String token;
 	
 	public Long getCdTokenAceite() {
 		return cdTokenAceite;
@@ -57,4 +58,11 @@ public class TokenAceite implements Serializable {
 	public void setCdVenda(Long cdVenda) {
 		this.cdVenda = cdVenda;
 	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
 }
