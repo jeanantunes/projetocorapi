@@ -12,9 +12,11 @@ import br.com.odontoprev.api.manager.client.token.ApiManagerTokenFactory;
 import br.com.odontoprev.api.manager.client.token.ApiToken;
 import br.com.odontoprev.api.manager.client.token.enumerator.ApiManagerTokenEnum;
 import br.com.odontoprev.api.manager.client.token.util.ConfigurationUtils;
+import br.com.odontoprev.portal.corretor.dto.EmailAceite;
 import br.com.odontoprev.portal.corretor.serviceEmail.ApiException;
 import br.com.odontoprev.portal.corretor.serviceEmail.api.DefaultApi;
 import br.com.odontoprev.portal.corretor.serviceEmail.model.RequestEmail;
+import br.com.odontoprev.portal.corretor.util.FileReaderUtil;
 
 
 @Component
@@ -25,7 +27,7 @@ public class SendMail {
 	@Value("${SENDMAIL_ENDPOINT_URL}")
 	private String SENDMAIL_ENDPOINT_URL;
 	
-	public void sendMail() {
+	public void sendMail(EmailAceite email) {
 		
 		try {
 			
@@ -33,35 +35,42 @@ public class SendMail {
 			ApiToken apiToken = apiManager.generateToken();
 			
 			DefaultApi apiInstance = new DefaultApi();
-			//String SENDMAIL_ENDPOINT_URL = "sendemail/1.0";
 			apiInstance.getApiClient().setBasePath(ConfigurationUtils.getURLGetToken().replaceAll("/token","/"+ SENDMAIL_ENDPOINT_URL ));
 			apiInstance.getApiClient().setAccessToken(apiToken.getAccessToken());
 			apiInstance.getApiClient().addDefaultHeader("Authorization", "Bearer "+apiToken.getAccessToken());
-			//String ab = "Authorization: Bearer "+apiToken.getAccessToken() //exemplo roberto
 			RequestEmail body = new RequestEmail(); // RequestEmail
-			String msg = "TESTE";
-//			String msg = faleConoscoForcaVendasModel.getNomeCorretor() + ";";
-//			msg += faleConoscoForcaVendasModel.getNomeCorretora() + ";";
-//			msg += faleConoscoForcaVendasModel.getTipoMensagem() + ";";
-//			msg += faleConoscoForcaVendasModel.getMensagem() + ".";
-			body.setBody("Email Aceite: "+ msg );
-			body.setRecepientName("Prezados");
+			
+			String msg = this.montarBodyMsg(email);
+			
+			body.setBody(msg);
+//			body.setRecepientName("Prezados");
+			//TODO
 			body.setRecepients(Arrays.asList(new String [] {"jalves@vectoritcgroup.com","jaqueline.alves@outlook.com"}));
-			body.setSender("arquitetura.ti@odontoprev.com.br");
-			body.setSenderName("Arquitetura");
+			body.setSender("arquitetura.ti@odontoprev.com.br"); //TODO
+			body.setSenderName("Arquitetura"); //TODO
 			body.setType("text/html");
-			body.setSubject("ASSUNTO2");
+			body.setSubject("ASSUNTO2"); //TODO
 
 			apiInstance.sendEmail(body);
 		} catch (ApiException e) {
 			log.error(e.getResponseBody());
-//			System.out.println(e.getResponseBody());
 			log.error("Exception when calling DefaultApi#sendEmail");
-//			System.out.println("Exception when calling DefaultApi#sendEmail");
 			e.printStackTrace();
 		} catch(Exception ex) {
 			log.error(ex.getLocalizedMessage());
-//			System.out.println(ex.getLocalizedMessage());
 		}
+	}
+
+	private String montarBodyMsg(EmailAceite email) {
+		
+		FileReaderUtil fileReader = new FileReaderUtil();
+		String htmlStr = fileReader.readHtmlFile();
+		
+		htmlStr.replace("@NOMEDOCORRETOR", email.getNomeCorretor());
+		htmlStr.replace("@CORRETORA", email.getNomeCorretora());
+		htmlStr.replace("@EMPRESA", email.getNomeEmpresa());
+		
+		return htmlStr;
+		
 	}
 }

@@ -23,7 +23,7 @@ public class SendEmailController {
 		
 		log.info("Inicio sendMail");
 		
-		sendMail.sendMail();
+//		sendMail.sendMail();
 		
 		log.info("Fim sendMail");
 	}
