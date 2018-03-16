@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +39,16 @@ public class TokenAceiteController {
 		log.info(tokenAceite);		
 		TokenAceiteResponse tokenAceiteResponse = tokenAceiteService.updateTokenAceite(tokenAceite);
 		return ResponseEntity.ok(tokenAceiteResponse);
+	}
+	
+	@RequestMapping(value = "/token/{token}", method = { RequestMethod.GET })
+	public TokenAceite findTokenAceite(@PathVariable String token) {
+		
+		log.info(token);	
+		
+		TokenAceite tokenAceite = tokenAceiteService.buscarTokenAceitePorChave(token);
+		
+		return tokenAceite;
 	}
 	
 }

@@ -93,12 +93,12 @@ public class VendaPMEBusiness {
 			} //for (Empresa empresa : empresas)
 			
 			
-//			if(vendaResponse.getId() != 0){
-//				//Chamada servico token
-//				TokenAceite tokenAceite = new TokenAceite();
-//				tokenAceite.setCdVenda(vendaResponse.getId());
-//				tokenAceiteService.addTokenAceite(tokenAceite);
-//			}
+			if(vendaResponse.getId() != 0){
+				//Chamada servico token
+				TokenAceite tokenAceite = new TokenAceite();
+				tokenAceite.setCdVenda(vendaResponse.getId());
+				tokenAceiteService.addTokenAceite(tokenAceite);
+			}
 			
 		} catch (Exception e) {
 			log.error("salvarVendaPMEComEmpresasPlanosTitularesDependentes :: Erro ao cadastrar venda CdVenda:[" + venda.getCdVenda() + "]. Detalhe: [" + e.getMessage() + "]");

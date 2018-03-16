@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.odontoprev.portal.corretor.business.SendMailBusiness;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dto.EmailAceite;
 import br.com.odontoprev.portal.corretor.dto.Plano;
@@ -20,7 +21,6 @@ import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceitePK;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
-import br.com.odontoprev.portal.corretor.sendmail.SendMail;
 import br.com.odontoprev.portal.corretor.service.PlanoService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 import br.com.odontoprev.portal.corretor.service.VendaService;
@@ -89,7 +89,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 										
 			emailAceite.setPlanos(planos);
 			
-			SendMail mail = new SendMail();
+			SendMailBusiness mail = new SendMailBusiness();
 			mail.sendMail(emailAceite);
 			
 		} catch (Exception e) {
@@ -103,8 +103,28 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 
 	@Override
 	public TokenAceite buscarTokenAceitePorChave(String chave) {
-		// TODO Auto-generated method stub
-		return null;
+
+		log.info("buscarTokenAceitePorChave");
+		
+		TokenAceite tokenAceite = new TokenAceite();		
+		
+		try {
+			
+			TbodTokenAceite tbTokenAceite = tokenAceiteDAO.findByIdCdToken(chave);
+			
+			if(tbTokenAceite != null) {
+				tokenAceite.setToken(tbTokenAceite.getId().getCdToken());
+				tokenAceite.setCdVenda(tbTokenAceite.getId().getCdVenda());
+				tokenAceite.setEmail(tbTokenAceite.getEmailEnvio());
+			}
+			
+		} catch (Exception e) {
+			log.error(e);
+			log.error("Erro ao buscar tokenAceite por chave. Detalhe: [" + e.getMessage() + "]");
+		}
+		
+		return tokenAceite;
+		
 	}
 
 	@Override
