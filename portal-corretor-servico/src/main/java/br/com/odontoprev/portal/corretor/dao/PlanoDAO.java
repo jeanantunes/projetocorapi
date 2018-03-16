@@ -16,9 +16,9 @@ public interface PlanoDAO extends Repository<TbodPlano, Long> {
 	
 	public List<TbodPlano> findAll();
 
-	@Query(value="select plano.cd_plano, plano.nome_plano, venda.cd_venda from TBOD_PLANO plano " + 
-					"    inner join TBOD_VENDA venda on plano.cd_plano = venda.cd_plano and venda.cd_empresa = :cdEmpresa " 
-					, nativeQuery=true)
+	@Query(value="select plano.cd_plano, plano.nome_plano, venda.cd_venda, plano.valor_anual, plano.valor_mensal from TBOD_PLANO plano " + 
+			"    inner join TBOD_VENDA venda on plano.cd_plano = venda.cd_plano and venda.cd_empresa = :cdEmpresa " 
+			, nativeQuery=true)
 	public List<Object[]> planosByEmpresa(@Param("cdEmpresa") long cdEmpresa);
 
 }

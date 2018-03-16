@@ -11,5 +11,5 @@ import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 public interface TokenAceiteDAO extends CrudRepository<TbodTokenAceite, Long> {
 	
 	@Query("SELECT token FROM TbodTokenAceite token WHERE token.id.cdVenda = :cd_Venda AND token.id.cdToken = :cd_token and token.emailEnvio = :emailEnvio ")
-	TbodTokenAceite findTokenPorVendaToken(@Param("cd_Venda") Long cd_Venda ,@Param("cd_token") String cd_token, @Param("emailEnvio") String emailEnvio);
+	TbodTokenAceite findTokenPorVendaToken(@Param("cd_Venda") Long cd_Venda ,@Param("cd_token") String cd_token, @Param("emailEnvio") String emailEnvio);		
 }
