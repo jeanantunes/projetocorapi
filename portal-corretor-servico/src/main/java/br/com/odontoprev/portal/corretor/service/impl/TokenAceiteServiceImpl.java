@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,11 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
+import br.com.odontoprev.portal.corretor.dto.EmailAceite;
+import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceitePK;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.sendmail.SendMail;
+import br.com.odontoprev.portal.corretor.service.PlanoService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 import br.com.odontoprev.portal.corretor.service.VendaService;
 import br.com.odontoprev.portal.corretor.util.GerarTokenUtils;
@@ -29,9 +34,14 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 	
 	@Autowired
 	VendaService vendaService;
+	
+	@Autowired
+	PlanoService planoService;
 		
 	@Override
 	public TokenAceiteResponse addTokenAceite(TokenAceite tokenAceite) {
+		
+		//TODO: validaçoes
 		
 		log.info("[addTokenAceite - validacao venda existe]");
 		
@@ -58,6 +68,20 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 			tbodTokenAceite.setDtExpiracao(new Date());
 			
 			tbodTokenAceite = tokenAceiteDAO.save(tbodTokenAceite);
+			
+			EmailAceite emailAceite = new EmailAceite();
+			emailAceite.setNomeCorretor(venda.getTbodForcaVenda().getNome());
+			emailAceite.setNomeCorretora(venda.getTbodForcaVenda().getTbodCorretora().getNome());
+			emailAceite.setNomeEmpresa(venda.getTbodEmpresa().getRazaoSocial());
+			emailAceite.setEmailEnvio(venda.getTbodEmpresa().getEmail());
+			emailAceite.setToken(tokenAceitePK.getCdToken());
+			
+			List<Plano> planos = planoService.findPlanosByEmpresa(venda.getTbodEmpresa().getCdEmpresa());
+										
+			emailAceite.setPlanos(planos);
+			
+			SendMail mail = new SendMail();
+			mail.sendMail(emailAceite);
 			
 		} catch (Exception e) {
 			log.error(e);
@@ -93,7 +117,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 				return new TokenAceiteResponse(404, HttpStatus.NOT_FOUND.toString());
 			} 			
 			
-			//TODO: outras validaçoes
+			//TODO: validaçoes
 			
 			tbodTokenAceite.setIp(tokenAceite.getIp());
 			tbodTokenAceite.setDtAceite(new Date());

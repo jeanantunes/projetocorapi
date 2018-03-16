@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,10 @@ public class PlanoServiceImpl implements PlanoService {
 			plano.setCdPlano(new Long(String.valueOf(obj[0])));
 			plano.setDescricao(String.valueOf(obj[1]));
 			plano.setCdVenda(new Long(String.valueOf(obj[2])));
+			
+			BigDecimal valor = ((BigDecimal) obj[3]).add((BigDecimal) obj[4]);
+			plano.setValor(String.valueOf(valor));
+		
 			planos.add(plano);
 		}
 		
@@ -67,6 +72,8 @@ public class PlanoServiceImpl implements PlanoService {
 			plano.setTitulo(entity.getTitulo());
 			plano.setValor(entity.getValorMensal().toString());
 			plano.setSigla(entity.getCodigo());
+			
+			//entity.getValorMensal() + 
 			
 			planos.add(plano);
 		}
