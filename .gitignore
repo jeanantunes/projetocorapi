@@ -1,3 +1,4 @@
+.tern-project
 /.metadata/
 target/
 !.mvn/wrapper/maven-wrapper.jar

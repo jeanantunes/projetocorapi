@@ -24,7 +24,6 @@ public class FileReaderUtil {
 			InputStream inputStream = this.getClass().getClassLoader()
 					.getResourceAsStream("templates" + File.separatorChar + "emkt.html");
 			BufferedInputStream bufferInput = new BufferedInputStream(inputStream);
-//			DataInputStream dataInput = new DataInputStream(bufferInput);
 			BufferedReader br = new BufferedReader(new InputStreamReader(bufferInput));
 			
 			StringBuffer inputLine = new StringBuffer();
@@ -38,10 +37,9 @@ public class FileReaderUtil {
             
 			bufferInput.close();
 			br.close();
-//			dataInput.close();
 
 		} catch (Exception e) {
-			log.error("Erro ao ler arquivo email aceite!");
+			log.error("Erro ao ler html email aceite! Detalhe: [" + e.getMessage() + "]");
 			return "";
 		}
 
