@@ -42,13 +42,13 @@ public class TokenAceiteController {
 	}
 	
 	@RequestMapping(value = "/token/{token}", method = { RequestMethod.GET })
-	public TokenAceite findTokenAceite(@PathVariable String token) {
+	public ResponseEntity<TokenAceite> findTokenAceite(@PathVariable String token) {
 		
 		log.info(token);	
 		
 		TokenAceite tokenAceite = tokenAceiteService.buscarTokenAceitePorChave(token);
 		
-		return tokenAceite;
+		return ResponseEntity.ok(tokenAceite);
 	}
 	
 }
