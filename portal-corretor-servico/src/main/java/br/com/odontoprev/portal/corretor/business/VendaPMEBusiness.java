@@ -14,9 +14,11 @@ import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.Plano;
+import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
+import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 
 @ManagedBean
 public class VendaPMEBusiness {
@@ -31,6 +33,9 @@ public class VendaPMEBusiness {
 	
 	@Autowired
 	CorretoraBusiness corretoraBusiness;
+	
+	@Autowired
+	TokenAceiteService tokenAceiteService;
 	
 	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(VendaPME vendaPME) {
 
@@ -86,6 +91,14 @@ public class VendaPMEBusiness {
 				} //for (Plano plano : empresa.getPlanos())
 				
 			} //for (Empresa empresa : empresas)
+			
+			
+//			if(vendaResponse.getId() != 0){
+//				//Chamada servico token
+//				TokenAceite tokenAceite = new TokenAceite();
+//				tokenAceite.setCdVenda(vendaResponse.getId());
+//				tokenAceiteService.addTokenAceite(tokenAceite);
+//			}
 			
 		} catch (Exception e) {
 			log.error("salvarVendaPMEComEmpresasPlanosTitularesDependentes :: Erro ao cadastrar venda CdVenda:[" + venda.getCdVenda() + "]. Detalhe: [" + e.getMessage() + "]");

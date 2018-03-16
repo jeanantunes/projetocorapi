@@ -72,9 +72,6 @@ public class PlanoServiceImpl implements PlanoService {
 			plano.setTitulo(entity.getTitulo());
 			plano.setValor(entity.getValorMensal().toString());
 			plano.setSigla(entity.getCodigo());
-			
-			//entity.getValorMensal() + 
-			
 			planos.add(plano);
 		}
 		

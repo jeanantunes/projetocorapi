@@ -1,12 +1,14 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,9 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 	
 	@Autowired
 	PlanoService planoService;
+	
+	@Value("${EXPIRACAO_TOKEN_ACEITE_EMAIL}")
+	private String EXPIRACAO_TOKEN_ACEITE_EMAIL;
 		
 	@Override
 	public TokenAceiteResponse addTokenAceite(TokenAceite tokenAceite) {
@@ -65,7 +70,11 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 			tbodTokenAceite.setId(tokenAceitePK);
 			tbodTokenAceite.setEmailEnvio(venda.getTbodEmpresa().getEmail());
 			tbodTokenAceite.setDtEnvio(new Date());
-			tbodTokenAceite.setDtExpiracao(new Date());
+			
+			Calendar c = Calendar.getInstance();
+			Long expiracao = Long.valueOf(EXPIRACAO_TOKEN_ACEITE_EMAIL);
+		    c.add(Calendar.DAY_OF_MONTH, expiracao.intValue());
+		    tbodTokenAceite.setDtExpiracao(c.getTime());
 			
 			tbodTokenAceite = tokenAceiteDAO.save(tbodTokenAceite);
 			
