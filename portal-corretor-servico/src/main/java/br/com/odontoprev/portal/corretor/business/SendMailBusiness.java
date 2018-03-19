@@ -94,9 +94,8 @@ public class SendMailBusiness {
 			String msg = this.montarBodyMsg(email);
 			
 			body.setBody(msg);
-			body.setRecepientName(recepientName);
-			body.setRecepients(Arrays.asList(new String [] {"jalves@vectoritcgroup.com"})); //teste
-//			body.setRecepients(Arrays.asList(new String [] {email.getEmailEnvio()}));
+			body.setRecepientName(recepientName);			
+			body.setRecepients(Arrays.asList(new String [] {email.getEmailEnvio()}));
 			body.setSender(sender);
 			body.setSenderName(senderName);
 			body.setType(type);
