@@ -89,7 +89,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			
 			// Muda status venda e monta lista de criticas retornadas do dcms
 			// 201803131540
-			this.mudarStatusVendaPME(propostasPME);
+	//		this.mudarStatusVendaPME(propostasPME);
 			
 			response.setDashboardPropostasPME(propostasPME);
 			
@@ -167,7 +167,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 			// Muda status venda e monta lista de criticas retornadas do dcms
 			// 201803130907
-			this.mudarStatusVendaCriticadoPF(propostasPF);
+	//		this.mudarStatusVendaCriticadoPF(propostasPF);
 
 			response.setDashboardPropostasPF(propostasPF);
 
