@@ -65,7 +65,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 		
 		try {
 			tokenAceitePK.setCdVenda(tokenAceite.getCdVenda());
-			tokenAceitePK.setCdToken(this.gerarToken(tokenAceite.getCdVenda().toString()+dataHoraAtual.toString()));		
+			tokenAceitePK.setCdToken(this.gerarToken(tokenAceite.getCdVenda().toString()+dataHoraAtual.toString().replace("=", "")));		
 			
 			tbodTokenAceite.setId(tokenAceitePK);
 			tbodTokenAceite.setEmailEnvio(venda.getTbodEmpresa().getEmail());
