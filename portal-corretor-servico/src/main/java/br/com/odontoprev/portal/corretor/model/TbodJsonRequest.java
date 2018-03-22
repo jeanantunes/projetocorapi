@@ -29,6 +29,9 @@ public class TbodJsonRequest implements Serializable {
 	private Date dtCriacao;
 
 	private String json;
+	
+	@Column(name="MODELO_CELULAR")
+	private String modeloCelular;
 
 	public TbodJsonRequest() {
 	}
@@ -65,4 +68,12 @@ public class TbodJsonRequest implements Serializable {
 		this.json = json;
 	}
 
+	public String getModeloCelular() {
+		return modeloCelular;
+	}
+
+	public void setModeloCelular(String modeloCelular) {
+		this.modeloCelular = modeloCelular;
+	}
+	
 }
