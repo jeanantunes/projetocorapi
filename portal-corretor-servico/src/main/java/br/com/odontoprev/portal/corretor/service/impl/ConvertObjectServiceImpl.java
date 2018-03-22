@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.dao.ConvertObjectDAO;
 import br.com.odontoprev.portal.corretor.dto.Venda;
+import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.model.TbodJsonRequest;
 import br.com.odontoprev.portal.corretor.service.ConvertObjectService;
 import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
@@ -25,15 +26,19 @@ public class ConvertObjectServiceImpl implements ConvertObjectService {
 	ConvertObjectUtil convertService;
 
 	@Override
-	public void addJsonInTable(Venda venda) {
+	public void addJsonInTable(Venda vendaPF, VendaPME vendaPME) {
 
 		log.info("[addJsonInTable - venda PF e PME]");
 		
 		try {
 			TbodJsonRequest jsonRequest = new TbodJsonRequest();
-			jsonRequest.setCdForcaVenda(venda.getCdForcaVenda().toString());
+			jsonRequest.setCdForcaVenda(vendaPF != null ? vendaPF.getCdForcaVenda().toString() : vendaPME.getCdForcaVenda().toString());			
 			jsonRequest.setDtCriacao(new Date());
-			jsonRequest.setJson(convertService.ConvertObjectToJson(venda).toString());			
+			if (vendaPF != null) {
+				jsonRequest.setJson(convertService.ConvertObjectToJson(vendaPF,null));
+			}else {
+				jsonRequest.setJson(convertService.ConvertObjectToJson(null,vendaPME));
+			}								
 			convertObjectDAO.save(jsonRequest);
 		} catch (Exception e) {
 			log.error(e);

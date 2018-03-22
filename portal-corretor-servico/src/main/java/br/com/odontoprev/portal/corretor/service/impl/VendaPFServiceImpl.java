@@ -32,7 +32,7 @@ public class VendaPFServiceImpl implements VendaPFService {
 
 		log.info("[VendaPFServiceImpl::addVenda]");
 		
-		convertObjectToJson.addJsonInTable(venda);
+		convertObjectToJson.addJsonInTable(venda, null);
 
 		return vendaPFBusiness.salvarVendaComTitularesComDependentes(venda, Boolean.TRUE);
 	}
@@ -41,6 +41,8 @@ public class VendaPFServiceImpl implements VendaPFService {
 	public VendaResponse addVendaPME(VendaPME vendaPME) {
 	
 		log.info("[VendaPFServiceImpl::addVendaPME]");
+		
+		convertObjectToJson.addJsonInTable(null, vendaPME);
 	
 		return vendaPMEBusiness.salvarVendaPMEComEmpresasPlanosTitularesDependentes(vendaPME);
 	}
