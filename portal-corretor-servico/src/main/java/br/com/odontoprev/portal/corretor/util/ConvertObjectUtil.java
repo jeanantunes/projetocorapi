@@ -13,8 +13,6 @@ public class ConvertObjectUtil {
 
 	public String ConvertObjectToJson(Venda vendaPF, VendaPME vendaPME) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
-		//return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(venda);
-		System.out.println(vendaPF != null ? vendaPF : vendaPME);
 		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(vendaPF != null ? vendaPF : vendaPME);
 	}
 	

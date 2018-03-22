@@ -35,6 +35,7 @@ public class ConvertObjectServiceImpl implements ConvertObjectService {
 			jsonRequest.setCdForcaVenda(vendaPF != null ? vendaPF.getCdForcaVenda().toString() : vendaPME.getCdForcaVenda().toString());			
 			jsonRequest.setDtCriacao(new Date());
 			jsonRequest.setModeloCelular(userAgent);
+			jsonRequest.setUrl(vendaPF != null ? "/vendapf" : "/vendapme");
 			if (vendaPF != null) {
 				jsonRequest.setJson(convertService.ConvertObjectToJson(vendaPF,null));
 			}else {

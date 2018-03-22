@@ -32,6 +32,8 @@ public class TbodJsonRequest implements Serializable {
 	
 	@Column(name="MODELO_CELULAR")
 	private String modeloCelular;
+	
+	private String url;
 
 	public TbodJsonRequest() {
 	}
@@ -75,5 +77,15 @@ public class TbodJsonRequest implements Serializable {
 	public void setModeloCelular(String modeloCelular) {
 		this.modeloCelular = modeloCelular;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	
 	
 }
