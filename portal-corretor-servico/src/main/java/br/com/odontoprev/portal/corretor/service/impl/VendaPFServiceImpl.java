@@ -10,6 +10,7 @@ import br.com.odontoprev.portal.corretor.business.VendaPMEBusiness;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
+import br.com.odontoprev.portal.corretor.service.ConvertObjectService;
 import br.com.odontoprev.portal.corretor.service.VendaPFService;
 
 @Service
@@ -23,10 +24,15 @@ public class VendaPFServiceImpl implements VendaPFService {
 	@Autowired
 	VendaPMEBusiness vendaPMEBusiness;
 	
+	@Autowired
+	ConvertObjectService convertObjectToJson;
+	
 	@Override
 	public VendaResponse addVenda(Venda venda) {
 
 		log.info("[VendaPFServiceImpl::addVenda]");
+		
+		convertObjectToJson.addJsonInTable(venda);
 
 		return vendaPFBusiness.salvarVendaComTitularesComDependentes(venda, Boolean.TRUE);
 	}
