@@ -16,6 +16,8 @@ public class TbodJsonRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@SequenceGenerator(name = "SEQ_TBOD_JSON_REQUEST", sequenceName = "SEQ_TBOD_JSON_REQUEST", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_JSON_REQUEST")
 	@Column(name="CD_JSON_REQUEST")
 	private long cdJsonRequest;
 
