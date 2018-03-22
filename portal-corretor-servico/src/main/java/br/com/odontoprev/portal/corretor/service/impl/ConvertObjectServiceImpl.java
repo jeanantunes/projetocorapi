@@ -26,7 +26,7 @@ public class ConvertObjectServiceImpl implements ConvertObjectService {
 	ConvertObjectUtil convertService;
 
 	@Override
-	public void addJsonInTable(Venda vendaPF, VendaPME vendaPME) {
+	public void addJsonInTable(Venda vendaPF, VendaPME vendaPME, String userAgent) {
 
 		log.info("[addJsonInTable - venda PF e PME]");
 		
@@ -34,6 +34,7 @@ public class ConvertObjectServiceImpl implements ConvertObjectService {
 			TbodJsonRequest jsonRequest = new TbodJsonRequest();
 			jsonRequest.setCdForcaVenda(vendaPF != null ? vendaPF.getCdForcaVenda().toString() : vendaPME.getCdForcaVenda().toString());			
 			jsonRequest.setDtCriacao(new Date());
+			jsonRequest.setModeloCelular(userAgent);
 			if (vendaPF != null) {
 				jsonRequest.setJson(convertService.ConvertObjectToJson(vendaPF,null));
 			}else {

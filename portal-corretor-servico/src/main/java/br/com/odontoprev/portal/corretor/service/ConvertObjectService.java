@@ -6,5 +6,5 @@ import br.com.odontoprev.portal.corretor.dto.VendaPME;
 public interface ConvertObjectService {
 
 	/*save Json vendas PF PME*/
-	void addJsonInTable(Venda vendaPF, VendaPME vendaPME);
+	void addJsonInTable(Venda vendaPF, VendaPME vendaPME, String userAgent);
 }
