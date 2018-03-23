@@ -46,8 +46,8 @@ public class XlsVidas {
 
 		try {
 
-			String filename = pathVidas + Data() + ".xls";
-//			String filename = "C:\\Users\\Vm8.1\\Desktop\\Arquivos\\" + Data() + ".xls";
+			String filename = pathVidas + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
+//			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Vidas");
 
@@ -152,8 +152,7 @@ public class XlsVidas {
 				vidasArr[20] = "I"; // Fixo "I" (Inclusao) Obrigatorio
 				// cpf do titular (para titular e seus dependentes) Obrig
 				vidasArr[21] = isTitular ? tbVida.getCpf() : tbVida.getTbodVida().getCpf();
-				// cpf do titular Obriga
-				vidasArr[22] = isTitular ? tbVida.getCpf() : tbVida.getTbodVida().getCpf();
+				vidasArr[22] = tbVida.getCpf(); //Obriga
 				vidasArr[23] = tbVida.getSexo(); // Obrig
 				vidasArr[24] = tbVida.getNomeMae(); // Obrig 70 carac
 				vidasArr[25] = ""; // nada
