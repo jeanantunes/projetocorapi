@@ -90,7 +90,6 @@ public class SendMailBusiness {
 			apiInstance.getApiClient().setAccessToken(apiToken.getAccessToken());
 			apiInstance.getApiClient().addDefaultHeader("Authorization", "Bearer "+apiToken.getAccessToken());
 			RequestEmail body = new RequestEmail(); // RequestEmail
-//			EmailAceite email = new EmailAceite(); //teste
 			String msg = this.montarBodyMsg(email);
 			
 			body.setBody(msg);
