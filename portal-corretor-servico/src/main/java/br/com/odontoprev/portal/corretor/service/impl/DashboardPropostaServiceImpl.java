@@ -167,7 +167,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 
 			// Muda status venda e monta lista de criticas retornadas do dcms
 			// 201803130907
-	//		this.mudarStatusVendaCriticadoPF(propostasPF);
+//			this.mudarStatusVendaCriticadoPF(propostasPF);
 
 			response.setDashboardPropostasPF(propostasPF);
 
@@ -182,25 +182,26 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 	private void mudarStatusVendaCriticadoPF(List<DashboardPropostaPF> propostasPF) {
 
 		log.info("mudarStatusVendaCriticadoPF");
-
-		List<Object[]> objects = new ArrayList<Object[]>();
-
+		
+		List<Object[]> objects = dashboardPropostaDAO.buscaPorCriticaPF();
+		
 		for (DashboardPropostaPF proposta : propostasPF) {
-
+			
 			if (proposta.getPropostaDcms() == null || "".equals(proposta.getPropostaDcms())) {
 				// Muda apenas o retorno, nao atualiza na base
 				proposta.setStatusVenda(CRIT_ENVIO.getDescricao());
+				
 			} else {
-
-				objects = dashboardPropostaDAO.buscaPorCriticaPFporNumeroAtendimento(proposta.getPropostaDcms());
-
-				if (objects != null && !objects.isEmpty()) {
-
-					// proposta.setStatusVenda("Critica negocio");
-
-					for (Object object : objects) {
-						proposta.setDsErroRegistro(object != null ? String.valueOf(object) : "");
-
+			
+				for (Object object : objects) {
+					Object[] obj = (Object[]) object;
+	
+					String nrAtendimento = obj[0] != null ? String.valueOf(obj[0]) : null;
+					
+					if(proposta.getPropostaDcms().equals(nrAtendimento)) {
+						
+						proposta.setDsErroRegistro(obj[1] != null ? String.valueOf(obj[1]) : "");
+						
 						if (proposta.getDsErroRegistro() != null && !"".equals(proposta.getDsErroRegistro())) {
 							List<String> criticas = new ArrayList<String>();
 							String[] criticasArr = proposta.getDsErroRegistro().split("/");
@@ -209,10 +210,43 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 							}
 							proposta.setCriticas(criticas);
 						}
+						break;
 					}
 				}
 			}
 		}
+		
+
+//		List<Object[]> objects = new ArrayList<Object[]>();
+//
+//		for (DashboardPropostaPF proposta : propostasPF) {
+//
+//			if (proposta.getPropostaDcms() == null || "".equals(proposta.getPropostaDcms())) {
+//				// Muda apenas o retorno, nao atualiza na base
+//				proposta.setStatusVenda(CRIT_ENVIO.getDescricao());
+//			} else {
+//
+//				objects = dashboardPropostaDAO.buscaPorCriticaPFporNumeroAtendimento(proposta.getPropostaDcms());
+//
+//				if (objects != null && !objects.isEmpty()) {
+//
+//					// proposta.setStatusVenda("Critica negocio");
+//
+//					for (Object object : objects) {
+//						proposta.setDsErroRegistro(object != null ? String.valueOf(object) : "");
+//
+//						if (proposta.getDsErroRegistro() != null && !"".equals(proposta.getDsErroRegistro())) {
+//							List<String> criticas = new ArrayList<String>();
+//							String[] criticasArr = proposta.getDsErroRegistro().split("/");
+//							for (String critica : criticasArr) {
+//								criticas.add(critica);
+//							}
+//							proposta.setCriticas(criticas);
+//						}
+//					}
+//				}
+//			}
+//		}
 
 	}
 
