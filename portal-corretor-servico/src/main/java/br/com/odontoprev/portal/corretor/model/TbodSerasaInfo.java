@@ -47,6 +47,9 @@ public class TbodSerasaInfo implements Serializable {
 	private String razaoSocial;
 
 	private String situacao;
+	
+	@Column(name="REQUEST_JSON")
+	private String requestJson;
 
 	//bi-directional many-to-one association to TbodSerasaEndereco
 	@OneToMany(mappedBy="tbodSerasaInfo")
@@ -141,6 +144,14 @@ public class TbodSerasaInfo implements Serializable {
 
 	public void setSituacao(String situacao) {
 		this.situacao = situacao;
+	}
+	
+	public String getRequestJson() {
+		return requestJson;
+	}
+
+	public void setRequestJson(String requestJson) {
+		this.requestJson = requestJson;
 	}
 
 	public List<TbodSerasaEndereco> getTbodSerasaEnderecos() {
