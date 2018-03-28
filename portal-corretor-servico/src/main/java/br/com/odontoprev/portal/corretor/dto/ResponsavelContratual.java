@@ -12,7 +12,7 @@ public class ResponsavelContratual implements Serializable {
 	private String email;
 	private String celular;
 	private String sexo;
-	private Endereco endereco;
+	private EnderecoProposta endereco;
 
 	public String getNome() {
 		return nome;
@@ -62,11 +62,11 @@ public class ResponsavelContratual implements Serializable {
 		this.sexo = sexo;
 	}
 
-	public Endereco getEndereco() {
+	public EnderecoProposta getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(EnderecoProposta endereco) {
 		this.endereco = endereco;
 	}
 

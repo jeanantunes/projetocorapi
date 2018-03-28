@@ -17,6 +17,8 @@ public class PropostaDCMS {
 	private DadosBancariosPropostaDCMS dadosBancarios;
 
 	private List<BeneficiarioPropostaDCMS> beneficiarios;
+	
+	private ResponsavelContratual responsavelContratual;
 
 	public CorretoraPropostaDCMS getCorretora() {
 		return corretora;
@@ -72,6 +74,14 @@ public class PropostaDCMS {
 
 	public void setBeneficiarios(List<BeneficiarioPropostaDCMS> beneficiarios) {
 		this.beneficiarios = beneficiarios;
+	}
+	
+	public ResponsavelContratual getResponsavelContratual() {
+		return responsavelContratual;
+	}
+
+	public void setResponsavelContratual(ResponsavelContratual responsavelContratual) {
+		this.responsavelContratual = responsavelContratual;
 	}
 
 	@Override

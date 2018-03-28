@@ -37,6 +37,7 @@ import br.com.odontoprev.portal.corretor.dto.EnderecoProposta;
 import br.com.odontoprev.portal.corretor.dto.PlanoDCMS;
 import br.com.odontoprev.portal.corretor.dto.PropostaDCMS;
 import br.com.odontoprev.portal.corretor.dto.PropostaDCMSResponse;
+import br.com.odontoprev.portal.corretor.dto.ResponsavelContratual;
 import br.com.odontoprev.portal.corretor.dto.TipoCobrancaPropostaDCMS;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
@@ -430,6 +431,54 @@ public class VendaPFBusiness {
 			propostaDCMS.getTipoCobranca().setCodigo((long)60); //TODO //Informar o que vem do serviço da empresa
 			propostaDCMS.getTipoCobranca().setSigla("BO"); //BO = Boleto / DA = Debito automatico
 		}
+		
+		//Responsavel Contratual para venda PF, se titular menor de idade 201803281502
+		if(venda.getResponsavelContratual() != null) {
+			ResponsavelContratual responsavelContratualDCMS = new ResponsavelContratual();
+			ResponsavelContratual responsavelContratualVenda = venda.getResponsavelContratual();
+			
+			responsavelContratualDCMS.setNome(responsavelContratualVenda.getNome());
+			
+			if(responsavelContratualVenda.getCpf() != null && !responsavelContratualVenda.getCpf().isEmpty()) {
+				responsavelContratualDCMS.setCpf(responsavelContratualVenda.getCpf().replace(".", "").replace("-", ""));
+			}
+			
+			responsavelContratualDCMS.setDataNascimento(responsavelContratualVenda.getDataNascimento());
+			SimpleDateFormat sdfApp = new SimpleDateFormat("dd/MM/yyyy");
+			Date dateDataNascimento = null;
+			try {
+				dateDataNascimento = sdfApp.parse(responsavelContratualVenda.getDataNascimento());
+			} catch (ParseException e) {
+				log.info("atribuirVendaPFParaPropostaDCMS; titular.getDataNascimento(String):[" + responsavelContratualVenda.getDataNascimento() + "]; e.getMessage():[" + e.getMessage() + "];");
+			}
+			SimpleDateFormat sdfJsonString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000Z");
+			responsavelContratualDCMS.setDataNascimento(stringDataNascimentoJSON);
+			
+			responsavelContratualDCMS.setEmail(responsavelContratualVenda.getEmail());
+			
+			if(responsavelContratualVenda.getCelular() != null && !responsavelContratualVenda.getCelular().isEmpty()) {
+				responsavelContratualDCMS.setCelular(responsavelContratualVenda.getCelular()
+					.replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", ""));
+			}
+			
+			responsavelContratualDCMS.setSexo(responsavelContratualVenda.getSexo());
+			
+			EnderecoProposta endereco = responsavelContratualVenda.getEndereco();
+			
+			responsavelContratualDCMS.setEndereco(new EnderecoProposta());
+			if(endereco.getCep() != null && !endereco.getCep().isEmpty()) {
+				responsavelContratualDCMS.getEndereco().setCep(endereco.getCep().replaceAll("-", ""));
+			}
+			responsavelContratualDCMS.getEndereco().setLogradouro(endereco.getLogradouro());
+			responsavelContratualDCMS.getEndereco().setNumero(endereco.getNumero());
+			responsavelContratualDCMS.getEndereco().setComplemento(endereco.getComplemento());
+			responsavelContratualDCMS.getEndereco().setBairro(endereco.getBairro());
+			responsavelContratualDCMS.getEndereco().setCidade(endereco.getCidade());
+			responsavelContratualDCMS.getEndereco().setEstado(endereco.getEstado());
+			
+			propostaDCMS.setResponsavelContratual(responsavelContratualDCMS);
+		}// FIM Responsavel Contratual para venda PF, se titular menor de idade
 
 		propostaDCMS.setBeneficiarios(new ArrayList<>());
 		

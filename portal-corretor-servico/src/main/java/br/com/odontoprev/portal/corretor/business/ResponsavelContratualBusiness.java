@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.ResponsavelContratualDAO;
 import br.com.odontoprev.portal.corretor.dao.TipoEnderecoDAO;
-import br.com.odontoprev.portal.corretor.dto.Endereco;
+import br.com.odontoprev.portal.corretor.dto.EnderecoProposta;
 import br.com.odontoprev.portal.corretor.dto.ResponsavelContratual;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
-import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 
 @ManagedBean
@@ -50,7 +49,7 @@ public class ResponsavelContratualBusiness {
 			
 			if(responsavelContratual.getEndereco() != null) {
 				
-				Endereco endereco = responsavelContratual.getEndereco();
+				EnderecoProposta endereco = responsavelContratual.getEndereco();
 				TbodEndereco tbEndereco = new TbodEndereco();
 				
 				tbEndereco.setLogradouro(endereco.getLogradouro());
@@ -61,10 +60,10 @@ public class ResponsavelContratualBusiness {
 				tbEndereco.setUf(endereco.getEstado());
 				tbEndereco.setCep(endereco.getCep());
 				
-				if (endereco.getTipoEndereco() != null) {
-					TbodTipoEndereco tbTipoEndereco = tipoEnderecoDao.findOne(endereco.getTipoEndereco());
-					tbEndereco.setTbodTipoEndereco(tbTipoEndereco);
-				}
+//				if (endereco.getTipoEndereco() != null) {
+//					TbodTipoEndereco tbTipoEndereco = tipoEnderecoDao.findOne(endereco.getTipoEndereco());
+//					tbEndereco.setTbodTipoEndereco(tbTipoEndereco);
+//				}
 				
 				tbEndereco = enderecoDao.save(tbEndereco);
 				
