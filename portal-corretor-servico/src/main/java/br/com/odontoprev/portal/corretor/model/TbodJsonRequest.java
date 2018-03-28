@@ -27,13 +27,11 @@ public class TbodJsonRequest implements Serializable {
 	@Column(name = "DT_CRIACAO")
 	private Date dtCriacao;
 
-	@Column(name = "JSON")
 	private String json;
 
 	@Column(name = "MODELO_CELULAR")
 	private String modeloCelular;
 
-	@Column(name = "URL")
 	private String url;
 	
 	@Column(name="CD_CORRETORA")

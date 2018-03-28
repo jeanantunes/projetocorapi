@@ -45,7 +45,7 @@ public class ConvertObjectServiceImpl implements ConvertObjectService {
 			if(tbodForcaVenda.getTbodCorretora() != null && tbodForcaVenda.getTbodCorretora().getCdCorretora() != null) {
 				jsonRequest.setCdCorretora(tbodForcaVenda.getTbodCorretora().getCdCorretora());
 			}
-			jsonRequest.setUrl(vendaPF != null ? "vendapf" : "vendapme");
+			jsonRequest.setUrl(vendaPF != null ? "/vendapf" : "/vendapme");
 			if (vendaPF != null) {
 				jsonRequest.setJson(convertService.ConvertObjectToJson(vendaPF,null));
 			}else {
