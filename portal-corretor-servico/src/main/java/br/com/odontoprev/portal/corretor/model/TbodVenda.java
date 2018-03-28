@@ -84,6 +84,11 @@ public class TbodVenda implements Serializable {
 	//bi-directional many-to-one association to TbodTokenAceite
 	@OneToMany(mappedBy="tbodVenda")
 	private List<TbodTokenAceite> tbodTokenAceites;
+	
+	//bi-directional many-to-one association to TbodResponsavelContratual
+	@ManyToOne
+	@JoinColumn(name="CD_RESPONSAVEL_CONTRATUAL")
+	private TbodResponsavelContratual tbodResponsavelContratual;
 
 	public TbodVenda() {
 	}
@@ -258,6 +263,14 @@ public class TbodVenda implements Serializable {
 		tbodTokenAceite.setTbodVenda(null);
 
 		return tbodTokenAceite;
+	}
+	
+	public TbodResponsavelContratual getTbodResponsavelContratual() {
+		return this.tbodResponsavelContratual;
+	}
+
+	public void setTbodResponsavelContratual(TbodResponsavelContratual tbodResponsavelContratual) {
+		this.tbodResponsavelContratual = tbodResponsavelContratual;
 	}
 
 }

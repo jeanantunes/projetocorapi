@@ -43,6 +43,7 @@ import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
+import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
 import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
@@ -80,6 +81,9 @@ public class VendaPFBusiness {
 	
 	@Autowired
 	ApiManagerTokenServiceImpl apiManagerTokenService;
+	
+	@Autowired
+	ResponsavelContratualBusiness responsavelContratualBusiness;
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
@@ -195,6 +199,18 @@ public class VendaPFBusiness {
 			
 			if(venda.getTipoPagamento() != null) {
 				tbVenda.setTipoPagamento(venda.getTipoPagamento());
+			}
+			
+			//Responsavel Contratual para venda PF, se titular menor de idade 201803281040
+			if(venda.getResponsavelContratual() != null) {
+				
+				TbodResponsavelContratual tbodResponsavelContratual = responsavelContratualBusiness
+						.salvarResponsavelContratualComEndereco(venda.getResponsavelContratual());
+				
+				if(tbodResponsavelContratual != null) {
+					tbVenda.setTbodResponsavelContratual(tbodResponsavelContratual);
+				}
+				
 			}
 			
 			tbVenda = vendaDao.save(tbVenda);

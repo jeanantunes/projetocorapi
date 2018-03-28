@@ -58,6 +58,10 @@ public class TbodEndereco implements Serializable {
 	//bi-directional many-to-one association to TbodVida
 	@OneToMany(mappedBy="tbodEndereco")
 	private List<TbodVida> tbodVidas;
+	
+	//bi-directional many-to-one association to TbodResponsavelContratual
+	@OneToMany(mappedBy="tbodEndereco")
+	private List<TbodResponsavelContratual> tbodResponsavelContratuals;
 
 	public TbodEndereco() {
 	}
@@ -198,6 +202,28 @@ public class TbodEndereco implements Serializable {
 		tbodVida.setTbodEndereco(null);
 
 		return tbodVida;
+	}
+	
+	public List<TbodResponsavelContratual> getTbodResponsavelContratuals() {
+		return this.tbodResponsavelContratuals;
+	}
+
+	public void setTbodResponsavelContratuals(List<TbodResponsavelContratual> tbodResponsavelContratuals) {
+		this.tbodResponsavelContratuals = tbodResponsavelContratuals;
+	}
+
+	public TbodResponsavelContratual addTbodResponsavelContratual(TbodResponsavelContratual tbodResponsavelContratual) {
+		getTbodResponsavelContratuals().add(tbodResponsavelContratual);
+		tbodResponsavelContratual.setTbodEndereco(this);
+
+		return tbodResponsavelContratual;
+	}
+
+	public TbodResponsavelContratual removeTbodResponsavelContratual(TbodResponsavelContratual tbodResponsavelContratual) {
+		getTbodResponsavelContratuals().remove(tbodResponsavelContratual);
+		tbodResponsavelContratual.setTbodEndereco(null);
+
+		return tbodResponsavelContratual;
 	}
 
 }

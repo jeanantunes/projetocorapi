@@ -24,6 +24,8 @@ public class Venda implements Serializable {
 	private List<Beneficiario> titulares;
 
 	private Long cdDCSSUsuario;
+	
+	private ResponsavelContratual responsavelContratual;
 
 	public Long getCdVenda() {
 		return cdVenda;
@@ -92,18 +94,7 @@ public class Venda implements Serializable {
 	public Long getCdPlano() {
 		return cdPlano;
 	}
-
-	public void setCdPlano(Long cdPlano) {
-		this.cdPlano = cdPlano;
-	}
 	
-	@Override
-	public String toString() {
-		return "Venda [cdVenda=" + cdVenda + ", cdEmpresa=" + cdEmpresa + ", cdPlano=" + cdPlano + ", cdForcaVenda="
-				+ cdForcaVenda + ", dataVenda=" + dataVenda + ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento="
-				+ faturaVencimento + ", tipoPagamento=" + tipoPagamento + ", titulares=" + titulares + "]";
-	}
-
 	public Long getCdDCSSUsuario() {		
 		return cdDCSSUsuario;
 	}
@@ -111,6 +102,25 @@ public class Venda implements Serializable {
 	public void setCdDCSSUsuario(Long cdDCSSUsuario) {
 		this.cdDCSSUsuario = cdDCSSUsuario;
 	}
+
+	public void setCdPlano(Long cdPlano) {
+		this.cdPlano = cdPlano;
+	}
 	
-	
+	public ResponsavelContratual getResponsavelContratual() {
+		return responsavelContratual;
+	}
+
+	public void setResponsavelContratual(ResponsavelContratual responsavelContratual) {
+		this.responsavelContratual = responsavelContratual;
+	}
+
+	@Override
+	public String toString() {
+		return "Venda [cdVenda=" + cdVenda + ", cdEmpresa=" + cdEmpresa + ", cdPlano=" + cdPlano + ", cdForcaVenda="
+				+ cdForcaVenda + ", dataVenda=" + dataVenda + ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento="
+				+ faturaVencimento + ", tipoPagamento=" + tipoPagamento + ", titulares=" + titulares
+				+ ", cdDCSSUsuario=" + cdDCSSUsuario + ", responsavelContratual=" + responsavelContratual + "]";
+	}
+
 }
