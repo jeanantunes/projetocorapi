@@ -26,7 +26,10 @@ public interface ForcaVendaDAO extends CrudRepository<TbodForcaVenda, Long> {
 			"	   plano.nome_plano, plano.valor_mensal, plano.valor_anual, " +
 			"	   tipoPlano.descricao " +
 			"      from TBOD_FORCA_VENDA forca  " +				
-			"      inner join TBOD_VENDA venda on venda.cd_forca_vendas = forca.cd_forca_venda and venda.cd_forca_vendas = :cdForcaVenda " +
+			"      inner join TBOD_VENDA venda on venda.cd_forca_vendas = forca.cd_forca_venda " +
+			"	   and venda.cd_forca_vendas = :cdForcaVenda " +
+			/*"	   and venda.dt_venda BETWEEN :dtVendaInic and :dtVendaFim " +*/
+			/*"	   and venda.dt_venda BETWEEN '03/03/2018' and '03/03/2018' " +*/
 			"      inner join TBOD_VENDA_VIDA vendaVida on vendaVida.cd_venda_vida = venda.cd_venda_vida " +
 			"	   inner join TBOD_VIDA vida on vida.cd_vida = vendaVida.cd_vida " +
 			"      inner join TBOD_ENDERECO endereco on endereco.cd_endereco = vida.cd_endereco " +
@@ -35,4 +38,13 @@ public interface ForcaVendaDAO extends CrudRepository<TbodForcaVenda, Long> {
 			, nativeQuery=true)
 	
 	public List<Object[]> vendasByForcaVenda(@Param("cdForcaVenda") long cdForcaVenda);
+	
+	@Query(value=" select forca.cd_forca_venda " + 		
+			"      from TBOD_FORCA_VENDA forca inner join TBOD_CORRETORA corretora" +			
+			"	   on forca.cd_corretora = corretora.cd_corretora " +
+			"	   and corretora.cd_corretora = :cdCorretora " +
+			"	   and corretora.ativo = 'S' "	
+			, nativeQuery=true)
+	
+	public List<Object[]> findForcaVendaAtiva(@Param("cdCorretora") long cdCorretora);
 }

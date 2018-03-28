@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.RelatorioGestaoVenda;
 import br.com.odontoprev.portal.corretor.service.CorretoraService;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
@@ -38,23 +37,25 @@ public class RelatorioGestaoVendaServiceImpl implements RelatorioGestaoVendaServ
 		List<RelatorioGestaoVenda> gestaoVendas = new ArrayList<RelatorioGestaoVenda>();
 		
 		Corretora corretora = corretoraService.buscaCorretoraPorCnpj(cnpj);
-		
-		List<ForcaVenda> forcaVenda =  forcaVendaService.findForcaVendasByForcaCdCorretora(corretora.getCdCorretora());
-		
+						
 		List<Object[]> objects = new ArrayList<Object[]>();
 		
-		forcaVenda.forEach(forca -> {			
-			forcaVendaDAO.vendasByForcaVenda(forca.getCdForcaVenda()).stream().forEach(dados -> {				
-				objects.add(dados);				
-			});
-		});
+		List<Object[]> forcaVenda = forcaVendaDAO.findForcaVendaAtiva(corretora.getCdCorretora());
 		
+		for (Object object : forcaVenda) {
+			forcaVendaDAO.vendasByForcaVenda(Long.valueOf(object.toString())).stream().forEach(dados -> {				
+				objects.add(dados);	
+			});			
+		};	
+				
 		for (Object object : objects) {
 			
 			Object[] obj = (Object[]) object;
 			
 			RelatorioGestaoVenda rel = new RelatorioGestaoVenda();
-						
+			
+			/*data venda*/
+			rel.setDataVenda(String.valueOf(obj[0]));
 			/*nome*/
 			rel.setNome(String.valueOf(obj[1]));
 			/*cpf*/
