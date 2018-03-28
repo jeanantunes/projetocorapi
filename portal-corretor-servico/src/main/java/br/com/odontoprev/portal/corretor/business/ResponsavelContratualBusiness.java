@@ -40,9 +40,10 @@ public class ResponsavelContratualBusiness {
 			
 			tbResponsavelContratual = new TbodResponsavelContratual();
 			tbResponsavelContratual.setNome(responsavelContratual.getNome());
-			tbResponsavelContratual.setCpf(responsavelContratual.getCpf() != null ? 
+			tbResponsavelContratual.setCpf(responsavelContratual.getCpf() != null && !responsavelContratual.getCpf().isEmpty() ? 
 					responsavelContratual.getCpf().replace(".", "").replace("-", "") : "");
-			tbResponsavelContratual.setCelular(responsavelContratual.getCelular());
+			tbResponsavelContratual.setCelular(responsavelContratual.getCelular() != null && !responsavelContratual.getCelular().isEmpty() ? 
+					responsavelContratual.getCelular().replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "") : "");
 			tbResponsavelContratual.setEmail(responsavelContratual.getEmail());
 			tbResponsavelContratual.setDataNascimento(DataUtil.dateParse(responsavelContratual.getDataNascimento()));
 			tbResponsavelContratual.setSexo(responsavelContratual.getSexo());
@@ -58,12 +59,7 @@ public class ResponsavelContratualBusiness {
 				tbEndereco.setComplemento(endereco.getComplemento());
 				tbEndereco.setCidade(endereco.getCidade());
 				tbEndereco.setUf(endereco.getEstado());
-				tbEndereco.setCep(endereco.getCep());
-				
-//				if (endereco.getTipoEndereco() != null) {
-//					TbodTipoEndereco tbTipoEndereco = tipoEnderecoDao.findOne(endereco.getTipoEndereco());
-//					tbEndereco.setTbodTipoEndereco(tbTipoEndereco);
-//				}
+				tbEndereco.setCep(endereco.getCep() != null && !endereco.getCep().isEmpty() ? endereco.getCep().replaceAll("-", "") : "");
 				
 				tbEndereco = enderecoDao.save(tbEndereco);
 				
