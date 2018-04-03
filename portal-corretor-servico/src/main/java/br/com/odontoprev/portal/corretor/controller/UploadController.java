@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,80 +29,81 @@ import br.com.odontoprev.portal.corretor.service.UploadService;
 @Controller
 public class UploadController {
 	
-	private static final String FILE_NAME = "/planilhaUploadOdpv/uploadArqForca.xlsx";
+	private static final String FILE_NAME = "/planilhaUploadOdpv/";
 	
 	@Autowired
 	UploadService uploadService;
 	
 	@SuppressWarnings("resource")
-	@RequestMapping(value="/upload", method = RequestMethod.POST)
-	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadFile ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
-		
+	@RequestMapping(value="/upload/{cnpj}", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cnpj  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
+				
 		DecimalFormat formatter = new DecimalFormat("######");
         String cellCPF= "";
         String cellCelular= "";
         
-		FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+		FileInputStream excelFile = new FileInputStream(new File(FILE_NAME+uploadFile.getOriginalFilename()));
               
         Workbook workbook = new XSSFWorkbook(excelFile);
         Sheet datatypeSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = datatypeSheet.iterator();        
-
+        Iterator<Row> iterator = datatypeSheet.iterator();      
+        
+        TbodUpload tbodUpload = null;
+     
         while (iterator.hasNext()) {
-
+        	
             Row currentRow = iterator.next();
-            Iterator<Cell> cellIterator = currentRow.iterator();
-            
-            TbodUpload tbodUpload = new TbodUpload();
-
+            Iterator<Cell> cellIterator = currentRow.iterator();            
+          
+            tbodUpload = new TbodUpload();
+            tbodUpload.setCnpj("03136742000137");
+			tbodUpload.setArquivo(uploadFile.getOriginalFilename());
+			tbodUpload.setDataCriacao(new Date());
+			tbodUpload.setStatus("PENDENTE");
+			
             while (cellIterator.hasNext()) {
 
                 Cell currentCell = cellIterator.next(); 
-                
-                tbodUpload.setCnpj("03136742000137");
-    			tbodUpload.setArquivo(uploadFile.getOriginalFilename());
-    			tbodUpload.setDataCriacao(new Date());
-    			tbodUpload.setStatus("PENDENTE");
     			
                 switch( currentCell.getColumnIndex() )
                 {
                     case 0: //nome
-                    	tbodUpload.setNome(currentCell.getStringCellValue());
-                    	//System.out.print(currentCell.getStringCellValue() + " | ");
+                    	tbodUpload.setNome(currentCell.getStringCellValue());                    	
                         break;                    
                     case 1: //cpf
                     	cellCPF = formatter.format(currentCell.getNumericCellValue());
-                    	tbodUpload.setCpf(cellCPF);
-                    	//System.out.println(cellCPF + " | ");
+                    	tbodUpload.setCpf(cellCPF);                    	
                         break;                    
                     case 2: //data nascimento
-                    	tbodUpload.setDataNascimento("30/10/1975");
-                    	//System.out.print(currentCell.getDateCellValue() + " | ");
+                    	tbodUpload.setDataNascimento("30/10/1975");                    	
                         break; 
                     case 3: //celular
                     	cellCelular = formatter.format(currentCell.getNumericCellValue());
-                    	tbodUpload.setCelular(cellCelular);
-                    	//System.out.println(cellCelular + " | ");
+                    	tbodUpload.setCelular(cellCelular);                    	
                         break;  
                     case 4: //email
-                    	tbodUpload.setEmail(currentCell.getStringCellValue());
-                    	//System.out.print(currentCell.getStringCellValue() + " | ");
+                    	tbodUpload.setEmail(currentCell.getStringCellValue());                    	
                         break;             
                     case 5: //departamento
-                    	tbodUpload.setDepartamento(currentCell.getStringCellValue());
-                    	//System.out.print(currentCell.getStringCellValue() + " | ");
+                    	tbodUpload.setDepartamento(currentCell.getStringCellValue());                    	
                         break;         
                     case 6: //cargo
-                    	tbodUpload.setCargo(currentCell.getStringCellValue());
-                    	//System.out.print(currentCell.getStringCellValue() + " | ");
+                    	tbodUpload.setCargo(currentCell.getStringCellValue());                    	
                         break;             
                     default:
-                        System.out.println("dados fora colunas permitidas");
+                        System.out.println("dados fora colunas permitidas");                       
                 }
+                
+            } 
+            
+            if (tbodUpload.getNome() != null && tbodUpload.getCpf() != null && tbodUpload.getDataNascimento() != null && 
+            		tbodUpload.getCelular() != null && tbodUpload.getEmail() != null && tbodUpload.getDepartamento() != null && tbodUpload.getCargo() != null) {
+            	uploadService.addDadosUpload(tbodUpload);  
+                tbodUpload = null;
             }            
-            uploadService.addDadosUpload(tbodUpload);            
-        }
-		return null;
+        } 
+      
+        return ResponseEntity.ok("Transação realizada com sucesso");
 	}
 
 }

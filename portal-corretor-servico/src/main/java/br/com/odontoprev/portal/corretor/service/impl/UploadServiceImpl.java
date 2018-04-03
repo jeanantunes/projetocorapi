@@ -24,18 +24,7 @@ public class UploadServiceImpl implements UploadService{
 
 		log.info("[addDadosUpload - add dados via planilha dos corretores]");
 		
-		try {
-			//TbodUpload tbodUpload = new TbodUpload();
-			//tbodUpload.setCnpj(upload.getCnpj());
-			//tbodUpload.setArquivo(upload.getArquivo());
-			//tbodUpload.setDataCriacao(new Date());
-			//tbodUpload.setNome(upload.getNome());
-			//tbodUpload.setCpf(upload.getCpf());
-			//tbodUpload.setDataNascimento(upload.getDataNascimento());
-			//tbodUpload.setCelular(upload.getNome());
-			//tbodUpload.setEmail(upload.getEmail());
-			//tbodUpload.setDepartamento(upload.getDepartamento());
-			//tbodUpload.setCargo(upload.getCargo());
+		try {				
 			uploadDAO.save(tbodUpload);
 		} catch (Exception e) {
 			log.error(e);
