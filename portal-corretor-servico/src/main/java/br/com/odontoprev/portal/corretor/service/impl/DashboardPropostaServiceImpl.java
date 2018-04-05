@@ -337,6 +337,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				dashboardPropostaPME.setEmpDcms(obj[5] != null ? String.valueOf(obj[5]) : "");
 				dashboardPropostaPME.setNome(obj[6] != null ? String.valueOf(obj[6]) : "");
 				dashboardPropostaPME.setCriticas(obj[7] != null ? String.valueOf(obj[7]) : "");
+				
 				propostasPME.add(dashboardPropostaPME);
 			}
 

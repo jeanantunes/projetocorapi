@@ -5,8 +5,9 @@ import java.util.List;
 
 import br.com.odontoprev.portal.corretor.model.ViewCorSumarioVenda;
 
-public interface ViewCorSumarioVendaDAO  {
+public interface ViewCorSumarioVendaDAO {
 
-	
-	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda, String cpf, String cnpj);
+	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora,
+			long cdForcaVenda, String cpf, String cnpj, Date dtVenda);
+
 }

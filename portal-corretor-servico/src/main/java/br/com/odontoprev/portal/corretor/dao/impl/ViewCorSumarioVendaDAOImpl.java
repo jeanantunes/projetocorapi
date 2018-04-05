@@ -23,7 +23,7 @@ public class ViewCorSumarioVendaDAOImpl implements ViewCorSumarioVendaDAO {
 	private EntityManager entityManager;
 	
 	@Override
-	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda, String cpf, String cnpj) {
+	public List<ViewCorSumarioVenda> viewCorSumarioVendasByFiltro(Date dtInicio, Date dtFim, long cdCorretora, long cdForcaVenda, String cpf, String cnpj, Date dtVenda) {
 		String squery = "from ViewCorSumarioVenda v where 1=1 ";
 		
 	/*	if(dtInicio != null && dtFim != null) {
@@ -64,6 +64,10 @@ public class ViewCorSumarioVendaDAOImpl implements ViewCorSumarioVendaDAO {
 		}
 		if(cpf != null) {			
 			query.setParameter("cpf", cpf);
+		}
+		
+		if(dtVenda != null) {
+			query.setParameter("dtVenda", dtVenda);
 		}
 		
 		@SuppressWarnings("unchecked")
