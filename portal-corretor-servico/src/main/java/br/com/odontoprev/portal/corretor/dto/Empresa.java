@@ -24,6 +24,7 @@ public class Empresa implements Serializable {
 	private List<Plano> planos;
 	private String cnpjCorretora;
 	private String nomeCorretora;
+	private ContatoEmpresa contactEmpresa;
 
 	public String getCnpj() {
 		return cnpj;
@@ -160,6 +161,14 @@ public class Empresa implements Serializable {
 	public void setNomeCorretora(String nomeCorretora) {
 		this.nomeCorretora = nomeCorretora;
 	}
+	
+	public ContatoEmpresa getContactEmpresa() {
+		return contactEmpresa;
+	}
+
+	public void setContactEmpresa(ContatoEmpresa contactEmpresa) {
+		this.contactEmpresa = contactEmpresa;
+	}
 
 	@Override
 	public String toString() {
@@ -168,7 +177,19 @@ public class Empresa implements Serializable {
 				+ representanteLegal + ", contatoEmpresa=" + contatoEmpresa + ", telefone=" + telefone + ", celular="
 				+ celular + ", email=" + email + ", vencimentoFatura=" + vencimentoFatura + ", cnae=" + cnae
 				+ ", dataVencimentoFatura=" + dataVencimentoFatura + ", enderecoEmpresa=" + enderecoEmpresa
-				+ ", planos=" + planos + ", cnpjCorretora=" + cnpjCorretora + ", nomeCorretora=" + nomeCorretora + "]";
+				+ ", planos=" + planos + ", cnpjCorretora=" + cnpjCorretora + ", nomeCorretora=" + nomeCorretora
+				+ ", contactEmpresa=" + contactEmpresa + "]";
 	}
 
+	/*@Override
+	public String toString() {
+		return "Empresa [cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", incEstadual=" + incEstadual
+				+ ", ramoAtividade=" + ramoAtividade + ", nomeFantasia=" + nomeFantasia + ", representanteLegal="
+				+ representanteLegal + ", contatoEmpresa=" + contatoEmpresa + ", telefone=" + telefone + ", celular="
+				+ celular + ", email=" + email + ", vencimentoFatura=" + vencimentoFatura + ", cnae=" + cnae
+				+ ", dataVencimentoFatura=" + dataVencimentoFatura + ", enderecoEmpresa=" + enderecoEmpresa
+				+ ", planos=" + planos + ", cnpjCorretora=" + cnpjCorretora + ", nomeCorretora=" + nomeCorretora + "]";
+	}*/
+
+	
 }

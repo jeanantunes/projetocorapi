@@ -1,8 +1,19 @@
 package br.com.odontoprev.portal.corretor.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the TBOD_EMPRESA database table.
@@ -65,6 +76,11 @@ public class TbodEmpresa implements Serializable {
 	@OneToMany(mappedBy = "tbodEmpresa")
 	private List<TbodVenda> tbodVendas;
 
+	//bi-directional many-to-one association to TbodEmpresaContato
+	@ManyToOne
+	@JoinColumn(name="CD_CONTATO")
+	private TbodEmpresaContato tbodEmpresaContato;
+		
 	public TbodEmpresa() {
 	}
 
@@ -202,4 +218,12 @@ public class TbodEmpresa implements Serializable {
 		return tbodVenda;
 	}
 
+	public TbodEmpresaContato getTbodEmpresaContato() {
+		return this.tbodEmpresaContato;
+	}
+
+	public void setTbodEmpresaContato(TbodEmpresaContato tbodEmpresaContato) {
+		this.tbodEmpresaContato = tbodEmpresaContato;
+	}
+	
 }

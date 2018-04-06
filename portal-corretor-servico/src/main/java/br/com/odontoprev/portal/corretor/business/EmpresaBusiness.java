@@ -11,16 +11,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import br.com.odontoprev.portal.corretor.dao.EmpresaContatoDAO;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
 import br.com.odontoprev.portal.corretor.dao.TipoEnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
+import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
+import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
@@ -46,6 +49,9 @@ public class EmpresaBusiness {
 	
 	@Autowired
 	VendaDAO vendaDao;
+	
+	@Autowired
+	EmpresaContatoDAO empresaContatoDAO;
 
 	public EmpresaResponse salvarEmpresaEnderecoVenda(Empresa empresa) {
 		TbodEmpresa tbEmpresa = new TbodEmpresa();
@@ -130,7 +136,20 @@ public class EmpresaBusiness {
 			}
 	
 			tbEndereco = enderecoDao.save(tbEndereco);
+			
+			/****  contato empresa ****/
+			if (empresa.getContactEmpresa() != null) {
+				TbodEmpresaContato tbodContatoEmpresa = new TbodEmpresaContato();
+				ContatoEmpresa contatoEmpresa = empresa.getContactEmpresa();				
+			
+				tbodContatoEmpresa.setCelular(contatoEmpresa.getCelular()  == null ? " " : contatoEmpresa.getCelular());
+				tbodContatoEmpresa.setEmail(contatoEmpresa.getEmail()  == null ? " " : contatoEmpresa.getEmail());
+				tbodContatoEmpresa.setNome(contatoEmpresa.getNome()  == null ? " " : contatoEmpresa.getNome());
+				tbodContatoEmpresa.setTelefone(contatoEmpresa.getTelefone()  == null ? " " : contatoEmpresa.getTelefone());			
+				tbodContatoEmpresa = empresaContatoDAO.save(tbodContatoEmpresa);
+			}
 	
+			
 			tbEmpresa.setCnpj(empresa.getCnpj());
 			tbEmpresa.setIncEstadual(empresa.getIncEstadual());
 			tbEmpresa.setRamoAtividade(empresa.getRamoAtividade());
@@ -145,8 +164,8 @@ public class EmpresaBusiness {
 			tbEmpresa.setCnae(empresa.getCnae());
 			tbEmpresa = empresaDao.save(tbEmpresa);
 		
-			XlsEmpresa xlsEmpresa = new XlsEmpresa();
-			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa);
+			//XlsEmpresa xlsEmpresa = new XlsEmpresa();
+			//xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa);
 	
 		} catch (Exception e) {
 			String msgErro = "EmpresaBusiness.salvarEmpresaEndereco :: Erro ao cadastrar empresa; Message:[" + e.getMessage() + "]; Cause:[" + e.getCause() != null ? e.getCause().getMessage() : "NuLL" + "]";

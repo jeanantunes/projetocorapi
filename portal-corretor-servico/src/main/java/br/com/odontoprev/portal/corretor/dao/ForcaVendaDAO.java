@@ -47,4 +47,7 @@ public interface ForcaVendaDAO extends CrudRepository<TbodForcaVenda, Long> {
 			, nativeQuery=true)
 	
 	public List<Object[]> findForcaVendaAtiva(@Param("cdCorretora") long cdCorretora);
+		
+	//public TbodForcaVenda findByCdForcaVendaAndEmail(Long cdForcaVenda, String email);
+	
 }
