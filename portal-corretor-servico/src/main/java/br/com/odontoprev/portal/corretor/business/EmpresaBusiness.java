@@ -138,7 +138,7 @@ public class EmpresaBusiness {
 			tbEndereco = enderecoDao.save(tbEndereco);
 			
 			/****  contato empresa ****/
-			if (empresa.getContactEmpresa() != null) {
+			if (empresa.getContactEmpresa() != null)  {
 				TbodEmpresaContato tbodContatoEmpresa = new TbodEmpresaContato();
 				ContatoEmpresa contatoEmpresa = empresa.getContactEmpresa();				
 			

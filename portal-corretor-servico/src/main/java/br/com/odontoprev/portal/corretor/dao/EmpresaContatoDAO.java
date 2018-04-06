@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
 
-public interface EmpresaContatoDAO extends CrudRepository<TbodEmpresaContato, Long> {
+public interface EmpresaContatoDAO extends CrudRepository<TbodEmpresaContato, Long>  {
 	
 	
 

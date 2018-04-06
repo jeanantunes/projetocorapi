@@ -22,7 +22,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TBOD_EMPRESA")
 @NamedQuery(name = "TbodEmpresa.findAll", query = "SELECT t FROM TbodEmpresa t")
-public class TbodEmpresa implements Serializable {
+public class TbodEmpresa implements Serializable  {
 	private static final long serialVersionUID = 1L;
 
 	@Id

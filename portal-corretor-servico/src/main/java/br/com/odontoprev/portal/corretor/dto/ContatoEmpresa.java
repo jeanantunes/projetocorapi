@@ -2,7 +2,7 @@ package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
 
-public class ContatoEmpresa implements Serializable {
+public class ContatoEmpresa implements Serializable  {
 
 	private static final long serialVersionUID = 1727478594054336083L;
 
