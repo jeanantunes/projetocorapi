@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -29,20 +30,22 @@ import br.com.odontoprev.portal.corretor.service.UploadService;
 @Controller
 public class UploadController {
 	
-	private static final String FILE_NAME = "/planilhaUploadOdpv/";
-	
 	@Autowired
 	UploadService uploadService;
 	
 	@SuppressWarnings("resource")
 	@RequestMapping(value="/upload/{cnpj}", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cnpj  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
-				
+		
+		SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
+		
 		DecimalFormat formatter = new DecimalFormat("######");
         String cellCPF= "";
         String cellCelular= "";
         
-		FileInputStream excelFile = new FileInputStream(new File(FILE_NAME+uploadFile.getOriginalFilename()));
+        File arquivo = new File(uploadFile.getOriginalFilename());
+               
+        FileInputStream excelFile = new FileInputStream(new File(arquivo.getAbsoluteFile().toString()));
               
         Workbook workbook = new XSSFWorkbook(excelFile);
         Sheet datatypeSheet = workbook.getSheetAt(0);
@@ -56,7 +59,7 @@ public class UploadController {
             Iterator<Cell> cellIterator = currentRow.iterator();            
           
             tbodUpload = new TbodUpload();
-            tbodUpload.setCnpj("03136742000137");
+            tbodUpload.setCnpj(cnpj);
 			tbodUpload.setArquivo(uploadFile.getOriginalFilename());
 			tbodUpload.setDataCriacao(new Date());
 			tbodUpload.setStatus("PENDENTE");
@@ -75,7 +78,8 @@ public class UploadController {
                     	tbodUpload.setCpf(cellCPF);                    	
                         break;                    
                     case 2: //data nascimento
-                    	tbodUpload.setDataNascimento("30/10/1975");                    	
+                    	if (currentCell.getDateCellValue() != null)
+                        tbodUpload.setDataNascimento(data.format(currentCell.getDateCellValue()));                    	                  	
                         break; 
                     case 3: //celular
                     	cellCelular = formatter.format(currentCell.getNumericCellValue());
