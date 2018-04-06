@@ -63,6 +63,7 @@ public class PropostaServiceImpl implements PropostaService {
 			BigDecimal valor = plano.getValorMensal().add(plano.getValorAnual()); // FIXME - Retornar somente um valor
 			long valorLong = valor.longValueExact();			
 			int qtdVidas = tbodVendaPME.getTbodVendaVidas().size();
+			//Date dtVenda = tbodVendaPME.getDtVenda();
 			quantidadeVidasPME+=qtdVidas;
 			valorSomaPME += valorLong*qtdVidas;
 			quantPME++;
@@ -70,6 +71,7 @@ public class PropostaServiceImpl implements PropostaService {
 		propostaPME.setValor(new BigDecimal(valorSomaPME));
 		propostaPME.setQuantidade(Long.valueOf(quantPME));
 		propostaPME.setQuantidadeVidas(quantidadeVidasPME);
+		
 		
 		// PF
 		long valorSomaPF = 0L;
@@ -95,7 +97,7 @@ public class PropostaServiceImpl implements PropostaService {
 	
 	
 	public List<ViewCorSumarioVenda> findViewCorSumarioByFiltro(DashBoardProposta dashBoardProposta) throws ParseException {
-		return vendaDAO.viewCorSumarioVendasByFiltro(dashBoardProposta.getDtInicio(), dashBoardProposta.getDtFim(), dashBoardProposta.getCdCorretora(), dashBoardProposta.getCdForcaVenda(), dashBoardProposta.getCpf(), dashBoardProposta.getCnpj());		
+		return vendaDAO.viewCorSumarioVendasByFiltro(dashBoardProposta.getDtInicio(), dashBoardProposta.getDtFim(), dashBoardProposta.getCdCorretora(), dashBoardProposta.getCdForcaVenda(), dashBoardProposta.getCpf(), dashBoardProposta.getCnpj(), dashBoardProposta.getDtVenda());		
 	}
 
 }

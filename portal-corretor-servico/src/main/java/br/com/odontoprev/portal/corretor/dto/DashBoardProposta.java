@@ -13,6 +13,15 @@ public class DashBoardProposta implements Serializable {
 	private long cdForcaVenda;
 	private String cpf;
 	private String cnpj;
+	private Date dtVenda;
+
+	public Date getDtVenda() {
+		return dtVenda;
+	}
+
+	public void setDtVenda(Date dtVenda) {
+		this.dtVenda = dtVenda;
+	}
 
 	public Date getDtInicio() {
 		return dtInicio;

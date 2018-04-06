@@ -57,6 +57,19 @@ public class ViewCorSumarioVenda implements Serializable {
 	@Id
 	@Column(name="TIPO_VENDA")
 	private String tipoVenda;
+	
+	@Id
+	@Column(name="DT_VENDA")
+	private String dtVenda;
+
+	public String getDtVenda() {
+		return dtVenda;
+	}
+
+
+	public void setDtVenda(String dtVenda) {
+		this.dtVenda = dtVenda;
+	}
 
 
 	public Long getCodigoEmpresa() {
