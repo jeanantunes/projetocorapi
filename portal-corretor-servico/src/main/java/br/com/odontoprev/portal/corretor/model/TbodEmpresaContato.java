@@ -30,8 +30,8 @@ public class TbodEmpresaContato implements Serializable  {
 	private String telefone;
 
 	//bi-directional many-to-one association to TbodEmpresa
-	@OneToMany(mappedBy="tbodEmpresaContato")
-	private List<TbodEmpresa> tbodEmpresas;
+	/*@OneToMany(mappedBy="tbodEmpresaContato")
+	private List<TbodEmpresa> tbodEmpresas;*/
 
 	public TbodEmpresaContato() {
 	}
@@ -76,26 +76,26 @@ public class TbodEmpresaContato implements Serializable  {
 		this.telefone = telefone;
 	}
 
-	public List<TbodEmpresa> getTbodEmpresas() {
+	/*public List<TbodEmpresa> getTbodEmpresas() {
 		return this.tbodEmpresas;
 	}
 
 	public void setTbodEmpresas(List<TbodEmpresa> tbodEmpresas) {
 		this.tbodEmpresas = tbodEmpresas;
-	}
+	}*/
 
-	public TbodEmpresa addTbodEmpresa(TbodEmpresa tbodEmpresa) {
+	/*public TbodEmpresa addTbodEmpresa(TbodEmpresa tbodEmpresa) {
 		getTbodEmpresas().add(tbodEmpresa);
 		tbodEmpresa.setTbodEmpresaContato(this);
 
 		return tbodEmpresa;
-	}
+	}*/
 
-	public TbodEmpresa removeTbodEmpresa(TbodEmpresa tbodEmpresa) {
+	/*public TbodEmpresa removeTbodEmpresa(TbodEmpresa tbodEmpresa) {
 		getTbodEmpresas().remove(tbodEmpresa);
 		tbodEmpresa.setTbodEmpresaContato(null);
 
 		return tbodEmpresa;
-	}
+	}*/
 
 }

@@ -3,7 +3,9 @@ package br.com.odontoprev.portal.corretor.business;
 import static br.com.odontoprev.portal.corretor.util.Constantes.NAO;
 import static br.com.odontoprev.portal.corretor.util.Constantes.SIM;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.ManagedBean;
 
@@ -147,8 +149,14 @@ public class EmpresaBusiness {
 				tbodContatoEmpresa.setNome(contatoEmpresa.getNome()  == null ? " " : contatoEmpresa.getNome());
 				tbodContatoEmpresa.setTelefone(contatoEmpresa.getTelefone()  == null ? " " : contatoEmpresa.getTelefone());			
 				tbodContatoEmpresa = empresaContatoDAO.save(tbodContatoEmpresa);
-			}
-	
+			}	
+			
+
+			//Iterable<TbodEmpresaContato> entities = new ArrayList<TbodEmpresaContato>();
+		
+			Long x = (long) empresaContatoDAO.buscamaxCod();
+					
+			//System.out.println(empresaContatoDAO.buscamaxCod());
 			
 			tbEmpresa.setCnpj(empresa.getCnpj());
 			tbEmpresa.setIncEstadual(empresa.getIncEstadual());
@@ -162,10 +170,11 @@ public class EmpresaBusiness {
 			tbEmpresa.setEmail(empresa.getEmail());
 			tbEmpresa.setTbodEndereco(tbEndereco);
 			tbEmpresa.setCnae(empresa.getCnae());
+			tbEmpresa.setCdEmpresaContato(x);
 			tbEmpresa = empresaDao.save(tbEmpresa);
 		
-			//XlsEmpresa xlsEmpresa = new XlsEmpresa();
-			//xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa);
+			XlsEmpresa xlsEmpresa = new XlsEmpresa();
+			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa);
 	
 		} catch (Exception e) {
 			String msgErro = "EmpresaBusiness.salvarEmpresaEndereco :: Erro ao cadastrar empresa; Message:[" + e.getMessage() + "]; Cause:[" + e.getCause() != null ? e.getCause().getMessage() : "NuLL" + "]";

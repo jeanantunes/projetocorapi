@@ -66,6 +66,9 @@ public class TbodEmpresa implements Serializable  {
 
 	@Column(name = "CNAE")
 	private String cnae;
+	
+	@Column(name = "CD_EMPRESA_CONTATO")
+	private Long cdEmpresaContato;
 
 	// bi-directional many-to-one association to TbodEndereco
 	@ManyToOne
@@ -77,9 +80,9 @@ public class TbodEmpresa implements Serializable  {
 	private List<TbodVenda> tbodVendas;
 
 	//bi-directional many-to-one association to TbodEmpresaContato
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name="CD_CONTATO")
-	private TbodEmpresaContato tbodEmpresaContato;
+	private TbodEmpresaContato tbodEmpresaContato;*/
 		
 	public TbodEmpresa() {
 	}
@@ -218,12 +221,22 @@ public class TbodEmpresa implements Serializable  {
 		return tbodVenda;
 	}
 
-	public TbodEmpresaContato getTbodEmpresaContato() {
+	public Long getCdEmpresaContato() {
+		return cdEmpresaContato;
+	}
+
+	public void setCdEmpresaContato(Long cdEmpresaContato) {
+		this.cdEmpresaContato = cdEmpresaContato;
+	}
+
+	
+	
+	/*public TbodEmpresaContato getTbodEmpresaContato() {
 		return this.tbodEmpresaContato;
 	}
 
 	public void setTbodEmpresaContato(TbodEmpresaContato tbodEmpresaContato) {
 		this.tbodEmpresaContato = tbodEmpresaContato;
-	}
+	}*/
 	
 }
