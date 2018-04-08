@@ -50,7 +50,7 @@ public class VendaPMEBusiness {
 				
 				this.buscarDadosCorretoraParaArquivoEmpresa(vendaPME.getCdForcaVenda(), empresa);
 				
-				EmpresaResponse empresaResponse = empresaBusiness.salvarEmpresaEndereco(empresa);
+				EmpresaResponse empresaResponse = empresaBusiness.salvarEmpresaEndereco(empresa,vendaPME );
 
 				if(empresaResponse.getId() == 0) {
 					throw new Exception(empresaResponse.getMensagem());

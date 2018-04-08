@@ -14,6 +14,7 @@ import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
+import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 
 public class XlsEmpresa {
 
@@ -36,11 +37,11 @@ public class XlsEmpresa {
 		return total;
 	}
 
-	public void GerarEmpresaXLS(TbodEmpresa tbEmpresa, Empresa empresaDto) throws Exception {
+	public void GerarEmpresaXLS(TbodEmpresa tbEmpresa, Empresa empresaDto, TbodForcaVenda forcaVenda) throws Exception {
 
 		try {
 
-			String[] empresaArr = new String[22];
+			String[] empresaArr = new String[25];
 			empresaArr[0] = tbEmpresa.getCnpj();
 			empresaArr[1] = tbEmpresa.getIncEstadual();
 			empresaArr[2] = tbEmpresa.getRamoAtividade();
@@ -65,6 +66,10 @@ public class XlsEmpresa {
 			empresaArr[19] = tbEmpresa.getCnae();
 			empresaArr[20] = empresaDto.getCnpjCorretora();
 			empresaArr[21] = empresaDto.getNomeCorretora();
+			empresaArr[22] = (forcaVenda != null ? forcaVenda.getNome() : " "); 
+			empresaArr[23] = (forcaVenda != null ? forcaVenda.getEmail() : " "); 
+			empresaArr[24] = (forcaVenda != null ? forcaVenda.getCelular() : " ");
+		
 
 			// Tratamento de CNPJ
 			String newcnpj = empresaArr[0].replaceAll("[.]", "").replaceAll("/", "");
@@ -74,6 +79,7 @@ public class XlsEmpresa {
 
 //			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
 			
+			//String filename = "C:\\planilhaUploadOdpv\\" + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
 			String filename = pathEmpresa + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
 
 			HSSFWorkbook workbook = new HSSFWorkbook();
@@ -102,9 +108,12 @@ public class XlsEmpresa {
 			rowhead.createCell(19).setCellValue("CNAE");
 			rowhead.createCell(20).setCellValue("CNPJ CORRETORA");
 			rowhead.createCell(21).setCellValue("NOME CORRETORA");
+			rowhead.createCell(22).setCellValue("NOME FORCA");
+			rowhead.createCell(23).setCellValue("EMAIL FORCA");
+			rowhead.createCell(24).setCellValue("TELEFONE FORCA");
 
 			HSSFRow row = sheet.createRow((short) 1);
-			for (int i = 0; i < 22; i++) {
+			for (int i = 0; i < 25; i++) {
 				row.createCell(i).setCellValue(empresaArr[i]);
 			}
 

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.odontoprev.portal.corretor.dao.EmpresaContatoDAO;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
+import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
 import br.com.odontoprev.portal.corretor.dao.TipoEnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
@@ -24,9 +25,11 @@ import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.Plano;
+import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
+import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
@@ -51,6 +54,9 @@ public class EmpresaBusiness {
 	
 	@Autowired
 	VendaDAO vendaDao;
+	
+	@Autowired
+	ForcaVendaDAO forcaVendaDAO;
 	
 	@Autowired
 	EmpresaContatoDAO empresaContatoDAO;
@@ -106,7 +112,7 @@ public class EmpresaBusiness {
 			}
 
 			XlsEmpresa xlsEmpresa = new XlsEmpresa();
-			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa);
+			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa, null);
 
 		} catch (Exception e) {
 			log.error("EmpresaServiceImpl :: Erro ao cadastrar empresa. Detalhe: [" + e.getMessage() + "]");
@@ -116,7 +122,7 @@ public class EmpresaBusiness {
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa cadastrada.");
 	}
 
-	public EmpresaResponse salvarEmpresaEndereco(Empresa empresa) {
+	public EmpresaResponse salvarEmpresaEndereco(Empresa empresa, VendaPME vendaPME) {
 		
 		TbodEmpresa tbEmpresa = new TbodEmpresa();
 	
@@ -140,24 +146,18 @@ public class EmpresaBusiness {
 			tbEndereco = enderecoDao.save(tbEndereco);
 			
 			/****  contato empresa ****/
+			TbodEmpresaContato tbodContatoEmpresa = null;
 			if (empresa.getContactEmpresa() != null)  {
-				TbodEmpresaContato tbodContatoEmpresa = new TbodEmpresaContato();
+				tbodContatoEmpresa = new TbodEmpresaContato();
 				ContatoEmpresa contatoEmpresa = empresa.getContactEmpresa();				
 			
 				tbodContatoEmpresa.setCelular(contatoEmpresa.getCelular()  == null ? " " : contatoEmpresa.getCelular());
 				tbodContatoEmpresa.setEmail(contatoEmpresa.getEmail()  == null ? " " : contatoEmpresa.getEmail());
 				tbodContatoEmpresa.setNome(contatoEmpresa.getNome()  == null ? " " : contatoEmpresa.getNome());
 				tbodContatoEmpresa.setTelefone(contatoEmpresa.getTelefone()  == null ? " " : contatoEmpresa.getTelefone());			
-				tbodContatoEmpresa = empresaContatoDAO.save(tbodContatoEmpresa);
-			}	
-			
-
-			//Iterable<TbodEmpresaContato> entities = new ArrayList<TbodEmpresaContato>();
-		
-			Long x = (long) empresaContatoDAO.buscamaxCod();
-					
-			//System.out.println(empresaContatoDAO.buscamaxCod());
-			
+				tbodContatoEmpresa = empresaContatoDAO.save(tbodContatoEmpresa);				
+			}		
+						
 			tbEmpresa.setCnpj(empresa.getCnpj());
 			tbEmpresa.setIncEstadual(empresa.getIncEstadual());
 			tbEmpresa.setRamoAtividade(empresa.getRamoAtividade());
@@ -170,11 +170,14 @@ public class EmpresaBusiness {
 			tbEmpresa.setEmail(empresa.getEmail());
 			tbEmpresa.setTbodEndereco(tbEndereco);
 			tbEmpresa.setCnae(empresa.getCnae());
-			tbEmpresa.setCdEmpresaContato(x);
+			tbEmpresa.setCdEmpresaContato(tbodContatoEmpresa.getCdContato());
 			tbEmpresa = empresaDao.save(tbEmpresa);
+			
+			/***  dados forca venda ***/
+			TbodForcaVenda forcaVenda = forcaVendaDAO.findOne(vendaPME.getCdForcaVenda());
 		
 			XlsEmpresa xlsEmpresa = new XlsEmpresa();
-			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa);
+			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa, forcaVenda);
 	
 		} catch (Exception e) {
 			String msgErro = "EmpresaBusiness.salvarEmpresaEndereco :: Erro ao cadastrar empresa; Message:[" + e.getMessage() + "]; Cause:[" + e.getCause() != null ? e.getCause().getMessage() : "NuLL" + "]";
