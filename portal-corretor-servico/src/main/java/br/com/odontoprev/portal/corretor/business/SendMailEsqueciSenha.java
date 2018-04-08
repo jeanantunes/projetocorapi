@@ -69,7 +69,7 @@ public class SendMailEsqueciSenha {
 //	private String API_CORRETOR_TOKEN;
 	
 	
-	public void sendMail(EmailAceite email) {
+	public void sendMail() {
 		
 		log.info("sendMail");
 		
@@ -96,7 +96,7 @@ public class SendMailEsqueciSenha {
 			apiInstance.getApiClient().addDefaultHeader("Authorization", "Bearer "+apiToken.getAccessToken());
 			//apiInstance.getApiClient().addDefaultHeader("Authorization", "Bearer "+teste);
 			RequestEmail body = new RequestEmail(); // RequestEmail
-			String msg = this.montarBodyMsg(email);
+			String msg = this.montarBodyMsg();
 			
 			body.setBody(msg);
 			body.setRecepientName(recepientName);			
@@ -117,7 +117,7 @@ public class SendMailEsqueciSenha {
 		}
 	}
 
-	private String montarBodyMsg(EmailAceite email) {
+	private String montarBodyMsg() {
 		
 		log.info("montarBodyMsg");
 		
@@ -129,28 +129,9 @@ public class SendMailEsqueciSenha {
 			htmlStr = fileReader.readHtmlFile();
 			
 			if(htmlStr == null || "".equals(htmlStr)) {
-				throw new Exception(" Html aceite email vazio!");
+				throw new Exception(" Html aceite email esqueci minha senha vazio!");
 			}
-			else {
-				StringBuilder planosSb = new StringBuilder("");
-				StringBuilder precosSb = new StringBuilder("");
-				
-				/*for(Plano plano : email.getPlanos()) {
-					planosSb.append(plano.getDescricao() + ",");
-					precosSb.append(plano.getValor() + ",");
-				}*/
-				
-				/*htmlStr = htmlStr.replace("@NOMEDOCORRETOR", email.getNomeCorretor())
-						.replace("@CORRETORA", email.getNomeCorretora())
-						.replace("@EMPRESA", email.getNomeEmpresa())
-						.replace("@PLANO", planosSb.toString())
-						.replace("@PREÇOPLANO", precosSb.toString());*/
-				
-	//			htmlStr = htmlStr.replace("@NOMEDOCORRETOR", "Joao Silva")
-	//					.replace("@CORRETORA", "Corretora e Cia")
-	//					.replace("@EMPRESA", "Empresa e Cia")
-	//					.replace("@PLANO", "Plano 1, Plano 2")
-	//					.replace("@PREÇOPLANO", "14,90, 49,90");
+			else {			
 				
 				String imgEmailBase = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_BASE);
 				String imgEmailHeader = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_HEADER);
@@ -172,7 +153,7 @@ public class SendMailEsqueciSenha {
 			}
 			
 		} catch (Exception e) {
-			log.error("Erro ao ler arquivo email aceite! Detalhe: [" + e.getMessage() + "]");
+			log.error("Erro ao ler arquivo email esqueci minha senha! Detalhe: [" + e.getMessage() + "]");
 			return "";
 		}
 		
