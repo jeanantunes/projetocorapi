@@ -1,7 +1,9 @@
 package br.com.odontoprev.portal.corretor.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.com.odontoprev.portal.corretor.model.TbodUpload;
 import br.com.odontoprev.portal.corretor.service.UploadService;
+import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 
 @Controller
 public class UploadController {
@@ -43,12 +46,21 @@ public class UploadController {
         String cellCPF= "";
         String cellCelular= "";
         
-        File arquivo = new File(uploadFile.getOriginalFilename());
+        //File arquivo = new File("C:\\planilhaUploadOdpv\\" + uploadFile.getOriginalFilename());		
                
-        FileInputStream excelFile = new FileInputStream(new File(arquivo.getAbsoluteFile().toString()));
+        //FileInputStream excelFile = new FileInputStream(new File(arquivo.getAbsoluteFile().toString()));
+        
+        //String caminho = "//u01//oracle//Middleware//Oracle_Home//user_projects//domains//corretor_venda_odonto";
+        
+        String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA);
+        String filename = pathEmpresa + uploadFile.getOriginalFilename();
+        FileOutputStream fileOut = new FileOutputStream(filename);
+        Workbook workbook = new XSSFWorkbook(filename);
+		workbook.write(fileOut);
+		fileOut.close();
               
-        Workbook workbook = new XSSFWorkbook(excelFile);
-        Sheet datatypeSheet = workbook.getSheetAt(0);
+        Workbook workb = new XSSFWorkbook(filename);
+        Sheet datatypeSheet = workb.getSheetAt(0);
         Iterator<Row> iterator = datatypeSheet.iterator();      
         
         TbodUpload tbodUpload = null;
