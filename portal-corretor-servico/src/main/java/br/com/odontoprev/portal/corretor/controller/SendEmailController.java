@@ -1,4 +1,4 @@
-package br.com.odontoprev.portal.corretor.controller;
+/*package br.com.odontoprev.portal.corretor.controller;
 
 
 import org.apache.commons.logging.Log;
@@ -31,3 +31,4 @@ public class SendEmailController {
 	}
 
 }
+*/
