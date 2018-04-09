@@ -20,7 +20,7 @@ public class TokenEsqueciSenhaController {
 	@Autowired
 	TokenEsqueciSenhaService tokenEsqueciSenhaService;
 	
-	@RequestMapping(value = "/tokenEsqueciSenha", method = { RequestMethod.POST })
+	@RequestMapping(value = "/esqueciMinhaSenha", method = { RequestMethod.POST })
 	public TokenEsqueciSenhaResponse addTokenEsqueciSenha(@RequestBody TokenEsqueciSenha tokenEsqueciSenha) throws Exception {
 		log.info("[API addTokenEsqueciSenha]");				
 		return tokenEsqueciSenhaService.addTokenEsqueciSenha(tokenEsqueciSenha);		
