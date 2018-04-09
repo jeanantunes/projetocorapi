@@ -73,7 +73,7 @@ public class TokenEsqueciSenhaServiceImpl implements TokenEsqueciSenhaService{
 			return new TokenEsqueciSenhaResponse(0, "Erro ao cadastrar token de esqueci minha Osenha. Detalhe: [" + e.getMessage() + "]");
 		}
 				
-		return new TokenEsqueciSenhaResponse(200, "Token de reset de senha gerado com sucesso.");
+		return new TokenEsqueciSenhaResponse(200, "Token de reset de senha gerado com sucesso. Enviado para o e-mail: " + tbForcaVendas.get(0).getEmail());
 	}
 
 	@Override
