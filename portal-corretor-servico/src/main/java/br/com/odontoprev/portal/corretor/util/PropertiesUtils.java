@@ -6,6 +6,13 @@ public class PropertiesUtils {
 	
 	private static final ResourceBundle PROPERTY;
 	
+	public static final String REQUESTMAIL_RECEPIENTNAME_ESQUECISENHA = "requestmailEsqueciSenha.body.recepientname";
+	public static final String REQUESTMAIL_SENDER_ESQUECISENHA = "requestmailEsqueciSenha.body.sender";
+	public static final String REQUESTMAIL_SENDERNAME_ESQUECISENHA = "requestmailEsqueciSenha.body.sendername";
+	public static final String REQUESTMAIL_TYPE_ESQUECISENHA = "requestmailEsqueciSenha.body.type";
+	public static final String REQUESTMAIL_SUBJECT_ESQUECISENHA = "requestmailEsqueciSenha.body.subject";
+
+	
 	public static final String PATH_XLS_EMPRESA = "server.path.empresa";
 	
 	public static final String PATH_XLS_VIDAS = "server.path.vidas";

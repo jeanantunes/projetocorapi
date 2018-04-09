@@ -12,8 +12,6 @@ import br.com.odontoprev.api.manager.client.token.ApiManagerTokenFactory;
 import br.com.odontoprev.api.manager.client.token.ApiToken;
 import br.com.odontoprev.api.manager.client.token.enumerator.ApiManagerTokenEnum;
 import br.com.odontoprev.api.manager.client.token.util.ConfigurationUtils;
-import br.com.odontoprev.portal.corretor.dto.EmailAceite;
-import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.serviceEmail.ApiException;
 import br.com.odontoprev.portal.corretor.serviceEmail.api.DefaultApi;
 import br.com.odontoprev.portal.corretor.serviceEmail.model.RequestEmail;
@@ -69,39 +67,33 @@ public class SendMailEsqueciSenha {
 //	private String API_CORRETOR_TOKEN;
 	
 	
-	public void sendMail() {
+	public void sendMail(String email, String token) {
 		
 		log.info("sendMail");
 		
 		try {
 			
-			String sendMailEndpointUrl = "sendemail/1.0/send"; //PropertiesUtils.getProperty(PropertiesUtils.SENDMAIL_ENDPOINT_URL);
-			String recepientName = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_RECEPIENTNAME);
-			String sender = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDER);
-			String senderName = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDERNAME);
-			String type = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_TYPE);
-			String subject = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT);
+			String sendMailEndpointUrl = PropertiesUtils.getProperty(PropertiesUtils.SENDMAIL_ENDPOINT_URL);
+			String recepientName = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_RECEPIENTNAME_ESQUECISENHA);
+			String sender = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDER_ESQUECISENHA);
+			String senderName = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDERNAME_ESQUECISENHA);
+			String type = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_TYPE_ESQUECISENHA);
+			String subject = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT_ESQUECISENHA);
 			
 			ApiManagerToken apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 			ApiToken apiToken = apiManager.generateToken();
-			
-			//String teste = "d59c1a8e-6a55-3971-88b3-2f4056a3f3f2";
-			
+						
 			DefaultApi apiInstance = new DefaultApi();
-			//apiInstance.getApiClient().setBasePath(ConfigurationUtils.getURLGetToken().replaceAll("/token","/"+ sendMailEndpointUrl));
-			String teste = "https://api.odontoprev.com.br:8243/sendemail/1.0/send";
-			apiInstance.getApiClient().setBasePath(ConfigurationUtils.getURLGetToken().replaceAll("/tokenEsqueciSenha","/"+ teste));
-			apiInstance.getApiClient().setAccessToken(apiToken.getAccessToken());
-			//apiInstance.getApiClient().setAccessToken(teste);
-			apiInstance.getApiClient().addDefaultHeader("Authorization", "Bearer "+apiToken.getAccessToken());
-			//apiInstance.getApiClient().addDefaultHeader("Authorization", "Bearer "+teste);
-			RequestEmail body = new RequestEmail(); // RequestEmail
-			String msg = this.montarBodyMsg();
+			apiInstance.getApiClient().setBasePath(ConfigurationUtils.getURLGetToken().replaceAll("/token","/"+ sendMailEndpointUrl));			
+			apiInstance.getApiClient().setAccessToken(apiToken.getAccessToken());		
+			apiInstance.getApiClient().addDefaultHeader("Authorization", "Bearer "+apiToken.getAccessToken());			
+			RequestEmail body = new RequestEmail(); 
+			String msg = this.montarBodyMsg(token);
 			
 			body.setBody(msg);
 			body.setRecepientName(recepientName);			
 			//body.setRecepients(Arrays.asList(new String [] {email.getEmailEnvio()}));
-			body.setRecepients(Arrays.asList(new String [] {"izaura.fsilva@gmail.com"}));
+			body.setRecepients(Arrays.asList(new String [] {email}));
 			body.setSender(sender);
 			body.setSenderName(senderName);
 			body.setType(type);
@@ -117,7 +109,7 @@ public class SendMailEsqueciSenha {
 		}
 	}
 
-	private String montarBodyMsg() {
+	private String montarBodyMsg(String token) {
 		
 		log.info("montarBodyMsg");
 		
@@ -126,7 +118,7 @@ public class SendMailEsqueciSenha {
 		try {
 			
 			FileReaderUtil fileReader = new FileReaderUtil();
-			htmlStr = fileReader.readHtmlFile();
+			htmlStr = fileReader.readHtmlFile("EsqueciMinhaSenha");
 			
 			if(htmlStr == null || "".equals(htmlStr)) {
 				throw new Exception(" Html aceite email esqueci minha senha vazio!");
@@ -148,7 +140,7 @@ public class SendMailEsqueciSenha {
 						.replace("@YT", imgEmailBase + imgEmailYt)
 						.replace("@ANS", imgEmailBase + imgEmailAsn)
 						.replace("@BTN", imgEmailBase + imgEmailBtn)
-						.replace("@TOKEN", imgEmailBase + apiCorretorToken + "KHHURUTUEYTU2343HDCAGSFGSFNZCBJJBJBJBJGH");
+						.replace("@TOKEN", imgEmailBase + apiCorretorToken + token);
 	//					.replace("@TOKEN", IMG_EMAIL_BASE + API_CORRETOR_TOKEN + "KHHURUTUEYTU2343HDCAGSFGSFNZCBJJBJBJBJGH");	
 			}
 			

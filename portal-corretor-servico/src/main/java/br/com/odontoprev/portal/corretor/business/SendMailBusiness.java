@@ -119,7 +119,7 @@ public class SendMailBusiness {
 		try {
 			
 			FileReaderUtil fileReader = new FileReaderUtil();
-			htmlStr = fileReader.readHtmlFile();
+			htmlStr = fileReader.readHtmlFile("EmailAceite");
 			
 			if(htmlStr == null || "".equals(htmlStr)) {
 				throw new Exception(" Html aceite email vazio!");

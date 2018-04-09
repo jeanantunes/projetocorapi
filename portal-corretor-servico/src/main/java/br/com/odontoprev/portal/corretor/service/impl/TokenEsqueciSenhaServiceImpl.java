@@ -65,7 +65,7 @@ public class TokenEsqueciSenhaServiceImpl implements TokenEsqueciSenhaService{
 			resetSenha = tokenEsqueciSenhaDAO.save(resetSenha);			
 			
 			SendMailEsqueciSenha sendEmail = new SendMailEsqueciSenha();
-			sendEmail.sendMail();
+			sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), resetSenha.getToken() );
 			
 		} catch (Exception e) {
 			log.error(e);

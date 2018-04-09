@@ -25,7 +25,7 @@ public class SendEmailController {
 		
 		log.info("Inicio sendMail");
 		
-		sendMail.sendMail(null);
+		sendMail.sendMail("izaura.fsilva@gmail.com", "MzgzMzA5ODI4NzQyMDE4LTA0LTA2VDE3OjQxOjI5LjgwNg");
 		
 		log.info("Fim sendMail");
 	}

@@ -13,16 +13,20 @@ public class FileReaderUtil {
 
 	private static final Log log = LogFactory.getLog(FileReaderUtil.class);
 
-	public String readHtmlFile() {
+	public String readHtmlFile(String tipoEmail) {
 		
 		String html = "";
+		
+		System.out.println(tipoEmail);
+		
+		String emkt = (tipoEmail.equals("EmailAceite") ? "emkt.html" : "emktRecuperarSenha.html");				
 
 		log.info("readHtmlFile");
 
 		try {
 
-			InputStream inputStream = this.getClass().getClassLoader()
-					.getResourceAsStream("templates" + File.separatorChar + "emkt.html");
+			//InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("templates" + File.separatorChar + "emkt.html");
+			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("templates" + File.separatorChar + emkt);
 			BufferedInputStream bufferInput = new BufferedInputStream(inputStream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(bufferInput));
 			
