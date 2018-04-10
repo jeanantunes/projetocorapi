@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.business.SendMailEsqueciSenha;
@@ -78,13 +79,33 @@ public class TokenEsqueciSenhaServiceImpl implements TokenEsqueciSenhaService{
 
 	@Override
 	public TbodTokenResetSenha buscarTokenEsqueciSenha(String token) {
-		return tokenEsqueciSenhaDAO.findCPFporToken(token);
+		return tokenEsqueciSenhaDAO.findToken(token);
 	}
 
 	@Override
-	public TokenEsqueciSenhaResponse updateTokenEsqueciSenha(TokenEsqueciSenha tokenAceite) {
-		// TODO Auto-generated method stub
-		return null;
+	public TokenEsqueciSenhaResponse updateDataResetSenha(String token) {
+		
+		log.info("updateTokenEsqueciSenha");
+		
+		try {
+			
+			TbodTokenResetSenha tbodTokenResetSenha = new TbodTokenResetSenha();
+			tbodTokenResetSenha = tokenEsqueciSenhaDAO.findToken(token);
+			
+			if (tbodTokenResetSenha == null) {
+				return new TokenEsqueciSenhaResponse(404, HttpStatus.NOT_FOUND.toString());
+			} 			
+					
+			tbodTokenResetSenha.setDataResetSenha(new Date());						
+			tbodTokenResetSenha = tokenEsqueciSenhaDAO.save(tbodTokenResetSenha);
+			
+			return new TokenEsqueciSenhaResponse(200, HttpStatus.OK.toString());
+			
+		} catch (Exception e) {
+			log.error(e);
+			log.error("Erro ao confirmar data de aceite :: Detalhe: [" + e.getMessage() + "]");
+			return new TokenEsqueciSenhaResponse(0, "Erro ao confirmar data de reset de senha. Detalhe: [" + e.getMessage() + "]");
+		}
 	}
 
 	@Override

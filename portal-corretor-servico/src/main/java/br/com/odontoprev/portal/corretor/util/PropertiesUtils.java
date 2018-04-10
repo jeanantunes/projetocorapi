@@ -33,6 +33,8 @@ public class PropertiesUtils {
 	
 	public static final String IMG_EMAIL_HEADER = "img.email.header";
 	
+	public static final String IMG_EMAIL_HEADER_ESQUECI_SENHA = "img.email.header.esqueciSenha";
+	
 	public static final String IMG_EMAIL_BTN = "img.email.btn";
 	
 	public static final String IMG_EMAIL_ASN = "img.email.ans";

@@ -92,8 +92,8 @@ public class SendMailEsqueciSenha {
 			
 			body.setBody(msg);
 			body.setRecepientName(recepientName);			
-			//body.setRecepients(Arrays.asList(new String [] {email.getEmailEnvio()}));
 			body.setRecepients(Arrays.asList(new String [] {email}));
+			//body.setRecepients(Arrays.asList(new String [] {"izaura.fsilva@gmail.com"}));
 			body.setSender(sender);
 			body.setSenderName(senderName);
 			body.setType(type);
@@ -126,21 +126,21 @@ public class SendMailEsqueciSenha {
 			else {			
 				
 				String imgEmailBase = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_BASE);
-				String imgEmailHeader = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_HEADER);
+				String imgEmailHeader = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_HEADER_ESQUECI_SENHA);
 				String imgEmailFb = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_FB);
 				String imgEmailLb = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_LD);
 				String imgEmailYt = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_YT);
 				String imgEmailAsn = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_ASN);
 				String imgEmailBtn = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_BTN);
-				String apiCorretorToken = PropertiesUtils.getProperty(PropertiesUtils.API_CORRETOR_TOKEN);
+				//String apiCorretorToken = PropertiesUtils.getProperty(PropertiesUtils.API_CORRETOR_TOKEN);
 				
 				htmlStr = htmlStr.replace("@HEADER", imgEmailBase + imgEmailHeader)
 						.replace("@FB", imgEmailBase + imgEmailFb)
 						.replace("@LD", imgEmailBase + imgEmailLb)
 						.replace("@YT", imgEmailBase + imgEmailYt)
 						.replace("@ANS", imgEmailBase + imgEmailAsn)
-						.replace("@BTN", imgEmailBase + imgEmailBtn)
-						.replace("@TOKEN", imgEmailBase + apiCorretorToken + token);
+						.replace("@BTN", imgEmailBase + imgEmailBtn);
+						//.replace("@TOKEN", imgEmailBase + apiCorretorToken + token);
 	//					.replace("@TOKEN", IMG_EMAIL_BASE + API_CORRETOR_TOKEN + "KHHURUTUEYTU2343HDCAGSFGSFNZCBJJBJBJBJGH");	
 			}
 			

@@ -24,5 +24,11 @@ public class TokenEsqueciSenhaResponse implements Serializable {
 	
 	public String getMensagem() {
 		return mensagem;
-	}	
+	}
+
+	@Override
+	public String toString() {
+		return "TokenEsqueciSenhaResponse [id=" + id + ", mensagem=" + mensagem + "]";
+	}		
+	
 }

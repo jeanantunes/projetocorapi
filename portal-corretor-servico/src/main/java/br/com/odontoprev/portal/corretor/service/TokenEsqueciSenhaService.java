@@ -2,18 +2,19 @@ package br.com.odontoprev.portal.corretor.service;
 
 import br.com.odontoprev.portal.corretor.dto.TokenEsqueciSenha;
 import br.com.odontoprev.portal.corretor.dto.TokenEsqueciSenhaResponse;
+import br.com.odontoprev.portal.corretor.model.TbodTokenResetSenha;
 
 public interface TokenEsqueciSenhaService {
 
-	/*add token aceite*/
+	/*add token esqueci senha*/
 	TokenEsqueciSenhaResponse addTokenEsqueciSenha(TokenEsqueciSenha tokenEsqueciSenha) throws Exception;
 	
 	/*busca token por chave*/
-	TokenEsqueciSenha buscarTokenEsqueciSenha(String token);
+	TbodTokenResetSenha buscarTokenEsqueciSenha(String token);
 
 	/*Criptografa token*/
 	String gerarToken(String chave);
 
-	/*update token aceite*/
-	TokenEsqueciSenhaResponse updateTokenEsqueciSenha(TokenEsqueciSenha tokenAceite);
+	/*update token data reset de senha*/
+	TokenEsqueciSenhaResponse updateDataResetSenha(String token);
 }

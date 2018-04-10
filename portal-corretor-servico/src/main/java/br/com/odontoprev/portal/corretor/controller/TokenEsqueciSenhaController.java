@@ -49,5 +49,12 @@ public class TokenEsqueciSenhaController {
 		
 		return ResponseEntity.ok(forcaDadosTrocaSenha);
 	}
+	
+	@RequestMapping(value = "/dataResetSenha", method = { RequestMethod.PUT })
+	public ResponseEntity<TokenEsqueciSenhaResponse> updateDataResetSenha(@RequestBody TokenEsqueciSenha tokenEsqueciSenha) {
+		log.info("[API updateDataResetSenha]");			
+		TokenEsqueciSenhaResponse tokenEsqueciSenhaResponse = tokenEsqueciSenhaService.updateDataResetSenha(tokenEsqueciSenha.getToken());
+		return ResponseEntity.ok(tokenEsqueciSenhaResponse);
+	}
 
 }
