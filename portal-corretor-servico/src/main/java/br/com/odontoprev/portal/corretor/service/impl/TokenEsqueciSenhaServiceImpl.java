@@ -77,9 +77,8 @@ public class TokenEsqueciSenhaServiceImpl implements TokenEsqueciSenhaService{
 	}
 
 	@Override
-	public TokenEsqueciSenha buscarTokenEsqueciSenha(String token) {
-		// TODO Auto-generated method stub
-		return null;
+	public TbodTokenResetSenha buscarTokenEsqueciSenha(String token) {
+		return tokenEsqueciSenhaDAO.findCPFporToken(token);
 	}
 
 	@Override
