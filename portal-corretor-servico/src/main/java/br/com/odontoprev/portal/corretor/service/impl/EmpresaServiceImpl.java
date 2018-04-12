@@ -1,6 +1,9 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import java.text.ParseException;
 import java.util.List;
+
+import javax.swing.text.MaskFormatter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
+import br.com.odontoprev.portal.corretor.dto.CnpjDados;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
@@ -82,6 +86,49 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
 
+	}
+
+	@Override
+	public CnpjDados findDadosEmpresaByCnpj(String cnpj) throws ParseException {
+		
+		log.info("#### findDadosEmpresaByCnpj ####");
+		
+		MaskFormatter mask = new MaskFormatter("##.###.###/####-##");
+		mask.setValueContainsLiteralCharacters(false);
+		
+		TbodEmpresa tbodEmpresa = null;		
+		CnpjDados cnpjDados = new CnpjDados();		
+		
+		try {
+			
+			if ( cnpj.length() == 14) {
+				
+				tbodEmpresa = empresaDao.findByCnpj(mask.valueToString(cnpj));
+								
+				if(tbodEmpresa != null) {
+					cnpjDados.setCdEmpresa(tbodEmpresa.getCdEmpresa());
+					cnpjDados.setRazaoSocial(tbodEmpresa.getRazaoSocial());
+					cnpjDados.setCnpj(cnpj);				
+				} else {				
+					tbodEmpresa = empresaDao.findByCnpj(cnpj);
+					if(tbodEmpresa == null) {
+						cnpjDados.setObservacao("Cnpj não encontrado na base!!!");
+					} else {
+						cnpjDados.setCdEmpresa(tbodEmpresa.getCdEmpresa());
+						cnpjDados.setRazaoSocial(tbodEmpresa.getRazaoSocial());
+						cnpjDados.setCnpj(cnpj);
+					}						
+				}
+			} else {
+				cnpjDados.setObservacao("Cnpj é obrigatório informar 14 digitos!!!");
+			}
+			
+		} catch (Exception e) {
+			cnpjDados.setObservacao("Encontrado +1 cnpj na base!!!");
+			return cnpjDados;
+		}
+		
+		return cnpjDados;	
 	}
 
 }

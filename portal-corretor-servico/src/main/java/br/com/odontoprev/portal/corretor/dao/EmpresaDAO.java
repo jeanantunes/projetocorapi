@@ -9,5 +9,7 @@ import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 public interface EmpresaDAO extends CrudRepository<TbodEmpresa, Long> {
 	
 	public TbodEmpresa findBycdEmpresaAndCnpj(Long cdEmpresa, String cnpj);
+	
+	public TbodEmpresa findByCnpj(String cnpj);
 
 }
