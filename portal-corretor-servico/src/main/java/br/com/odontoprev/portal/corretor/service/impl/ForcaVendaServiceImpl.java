@@ -671,4 +671,47 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				+ " De:[" + ativoAnterior +"-"+ statusAnterior + "];"
 				+ " Para:[ " + tbForcaVenda.getAtivo() +"-"+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "].");
 	}
+
+	@Override
+	public ForcaVendaResponse updateForcaVendaStatusByCpf(ForcaVenda forcaVenda, String opcaoStatus) throws Exception {
+
+		log.info("[updateForcaVendaStatusByCpf - status: " + opcaoStatus);
+		
+		if (forcaVenda == null || forcaVenda.getCpf() == null || forcaVenda.getCpf().isEmpty()) {
+			throw new Exception("CPF ForcaVenda nao informado. Atualizacao nao realizada!");
+		}
+		
+		List<TbodForcaVenda> tbForcaVendas = new ArrayList<TbodForcaVenda>();
+		
+		/**** O retorno eh uma lista, mas nao deve existir mais de uma forca de venda na base com o mesmo cpf ****/
+		tbForcaVendas = forcaVendaDao.findByCpf(forcaVenda.getCpf());
+
+		if (tbForcaVendas.isEmpty()) {
+			throw new Exception("ForcaVenda nao encontrada. Atualizacao nao realizada!");
+		} else if (tbForcaVendas.size() > 1) {
+			throw new Exception("CPF duplicado. Atualizacao nao realizada!");
+		}		
+		
+		try {
+			TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
+			tbForcaVenda = tbForcaVendas.get(0);
+			/***** status excluir ou reprovar - ativo = N *****/
+			tbForcaVenda.setAtivo(Constantes.INATIVO);
+			/***** status excluir ou reprovar - cdCorretora = null *****/			
+			tbForcaVenda.setTbodCorretora(null);			
+			/***** status reprovar ou excluir *****/
+			final TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao
+					.findOne(opcaoStatus == "REPROVAR" ? StatusForcaVendaEnum.PENDENTE.getCodigo()
+							: StatusForcaVendaEnum.INATIVO.getCodigo());
+			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
+			/***** udate *****/
+			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
+		} catch (Exception e) {
+			log.error("Erro ao atualizar status Forca Venda (reprovar ou excluir) :: Message: [" + e.getMessage() + "]");
+			return new ForcaVendaResponse(0, "Erro ao atualizar status Forca Venda (reprovar ou excluir) :: Message: [" + e.getMessage() + "].");
+		}
+		
+		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado!" 
+				+ " Cpf:[" + forcaVenda.getCpf() + "];");
+	}
 }
