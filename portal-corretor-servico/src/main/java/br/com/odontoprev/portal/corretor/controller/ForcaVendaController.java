@@ -95,13 +95,13 @@ public class ForcaVendaController {
 		return forcaVendaService.findForcaVendasByForcaCdCorretora(cdCorretora);
 	}
 	
-	@RequestMapping(value = "/forcavenda/status-excluir", method = { RequestMethod.PUT })
+	@RequestMapping(value = "/forcavenda/status-excluido", method = { RequestMethod.PUT })
 	public ForcaVendaResponse updateForcaVendaStatusExcluir(@RequestBody ForcaVenda forcaVenda) throws Exception {
 		log.info("[updateForcaVendaStatusExcluir]");
 		return forcaVendaService.updateForcaVendaStatusByCpf(forcaVenda,"EXCLUIR");
 	}
 
-	@RequestMapping(value = "/forcavenda/status-reprovar", method = { RequestMethod.PUT })
+	@RequestMapping(value = "/forcavenda/status-reprovado", method = { RequestMethod.PUT })
 	public ForcaVendaResponse updateForcaVendaStatusReprovar(@RequestBody ForcaVenda forcaVenda) throws Exception {
 		log.info("[updateForcaVendaStatusReprovar]");
 		return forcaVendaService.updateForcaVendaStatusByCpf(forcaVenda, "REPROVAR");
