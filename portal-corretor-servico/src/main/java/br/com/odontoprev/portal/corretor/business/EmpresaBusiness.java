@@ -156,6 +156,7 @@ public class EmpresaBusiness {
 				tbodContatoEmpresa.setNome(contatoEmpresa.getNome()  == null ? " " : contatoEmpresa.getNome());
 				tbodContatoEmpresa.setTelefone(contatoEmpresa.getTelefone()  == null ? " " : contatoEmpresa.getTelefone());			
 				tbodContatoEmpresa = empresaContatoDAO.save(tbodContatoEmpresa);				
+				tbEmpresa.setCdEmpresaContato(tbodContatoEmpresa.getCdContato());
 			}		
 						
 			tbEmpresa.setCnpj(empresa.getCnpj());
@@ -170,7 +171,6 @@ public class EmpresaBusiness {
 			tbEmpresa.setEmail(empresa.getEmail());
 			tbEmpresa.setTbodEndereco(tbEndereco);
 			tbEmpresa.setCnae(empresa.getCnae());
-			tbEmpresa.setCdEmpresaContato(tbodContatoEmpresa.getCdContato());
 			tbEmpresa = empresaDao.save(tbEmpresa);
 			
 			/***  dados forca venda ***/
