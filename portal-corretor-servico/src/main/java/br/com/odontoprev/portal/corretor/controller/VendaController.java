@@ -41,7 +41,7 @@ public class VendaController {
 		
 		log.info(vendaPME);
 		
-		convertObjectToJson.addJsonInTable(null, vendaPME, userAgent);
+		//convertObjectToJson.addJsonInTable(null, vendaPME, userAgent);
 		
 		return vendaPFService.addVendaPME(vendaPME);
 	}
