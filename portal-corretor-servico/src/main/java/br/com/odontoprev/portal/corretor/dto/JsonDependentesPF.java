@@ -5,8 +5,7 @@ import java.io.Serializable;
 public class JsonDependentesPF implements Serializable {
 
 	private static final long serialVersionUID = 3103017260669982091L;
-	
-	private Long cdVida;
+		private Long cdVida;
 	private Long cdTitular;
 	private String celular;
 	private String cpf;	
