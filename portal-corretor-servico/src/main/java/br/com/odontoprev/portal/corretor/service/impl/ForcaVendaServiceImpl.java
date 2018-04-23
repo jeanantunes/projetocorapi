@@ -64,10 +64,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
-	
-	@Value("${DCSS_URL_PROD}")
-	private String dcssUrlProd;
-	
+		
 	@Value("${DCSS_CODIGO_CANAL_VENDAS}")
 	private String dcss_codigo_canal_vendas;
 	
