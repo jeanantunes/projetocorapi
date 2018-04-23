@@ -194,9 +194,19 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				}
 	
 				tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
-				this.putIntegracaoForcaDeVendaDcss(forcaVenda,null);
+				
+				if (tbForcaVenda.getCodigoDcssUsuario() != null) {
+					this.putIntegracaoForcaDeVendaDcss(forcaVenda,null);
+					/*return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
+							"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");*/
+				}
+				
 				return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
 						"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");
+				
+				/*this.putIntegracaoForcaDeVendaDcss(forcaVenda,null);
+				return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
+						"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");*/
 	
 			} else {
 				return new ForcaVendaResponse(forcaVenda.getCdForcaVenda(),
