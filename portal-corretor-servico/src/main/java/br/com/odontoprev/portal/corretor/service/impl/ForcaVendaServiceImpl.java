@@ -158,6 +158,17 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 					tbForcaVenda.setTbodCorretora(tbCorretora);
 				}
 	
+				//TbodStatusForcaVenda
+				if (forcaVenda.getStatusForcaVenda() != null) {
+					TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(Long.valueOf(forcaVenda.getStatusForcaVenda()));
+					tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
+				}
+				
+				if (forcaVenda.getStatus() != null) {
+					tbForcaVenda.setAtivo(forcaVenda.getStatus());
+				}
+				
+				
 				// Grava senha na tabela de login na tela de Aguardando Aprovacao
 				if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
 					TbodLogin tbLogin = null;
