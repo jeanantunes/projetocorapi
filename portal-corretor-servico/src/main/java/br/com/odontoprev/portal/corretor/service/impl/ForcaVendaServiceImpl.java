@@ -132,8 +132,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaMap.put("canalVenda", forca.getCdForcaVenda());		
 		forcaMap.put("statusUsuario", status == "INATIVO" ? "I" : "A");
 		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
-		//restTemplate.exchange((dcssUrl + "/usuario/1.0/"), HttpMethod.PUT, request, ForcaVenda.class);
-		restTemplate.exchange((dcssUrlProd + "/usuario/1.0/"), HttpMethod.PUT, request, ForcaVenda.class);
+		restTemplate.exchange((dcssUrl + "/usuario/1.0/"), HttpMethod.PUT, request, ForcaVenda.class);		
 
 	}
 
