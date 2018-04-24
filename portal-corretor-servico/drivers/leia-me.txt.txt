@@ -1,0 +1,15 @@
+Como sempre , a Microsoft est  a frente de seu tempo e devido a isso ela n o permite que seus drivers (do sqlServer) sejam disponibilizados pelo maven.
+
+Devido a isso foi necess rio meter este "drive" na pasta "drivers-microsoft".
+
+Por isso   necess rio "instalar" o driver no repositorio local , para isso execute o comando abaixo , pelo menos uma vez.
+
+mvn install:install-file -Dfile=C:\workspace\portal-corretor-odontoprev-web\drivers\sqljdbc4.jar -DgroupId=com.microsoft.sqlserver -DartifactId=sqljdbc4 -Dversion=4.0 -Dpackaging=jar -e
+
+Agrade a a Microsoft.
+
+A Oracle faz a mesma coisa , por isso a necessidade do drive na pasta drivers
+
+mvn install:install-file -Dfile=C:\workspace\portal-corretor-odontoprev-web\drivers\ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar -e
+
+

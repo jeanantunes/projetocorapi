@@ -1,0 +1,962 @@
+172.16.20.30:7001/portal-corretor-servico-0.0.1-SNAPSHOT
+
+
+BENEFICIARIO
+
+	POST /beneficiario
+	[{  
+	   "cdVida":0,
+	   "cdTitular":0,
+	   "celular":"0987654",
+	   "cpf":"11111111",
+	   "dataNascimento":"2018-02-20",
+	   "email":"aaaaa@ddadadad",
+	   "nome":"JOAQUIM",
+	   "nomeMae":"JOAQUINA",
+	   "pfPj":"f",
+	   "sexo":"m",
+	   "cdPlano":1,
+	   "cdVenda":2,
+	   "endereco":{  
+		  "cep":"111111",
+		  "logradouro":"Rua teste",
+		  "numero":"11111",
+		  "complemento":"c2",
+		  "bairro":"Teste",
+		  "cidade":"Teste",
+		  "estado":"Sp",
+		  "tipoEndereco":1
+	   },
+	   "dependentes":[
+			{
+				"cdVida":0,
+				"cdTitular":0,
+				"celular":"0987654",
+				"cpf":"11111111",
+				"dataNascimento":"2018-02-20",
+				"email":"aaaaa@ddadadad",
+				"nome":"MARIO",
+				"nomeMae":"ROSA",
+				"pfPj":"f",
+				"sexo":"m"
+			},
+			{
+				"cdVida":0,
+				"cdTitular":0,
+				"celular":"0987654",
+				"cpf":"11111111",
+				"dataNascimento":"2018-02-20",
+				"email":"aaaaa@ddadadad",
+				"nome":"KARINA",
+				"nomeMae":"ROSA",
+				"pfPj":"f",
+				"sexo":"f"
+			}
+		]
+	}]
+	
+	
+CORRETORA
+	GET /corretora{cnpj}
+	
+	resposta OK 
+	{
+	    "cdCorretora": 244,
+	    "cnpj": "03136742000137",
+	    "razaoSocial": "NATUSEG CORRETORA DE SEGUROS LTD",
+	    "cnae": "6622300",
+	    "telefone": "21050600",
+	    "celular": "981010600",
+	    "email": "MARCELO.GURGEL@NATUSEG.COM.BR",
+	    "statusCnpj": false,
+	    "simplesNacional": false,
+	    "dataAbertura": "1998-12-17",
+	    "enderecoCorretora": {
+	        "cep": "06434-090",
+	        "logradouro": "a",
+	        "numero": "12",
+	        "complemento": "q",
+	        "bairro": "a",
+	        "cidade": "A",
+	        "estado": "SP",
+	        "tipoEndereco": 1
+	    },
+	    "conta": null,
+	    "login": {
+	        "cdLogin": 324,
+	        "cdTipoLogin": 1,
+	        "fotoPerfilB64": null,
+	        "senha": "odonto2018",
+	        "usuario": null
+	    },
+	    "representantes": null
+	}
+
+	resposta Erro
+	{
+	    "cdCorretora": 0,
+	    "cnpj": null,
+	    "razaoSocial": null,
+	    "cnae": null,
+	    "telefone": null,
+	    "celular": null,
+	    "email": null,
+	    "statusCnpj": false,
+	    "simplesNacional": false,
+	    "dataAbertura": null,
+	    "enderecoCorretora": null,
+	    "conta": null,
+	    "login": null,
+	    "representantes": null
+	}
+	
+	
+
+POST /corretora
+	{
+	   "cnpj":"19434047000191",
+	   "razaoSocial":"Xpto e cia 3",
+	   "cnae":"abc",
+	   "simplesNacional":"N",
+	   "dataAbertura":"01/10/1990",
+	   "statusCnpj":"ATIVO",
+	   "telefone":"1134445866",
+	   "celular":"1196542522",
+	   "email":"xpto@teste.com",
+	   "enderecoCorretora":{
+	      "cep":"123456",
+	      "logradouro":"Rua teste",
+	      "numero":"1",
+	      "complemento":"c1",
+	      "bairro":"Bairro teste",
+	      "cidade":"SaoPaulo",
+	      "estado":"SP",
+	      "tipoEndereco":1
+	   },
+	   "conta":{
+	   		"codigoBanco":"033",
+			"codigoAgencia":"0001",
+			"numeroConta":"28832830"
+	   },
+	   "login":{
+	      "senha":"123456888"
+	   },
+	   "representantes":[
+	      {
+	         "nome":"Repres 1",
+	         "cpf":"2113213"
+	      }
+	   ]
+	}
+	
+	
+
+PUT /corretora
+
+
+
+	
+	
+
+DASHBOARDPROPOSTA	
+	POST /propostasDashBoard
+	{
+		"cdCorretora":"",
+		"cdForcaVenda":"",
+		"cnpj":"",
+		"cpf":""
+	}	
+	Response OK
+	[
+	    {
+	        "codigoEmpresa": 204,
+	        "empresaDCMS": "997536",
+	        "totalVidas": 3,
+	        "valorTotal": 358.44,
+	        "codigoForcaVenda": 102,
+	        "nomeForca": "Marcelo de Oliveira",
+	        "cpf": "29888405822",
+	        "codigoCorretora": 28,
+	        "nomeCorretora": "Teste 123",
+	        "cnpj": "12345670001",
+	        "tipoVenda": "PME"
+	    },
+	    {
+	        "codigoEmpresa": null,
+	        "empresaDCMS": null,
+	        "totalVidas": 72,
+	        "valorTotal": 0,
+	        "codigoForcaVenda": 102,
+	        "nomeForca": "Marcelo de Oliveira",
+	        "cpf": "29888405822",
+	        "codigoCorretora": 28,
+	        "nomeCorretora": "Teste 123",
+	        "cnpj": "12345670001",
+	        "tipoVenda": "PF"
+	    },
+	    {
+	        "codigoEmpresa": 204,
+	        "empresaDCMS": "997536",
+	        "totalVidas": 3,
+	        "valorTotal": 358.44,
+	        "codigoForcaVenda": 102,
+	        "nomeForca": "Marcelo de Oliveira",
+	        "cpf": "29888405822",
+	        "codigoCorretora": 28,
+	        "nomeCorretora": "Teste 123",
+	        "cnpj": "12345670001",
+	        "tipoVenda": "PME"
+	    }
+	]
+	Response Erro
+	[]
+	
+	
+	
+	
+EMPRESA
+
+	PUT /empresa-dcms - atualiza empDcms da empresa
+	{
+		"cdEmpresa":42,
+		"cnpj":"12311200003",
+		"empDcms":"B12345"
+	}
+	Resposta OK
+	{
+	    "id": 42,
+	    "mensagem": "Empresa atualizada."
+	}
+	Respostas Erro //Parametros nao informados
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [Os parametros sao obrigatorios!]"
+	}
+	OU
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [CdEmpresa nao relacionado com CNPJ!]"
+	}
+
+
+
+
+
+	POST /empresa
+	{  
+	   "cnpj":"13021741000109",
+	   "razaoSocial":"Empresa Teste Jaque 2",
+	   "incEstadual":"0987654",
+	   "ramoAtividade":"XPTOOO",
+	   "nomeFantasia":"XPTOOO",
+	   "representanteLegal":"teste xpto representante legal",
+	   "contatoEmpresa":true,
+	   "telefone":"1144442222",
+	   "celular":"11944445555",
+	   "email":"empresa2@teste.com",
+	   "vencimentoFatura":1,
+	   "cnae":"ABC123DDDQWE444",
+	   "enderecoEmpresa":{  
+		  "cep":"06111060",
+		  "logradouro":"Rua empresa",
+		  "numero":"10",
+		  "complemento":"c2",
+		  "bairro":"Jardim Paulista",
+		  "cidade":"Sao Paulo",
+		  "estado":"SP",
+		  "tipoEndereco":1
+		},
+		"planos":[
+			{
+				"cdPlano": 2
+			},
+			{
+				"cdPlano": 3
+			}
+		]	
+	}
+	Response OK
+	{
+	    "id": 427,
+	    "mensagem": "Empresa cadastrada."
+	}
+	Response Erro	
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao cadastrar empresa. Favor, entre em contato com o suporte."
+	}
+	
+	
+	
+	
+FORCAVENDA
+
+	GET /forcavenda/{cpf} - Retorna forcavenda por cpf
+	Response OK
+	{
+	    "cdForcaVenda": 249,
+	    "nome": "JORGE DA SILVA",
+	    "celular": "1155559999",
+	    "email": "jorge@teste.com",
+	    "corretora": {
+	        "cdCorretora": 1,
+	        "cnpj": "1111111",
+	        "razaoSocial": "Teste",
+	        "cnae": null,
+	        "telefone": null,
+	        "celular": null,
+	        "email": null,
+	        "statusCnpj": false,
+	        "simplesNacional": false,
+	        "dataAbertura": null,
+	        "enderecoCorretora": null,
+	        "conta": null,
+	        "login": null,
+	        "representantes": null
+	    },
+	    "statusForcaVenda": "Ativo",
+	    "cpf": "11122233344",
+	    "ativo": true,
+	    "departamento": "ABC",
+	    "cargo": "Analista de Sistemas",
+	    "dataNascimento": "20/06/1980",
+	    "nomeEmpresa": null,
+	    "nomeGerente": null,
+	    "responsavel": null,
+	    "rg": null,
+	    "senha": "",
+	    "canalVenda": null
+	}
+	Response Erro
+	{
+	    "cdForcaVenda": null,
+	    "nome": null,
+	    "celular": null,
+	    "email": null,
+	    "corretora": null,
+	    "statusForcaVenda": null,
+	    "cpf": null,
+	    "ativo": false,
+	    "departamento": null,
+	    "cargo": null,
+	    "dataNascimento": null,
+	    "nomeEmpresa": null,
+	    "nomeGerente": null,
+	    "responsavel": null,
+	    "rg": null,
+	    "senha": null,
+	    "canalVenda": null
+	}
+	
+
+	GET /forcavenda/{cdForcaVenda}/corretora/{cnpj} - Busca associacao forcavenda/corretora
+	/forcavenda/102/corretora/12345670001
+	Response OK
+	{
+	    "id": 1,
+	    "mensagem": "ForcaVenda [29888405822] esta associada a corretora [12345670001]"
+	}
+	/forcavenda/102/corretora/12345670002
+	Response Erro
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao verificar associacao ForcaVendaCorretora. Detalhe: [ForcaVenda e Corretora nao associadas!]."
+	}
+	
+	
+	
+	GET /forcavendastatus/{cdStatusForcaVenda}/corretora/{cdCorretora}
+	/forcavendastatus/2/corretora/184
+	Resposta OK
+	[
+	    {
+	        "cdForcaVenda": 201,
+	        "nome": "YAGO",
+	        "celular": "11912341234",
+	        "email": "yago@vector.com.br",
+	        "corretora": {
+	            "cdCorretora": 184,
+	            "cnpj": "14324635000159",
+	            "razaoSocial": "JC Luz Volta Redonda  Corretora e Adm de Seguros",
+	            "cnae": "6622300",
+	            "telefone": "2138031",
+	            "celular": "22998878",
+	            "email": "celsolima@jcluz.com.br",
+	            "statusCnpj": false,
+	            "simplesNacional": false,
+	            "dataAbertura": "2011-09-20",
+	            "enderecoCorretora": {
+	                "cep": "00000000",
+	                "logradouro": "Rua teste",
+	                "numero": "123",
+	                "complemento": null,
+	                "bairro": "Bairro Teste",
+	                "cidade": "Cidade Teste",
+	                "estado": "TE",
+	                "tipoEndereco": null
+	            },
+	            "conta": null,
+	            "login": null,
+	            "representantes": null
+	        },
+	        "statusForcaVenda": "Ativo",
+	        "cpf": "46809897852",
+	        "ativo": false,
+	        "departamento": "TI",
+	        "cargo": "TI",
+	        "dataNascimento": "11/11/1989",
+	        "nomeEmpresa": null,
+	        "nomeGerente": null,
+	        "responsavel": null,
+	        "rg": null,
+	        "senha": "12345678",
+	        "canalVenda": null
+	    },
+	    {
+	        "cdForcaVenda": 410,
+	        "nome": "Robert Wieselberg",
+	        "celular": "952523505",
+	        "email": "robert.wieselberg@odontoprev.com.br",
+	        "corretora": {
+	            "cdCorretora": 184,
+	            "cnpj": "14324635000159",
+	            "razaoSocial": "JC Luz Volta Redonda  Corretora e Adm de Seguros",
+	            "cnae": "6622300",
+	            "telefone": "2138031",
+	            "celular": "22998878",
+	            "email": "celsolima@jcluz.com.br",
+	            "statusCnpj": false,
+	            "simplesNacional": false,
+	            "dataAbertura": "2011-09-20",
+	            "enderecoCorretora": {
+	                "cep": "00000000",
+	                "logradouro": "Rua teste",
+	                "numero": "123",
+	                "complemento": null,
+	                "bairro": "Bairro Teste",
+	                "cidade": "Cidade Teste",
+	                "estado": "TE",
+	                "tipoEndereco": null
+	            },
+	            "conta": null,
+	            "login": null,
+	            "representantes": null
+	        },
+	        "statusForcaVenda": "Ativo",
+	        "cpf": "66536456734",
+	        "ativo": false,
+	        "departamento": "ESTEIRA",
+	        "cargo": "FORÇA DE VENDA",
+	        "dataNascimento": "08/06/1963",
+	        "nomeEmpresa": null,
+	        "nomeGerente": null,
+	        "responsavel": null,
+	        "rg": null,
+	        "senha": "Prodigio",
+	        "canalVenda": null
+	    }
+	]
+	Resposta Erro
+	[]
+	
+	
+	
+	POST /forcavenda
+	{  
+	   "nome":"JAQUELINE ALVES TESTE3",
+	   "celular":"1144445555",
+	   "email":"jaque3@teste.com",
+	   "corretora":{  
+		  "cdCorretora":"25"
+		},
+		"cpf":"45125235539",
+		"departamento":"TI",
+		"cargo":"Analista de Sistemas",
+		"dataNascimento":"20-06-1980",
+        "senha": "44455566" //Com senha - forcavenda sem pre-cadastro //Sem senha - pre-cadastro forca pela tela corretora
+	}
+	Resposta OK
+	{
+	    "id": 493,
+	    "mensagem": "ForcaVenda cadastrada. CPF [45125235544]"
+	}
+	Resposta erro
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao cadastrar forcaVenda. Detalhe: [CPF [45125235544] já existe!]"
+	}
+	
+	
+	
+	
+	PUT /forcavenda/login - Ativar forca de venda pela tela de login (forca de venda pre-cadastrada)
+	{
+	   "cdForcaVenda": 352,
+	   "nome":"FERNANDO SETAI",
+	   "celular":"11912341235",
+	   "email":"fernando.mota@odontoprev.com.br",
+	   "senha":"12312344",
+	   "nomeEmpresa": "Teste Login",
+	   "nomeGerente": "Teste Login",
+	   "responsavel": "Teste Login",
+	   "rg": 0,
+	   "canalVenda":1
+	}
+	Response OK
+	{
+	    "id": 1,
+	    "mensagem": "ForcaVendaLogin atualizado! [38330982876]"
+	}
+	Response Erro
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao atualizar ForcaVendaLogin :: Detalhe: [cdForcaVenda nao informado. Atualizacao nao realizada!]."
+	    Detalhe: [cdForcaVenda nao encontrado. Atualizacao nao realizada!]
+	}
+	
+	
+	
+	
+	PUT /forcavenda/status-ativo - Ativar forca de venda pela corretora
+	{
+ 		"cpf":"78945612312"
+	}
+	Resposta OK
+	{
+	    "id": 1,
+	    "mensagem": "ForcaVendaLogin atualizado! [CPF: 11122233344 - De: N-Pré-cadastro - Para: S-Ativo]"
+	}
+	Resposta Erro
+	{
+	    "id": 0,
+	    "mensagem": "Erro ao atualizar ForcaVendaStatus :: Detalhe: [CPF ForcaVenda nao informado. Atualizacao nao realizada!]."
+	    Detalhe: [ForcaVenda nao encontrada. Atualizacao nao realizada!]
+	    Detalhe: [CPF duplicado. Atualizacao nao realizada!]
+	    Detalhe: [CPF ja esta ativo! Nenhuma acao realizada!]
+	}
+	
+	
+
+PLANOS
+
+	GET /plano - Retorna lista de planos
+	Response OK
+	[
+	    {
+	        "cdPlano": 1,
+	        "titulo": "PLANO TOP",
+	        "descricao": "MENSAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    },
+	    {
+	        "cdPlano": 2,
+	        "titulo": "TESTE",
+	        "descricao": "MENSAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    },
+	    {
+	        "cdPlano": 3,
+	        "titulo": "Teste2",
+	        "descricao": "ANUAL",
+	        "sigla": "TOP",
+	        "valor": "2.5",
+	        "tipo": null,
+	        "cdVenda": 0
+	    }
+	]
+	
+	Response Erro
+	[] 
+
+
+
+
+	GET /plano-empresa/{cdEmpresa} - Retorna lista de planos da empresa x
+	Response OK
+	[
+	    {
+	        "cdPlano": 2,
+	        "titulo": null,
+	        "descricao": "INDIVIDUAL",
+	        "sigla": null,
+	        "valor": null,
+	        "tipo": null,
+	        "cdVenda": 5
+	    }
+	]
+	
+	Response Erro
+	[]
+
+
+	
+
+
+VENDA
+	POST /vendapf 
+	{
+		"cdEmpresa":2, 
+		"cdPlano":3,
+		"cdForcaVenda":622,
+		"dataVenda":"2018-02-25T20:16:14.000-0300",
+		"cdStatusVenda":1,
+		"faturaVencimento":6,
+		"tipoConta":"CC",
+		"banco":"033",
+		"agencia":"00012",
+		"conta":"014200001",
+		"tipoPagamento":"BO",
+		"titulares":[
+			{  
+			   "cdVida":0,
+			   "cdTitular":0,
+			   "celular":"0987654",
+			   "cpf":"11111111",
+			   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+			   "email":"aaaaa@ddadadad",
+			   "nome":"JOAQUIM TIT 1",
+			   "nomeMae":"JOAQUINA TIT 1",
+			   "pfPj":"f",
+			   "sexo":"m",
+			   "cdPlano":1,
+			   "cdVenda":2,
+			   "cdTeste":123467,
+			   "endereco":{  
+			      "cep":"111111",
+			      "logradouro":"Rua teste",
+			      "numero":"11111",
+			      "complemento":"c2",
+			      "bairro":"Teste",
+			      "cidade":"Teste",
+			      "estado":"Sp",
+			      "tipoEndereco":1
+			   },
+			   "dependentes":[
+					{
+					"cdVida":0,
+					"cdTitular":0,
+					"celular":"0987654",
+					"cpf":"11111111",
+					"dataNascimento":"2018-02-20",
+					"email":"aaaaa@ddadadad",
+					"nome":"MARIO FILHO TIT 1",
+					"nomeMae":"ROSA ESPOSA TIT 1",
+					"pfPj":"f",
+					"sexo":"m"
+					},
+					{
+					"cdVida":0,
+					"cdTitular":0,
+					"celular":"0987654",
+					"cpf":"11111111",
+					"dataNascimento":"2018-02-20",
+					"email":"aaaaa@ddadadad",
+					"nome":"KARINA FILHA TIT 1",
+					"nomeMae":"ROSA ESPOSA TIT 1",
+					"pfPj":"f",
+					"sexo":"f"
+					}
+				]
+			},
+			{  
+			   "cdVida":0,
+			   "cdTitular":0,
+			   "celular":"0987654",
+			   "cpf":"11111111",
+			   "dataNascimento":"2018-02-20T00:00:00.000-0300",
+			   "email":"aaaaa@ddadadad",
+			   "nome":"JOAQUIM TIT 2",
+			   "nomeMae":"JOAQUINA TIT 2",
+			   "pfPj":"f",
+			   "sexo":"m",
+			   "cdPlano":1,
+			   "cdVenda":2,
+			   "cdTeste":123467,
+			   "endereco":{  
+			      "cep":"111111",
+			      "logradouro":"Rua teste",
+			      "numero":"11111",
+			      "complemento":"c2",
+			      "bairro":"Teste",
+			      "cidade":"Teste",
+			      "estado":"Sp",
+			      "tipoEndereco":1
+			   },
+			   "dependentes":[
+					{
+					"cdVida":0,
+					"cdTitular":0,
+					"celular":"0987654",
+					"cpf":"11111111",
+					"dataNascimento":"2018-02-20",
+					"email":"aaaaa@ddadadad",
+					"nome":"MARIO FILHO TIT 2",
+					"nomeMae":"ROSA ESP TIT 2",
+					"pfPj":"f",
+					"sexo":"m"
+					},
+					{
+					"cdVida":0,
+					"cdTitular":0,
+					"celular":"0987654",
+					"cpf":"11111111",
+					"dataNascimento":"2018-02-20",
+					"email":"aaaaa@ddadadad",
+					"nome":"KARINA FILHA TIT 2",
+					"nomeMae":"ROSA ESP TIT 2",
+					"pfPj":"f",
+					"sexo":"f"
+					}
+				]
+			}
+		]
+	}
+	
+	
+	POST /vendapme (APP - Sinc)
+	{  
+   	   "cdForcaVenda":611,
+	   "empresas":[  
+	      {  
+	         "status":"PRONTA",
+	         "cnpj":"29.294.771/0001-10",
+	         "cnae":"6311900",
+	         "razaoSocial":"ANTONIO COLELLA DA SILVA - ME",
+	         "incEstadual":"",
+	         "ramoAtividade":"Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet",
+	         "nomeFantasia":"SYTRICS SOLUCOES EM AUTOMACAO E TESTES DE SOFTWARE",
+	         "representanteLegal":"Antonio",
+	         "contatoEmpresa":true,
+	         "telefone":"(11) 9578-9931",
+	         "celular":"(11) 55151-1515",
+	         "email":"almeida@hotmail.com",
+	         "vencimentoFatura":"10",
+	         "enderecoEmpresa":{  
+	            "cep":"05542-020",
+	            "logradouro":"Rua João José dos Santos",
+	            "numero":"307",
+	            "complemento":"",
+	            "bairro":"Jardim Olympia",
+	            "cidade":"São Paulo",
+	            "estado":"SP"
+	         },
+	         "planos":[  
+	            {  
+	               "cdPlano":9,
+	               "nome":"",
+	               "desc":"",
+	               "valor":"",
+	               "centavo":"",
+	               "tipo":"",
+	               "css":""
+	            },
+	            {  
+	               "cdPlano":10,
+	               "nome":"",
+	               "desc":"",
+	               "valor":"",
+	               "centavo":"",
+	               "tipo":"",
+	               "css":""
+	            }
+	         ],
+	         "cpfRepresentante":"468.098.978-52",
+	         "dependentes":[  
+	
+	         ]
+	      }
+	   ],
+	   "titulares":[  
+	      {  
+	         "cdVida":0,
+	         "cdTitular":0,
+	         "cnpj":"29.294.771/0001-10",
+	         "celular":"",
+	         "cpf":"468.098.978-52",
+	         "dataNascimento":"27/04/1998",
+	         "email":"",
+	         "nome":"teste teste teste",
+	         "nomeMae":"teste este etste",
+	         "pfPj":"f",
+	         "sexo":"m",
+	         "cdPlano":"9",
+	         "cdVenda":0,
+	         "endereco":{  
+	            "cep":"05542-020",
+	            "endereco":"",
+	            "numero":"",
+	            "complemento":"",
+	            "bairro":"",
+	            "cidade":"",
+	            "estado":""
+	         },
+	         "dependentes":[  
+	            {  
+	               "cdVida":0,
+	               "cdTitular":0,
+	               "celular":"",
+	               "cpf":"",
+	               "dataNascimento":"27/05/2006",
+	               "email":"",
+	               "nome":"teste teste",
+	               "nomeMae":"teste teste",
+	               "pfPj":"f",
+	               "sexo":"m",
+	               "enderecoTitular":false
+	            }
+	         ]
+	      },
+	      {  
+	         "cdVida":0,
+	         "cdTitular":0,
+	         "cnpj":"29.294.771/0001-10",
+	         "celular":"",
+	         "cpf":"019.352.926-25",
+	         "dataNascimento":"25/02/1998",
+	         "email":"",
+	         "nome":"teste teste",
+	         "nomeMae":"teste teste",
+	         "pfPj":"f",
+	         "sexo":"m",
+	         "cdPlano":"10",
+	         "cdVenda":0,
+	         "endereco":{  
+	            "cep":"05542-020",
+	            "endereco":"",
+	            "numero":"",
+	            "complemento":"",
+	            "bairro":"",
+	            "cidade":"",
+	            "estado":""
+	         },
+	         "dependentes":[  
+	
+	         ]
+	      },
+	      {  
+	         "cdVida":0,
+	         "cdTitular":0,
+	         "cnpj":"29.294.771/0001-10",
+	         "celular":"",
+	         "cpf":"666.153.881-38",
+	         "dataNascimento":"25/04/1998",
+	         "email":"",
+	         "nome":"teste teste teste",
+	         "nomeMae":"teste teste teste",
+	         "pfPj":"f",
+	         "sexo":"m",
+	         "cdPlano":"9",
+	         "cdVenda":0,
+	         "endereco":{  
+	            "cep":"05542-020",
+	            "endereco":"",
+	            "numero":"",
+	            "complemento":"",
+	            "bairro":"",
+	            "cidade":"",
+	            "estado":""
+	         },
+	         "dependentes":[  
+	            {  
+	               "cdVida":0,
+	               "cdTitular":0,
+	               "celular":"",
+	               "cpf":"682.550.463-05",
+	               "dataNascimento":"27/04/1998",
+	               "email":"",
+	               "nome":"teste teste teste",
+	               "nomeMae":"teste teste teste",
+	               "pfPj":"f",
+	               "sexo":"m",
+	               "enderecoTitular":false
+	            },
+	            {  
+	               "cdVida":0,
+	               "cdTitular":0,
+	               "celular":"",
+	               "cpf":"686.115.355-96",
+	               "dataNascimento":"25/08/2005",
+	               "email":"",
+	               "nome":"teste teste teste",
+	               "nomeMae":"teste teste teste",
+	               "pfPj":"f",
+	               "sexo":"m",
+	               "enderecoTitular":false
+	            }
+	         ]
+	      },
+	      {  
+	         "cdVida":0,
+	         "cdTitular":0,
+	         "cnpj":"29.294.771/0001-10",
+	         "celular":"",
+	         "cpf":"599.465.736-01",
+	         "dataNascimento":"28/05/1980",
+	         "email":"",
+	         "nome":"teste teste ",
+	         "nomeMae":"teste teste teste",
+	         "pfPj":"f",
+	         "sexo":"m",
+	         "cdPlano":"9",
+	         "cdVenda":0,
+	         "endereco":{  
+	            "cep":"05542-020",
+	            "endereco":"",
+	            "numero":"",
+	            "complemento":"",
+	            "bairro":"",
+	            "cidade":"",
+	            "estado":""
+	         },
+	         "dependentes":[  
+	            {  
+	               "cdVida":0,
+	               "cdTitular":0,
+	               "celular":"",
+	               "cpf":"",
+	               "dataNascimento":"27/08/2008",
+	               "email":"",
+	               "nome":"teste teste teste",
+	               "nomeMae":"testet eteste ",
+	               "pfPj":"f",
+	               "sexo":"m",
+	               "enderecoTitular":false
+	            }
+	         ]
+	      }
+	   ]
+	}
+
+Login
+    POST /login
+    {
+		"usuario":"38330982874",
+		"senha":"odonto2018"
+	}
+
+    Resposta 200
+    {
+	    "codigoDcss": 580,
+	    "codigoUsuario": 350,
+	    "nomeUsuario": "Fernando Setai",
+	    "documento": "38330982874",
+	    "codigoCorretora": 142,
+	    "nomeCorretora": "Teste 123",
+	    "perfil": "Corretor"
+	}
+
+    403
+    {
+        "usuario": null,
+        "sucesso": false,
+        "cdLogin": null
+    }
+
+
+

@@ -1,0 +1,24 @@
+package br.com.odontoprev.portal.corretor;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.web.WebApplicationInitializer;
+
+@SpringBootApplication
+@EnableAutoConfiguration
+public class PortalCorretorServicoApplication extends SpringBootServletInitializer
+		implements WebApplicationInitializer {
+
+	private static final Log log = LogFactory.getLog(PortalCorretorServicoApplication.class);
+
+	public static void main(String[] args) {
+
+		log.info("[PortalCorretorServicoApplication][v.201802251422]");
+
+		SpringApplication.run(PortalCorretorServicoApplication.class, args);
+	}
+}
