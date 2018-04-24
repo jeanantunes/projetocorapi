@@ -93,7 +93,6 @@ public class SendMailEsqueciSenha {
 			body.setBody(msg);
 			body.setRecepientName(recepientName);			
 			body.setRecepients(Arrays.asList(new String [] {email}));
-			//body.setRecepients(Arrays.asList(new String [] {"almeida_yago@hotmail.com"}));
 			body.setSender(sender);
 			body.setSenderName(senderName);
 			body.setType(type);
@@ -141,7 +140,7 @@ public class SendMailEsqueciSenha {
 						.replace("@LD", imgEmailBase + imgEmailLb)
 						.replace("@YT", imgEmailBase + imgEmailYt)
 						.replace("@ANS", imgEmailBase + imgEmailAsn)
-						.replace("@TOKEN", imgEmailBase + "/"+token);
+						.replace("@TOKEN", imgEmailBase + "/esqueci-minha-senha/"+token);
 						//.replace("@TOKEN", imgEmailBase + apiCorretorToken + token);
 						//.replace("@BTN", imgEmailBase + imgEmailBtn);
 						//.replace("@TOKEN", imgEmailBase + apiCorretorToken + token);
