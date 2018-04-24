@@ -64,7 +64,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
-	
+		
 	@Value("${DCSS_CODIGO_CANAL_VENDAS}")
 	private String dcss_codigo_canal_vendas;
 	
@@ -107,7 +107,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	}
 
-	private void putIntegracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
+	private void putIntegracaoForcaDeVendaDcss(ForcaVenda forca, String status) throws ApiTokenException {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
@@ -126,9 +126,10 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaMap.put("responsavel", forca.getResponsavel());
 		forcaMap.put("nomeGerente", forca.getNomeGerente());
 		forcaMap.put("senha", forca.getSenha());
-		forcaMap.put("canalVenda", forca.getCdForcaVenda());
+		forcaMap.put("canalVenda", forca.getCdForcaVenda());		
+		forcaMap.put("statusUsuario", status == "INATIVO" ? "I" : "A");
 		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
-		restTemplate.exchange((dcssUrl + "/usuario/1.0/"), HttpMethod.PUT, request, ForcaVenda.class);
+		restTemplate.exchange((dcssUrl + "/usuario/1.0/"), HttpMethod.PUT, request, ForcaVenda.class);		
 
 	}
 
@@ -154,6 +155,17 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 					tbForcaVenda.setTbodCorretora(tbCorretora);
 				}
 	
+				//TbodStatusForcaVenda
+				if (forcaVenda.getStatusForcaVenda() != null) {
+					TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(Long.valueOf(forcaVenda.getStatusForcaVenda()));
+					tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
+				}
+				
+				if (forcaVenda.getStatus() != null) {
+					tbForcaVenda.setAtivo(forcaVenda.getStatus());
+				}
+				
+				
 				// Grava senha na tabela de login na tela de Aguardando Aprovacao
 				if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
 					TbodLogin tbLogin = null;
@@ -189,9 +201,19 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				}
 	
 				tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
-				this.putIntegracaoForcaDeVendaDcss(forcaVenda);
+				
+				if (tbForcaVenda.getCodigoDcssUsuario() != null) {
+					this.putIntegracaoForcaDeVendaDcss(forcaVenda,null);
+					/*return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
+							"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");*/
+				}
+				
 				return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
 						"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");
+				
+				/*this.putIntegracaoForcaDeVendaDcss(forcaVenda,null);
+				return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
+						"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");*/
 	
 			} else {
 				return new ForcaVendaResponse(forcaVenda.getCdForcaVenda(),
@@ -706,6 +728,15 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
 			/***** udate *****/
 			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
+			
+			/*** DCSS ***/
+			try {		
+				this.putIntegracaoForcaDeVendaDcss(forcaVenda, "INATIVO");
+			} catch (Exception e) {
+				log.error("Erro na integração Forca de Venda Dcss :: Message: [" + e.getMessage() + "]");
+				return new ForcaVendaResponse(0, "Erro na integração Forca de Venda Dcss (putIntegracaoForcaDeVendaDcss) :: Message: [" + e.getMessage() + "].");
+			}
+			
 		} catch (Exception e) {
 			log.error("Erro ao atualizar status Forca Venda (reprovar ou excluir) :: Message: [" + e.getMessage() + "]");
 			return new ForcaVendaResponse(0, "Erro ao atualizar status Forca Venda (reprovar ou excluir) :: Message: [" + e.getMessage() + "].");
