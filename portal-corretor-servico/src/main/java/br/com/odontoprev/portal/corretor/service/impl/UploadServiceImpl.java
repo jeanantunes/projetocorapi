@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.odontoprev.portal.corretor.dao.UploadDAO;
 import br.com.odontoprev.portal.corretor.dto.UploadResponse;
-import br.com.odontoprev.portal.corretor.model.TbodUpload;
+import br.com.odontoprev.portal.corretor.model.TbodUploadForcavenda;
 import br.com.odontoprev.portal.corretor.service.UploadService;
 
 @Service
@@ -20,16 +20,16 @@ public class UploadServiceImpl implements UploadService{
 	UploadDAO uploadDAO;
 	
 	@Override
-	public UploadResponse addDadosUpload(TbodUpload tbodUpload) {
+	public UploadResponse addDadosUpload(TbodUploadForcavenda tbodUpload) {
 
-		log.info("[addDadosUpload - add dados via planilha dos corretores]");
+		log.info("[addDadosUpload - add dados via arquivo csv]");
 		
 		try {				
 			uploadDAO.save(tbodUpload);
 		} catch (Exception e) {
 			log.error(e);
-			log.error("Erro ao cadastrar dados da corretora via arquivo excel (TbodUpload) :: Detalhe: [" + e.getMessage() + "]");
-			return new UploadResponse(0, "Erro ao cadastrar dados da corretora via arquivo excel (TbodUpload). Detalhe: [" + e.getMessage() + "]");
+			log.error("Erro ao cadastrar dados via arquivo csv (TbodUploadForcaVenda) :: Detalhe: [" + e.getMessage() + "]");
+			return new UploadResponse(0, "Erro ao cadastrar dados via arquivo csv (TbodUploadForcaVenda). Detalhe: [" + e.getMessage() + "]");
 		}
 		return new UploadResponse(200, HttpStatus.OK.toString());
 	}
