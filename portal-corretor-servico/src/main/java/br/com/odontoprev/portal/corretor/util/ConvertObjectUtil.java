@@ -181,7 +181,9 @@ public class ConvertObjectUtil {
 			dadosBancarios.setAgencia(t.getDadosBancarios().getAgencia());
 			dadosBancarios.setTipoConta(t.getDadosBancarios().getTipoConta());
 			dadosBancarios.setConta(t.getDadosBancarios().getConta());
-			benef.setDadosBancarios(dadosBancarios);
+			benef.setDadosBancarios(dadosBancarios);			
+			
+			benef.setDependentes(dependentes);
 			
 			for (Beneficiario d : t.getDependentes()) {
 				JsonDependentesPF depend = new JsonDependentesPF();			
@@ -196,7 +198,6 @@ public class ConvertObjectUtil {
 				depend.setSexo(d.getSexo());
 				depend.setpFpJ(d.getPfPj());
 				dependentes.add(depend);	
-				benef.setDependentes(dependentes);
 			}			
 		}
 		
