@@ -11,6 +11,12 @@ public class PropertiesUtils {
 	public static final String REQUESTMAIL_SENDERNAME_ESQUECISENHA = "requestmailEsqueciSenha.body.sendername";
 	public static final String REQUESTMAIL_TYPE_ESQUECISENHA = "requestmailEsqueciSenha.body.type";
 	public static final String REQUESTMAIL_SUBJECT_ESQUECISENHA = "requestmailEsqueciSenha.body.subject";
+	
+	public static final String REQUESTMAIL_RECEPIENTNAME_FORCASTATUS = "requestmailForcaStatus.body.recepientname";
+	public static final String REQUESTMAIL_SENDER_FORCASTATUS = "requestmailForcaStatus.body.sender";
+	public static final String REQUESTMAIL_SENDERNAME_FORCASTATUS_REPROVADO = "requestmailForcaStatusReprovado.body.sendername";
+	public static final String REQUESTMAIL_TYPE_FORCASTATUS = "requestmailForcaStatus.body.type";
+	public static final String REQUESTMAIL_SUBJECT_FORCASTATUS_REPROVADO = "requestmailForcaStatusReprovado.body.subject";
 
 	
 	public static final String PATH_XLS_EMPRESA = "server.path.empresa";
@@ -34,6 +40,8 @@ public class PropertiesUtils {
 	public static final String IMG_EMAIL_HEADER = "img.email.header";
 	
 	public static final String IMG_EMAIL_HEADER_ESQUECI_SENHA = "img.email.header.esqueciSenha";
+	
+	public static final String IMG_EMAIL_HEADER_FORCA_STATUS = "img.email.header.forcaStatus";
 	
 	public static final String IMG_EMAIL_BTN = "img.email.btn";
 	

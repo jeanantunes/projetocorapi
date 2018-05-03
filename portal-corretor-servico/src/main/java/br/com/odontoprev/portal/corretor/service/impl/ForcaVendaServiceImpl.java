@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
 import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.LoginDAO;
@@ -707,12 +708,16 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		
 		/**** O retorno eh uma lista, mas nao deve existir mais de uma forca de venda na base com o mesmo cpf ****/
 		tbForcaVendas = forcaVendaDao.findByCpf(forcaVenda.getCpf());
-
+		
 		if (tbForcaVendas.isEmpty()) {
 			throw new Exception("ForcaVenda nao encontrada. Atualizacao nao realizada!");
 		} else if (tbForcaVendas.size() > 1) {
 			throw new Exception("CPF duplicado. Atualizacao nao realizada!");
 		}		
+		
+		/*** nome da corretora no email ***/
+		TbodCorretora tbCorretora = corretoraDao.findOne(tbForcaVendas.get(0).getTbodCorretora().getCdCorretora());		
+		
 		
 		try {
 			TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
@@ -742,7 +747,13 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			return new ForcaVendaResponse(0, "Erro ao atualizar status Forca Venda (reprovar ou excluir) :: Message: [" + e.getMessage() + "].");
 		}
 		
+		if (opcaoStatus == "REPROVAR") {
+			SendMailForcaStatus sendEmail = new SendMailForcaStatus();
+			sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), opcaoStatus);
+		}
+		
 		return new ForcaVendaResponse(1, "ForcaVendaLogin atualizado!" 
 				+ " Cpf:[" + forcaVenda.getCpf() + "];");
+		
 	}
 }
