@@ -33,9 +33,9 @@ public class SendMailForcaStatus {
 			String sendMailEndpointUrl = PropertiesUtils.getProperty(PropertiesUtils.SENDMAIL_ENDPOINT_URL);
 			String recepientName = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_RECEPIENTNAME_FORCASTATUS);
 			String sender = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDER_FORCASTATUS);			
-			String senderName = (opcaoStatus == "REPROVAR" ? PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDERNAME_FORCASTATUS_REPROVADO) : null);			
+			String senderName = (opcaoStatus == "REPROVAR" ? PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDERNAME_FORCASTATUS_REPROVADO) : PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDERNAME_FORCASTATUS_APROVADO));			
 			String type = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_TYPE_FORCASTATUS);			
-			String subject = (opcaoStatus == "REPROVAR" ? PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT_FORCASTATUS_REPROVADO) : null);
+			String subject = (opcaoStatus == "REPROVAR" ? PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT_FORCASTATUS_REPROVADO) : PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT_FORCASTATUS_APROVADO));
 			
 			ApiManagerToken apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 			ApiToken apiToken = apiManager.generateToken();
@@ -79,6 +79,8 @@ public class SendMailForcaStatus {
 			
 			if (opcaoStatus == "REPROVAR") {
 				htmlStr = fileReader.readHtmlForcaStatus("REPROVAR");
+			} else {
+				htmlStr = fileReader.readHtmlForcaStatus("APROVAR");
 			}
 			
 			

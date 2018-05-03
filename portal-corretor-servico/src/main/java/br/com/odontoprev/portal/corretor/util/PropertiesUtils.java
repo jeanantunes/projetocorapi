@@ -17,6 +17,9 @@ public class PropertiesUtils {
 	public static final String REQUESTMAIL_SENDERNAME_FORCASTATUS_REPROVADO = "requestmailForcaStatusReprovado.body.sendername";
 	public static final String REQUESTMAIL_TYPE_FORCASTATUS = "requestmailForcaStatus.body.type";
 	public static final String REQUESTMAIL_SUBJECT_FORCASTATUS_REPROVADO = "requestmailForcaStatusReprovado.body.subject";
+	
+	public static final String REQUESTMAIL_SENDERNAME_FORCASTATUS_APROVADO = "requestmailForcaStatusAprovado.body.sendername";
+	public static final String REQUESTMAIL_SUBJECT_FORCASTATUS_APROVADO = "requestmailForcaStatusAprovado.body.subject";
 
 	
 	public static final String PATH_XLS_EMPRESA = "server.path.empresa";

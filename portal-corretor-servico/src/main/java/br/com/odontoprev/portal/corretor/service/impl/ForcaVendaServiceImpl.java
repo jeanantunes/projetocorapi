@@ -682,6 +682,12 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			} else {
 				throw new Exception("updateForcaVendaStatusByCpf: reponseDCSSLogin.getCodigo() == null."); //201803052006 inc esert
 			}
+			
+			/*** nome da corretora no email ***/
+			TbodCorretora tbCorretora = corretoraDao.findOne(tbForcaVendas.get(0).getTbodCorretora().getCdCorretora());	
+			
+			SendMailForcaStatus sendEmail = new SendMailForcaStatus();
+			sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaStatus :: Message: [" + e.getMessage() + "]");
