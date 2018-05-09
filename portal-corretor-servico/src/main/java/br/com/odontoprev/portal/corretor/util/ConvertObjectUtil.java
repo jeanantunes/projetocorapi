@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,10 @@ import br.com.odontoprev.portal.corretor.dto.JsonVendaPF;
 import br.com.odontoprev.portal.corretor.dto.ResponsavelContratual;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
+import br.com.odontoprev.portal.corretor.model.TbodEndereco;
+import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
+import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.model.TbodVida;
 
 @Service
 public class ConvertObjectUtil {
@@ -109,6 +114,110 @@ public class ConvertObjectUtil {
 		
 		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonVendaPF);
 	}
-	
+
+	//201805082104 - esert
+	public static Endereco translateTbodEnderecoToEndereco(TbodEndereco tbodEndereco) {
+		Endereco endereco = new Endereco();
+		if(tbodEndereco!=null) {
+			endereco = new Endereco();
+			endereco.setBairro(tbodEndereco.getBairro());
+			endereco.setCep(tbodEndereco.getCep());
+			endereco.setCidade(tbodEndereco.getCidade());
+			endereco.setComplemento(tbodEndereco.getComplemento());
+			endereco.setLogradouro(tbodEndereco.getLogradouro());
+			endereco.setNumero(tbodEndereco.getNumero());
+			endereco.setEstado(tbodEndereco.getUf());
+		}
+		return endereco;
+	}
+
+	//201805082104 - esert
+	public static EnderecoProposta translateTbodEnderecoToEnderecoProposta(TbodEndereco tbodEndereco) {
+		EnderecoProposta endereco = new EnderecoProposta();
+		if(tbodEndereco!=null) {
+			endereco = new EnderecoProposta();
+			endereco.setBairro(tbodEndereco.getBairro());
+			endereco.setCep(tbodEndereco.getCep());
+			endereco.setCidade(tbodEndereco.getCidade());
+			endereco.setComplemento(tbodEndereco.getComplemento());
+			endereco.setLogradouro(tbodEndereco.getLogradouro());
+			endereco.setNumero(tbodEndereco.getNumero());
+			endereco.setEstado(tbodEndereco.getUf());
+		}
+		return endereco;
+	}
+
+	//201805082112 - esert
+	public static Beneficiario translateTbodVidaToBeneficiario(TbodVida tbodVida) {
+		Beneficiario beneficiario = null;
+		if(tbodVida!=null) {
+			beneficiario = new Beneficiario();
+			beneficiario.setCelular(tbodVida.getCelular());
+			beneficiario.setCpf(tbodVida.getCpf());
+			beneficiario.setEmail(tbodVida.getEmail());
+			beneficiario.setNome(tbodVida.getNome());
+			beneficiario.setNomeMae(tbodVida.getNomeMae());
+			beneficiario.setPfPj(tbodVida.getPfPj());
+			beneficiario.setSexo(tbodVida.getSexo());
+//			beneficiario.setCdPlano(tbodVida.getSiglaPlano());
+			if(tbodVida.getTbodEndereco()!=null) {
+				beneficiario.setEndereco(
+						ConvertObjectUtil.translateTbodEnderecoToEndereco(
+								tbodVida.getTbodEndereco()));
+			}
+		}
+		return beneficiario;
+	}
+
+	//201805082118 - esert
+	public static DadosBancariosVenda translateTbodVendaDadosBancariosToDadosBancarios(TbodVenda tbodVenda) {
+		DadosBancariosVenda dadosBancariosVenda = new DadosBancariosVenda();
+		
+		String agencia = null;
+		if(tbodVenda.getAgencia() != null) {
+			agencia = tbodVenda.getAgencia();
+		}
+		if(tbodVenda.getAgenciaDv() != null) {
+			agencia = agencia.concat("-").concat(tbodVenda.getAgenciaDv());
+		}
+		dadosBancariosVenda.setAgencia(agencia);
+		
+		String conta = null;
+		if(tbodVenda.getConta()!=null) {
+			conta = tbodVenda.getConta();
+		}
+		if(tbodVenda.getContaDv()!=null) {
+			conta = conta.concat("-").concat(tbodVenda.getContaDv());
+		}		
+		dadosBancariosVenda.setConta(conta);
+		
+		dadosBancariosVenda.setTipoConta(tbodVenda.getTipoConta());
+		
+		dadosBancariosVenda.setCodigoBanco(tbodVenda.getBanco());
+		
+		return dadosBancariosVenda;
+	}
+
+	public static ResponsavelContratual translateTbodResponsavelContratualToResponsavelContratual(
+		TbodResponsavelContratual tbodResponsavelContratual) {
+		ResponsavelContratual responsavelContratual = null;
+		if(tbodResponsavelContratual!=null) {
+			responsavelContratual = new ResponsavelContratual();
+	//			(tbodResponsavelContratual.getCdResponsavelContratual());
+			responsavelContratual.setCelular(tbodResponsavelContratual.getCelular());
+			responsavelContratual.setCpf(tbodResponsavelContratual.getCpf());
+			if(tbodResponsavelContratual.getDataNascimento()!=null) {
+				responsavelContratual.setDataNascimento((new SimpleDateFormat("dd/MM/yyyy")).format(tbodResponsavelContratual.getDataNascimento()));
+			}
+			responsavelContratual.setEmail(tbodResponsavelContratual.getEmail());
+			responsavelContratual.setNome(tbodResponsavelContratual.getNome());
+			responsavelContratual.setSexo(tbodResponsavelContratual.getSexo());
+			
+			responsavelContratual.setEndereco(
+					ConvertObjectUtil.translateTbodEnderecoToEnderecoProposta(
+							tbodResponsavelContratual.getTbodEndereco()));
+		}
+		return responsavelContratual;
+	}	
 	
 }

@@ -79,5 +79,4 @@ public class DashboardPropostaController {
 
 		return dashboardService.buscaPorCriticaPME(cnpj, cpf);
 	}
-
 }
