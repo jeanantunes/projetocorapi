@@ -2,14 +2,10 @@ package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
 
-public class Upload implements Serializable {
+public class UploadForcaCriticados implements Serializable {
 
 	private static final long serialVersionUID = -470343704625309491L;
 
-	private String cnpj;
-	private String arquivo;	
-	private String dataCriacao;
-	private String status;
 	private String critica;
 	private String nome;
 	private String cpf;
@@ -18,31 +14,8 @@ public class Upload implements Serializable {
 	private String email;
 	private String departamento;
 	private String cargo;
-	
-	public String getCnpj() {
-		return cnpj;
-	}
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
-	public String getArquivo() {
-		return arquivo;
-	}
-	public void setArquivo(String arquivo) {
-		this.arquivo = arquivo;
-	}
-	public String getDataCriacao() {
-		return dataCriacao;
-	}
-	public void setDataCriacao(String dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	private Long cdCorretora;
+		
 	public String getCritica() {
 		return critica;
 	}
@@ -91,5 +64,10 @@ public class Upload implements Serializable {
 	public void setCargo(String cargo) {
 		this.cargo = cargo;
 	}
-
+	public Long getCdCorretora() {
+		return cdCorretora;
+	}
+	public void setCdCorretora(Long cdCorretora) {
+		this.cdCorretora = cdCorretora;
+	}	
 }
