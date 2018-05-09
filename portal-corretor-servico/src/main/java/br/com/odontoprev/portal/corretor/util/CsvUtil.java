@@ -23,11 +23,11 @@ public class CsvUtil {
 			
 			try {
 				
-				String csvFileName = "relatorio-gestao-vendas.csv";
+				String csvFileName = "relatorio-gestao-vendas.xls";
 				
-				response.setContentType("text/csv");
-				
-		        String headerKey = "Content-Disposition";
+				response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+				String headerKey = "Content-Disposition";
 		        String headerValue = String.format("attachment; filename=\"%s\"", csvFileName);
 		        response.setHeader(headerKey, headerValue);
 		        
