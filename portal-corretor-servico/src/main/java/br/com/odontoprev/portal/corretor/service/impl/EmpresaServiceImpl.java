@@ -101,22 +101,24 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	//201805091745 - esert
 	private void sendEmailBoasVindasPME(TbodEmpresa tbEmpresa, long diaVencimentoFatura, String login) {
-		sendMailBoasVindasPME.sendMail(
-				tbEmpresa.getEmail(), //email, 
-				tbEmpresa.getNomeFantasia(), //nomeCorretora, 
-				login, //login, 
-				PropertiesUtils.getProperty(PropertiesUtils.SENHA_INICIAL_PORTAL_PME), //senha, 
-				PropertiesUtils.getProperty(PropertiesUtils.LINK_PORTAL_PME_URL), //linkPortal, 
-				this.calcularDataVigenciaPeloDiaVencimentoFatura(diaVencimentoFatura), //dataVigencia, 
-				String.valueOf(100L + diaVencimentoFatura).substring(1,3) //diaVencimentoFatura
-				);
+		String strDiaVencimentoFatura = String.valueOf(100L + diaVencimentoFatura).substring(1,3);
 		
+		sendMailBoasVindasPME.sendMail(
+			tbEmpresa.getEmail(), //email, 
+			tbEmpresa.getNomeFantasia(), //nomeCorretora, 
+			login, //login, 
+			PropertiesUtils.getProperty(PropertiesUtils.SENHA_INICIAL_PORTAL_PME), //senha, 
+			PropertiesUtils.getProperty(PropertiesUtils.LINK_PORTAL_PME_URL), //linkPortal, 
+			this.calcularDataVigenciaPeloDiaVencimentoFatura(diaVencimentoFatura), //dataVigencia, 
+			strDiaVencimentoFatura //diaVencimentoFatura
+			);		
 	}
 
 	private String calcularDataVigenciaPeloDiaVencimentoFatura(long diaVencimentoFatura) {
-		String strDataVigencia = null;
+		String strDataVigencia = String.valueOf(diaVencimentoFatura).concat("/MM/yyyy");
 		return strDataVigencia;
 	}
+	
 
 	@Override
 	public CnpjDados findDadosEmpresaByCnpj(String cnpj) throws ParseException {
