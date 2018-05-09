@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
+import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dto.CnpjDados;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
@@ -21,6 +22,7 @@ import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 import br.com.odontoprev.portal.corretor.util.XlsVidas;
 
 @Service
@@ -36,6 +38,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Autowired
 	BeneficiarioBusiness beneficiarioBusiness;
+
+	@Autowired
+	SendMailBoasVindasPME sendMailBoasVindasPME;
 
 	@Override
 	@Transactional
@@ -53,6 +58,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 		log.info("[EmpresaServiceImpl::updateEmpresa]");
 		
 		TbodEmpresa tbEmpresa = new TbodEmpresa();
+		long diaVencimentoFatura = 0L; //201805091739 - esert
+		String loginDCMS = "(n/a)"; //201805091818 - esert
 
 		try {
 			
@@ -67,13 +74,17 @@ public class EmpresaServiceImpl implements EmpresaService {
 			if (tbEmpresa != null) {
 				tbEmpresa.setEmpDcms(empresaDcms.getEmpDcms());
 				empresaDao.save(tbEmpresa);
+				loginDCMS = empresaDcms.getEmpDcms(); //201805091818 - esert
 				
-				List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa());
+				//201805091745 - esert - adicionado param [long diaVencimentoFatura] para aproveitar consulta ja realizada [TBOD_VENDA] e obter [FATURA_VENCIMENTO]
+				List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa(), diaVencimentoFatura);
 				
 				if(vidas != null && !vidas.isEmpty()) {
 					XlsVidas xlsVidas = new XlsVidas();
 					xlsVidas.gerarVidasXLS(vidas, tbEmpresa);
 				}
+				
+				this.sendEmailBoasVindasPME(tbEmpresa, diaVencimentoFatura, loginDCMS); //201805091745 - esert
 			}
 			else {
 				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
@@ -86,6 +97,25 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
 
+	}
+
+	//201805091745 - esert
+	private void sendEmailBoasVindasPME(TbodEmpresa tbEmpresa, long diaVencimentoFatura, String login) {
+		sendMailBoasVindasPME.sendMail(
+				tbEmpresa.getEmail(), //email, 
+				tbEmpresa.getNomeFantasia(), //nomeCorretora, 
+				login, //login, 
+				PropertiesUtils.getProperty(PropertiesUtils.SENHA_INICIAL_PORTAL_PME), //senha, 
+				PropertiesUtils.getProperty(PropertiesUtils.LINK_PORTAL_PME_URL), //linkPortal, 
+				this.calcularDataVigenciaPeloDiaVencimentoFatura(diaVencimentoFatura), //dataVigencia, 
+				String.valueOf(100L + diaVencimentoFatura).substring(1,3) //diaVencimentoFatura
+				);
+		
+	}
+
+	private String calcularDataVigenciaPeloDiaVencimentoFatura(long diaVencimentoFatura) {
+		String strDataVigencia = null;
+		return strDataVigencia;
 	}
 
 	@Override
