@@ -2,7 +2,6 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,16 +15,13 @@ import br.com.odontoprev.portal.corretor.dao.TxtImportacaoDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.ViewCorSumarioVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
-import br.com.odontoprev.portal.corretor.dto.DadosBancariosVenda;
 import br.com.odontoprev.portal.corretor.dto.DashBoardProposta;
-import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.dto.PropostaCritica;
 import br.com.odontoprev.portal.corretor.dto.PropostaPF;
 import br.com.odontoprev.portal.corretor.dto.PropostaPME;
 import br.com.odontoprev.portal.corretor.dto.PropostasDashBoard;
-import br.com.odontoprev.portal.corretor.dto.ResponsavelContratual;
 import br.com.odontoprev.portal.corretor.dto.TxtImportacao;
-import br.com.odontoprev.portal.corretor.dto.Venda2;
+import br.com.odontoprev.portal.corretor.dto.VendaCritica;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
 import br.com.odontoprev.portal.corretor.model.TbodTxtImportacao;
@@ -138,42 +134,27 @@ public class PropostaServiceImpl implements PropostaService {
 		if(tbodVenda != null) {
 			propostaCritica = new PropostaCritica();
 			
-			Venda2 venda = new Venda2();
-			
-			venda.setDadosBancariosVenda(
-					ConvertObjectUtil.translateTbodVendaDadosBancariosToDadosBancarios(
+			VendaCritica vendaCritica = new VendaCritica();
+
+			//deve ser a primeira atribuicao //201805091200 - esert
+			vendaCritica = ConvertObjectUtil.translateTbodVendaToVendaCritica(tbodVenda, vendaCritica);
+						
+			vendaCritica.setDadosBancariosVenda(
+					ConvertObjectUtil.translateTbodVendaDadosBancariosToDadosBancariosVenda(
 							tbodVenda));
 			
-			venda.setPropostaDcms(tbodVenda.getPropostaDcms());
+			vendaCritica.setPropostaDcms(tbodVenda.getPropostaDcms());
 
-			venda.setTipoPagamento(tbodVenda.getTipoPagamento());
 			
 			TbodResponsavelContratual tbodResponsavelContratual = tbodVenda.getTbodResponsavelContratual();
-			if(tbodResponsavelContratual!=null) {
-				ResponsavelContratual responsavelContratual = new ResponsavelContratual();
-	//			(tbodResponsavelContratual.getCdResponsavelContratual());
-				responsavelContratual.setCelular(tbodResponsavelContratual.getCelular());
-				responsavelContratual.setCpf(tbodResponsavelContratual.getCpf());
-				if(tbodResponsavelContratual.getDataNascimento()!=null) {
-					responsavelContratual.setDataNascimento((new SimpleDateFormat("dd/MM/yyyy")).format(tbodResponsavelContratual.getDataNascimento()));
-				}
-				responsavelContratual.setEmail(tbodResponsavelContratual.getEmail());
-				responsavelContratual.setNome(tbodResponsavelContratual.getNome());
-				responsavelContratual.setSexo(tbodResponsavelContratual.getSexo());
-				
-				responsavelContratual.setEndereco(
-						ConvertObjectUtil.translateTbodEnderecoToEnderecoProposta(
-								tbodResponsavelContratual.getTbodEndereco()));
-				
-				venda.setResponsavelContratual(responsavelContratual);
-			}
-			
-			propostaCritica.setVenda(venda);
-			
-			List<TbodVendaVida> vendaVidas = tbodVenda.getTbodVendaVidas();
-			if(vendaVidas!=null) {
+			vendaCritica.setResponsavelContratual(
+					ConvertObjectUtil.translateTbodResponsavelContratualToResponsavelContratual(
+							tbodResponsavelContratual));
+						
+			List<TbodVendaVida> tbodVendaVidas = tbodVenda.getTbodVendaVidas();
+			if(tbodVendaVidas!=null) {
 				List<Beneficiario> vidas = new ArrayList<Beneficiario>();
-				for (TbodVendaVida tbodVendaVida : vendaVidas) {
+				for (TbodVendaVida tbodVendaVida : tbodVendaVidas) {
 					if(tbodVendaVida.getTbodVida()!=null) {
 						TbodVida tbodVida = tbodVendaVida.getTbodVida();
 						if(tbodVida!=null) {
@@ -183,36 +164,25 @@ public class PropostaServiceImpl implements PropostaService {
 						}
 					}
 				}
-				propostaCritica.setVidas(vidas);
+				vendaCritica.setTitulares(vidas);
+				
 			}
 			
 			TbodPlano tbodPlano = tbodVenda.getTbodPlano();
-			if(tbodPlano!=null) {
-				Plano plano = new Plano();
-				plano.setCdPlano(tbodPlano.getCdPlano());
-//				plano.setCdPlano(Long.parseLong(tbodPlano.getCodigo()));
-				plano.setDescricao(tbodPlano.getNomePlano());
-				plano.setSigla(tbodPlano.getSigla());
-				plano.setTitulo(tbodPlano.getTitulo());
-				if(tbodPlano.getTbodTipoPlano()!=null) {
-					plano.setTipo(String.valueOf(tbodPlano.getTbodTipoPlano().getCdTipoPlano()));
-				}				
-				if(tbodPlano.getValorMensal()!=null) {
-					plano.setValor(tbodPlano.getValorMensal().toString());
-				}
-//				plano.setValor(tbodPlano.getValorAnual());
-				propostaCritica.setPlano(plano);
-			}
+			vendaCritica.setPlano(
+					ConvertObjectUtil.translateTbodPlanoToPlano(
+							tbodPlano));
 			
 			List<TxtImportacao> listTxtImportacao = new ArrayList<TxtImportacao>();
-			List<TbodTxtImportacao> listTbodTxtImportacao = txtImportacaoDAO.findByNrAtendimento(venda.getPropostaDcms());
+			List<TbodTxtImportacao> listTbodTxtImportacao = txtImportacaoDAO.findByNrAtendimento(tbodVenda.getPropostaDcms());
 			for (TbodTxtImportacao tbodTxtImportacao : listTbodTxtImportacao) {
-				TxtImportacao txtImportacao = new TxtImportacao();
-				txtImportacao.setNrAtendimento(tbodTxtImportacao.getNrAtendimento());
-				txtImportacao.setDsErroRegistro(tbodTxtImportacao.getDsErroRegistro());
-				listTxtImportacao.add(txtImportacao);
+				listTxtImportacao.add(
+						ConvertObjectUtil.translateTbodTxtImportacaoToTxtImportacao(
+								tbodTxtImportacao));
 			}
-			propostaCritica.setCriticas(listTxtImportacao);
+			vendaCritica.setCriticas(listTxtImportacao);
+			
+			propostaCritica.setVenda(vendaCritica);
 		}
 		
 		return propostaCritica;
