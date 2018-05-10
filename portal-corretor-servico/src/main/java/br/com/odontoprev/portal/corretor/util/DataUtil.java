@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
@@ -61,12 +62,15 @@ public class DataUtil {
 
 	public static final String isEffectiveDate(long dayDueDate) {
 		String strDataVigencia = "dd/MM/yyyy";
-//		function isEffectiveDate(dayDueDate) {
+//	function isEffectiveDate(dayDueDate) {
 //
-//		    var currentTime = moment();
-//		    currentTime.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-//		    currentTime.toISOString();
-//		    currentTime.format();
+//		var currentTime = moment();
+		Calendar currentTime = Calendar.getInstance();
+	
+//		currentTime.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+		//currentTime.set(arg0, arg1, arg2, arg3, arg4, arg5);;
+//		currentTime.toISOString();
+//		currentTime.format();
 //
 //		    var month = currentTime.format('MM');
 //		    var day = currentTime.format('DD');
