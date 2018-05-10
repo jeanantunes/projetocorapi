@@ -181,7 +181,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 		}		
 		
 	}
-	
+
+	//201805102039 - esert - COR-169 - obter tbodEmpresa.getEmpDcms()); 				
 	@Override
 	public CnpjDados findDadosEmpresaByCnpj(String cnpj) throws ParseException {
 		
@@ -203,6 +204,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 					cnpjDados.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 					cnpjDados.setRazaoSocial(tbodEmpresa.getRazaoSocial());
 					cnpjDados.setCnpj(cnpj);				
+					cnpjDados.setEmpDcms(tbodEmpresa.getEmpDcms()); //201805102039 - esert - COR-169				
 				} else {				
 					tbodEmpresa = empresaDao.findByCnpj(cnpj);
 					if(tbodEmpresa == null) {
@@ -211,6 +213,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 						cnpjDados.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 						cnpjDados.setRazaoSocial(tbodEmpresa.getRazaoSocial());
 						cnpjDados.setCnpj(cnpj);
+						cnpjDados.setEmpDcms(tbodEmpresa.getEmpDcms()); //201805102039 - esert - COR-169				
 					}						
 				}
 			} else {
