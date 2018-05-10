@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
@@ -59,4 +60,80 @@ public class DataUtil {
 
 	}
 
+	public static final String isEffectiveDate(long dayDueDate) {
+		String strDataVigencia = "dd/MM/yyyy";
+//	function isEffectiveDate(dayDueDate) {
+//
+//		var currentTime = moment();
+		Calendar currentTime = Calendar.getInstance();
+	
+//		currentTime.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+		//currentTime.set(arg0, arg1, arg2, arg3, arg4, arg5);;
+//		currentTime.toISOString();
+//		currentTime.format();
+//
+//		    var month = currentTime.format('MM');
+//		    var day = currentTime.format('DD');
+//		    var year = currentTime.format('YYYY');
+//
+//		    $("#divProximoMes").addClass('hide');
+//
+//		    switch (dayDueDate) {
+//
+//		        case "05":
+//
+//		            var vencimento;
+//		            var dataVencimento = moment("05-" + month.toString() + "-" + year, "DD-MM-YYYY");
+//		            var dataVencimento = dataVencimento.add(1, 'M');
+//
+//		            var olderDate = moment(dataVencimento).add(-11, "days");
+//
+//		            if (currentTime.isAfter(olderDate)) vencimento = dataVencimento.add(1, 'M');
+//		            else vencimento = dataVencimento;
+//
+//		            var dataDeCorteDeMovimentacao = moment(dataVencimento).add(-11, "days");
+//
+//		            $("#corte").html('Data de corte de movimentação:<br>' + dataDeCorteDeMovimentacao.format("DD/MM/YYYY"));
+//		            $("#vencimento").html('Data de vencimento:<br>' + vencimento.format("DD/MM/YYYY"));
+//		            $("#vigencia").html('Data de vigência:<br>' + vencimento.format("DD/MM/YYYY"));
+//
+//		            break;
+//
+//		        case "15": 
+//
+//		            var vencimento;
+//		            var dataVencimento = moment("15-" + month.toString() + "-" + year, "DD-MM-YYYY");
+//		            var olderDate = moment(dataVencimento).add(-11, "days");
+//
+//		            if (currentTime.isAfter(olderDate)) vencimento = dataVencimento.add(1, 'M');
+//		            else vencimento = dataVencimento;
+//
+//		            var dataDeCorteDeMovimentacao = moment(dataVencimento).add(-11, "days");
+//
+//		            $("#corte").html('Data de corte de movimentação:<br>' + dataDeCorteDeMovimentacao.format("DD/MM/YYYY"));
+//		            $("#vencimento").html('Data de vencimento:<br>' + vencimento.format("DD/MM/YYYY"));
+//		            $("#vigencia").html('Data de vigência:<br>' + vencimento.format("DD/MM/YYYY"));
+//
+//		            break;
+//
+//		        case "25":
+//
+//		            var vencimento;
+//		            var dataVencimento = moment("25-" + month.toString() + "-" + year, "DD-MM-YYYY");
+//		            var olderDate = moment(dataVencimento).add(-11, "days");
+//
+//		            if (currentTime.isAfter(olderDate)) vencimento = dataVencimento.add(1, 'M');
+//		            else vencimento = dataVencimento;
+//
+//		            var dataDeCorteDeMovimentacao = moment(dataVencimento).add(-11, "days");
+//
+//		            $("#corte").html('Data de corte de movimentação:<br>' + dataDeCorteDeMovimentacao.format("DD/MM/YYYY"));
+//		            $("#vencimento").html('Data de vencimento:<br>' + vencimento.format("DD/MM/YYYY"));
+//		            $("#vigencia").html('Data de vigência:<br>' + vencimento.format("DD/MM/YYYY"));
+//
+//		            break;
+//		    }
+//		}
+		return strDataVigencia;
+	}
 }
