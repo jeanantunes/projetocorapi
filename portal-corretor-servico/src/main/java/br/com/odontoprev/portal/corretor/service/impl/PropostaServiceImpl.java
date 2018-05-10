@@ -139,9 +139,11 @@ public class PropostaServiceImpl implements PropostaService {
 			//deve ser a primeira atribuicao //201805091200 - esert
 			vendaCritica = ConvertObjectUtil.translateTbodVendaToVendaCritica(tbodVenda, vendaCritica);
 						
+			
 			vendaCritica.setDadosBancariosVenda(
 					ConvertObjectUtil.translateTbodVendaDadosBancariosToDadosBancariosVenda(
 							tbodVenda));
+			
 			
 			vendaCritica.setPropostaDcms(tbodVenda.getPropostaDcms());
 
@@ -151,6 +153,7 @@ public class PropostaServiceImpl implements PropostaService {
 					ConvertObjectUtil.translateTbodResponsavelContratualToResponsavelContratual(
 							tbodResponsavelContratual));
 						
+			
 			List<TbodVendaVida> tbodVendaVidas = tbodVenda.getTbodVendaVidas();
 			if(tbodVendaVidas!=null) {
 				List<Beneficiario> vidas = new ArrayList<Beneficiario>();
