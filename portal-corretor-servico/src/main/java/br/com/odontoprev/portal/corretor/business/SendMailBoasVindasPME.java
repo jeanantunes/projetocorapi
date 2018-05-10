@@ -26,7 +26,7 @@ public class SendMailBoasVindasPME {
 	
 	public void sendMail(
 			String email, 
-			String nomeCorretora, 
+			String nomeEmpresa, 
 			String login, 
 			String senha, 
 			String linkPortal, 
@@ -36,7 +36,7 @@ public class SendMailBoasVindasPME {
 		
 		//201805091825 - esert
 		log.info("sendMail(email:["+ email +"])");
-		log.info("sendMail(nomeCorretora:["+ nomeCorretora +"])");
+		log.info("sendMail(nomeEmpresa:["+ nomeEmpresa +"])");
 		log.info("sendMail(login:["+ login +"])");
 		log.info("sendMail(linkPortal:["+ linkPortal +"])");
 		log.info("sendMail(dataVigencia:["+ dataVigencia +"])");
@@ -62,7 +62,7 @@ public class SendMailBoasVindasPME {
 			RequestEmail body = new RequestEmail(); 
 			
 			String msg = this.montarBodyMsg(
-					nomeCorretora, 
+					nomeEmpresa, 
 					login, 
 					senha, 
 					linkPortal, 
@@ -90,7 +90,7 @@ public class SendMailBoasVindasPME {
 
 	//201805091610 - esert - COR-160
 	private String montarBodyMsg(
-			String nomeCorretora, 
+			String nomeEmpresa, 
 			String login, 
 			String senha, 
 			String linkPortal, 
@@ -125,7 +125,7 @@ public class SendMailBoasVindasPME {
 						.replace("@LD", imgEmailBase + imgEmailLb)
 						.replace("@YT", imgEmailBase + imgEmailYt)
 						.replace("@ANS", imgEmailBase + imgEmailAsn)
-						.replace("@CORRETORA", nomeCorretora)
+						.replace("@NOMEEMPRESA", nomeEmpresa)
 						.replace("@LOGIN", login)
 						.replace("@SENHA", senha)
 						.replace("@LINKPORTAL", linkPortal)
