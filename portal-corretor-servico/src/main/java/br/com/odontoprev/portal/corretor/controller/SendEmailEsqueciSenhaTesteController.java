@@ -17,16 +17,16 @@ public class SendEmailEsqueciSenhaTesteController {
 	private static final Log log = LogFactory.getLog(SendEmailEsqueciSenhaTesteController.class);
 	
 	@Autowired
-	SendMailEsqueciSenha sendMail;
+	SendMailEsqueciSenha sendMailEsqueciSenha;
 	
-	@RequestMapping(value = "/sendMailEsqueciSenhaTeste", method = { RequestMethod.GET })
-	public void sendMailEsqueciSenhaTeste() {
-		
-		log.info("Inicio sendMail");
-		
-		sendMail.sendMail("izaura.fsilva@gmail.com", "MzgzMzA5ODI4NzQyMDE4LTA0LTA2VDE3OjQxOjI5LjgwNg");
-		
-		log.info("Fim sendMail");
-	}
+//	@RequestMapping(value = "/sendMailEsqueciSenhaTeste", method = { RequestMethod.GET })
+//	public void sendMailEsqueciSenhaTeste() {
+//		
+//		log.info("Inicio sendMail");
+//		
+//		sendMailEsqueciSenha.sendMail("izaura.fsilva@gmail.com", "MzgzMzA5ODI4NzQyMDE4LTA0LTA2VDE3OjQxOjI5LjgwNg");
+//		
+//		log.info("Fim sendMail");
+//	}
 
 }
