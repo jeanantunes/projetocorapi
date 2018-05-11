@@ -6,7 +6,7 @@ public class CnpjDados {
 	private String cnpj;
 	private String razaoSocial;
 	private String observacao;
-	private String empDcms; //2018050102036 - esert - COR-169 
+	private String empDcms; //201805102036 - esert - COR-169 
 	
 	public Long getCdEmpresa() {
 		return cdEmpresa;

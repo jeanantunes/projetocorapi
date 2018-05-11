@@ -3,6 +3,8 @@ package br.com.odontoprev.portal.corretor.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +26,7 @@ import br.com.odontoprev.portal.corretor.dto.JsonVendaPF;
 import br.com.odontoprev.portal.corretor.dto.JsonVendaPME;
 import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.dto.ResponsavelContratual;
+import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.TxtImportacao;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaCritica;
@@ -31,12 +34,15 @@ import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
+import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodTxtImportacao;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 
 @Service
 public class ConvertObjectUtil {
+
+	private static final Log log = LogFactory.getLog(ConvertObjectUtil.class); //201805111218 - esert - COR-172
 
 	public String ConvertObjectToJson(Venda vendaPF, VendaPME vendaPME) throws JsonProcessingException {		
 		return vendaPF != null ? jsonPF(vendaPF) : jsonPME(vendaPME);		
@@ -475,6 +481,53 @@ public class ConvertObjectUtil {
 			venda.setTipoPagamento(tbodVenda.getTipoPagamento());
 		}
 		return venda;
+	}
+
+	//201805111210 - esert - COR-172
+	public static TokenAceite translateTbodTokenAceiteToTokenAceite(TbodTokenAceite tbodTokenAceite) { //201805111210 - esert - COR-172
+		TokenAceite tokenAceite = null;
+		log.info("translateTbodTokenAceiteToTokenAceite - ini");
+		if(tbodTokenAceite!=null) {
+			tokenAceite = new TokenAceite();
+			
+			tokenAceite.setEmail(tbodTokenAceite.getEmailEnvio());
+			tokenAceite.setIp(tbodTokenAceite.getIp());
+			if(tbodTokenAceite.getId()!=null) {
+				tokenAceite.setToken(tbodTokenAceite.getId().getCdToken());
+				tokenAceite.setCdVenda(tbodTokenAceite.getId().getCdVenda());
+			} else {
+				log.error("tbodTokenAceite.getId()==null");				
+			}
+//			tokenAceite.setCdTokenAceite(null); //???
+
+			if(tbodTokenAceite.getDtAceite()!=null) {
+				try {
+					tokenAceite.setDataAceite(DataUtil.dateToStringParse(tbodTokenAceite.getDtAceite()));
+				} catch (Exception e) {
+					log.error("Data inválida tbodTokenAceite.getDtAceite(" + tbodTokenAceite.getDtAceite() + ")", e);
+				}
+			}
+
+			if(tbodTokenAceite.getDtEnvio()!=null) {
+				try {
+					tokenAceite.setDataEnvio(DataUtil.dateToStringParse(tbodTokenAceite.getDtEnvio()));
+				} catch (Exception e) {
+					log.error("Data inválida tbodTokenAceite.getDtEnvio(" + tbodTokenAceite.getDtEnvio() + ")", e);
+				}
+			}
+						
+			if(tbodTokenAceite.getDtExpiracao()!=null) {
+				try {
+					tokenAceite.setDataExpiracao(DataUtil.dateToStringParse(tbodTokenAceite.getDtExpiracao()));
+				} catch (Exception e) {
+					log.error("Data inválida tbodTokenAceite.getDtExpiracao(" + tbodTokenAceite.getDtExpiracao() + ")", e);
+				}
+			}
+			
+			
+		}
+		log.info("translateTbodTokenAceiteToTokenAceite - fim");
+		return tokenAceite;
 	}	
 	
 }

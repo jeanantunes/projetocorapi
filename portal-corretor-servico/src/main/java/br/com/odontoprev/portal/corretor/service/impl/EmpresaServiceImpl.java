@@ -18,16 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
 import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
+import br.com.odontoprev.portal.corretor.business.SendMailAceite;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
+import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dto.CnpjDados;
+import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
+import br.com.odontoprev.portal.corretor.dto.EmailAceite;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
+import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
+import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 import br.com.odontoprev.portal.corretor.util.XlsVidas;
@@ -38,10 +45,13 @@ public class EmpresaServiceImpl implements EmpresaService {
 	private static final Log log = LogFactory.getLog(EmpresaServiceImpl.class);
 
 	@Autowired
-	EmpresaDAO empresaDao;
+	EmpresaDAO empresaDAO;
 
 	@Autowired
-	VendaDAO vendaDao;
+	VendaDAO vendaDAO;
+	
+	@Autowired
+	TokenAceiteDAO tokenAceiteDAO;
 
 	@Autowired
 	EmpresaBusiness empresaBusiness;
@@ -77,11 +87,11 @@ public class EmpresaServiceImpl implements EmpresaService {
 				throw new Exception("Os parametros sao obrigatorios!");
 			}
 
-			tbEmpresa = empresaDao.findBycdEmpresaAndCnpj(empresaDcms.getCdEmpresa(), empresaDcms.getCnpj());
+			tbEmpresa = empresaDAO.findBycdEmpresaAndCnpj(empresaDcms.getCdEmpresa(), empresaDcms.getCnpj());
 
 			if (tbEmpresa != null) {
 				tbEmpresa.setEmpDcms(empresaDcms.getEmpDcms());
-				empresaDao.save(tbEmpresa);
+				empresaDAO.save(tbEmpresa);
 				
 				List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa());
 				
@@ -111,7 +121,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	//201805091745 - esert
 	//201805101941 - esert - excluido param cnpj
-	//201805101947 - esert - service adaptado para reenvio de emails vide Fernando@ODPV
+	//201805101947 - esert - service para reenvio de emails vide Fernando@ODPV
 	@Override
 	public ResponseEntity<EmpresaDcms> sendEmailBoasVindasPME(Long cdEmpresa) {
 		Long longDiaVencimentoFatura = 0L;
@@ -120,7 +130,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 		try {
 			log.info("cdEmpresa:[" + cdEmpresa + "]");
 			
-			TbodEmpresa tbodEmpresa = empresaDao.findOne(cdEmpresa);
+			TbodEmpresa tbodEmpresa = empresaDAO.findOne(cdEmpresa);
 			
 			if(tbodEmpresa==null) {
 				log.info("tbodEmpresa==null");
@@ -134,7 +144,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			
 			log.info("tbodEmpresa.getEmpDcms():[" + tbodEmpresa.getEmpDcms() + "]");
 			
-			List<TbodVenda> tbodVendas = vendaDao.findByTbodEmpresaCdEmpresa(cdEmpresa);
+			List<TbodVenda> tbodVendas = vendaDAO.findByTbodEmpresaCdEmpresa(cdEmpresa);
 			
 			if(tbodVendas!=null) {				
 				log.info("tbodVendas.size():[" + tbodVendas.size() + "]");				
@@ -198,7 +208,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			
 			if ( cnpj.length() == 14) {
 				
-				tbodEmpresa = empresaDao.findByCnpj(mask.valueToString(cnpj));
+				tbodEmpresa = empresaDAO.findByCnpj(mask.valueToString(cnpj));
 								
 				if(tbodEmpresa != null) {
 					cnpjDados.setCdEmpresa(tbodEmpresa.getCdEmpresa());
@@ -206,7 +216,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 					cnpjDados.setCnpj(cnpj);				
 					cnpjDados.setEmpDcms(tbodEmpresa.getEmpDcms()); //201805102039 - esert - COR-169				
 				} else {				
-					tbodEmpresa = empresaDao.findByCnpj(cnpj);
+					tbodEmpresa = empresaDAO.findByCnpj(cnpj);
 					if(tbodEmpresa == null) {
 						cnpjDados.setObservacao("Cnpj não encontrado na base!!!");
 					} else {
@@ -226,6 +236,183 @@ public class EmpresaServiceImpl implements EmpresaService {
 		}
 		
 		return cnpjDados;	
+	}
+	
+	//201805111131 - esert - COR-172 - Serviço - Consultar dados empresa PME 				
+	@Override
+	public CnpjDadosAceite findDadosEmpresaAceiteByCnpj(String cnpj) throws ParseException { //201805111131 - esert - COR-172
+		CnpjDadosAceite cnpjDadosAceite = new CnpjDadosAceite();		
+		
+		log.info("findDadosEmpresaAceiteByCnpj - ini");
+		
+		MaskFormatter mask = new MaskFormatter("##.###.###/####-##");
+		mask.setValueContainsLiteralCharacters(false);
+		
+		TbodEmpresa tbodEmpresa = null;		
+		TbodVenda tbodVenda = null;		
+		TbodTokenAceite tbodTokenAceite = null;		
+		
+		try {
+			
+			if ( cnpj.length() == 14) {
+				
+				tbodEmpresa = empresaDAO.findByCnpj(mask.valueToString(cnpj));
+				
+				if(tbodEmpresa == null) {
+					tbodEmpresa = empresaDAO.findByCnpj(cnpj);
+				}
+				
+				if(tbodEmpresa == null) {
+					cnpjDadosAceite.setObservacao("CNPJ não encontrado!!!");
+				} else {
+					cnpjDadosAceite = translateTbodEmpresaToCnpjDadosAceite(cnpjDadosAceite, tbodEmpresa);
+					
+					List<TbodVenda> listTbodVenda = vendaDAO.findByTbodEmpresaCdEmpresa(tbodEmpresa.getCdEmpresa());
+					
+					if(listTbodVenda!=null) {
+						Date maiorDataVenda = null;
+						Long maiorCdVenda = null;
+						for (TbodVenda tbodVendaItem : listTbodVenda) {
+							if(
+								maiorDataVenda==null
+								||
+								maiorCdVenda==null
+								||
+								tbodVendaItem.getDtVenda().getTime() > maiorDataVenda.getTime() //201805111201 - esert - COR-172 - fica com maiorDataVenda para ter o mais recente
+								||
+								tbodVendaItem.getCdVenda() > maiorCdVenda //201805111201 - esert - COR-172 - fica com maiorDataVenda para ter o mais recente
+							) {
+								tbodVenda = tbodVendaItem;
+								maiorDataVenda = tbodVenda.getDtVenda(); //201805111201 - esert - COR-172 - fica com maiorDataVenda para ter o mais recente
+								maiorCdVenda = tbodVenda.getCdVenda(); //201805111517 - esert - COR-172 - fica com maiorDataVenda para ter o mais recente
+							}
+						}
+					}
+					
+					if(tbodVenda == null) {
+						cnpjDadosAceite.setObservacao("Venda não encontrado !!!");
+					} else {
+						
+						cnpjDadosAceite.setCdVenda(tbodVenda.getCdVenda());
+						cnpjDadosAceite.setDtVenda(tbodVenda.getDtVenda()); //201805111519 - esert - informativo de desempate
+						
+						tbodTokenAceite = tokenAceiteDAO.findByTbodVendaCdVenda(tbodVenda.getCdVenda());
+						
+						if(tbodTokenAceite==null) {
+							cnpjDadosAceite.setObservacao("TokenAceite não encontrado !!!");							
+						} else {
+							cnpjDadosAceite = translateTbodTokenAceiteToCnpjDadosAceite(cnpjDadosAceite, tbodTokenAceite);
+						}
+					}
+				}
+				
+			} else {
+				cnpjDadosAceite.setObservacao("CNPJ obrigatório informar 14 digitos!!!");
+			}
+			
+		} catch (Exception e) {
+			log.error("Exception e:["+ e.getMessage() +"]");
+			cnpjDadosAceite.setObservacao("Encontrado +1 cnpj na base!!!");
+		}
+		
+		log.info("findDadosEmpresaAceiteByCnpj - fim");
+
+		return cnpjDadosAceite;	
+	}
+
+	//201805111210 - esert - COR-172
+	private CnpjDadosAceite translateTbodTokenAceiteToCnpjDadosAceite( //201805111210 - esert - COR-172
+			CnpjDadosAceite cnpjDadosAceite,
+			TbodTokenAceite tbodTokenAceite
+	) {
+		log.info("translateTbodTokenAceiteToCnpjDadosAceite - ini");
+
+		if(tbodTokenAceite!=null) {
+			
+			if(cnpjDadosAceite==null) {
+				cnpjDadosAceite = new CnpjDadosAceite();
+			}
+			
+			cnpjDadosAceite.setTokenAceite(
+					ConvertObjectUtil.translateTbodTokenAceiteToTokenAceite(
+							tbodTokenAceite
+					)
+			);
+		}
+		log.info("translateTbodTokenAceiteToCnpjDadosAceite - fim");
+		return cnpjDadosAceite;
+	}
+
+	//201805111153 - esert - COR-172
+	private CnpjDadosAceite translateTbodEmpresaToCnpjDadosAceite( //201805111153 - esert - COR-172
+			CnpjDadosAceite cnpjDadosAceite, 
+			TbodEmpresa tbodEmpresa
+	) {
+		log.info("translateTbodEmpresaToCnpjDadosAceite - ini");
+
+		if(tbodEmpresa!=null) {
+			
+			if(cnpjDadosAceite==null) {
+				cnpjDadosAceite = new CnpjDadosAceite();
+			}
+			
+			cnpjDadosAceite.setCdEmpresa(tbodEmpresa.getCdEmpresa());
+			cnpjDadosAceite.setRazaoSocial(tbodEmpresa.getRazaoSocial());
+			cnpjDadosAceite.setCnpj(tbodEmpresa.getCnpj());				
+			cnpjDadosAceite.setEmpDcms(tbodEmpresa.getEmpDcms()); //201805102039 - esert - COR-169
+		}
+		log.info("translateTbodEmpresaToCnpjDadosAceite - fim");
+		return cnpjDadosAceite;
+	}
+
+	//201805111544 - esert - COR-171 - Serviço - Atualizar email cadastrado empresa
+	@Override
+	@Transactional
+	public EmpresaResponse updateEmpresaEmailAceite(EmpresaEmailAceite empresaEmail) { //201805111544 - esert - COR-171 - Serviço - Atualizar email cadastrado empresa
+
+		log.info("[EmpresaServiceImpl::updateEmpresa]");
+		
+		TbodEmpresa tbEmpresa = new TbodEmpresa();
+
+		try {
+			
+			if(
+				empresaEmail.getCdEmpresa() == null
+				|| 
+				empresaEmail.getCdEmpresa() == 0
+				|| 
+				empresaEmail.getEmail() == null
+				||
+				empresaEmail.getEmail().isEmpty()
+			){
+				return (new EmpresaResponse(empresaEmail.getCdEmpresa(), "Os parametros sao obrigatorios!"));
+			}
+
+			tbEmpresa = empresaDAO.findOne(empresaEmail.getCdEmpresa());
+
+			if (tbEmpresa != null) {
+				tbEmpresa.setEmail(empresaEmail.getEmail());
+				empresaDAO.save(tbEmpresa);
+								
+				//201805091745 - esert
+				//201805101609 - esert - criar servico independente para Email Boas Vindas PME vide Fernando@ODPV em 20180510
+				//201805101941 - esert - excluido param cnpj
+//				ResponseEntity<EmpresaDcms> res = this.sendEmailBoasVindasPME(empresaEmail.getCdEmpresa());
+//				log.info("res:[" + res.toString() + "]");
+				
+				(new SendMailAceite()).sendMail(new EmailAceite());
+			}
+			else {
+				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
+			}
+
+		} catch (Exception e) {
+			log.error("EmpresaServiceImpl :: Erro ao atualizar empresaDcms. Detalhe: [" + e.getMessage() + "]");
+			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [" + e.getMessage() + "]");
+		}
+
+		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
+
 	}
 
 }
