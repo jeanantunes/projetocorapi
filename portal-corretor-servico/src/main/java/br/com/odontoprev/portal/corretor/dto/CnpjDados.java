@@ -6,6 +6,7 @@ public class CnpjDados {
 	private String cnpj;
 	private String razaoSocial;
 	private String observacao;
+	private String empDcms; //2018050102036 - esert - COR-169 
 	
 	public Long getCdEmpresa() {
 		return cdEmpresa;
@@ -32,10 +33,17 @@ public class CnpjDados {
 		this.observacao = observacao;
 	}
 	
+	public String getEmpDcms() {
+		return empDcms;
+	}
+	public void setEmpDcms(String empDcms) {
+		this.empDcms = empDcms;
+	}
+	
 	@Override
 	public String toString() {
 		return "CnpjDados [cdEmpresa=" + cdEmpresa + ", cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", observacao="
-				+ observacao + "]";
+				+ observacao + ", empDcms=" + empDcms + "]";
 	}	
 	
 	

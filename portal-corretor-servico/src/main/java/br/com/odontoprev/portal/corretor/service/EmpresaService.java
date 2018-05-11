@@ -2,6 +2,8 @@ package br.com.odontoprev.portal.corretor.service;
 
 import java.text.ParseException;
 
+import org.springframework.http.ResponseEntity;
+
 import br.com.odontoprev.portal.corretor.dto.CnpjDados;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
@@ -15,4 +17,5 @@ public interface EmpresaService {
 	
 	public CnpjDados findDadosEmpresaByCnpj(String cnpj) throws ParseException; 
 
+	public ResponseEntity<EmpresaDcms> sendEmailBoasVindasPME(Long cdEmpresa);
 }

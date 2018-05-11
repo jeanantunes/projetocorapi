@@ -271,12 +271,15 @@ public class ConvertObjectUtil {
 	//201805082112 - esert
 	//201805091130 - esert
 	//201805091243 - esert
+	//201805101505 - esert - CdTitular é o CdVida do Titular
 	public static Beneficiario translateTbodVidaToBeneficiario(TbodVida tbodVida) {
 		Beneficiario beneficiario = null;
 		if(tbodVida!=null) {
 			beneficiario = new Beneficiario();
 			beneficiario.setCdVida(tbodVida.getCdVida());
-			beneficiario.setCdTitular(0); //???
+			if(tbodVida.getTbodVida()!=null) { 
+				beneficiario.setCdTitular(tbodVida.getTbodVida().getCdVida()); //201805101505 - esert - CdTitular é o CdVida do Titular 
+			}
 			beneficiario.setCelular(tbodVida.getCelular());
 			beneficiario.setCpf(tbodVida.getCpf());
 			beneficiario.setCnpj(null); //???
@@ -426,8 +429,11 @@ public class ConvertObjectUtil {
 		TxtImportacao txtImportacao = null;
 		if(tbodTxtImportacao!=null) {
 			txtImportacao = new TxtImportacao();
+			txtImportacao.setNrImportacao(tbodTxtImportacao.getNrImportacao());
+			txtImportacao.setNrSeqRegistro(tbodTxtImportacao.getNrSeqRegistro());
 			txtImportacao.setNrAtendimento(tbodTxtImportacao.getNrAtendimento());
 			txtImportacao.setDsErroRegistro(tbodTxtImportacao.getDsErroRegistro());
+			txtImportacao.setNome(tbodTxtImportacao.getNome());
 		}
 		return txtImportacao;
 	}
