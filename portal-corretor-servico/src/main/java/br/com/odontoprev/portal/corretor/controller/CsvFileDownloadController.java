@@ -35,7 +35,7 @@ public class CsvFileDownloadController {
 		if(gestaoVendas != null && !gestaoVendas.isEmpty()) {
 			CsvUtil.gerarCsv(response, gestaoVendas);
 		}
-
+		
 	}
 
 	
