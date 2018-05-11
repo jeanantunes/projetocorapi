@@ -135,6 +135,7 @@ public class DataUtil {
 				log.info("olderDate_VencMenos11Dias:[" + sdf_ddMMyyyy.format(olderDate_VencMenos11Dias.getTime()) + "]");
 
 //	            if (currentTime.isAfter(olderDate)) 
+				//201805101739 - esert - porem para WEB usara DataVenda ao inves de CurrentDate vide Camila@ODPV
 				if(dataVenda.getTimeInMillis() > olderDate_VencMenos11Dias.getTimeInMillis()) {
 //					vencimento = dataVencimento.add(1, 'M');
 					dataVencimento.add(Calendar.MONTH, 1);
