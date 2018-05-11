@@ -133,9 +133,7 @@ public class BeneficiarioBusiness {
 		return new BeneficiarioResponse(1, "Vidas cadastradas.");
 	}
 
-	//201805091727 - esert - adicionado param [long diaVencimentoFatura] para aproveitar consulta ja realizada [TBOD_VENDA] e obter [FATURA_VENCIMENTO]
-	//201805091727 - esert - havendo mais de uma Venda, fica com o ultimo registro acreditando ser a venda mais recente
-	public List<TbodVida> buscarVidasPorEmpresa(Long cdEmpresa, long diaVencimentoFatura) {
+	public List<TbodVida> buscarVidasPorEmpresa(Long cdEmpresa) {
 
 		log.info("[buscarVidasPorEmpresa]");
 
@@ -149,7 +147,6 @@ public class BeneficiarioBusiness {
 
 			for (TbodVenda tbVenda : tbVendas) {
 				tbVendaVidas.addAll(tbVenda.getTbodVendaVidas());
-				diaVencimentoFatura = tbVenda.getFaturaVencimento(); //havendo mais de uma Venda, fica com o ultimo registro acreditando ser a venda mais recente //201805091727 - esert
 			}
 
 			List<TbodVida> tbVidas = new ArrayList<TbodVida>();

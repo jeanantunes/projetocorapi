@@ -139,9 +139,11 @@ public class PropostaServiceImpl implements PropostaService {
 			//deve ser a primeira atribuicao //201805091200 - esert
 			vendaCritica = ConvertObjectUtil.translateTbodVendaToVendaCritica(tbodVenda, vendaCritica);
 						
+			
 			vendaCritica.setDadosBancariosVenda(
 					ConvertObjectUtil.translateTbodVendaDadosBancariosToDadosBancariosVenda(
 							tbodVenda));
+			
 			
 			vendaCritica.setPropostaDcms(tbodVenda.getPropostaDcms());
 
@@ -151,6 +153,7 @@ public class PropostaServiceImpl implements PropostaService {
 					ConvertObjectUtil.translateTbodResponsavelContratualToResponsavelContratual(
 							tbodResponsavelContratual));
 						
+			
 			List<TbodVendaVida> tbodVendaVidas = tbodVenda.getTbodVendaVidas();
 			if(tbodVendaVidas!=null) {
 				List<Beneficiario> vidas = new ArrayList<Beneficiario>();
@@ -176,6 +179,15 @@ public class PropostaServiceImpl implements PropostaService {
 			List<TxtImportacao> listTxtImportacao = new ArrayList<TxtImportacao>();
 			List<TbodTxtImportacao> listTbodTxtImportacao = txtImportacaoDAO.findByNrAtendimento(tbodVenda.getPropostaDcms());
 			for (TbodTxtImportacao tbodTxtImportacao : listTbodTxtImportacao) {
+				//201805111000 - esert - nao listar critica sem descricao porque significa que nao houve critica (vide Fernando@ODPV)
+				if(
+					tbodTxtImportacao.getDsErroRegistro()==null 
+					|| 
+					tbodTxtImportacao.getDsErroRegistro().isEmpty() 
+				) {
+					continue; //201805111000 - esert - nao listar registros sem descricao porque significa que nao houve critica (vide Fernando@ODPV)
+				}
+				
 				listTxtImportacao.add(
 						ConvertObjectUtil.translateTbodTxtImportacaoToTxtImportacao(
 								tbodTxtImportacao));
