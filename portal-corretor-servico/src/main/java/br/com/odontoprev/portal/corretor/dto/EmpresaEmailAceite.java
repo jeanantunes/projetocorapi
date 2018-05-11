@@ -7,6 +7,7 @@ public class EmpresaEmailAceite implements Serializable { //201805111538 - esert
 	private static final long serialVersionUID = -1388958358380373819L;
 
 	private Long cdEmpresa;
+	private Long cdVenda;
 	private String email;
 
 	public Long getCdEmpresa() {
@@ -14,6 +15,13 @@ public class EmpresaEmailAceite implements Serializable { //201805111538 - esert
 	}
 	public void setCdEmpresa(Long cdEmpresa) {
 		this.cdEmpresa = cdEmpresa;
+	}
+	
+	public Long getCdVenda() {
+		return cdVenda;
+	}
+	public void setCdVenda(Long cdVenda) {
+		this.cdVenda = cdVenda;
 	}
 	
 	public String getEmail() {
@@ -25,7 +33,7 @@ public class EmpresaEmailAceite implements Serializable { //201805111538 - esert
 	
 	@Override
 	public String toString() {
-		return "EmpresaEmail [cdEmpresa=" + cdEmpresa + ", email=" + email + "]";
+		return "EmpresaEmailAceite [cdEmpresa=" + cdEmpresa + ", cdVenda=" + cdVenda + ", email=" + email + "]";
 	}
 	
 }

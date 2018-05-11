@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
-import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
 import br.com.odontoprev.portal.corretor.business.SendMailAceite;
+import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
@@ -29,11 +29,13 @@ import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
+import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.service.PlanoService;
 import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
@@ -60,7 +62,13 @@ public class EmpresaServiceImpl implements EmpresaService {
 	BeneficiarioBusiness beneficiarioBusiness;
 
 	@Autowired
+	SendMailAceite sendMailAceite;
+	
+	@Autowired
 	SendMailBoasVindasPME sendMailBoasVindasPME;
+
+	@Autowired
+	PlanoService planoService;
 
 	@Override
 	@Transactional
@@ -370,7 +378,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 	@Transactional
 	public EmpresaResponse updateEmpresaEmailAceite(EmpresaEmailAceite empresaEmail) { //201805111544 - esert - COR-171 - Serviço - Atualizar email cadastrado empresa
 
-		log.info("[EmpresaServiceImpl::updateEmpresa]");
+		log.info("updateEmpresaEmailAceite - ini");
 		
 		TbodEmpresa tbEmpresa = new TbodEmpresa();
 
@@ -380,12 +388,24 @@ public class EmpresaServiceImpl implements EmpresaService {
 				empresaEmail.getCdEmpresa() == null
 				|| 
 				empresaEmail.getCdEmpresa() == 0
+			){
+				return (new EmpresaResponse(empresaEmail.getCdEmpresa(), "parametro CdEmpresa obrigatorio!"));
+			}
+			
+			if(
+				empresaEmail.getCdVenda() == null
 				|| 
+				empresaEmail.getCdVenda() == 0
+			){
+				return (new EmpresaResponse(empresaEmail.getCdEmpresa(), "Os parametros sao obrigatorios!"));
+			}
+			
+			if(
 				empresaEmail.getEmail() == null
 				||
 				empresaEmail.getEmail().isEmpty()
 			){
-				return (new EmpresaResponse(empresaEmail.getCdEmpresa(), "Os parametros sao obrigatorios!"));
+				return (new EmpresaResponse(0, "parametro Email obrigatorio !"));
 			}
 
 			tbEmpresa = empresaDAO.findOne(empresaEmail.getCdEmpresa());
@@ -394,15 +414,28 @@ public class EmpresaServiceImpl implements EmpresaService {
 				tbEmpresa.setEmail(empresaEmail.getEmail());
 				empresaDAO.save(tbEmpresa);
 								
-				//201805091745 - esert
-				//201805101609 - esert - criar servico independente para Email Boas Vindas PME vide Fernando@ODPV em 20180510
-				//201805101941 - esert - excluido param cnpj
-//				ResponseEntity<EmpresaDcms> res = this.sendEmailBoasVindasPME(empresaEmail.getCdEmpresa());
-//				log.info("res:[" + res.toString() + "]");
+				TbodVenda tbodVenda = vendaDAO.findOne(empresaEmail.getCdVenda());
+				if(tbodVenda==null) {
+					return (new EmpresaResponse(empresaEmail.getCdVenda(), "TbodVenda nao encontrado para empresaEmail.getCdVenda("+ empresaEmail.getCdVenda() +")!"));
+				}
 				
-				(new SendMailAceite()).sendMail(new EmailAceite());
-			}
-			else {
+				TbodTokenAceite tbodTokenAceite = tokenAceiteDAO.findByTbodVendaCdVenda(empresaEmail.getCdVenda());
+				if(tbodTokenAceite==null) {
+					return (new EmpresaResponse(empresaEmail.getCdVenda(), "TbodTokenAceite nao encontrado para empresaEmail.getCdVenda(" + empresaEmail.getCdVenda() + ")!"));
+				}
+
+				EmailAceite emailAceite = new EmailAceite();
+				emailAceite.setNomeCorretor(tbodVenda.getTbodForcaVenda().getNome());
+				emailAceite.setNomeCorretora(tbodVenda.getTbodForcaVenda().getTbodCorretora().getNome());
+				emailAceite.setNomeEmpresa(tbodVenda.getTbodEmpresa().getRazaoSocial());
+				emailAceite.setEmailEnvio(tbodVenda.getTbodEmpresa().getEmail());
+				emailAceite.setToken(tbodTokenAceite.getId().getCdToken());
+				
+				List<Plano> planos = planoService.findPlanosByEmpresa(tbodVenda.getTbodEmpresa().getCdEmpresa());
+											
+				emailAceite.setPlanos(planos);
+				sendMailAceite.sendMail(emailAceite);
+			} else {
 				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
 			}
 
@@ -410,6 +443,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 			log.error("EmpresaServiceImpl :: Erro ao atualizar empresaDcms. Detalhe: [" + e.getMessage() + "]");
 			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [" + e.getMessage() + "]");
 		}
+		
+		log.info("updateEmpresaEmailAceite - fim");
 
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
 
