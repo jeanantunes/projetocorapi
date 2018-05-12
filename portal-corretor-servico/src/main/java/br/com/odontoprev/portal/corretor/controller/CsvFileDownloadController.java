@@ -25,7 +25,7 @@ public class CsvFileDownloadController {
 	@Autowired
 	RelatorioGestaoVendaService relatorioGestaoVendaService;
 	
-@RequestMapping(value = "downloadCSV/{cnpj}", method = { RequestMethod.GET })
+	@RequestMapping(value = "corretora/downloadCSV/{cnpj}", method = { RequestMethod.GET })
 	public void downloadCSV(@PathVariable String cnpj, HttpServletResponse response) {
 		
 		log.info("downloadCSV");
