@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.odontoprev.portal.corretor.business.SendMailBusiness;
+import br.com.odontoprev.portal.corretor.business.SendMailAceite;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dto.EmailAceite;
 import br.com.odontoprev.portal.corretor.dto.Plano;
@@ -90,8 +90,8 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 										
 			emailAceite.setPlanos(planos);
 			
-			SendMailBusiness mail = new SendMailBusiness();
-			mail.sendMail(emailAceite);
+			SendMailAceite sendMailAceite = new SendMailAceite();
+			sendMailAceite.sendMail(emailAceite);
 			
 		} catch (Exception e) {
 			log.error(e);

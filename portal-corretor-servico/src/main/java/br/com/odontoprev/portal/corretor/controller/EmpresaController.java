@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.CnpjDados;
+import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
+import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
@@ -55,6 +57,32 @@ public class EmpresaController {
 		CnpjDados cnpjDados = empresaService.findDadosEmpresaByCnpj(cnpj);
 		
 		return ResponseEntity.ok(cnpjDados);
+	}
+
+	@RequestMapping(value = "/cnpj-dadosaceite/{cnpj}", method = { RequestMethod.GET })
+	public ResponseEntity<CnpjDadosAceite> findCnpjDadosAceite(@PathVariable String cnpj) throws ParseException { //201805111244 - esert - COR-172
+		
+		log.info("#### findCnpjDadosAceite #### ini");	
+		
+		CnpjDadosAceite cnpjDadosAceite = empresaService.findDadosEmpresaAceiteByCnpj(cnpj); //201805111244 - esert - COR-172
+
+		log.info("#### findCnpjDadosAceite #### fim");	
+
+		return ResponseEntity.ok(cnpjDadosAceite);
+	}
+	
+	@RequestMapping(value = "/empresa-emailaceite", method = { RequestMethod.PUT })
+	public EmpresaResponse updateEmpresaEmailAceite(@RequestBody EmpresaEmailAceite empresaEmailAceite) {
+		
+		log.info("#### updateEmpresaEmailAceite #### ini");	
+		
+		log.info(empresaEmailAceite);
+		
+		EmpresaResponse response = empresaService.updateEmpresaEmailAceite(empresaEmailAceite);
+		
+		log.info("#### updateEmpresaEmailAceite #### fim");	
+
+		return response;
 	}
 
 }

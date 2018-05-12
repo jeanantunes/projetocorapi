@@ -65,4 +65,10 @@ public class TokenAceite implements Serializable {
 		this.token = token;
 	}
 	
+	@Override
+	public String toString() { //2018051102036 - esert - COR-172
+		return "TokenAceite [cdTokenAceite=" + cdTokenAceite + ", cdVenda=" + cdVenda + ", ip=" + ip + ", dataAceite="
+				+ dataAceite + ", email=" + email + ", dataEnvio=" + dataEnvio + ", dataExpiracao=" + dataExpiracao
+				+ ", token=" + token + "]";
+	}
 }

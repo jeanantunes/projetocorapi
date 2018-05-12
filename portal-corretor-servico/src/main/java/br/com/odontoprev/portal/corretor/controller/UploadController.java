@@ -34,7 +34,7 @@ public class UploadController {
 	@Autowired
 	UploadService uploadService;
 	
-	@RequestMapping(value="/upload/{cdCorretora}", method = RequestMethod.POST)
+	@RequestMapping(value="upload/{cdCorretora}", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cdCorretora  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
 		
 		File serverFile = serverFile(uploadFile);  

@@ -14,4 +14,6 @@ public interface TokenAceiteDAO extends CrudRepository<TbodTokenAceite, Long> {
 	TbodTokenAceite findTokenPorVendaToken(@Param("cd_Venda") Long cd_Venda ,@Param("cd_token") String cd_token, @Param("emailEnvio") String emailEnvio);
 	
 	TbodTokenAceite findByIdCdToken(String cdToken);
+	
+	TbodTokenAceite findByTbodVendaCdVenda(Long cdVenda); //201805111207 - esert - COR-172
 }
