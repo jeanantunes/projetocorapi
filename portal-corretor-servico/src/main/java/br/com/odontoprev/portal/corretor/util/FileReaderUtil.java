@@ -24,8 +24,6 @@ public class FileReaderUtil {
 		log.info("readHtmlFile");
 
 		try {
-
-			//InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("templates" + File.separatorChar + "emkt.html");
 			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("templates" + File.separatorChar + emkt);
 			BufferedInputStream bufferInput = new BufferedInputStream(inputStream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(bufferInput));
@@ -49,6 +47,53 @@ public class FileReaderUtil {
 
 		return html;
 
+	}
+	
+	public String readHtmlForcaStatus(String opcao) {
+		
+		String html = "";
+		
+		String emkt = null;
+		
+		switch (opcao) {
+		case "REPROVAR":
+			emkt = "emkt_statusReprovadoForca.html";
+			log.info("readHtmlForcaStatusReprovado");
+			break;
+		case "APROVAR":
+			emkt = "emkt_statusAprovadoForca.html";
+			log.info("readHtmlForcaStatusAprovado");
+			break;
+		}
+	
+		html = readHTML(html, emkt);
+
+		return html;
+	}
+
+	private String readHTML(String html, String emkt) {
+		
+		try {
+			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("templates" + File.separatorChar + emkt);
+			BufferedInputStream bufferInput = new BufferedInputStream(inputStream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(bufferInput));
+			
+			StringBuffer inputLine = new StringBuffer();
+            String tmp; 
+            while ((tmp = br.readLine()) != null) {
+                inputLine.append(tmp);
+            }
+            
+            html = inputLine.toString();
+            
+			bufferInput.close();
+			br.close();
+
+		} catch (Exception e) {
+			log.error("Erro ao ler html! Detalhe: [" + e.getMessage() + "]");
+			return "";
+		}
+		return html;
 	}
 
 }

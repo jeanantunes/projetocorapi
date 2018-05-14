@@ -1,23 +1,20 @@
 package br.com.odontoprev.portal.corretor.controller;
 
-import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.util.Date;
-import java.util.Iterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,100 +23,97 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.odontoprev.portal.corretor.model.TbodUpload;
+import br.com.odontoprev.portal.corretor.model.TbodUploadForcavenda;
 import br.com.odontoprev.portal.corretor.service.UploadService;
-import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 
 @Controller
 public class UploadController {
 	
+	private static final Log log = LogFactory.getLog(UploadController.class);
+	
 	@Autowired
 	UploadService uploadService;
 	
-	@SuppressWarnings("resource")
-	@RequestMapping(value="/upload/{cnpj}", method = RequestMethod.POST)
-	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cnpj  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
+	@RequestMapping(value="upload/{cdCorretora}", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cdCorretora  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
 		
-		SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
+		File serverFile = serverFile(uploadFile);  
+				
+		BufferedReader bufferedReader = null;
 		
-		DecimalFormat formatter = new DecimalFormat("######");
-        String cellCPF= "";
-        String cellCelular= "";
-        
-        //File arquivo = new File("C:\\planilhaUploadOdpv\\" + uploadFile.getOriginalFilename());		
-               
-        //FileInputStream excelFile = new FileInputStream(new File(arquivo.getAbsoluteFile().toString()));
-        
-        //String caminho = "//u01//oracle//Middleware//Oracle_Home//user_projects//domains//corretor_venda_odonto";
-        
-        String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA);
-        String filename = pathEmpresa + uploadFile.getOriginalFilename();
-        FileOutputStream fileOut = new FileOutputStream(filename);
-        Workbook workbook = new XSSFWorkbook(filename);
-		workbook.write(fileOut);
-		fileOut.close();
-              
-        Workbook workb = new XSSFWorkbook(filename);
-        Sheet datatypeSheet = workb.getSheetAt(0);
-        Iterator<Row> iterator = datatypeSheet.iterator();      
-        
-        TbodUpload tbodUpload = null;
-     
-        while (iterator.hasNext()) {
-        	
-            Row currentRow = iterator.next();
-            Iterator<Cell> cellIterator = currentRow.iterator();            
-          
-            tbodUpload = new TbodUpload();
-            tbodUpload.setCnpj(cnpj);
-			tbodUpload.setArquivo(uploadFile.getOriginalFilename());
-			tbodUpload.setDataCriacao(new Date());
-			tbodUpload.setStatus("PENDENTE");
+		try {
+			String lines;
+			bufferedReader = new BufferedReader(new FileReader(serverFile.getAbsolutePath()));
+			bufferedReader.readLine();
+			while ((lines = bufferedReader.readLine()) != null) {				
+				uploadService.addDadosUpload(csvToArrayList(lines, cdCorretora, uploadFile.getOriginalFilename()));  
+			}
 			
-            while (cellIterator.hasNext()) {
-
-                Cell currentCell = cellIterator.next(); 
-    			
-                switch( currentCell.getColumnIndex() )
-                {
-                    case 0: //nome
-                    	tbodUpload.setNome(currentCell.getStringCellValue());                    	
-                        break;                    
-                    case 1: //cpf
-                    	cellCPF = formatter.format(currentCell.getNumericCellValue());
-                    	tbodUpload.setCpf(cellCPF);                    	
-                        break;                    
-                    case 2: //data nascimento
-                    	if (currentCell.getDateCellValue() != null)
-                        tbodUpload.setDataNascimento(data.format(currentCell.getDateCellValue()));                    	                  	
-                        break; 
-                    case 3: //celular
-                    	cellCelular = formatter.format(currentCell.getNumericCellValue());
-                    	tbodUpload.setCelular(cellCelular);                    	
-                        break;  
-                    case 4: //email
-                    	tbodUpload.setEmail(currentCell.getStringCellValue());                    	
-                        break;             
-                    case 5: //departamento
-                    	tbodUpload.setDepartamento(currentCell.getStringCellValue());                    	
-                        break;         
-                    case 6: //cargo
-                    	tbodUpload.setCargo(currentCell.getStringCellValue());                    	
-                        break;             
-                    default:
-                        System.out.println("dados fora colunas permitidas");                       
-                }
-                
-            } 
-            
-            if (tbodUpload.getNome() != null && tbodUpload.getCpf() != null && tbodUpload.getDataNascimento() != null && 
-            		tbodUpload.getCelular() != null && tbodUpload.getEmail() != null && tbodUpload.getDepartamento() != null && tbodUpload.getCargo() != null) {
-            	uploadService.addDadosUpload(tbodUpload);  
-                tbodUpload = null;
-            }            
-        } 
-      
+		} catch (IOException e) {
+			log.info("##### Error csv: " + e.getMessage());
+			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+		} finally {
+			if (bufferedReader != null) bufferedReader.close();
+		}
+		      
         return ResponseEntity.ok("Transação realizada com sucesso");
+	}
+
+	public TbodUploadForcavenda csvToArrayList(String csv, String cdCorretora, String uploadFile) {
+		
+		TbodUploadForcavenda uploadForcavenda = null;
+		
+		if (csv != null) {
+			
+			String[] splitData = csv.split("\\s*;\\s*");
+			
+			uploadForcavenda = new TbodUploadForcavenda();
+			
+			for (int i = 0; i < splitData.length; i++) {
+				if (!(splitData[i] == null) || !(splitData[i].length() == 0)) {
+					uploadForcavenda.setCdCorretora(Long.valueOf(cdCorretora));				
+					uploadForcavenda.setCsvArquivo(uploadFile);
+					uploadForcavenda.setDataCriacao(new Date());
+					uploadForcavenda.setStatus("PENDENTE");
+					uploadForcavenda.setNome(splitData[0].trim());
+					uploadForcavenda.setCpf(splitData[1].trim());
+					uploadForcavenda.setDataNascimento(splitData[2].trim());
+					uploadForcavenda.setCelular(splitData[3].trim());
+					uploadForcavenda.setEmail(splitData[4].trim());
+					uploadForcavenda.setDepartamento(splitData[5].trim());
+					try {
+						uploadForcavenda.setCargo(splitData[6].trim());
+					} catch (ArrayIndexOutOfBoundsException exception) {
+						uploadForcavenda.setCargo(null);
+			        }			
+				}
+			}
+		}
+		
+		return uploadForcavenda;
+	}
+		
+	private File serverFile(MultipartFile uploadFile) throws IOException, FileNotFoundException {
+		
+		String rootPath = System.getProperty("catalina.home");
+        File dir = new File(rootPath + File.separator + "ArquivosCSV");
+         
+        if (!dir.exists())
+            dir.mkdirs();
+        File serverFile = new File(dir.getAbsolutePath() + File.separator + uploadFile.getOriginalFilename());
+                         
+        InputStream in = uploadFile.getInputStream();
+        FileOutputStream out = new FileOutputStream(serverFile);
+        byte[] b = new byte[1024];
+        int len = 0;
+        while ((len = in.read(b)) > 0) {
+            out.write(b, 0, len);
+        }
+        out.close();
+        in.close();
+         
+        log.info("##### Server File Location: " + serverFile.getAbsolutePath());
+		return serverFile;
 	}
 
 }
