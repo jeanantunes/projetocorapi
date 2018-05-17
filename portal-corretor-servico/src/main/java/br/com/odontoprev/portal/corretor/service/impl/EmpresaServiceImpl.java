@@ -89,13 +89,23 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		try {
 			
-			if((empresaDcms.getCdEmpresa() == null)
-					|| (empresaDcms.getCnpj() == null || empresaDcms.getCnpj().isEmpty()) 
-					|| (empresaDcms.getEmpDcms() == null || empresaDcms.getEmpDcms().isEmpty())) {
+			if(
+				(empresaDcms.getCdEmpresa() == null)
+				|| 
+				(empresaDcms.getCnpj() == null || empresaDcms.getCnpj().isEmpty())
+				|| 
+				(empresaDcms.getEmpDcms() == null || empresaDcms.getEmpDcms().isEmpty())
+			) {
 				throw new Exception("Os parametros sao obrigatorios!");
 			}
 
-			tbEmpresa = empresaDAO.findBycdEmpresaAndCnpj(empresaDcms.getCdEmpresa(), empresaDcms.getCnpj());
+			
+			MaskFormatter mask = new MaskFormatter("##.###.###/####-##");
+			mask.setValueContainsLiteralCharacters(false);
+			
+			String cnpj = empresaDcms.getCnpj().replace(".", "").replace("/", "").replace("-", "").replace(" ", ""); //201805171917 - esert - desformata se [eventualmente] vier formatado
+			cnpj = mask.valueToString(cnpj); //201805171913 - esert - inc mask.valueToString() - reformata
+			tbEmpresa = empresaDAO.findBycdEmpresaAndCnpj(empresaDcms.getCdEmpresa(), cnpj); 
 
 			if (tbEmpresa != null) {
 				tbEmpresa.setEmpDcms(empresaDcms.getEmpDcms());
@@ -226,7 +236,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				} else {				
 					tbodEmpresa = empresaDAO.findByCnpj(cnpj);
 					if(tbodEmpresa == null) {
-						cnpjDados.setObservacao("Cnpj não encontrado na base!!!");
+						cnpjDados.setObservacao("Cnpj [" + cnpj + "] não encontrado na base !!! [" + (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date().getTime())) + "]");
 					} else {
 						cnpjDados.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 						cnpjDados.setRazaoSocial(tbodEmpresa.getRazaoSocial());
@@ -397,7 +407,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				|| 
 				empresaEmail.getCdVenda() == 0
 			){
-				return (new EmpresaResponse(empresaEmail.getCdEmpresa(), "Os parametros sao obrigatorios!"));
+				return (new EmpresaResponse(empresaEmail.getCdEmpresa(), "parametro CdVenda obrigatorio!")); //201805171124 - esert
 			}
 			
 			if(
@@ -423,12 +433,16 @@ public class EmpresaServiceImpl implements EmpresaService {
 				if(tbodTokenAceite==null) {
 					return (new EmpresaResponse(empresaEmail.getCdVenda(), "TbodTokenAceite nao encontrado para empresaEmail.getCdVenda(" + empresaEmail.getCdVenda() + ")!"));
 				}
-
+				
 				EmailAceite emailAceite = new EmailAceite();
 				emailAceite.setNomeCorretor(tbodVenda.getTbodForcaVenda().getNome());
 				emailAceite.setNomeCorretora(tbodVenda.getTbodForcaVenda().getTbodCorretora().getNome());
 				emailAceite.setNomeEmpresa(tbodVenda.getTbodEmpresa().getRazaoSocial());
+				
 				emailAceite.setEmailEnvio(tbodVenda.getTbodEmpresa().getEmail());
+				//OU ??????
+//				emailAceite.setEmailEnvio(tbEmpresa.getEmail()); //201805171133 - esert
+				
 				emailAceite.setToken(tbodTokenAceite.getId().getCdToken());
 				
 				List<Plano> planos = planoService.findPlanosByEmpresa(tbodVenda.getTbodEmpresa().getCdEmpresa());
@@ -436,7 +450,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				emailAceite.setPlanos(planos);
 				sendMailAceite.sendMail(emailAceite);
 			} else {
-				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
+				throw new Exception("CdEmpresa nao encontrado [" + empresaEmail.getCdEmpresa() + "] !"); //201705172015 - esert
 			}
 
 		} catch (Exception e) {
