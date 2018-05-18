@@ -29,7 +29,7 @@ public class TbodDeviceToken  implements Serializable {
 	        name="SEQ_DEVICE_TOKEN",
 	        sequenceName="SEQ_DEVICE_TOKEN"
 	    )
-	@GeneratedValue(generator="SEQ_DEVICE_TOKEN",strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(generator="SEQ_DEVICE_TOKEN",strategy=GenerationType.SEQUENCE)	
 	private Long codigo;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -46,7 +46,7 @@ public class TbodDeviceToken  implements Serializable {
 	private String sistemaOperacional;
      
 	@Column(name="DT_INCLUSAO")
-	private Date dataInclusao;
+	private Date dataInclusao = new Date();
 
 	public Long getCodigo() {
 		return codigo;
