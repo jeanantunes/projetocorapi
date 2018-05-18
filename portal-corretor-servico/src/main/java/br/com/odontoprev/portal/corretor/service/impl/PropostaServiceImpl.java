@@ -177,20 +177,24 @@ public class PropostaServiceImpl implements PropostaService {
 							tbodPlano));
 			
 			List<TxtImportacao> listTxtImportacao = new ArrayList<TxtImportacao>();
-			List<TbodTxtImportacao> listTbodTxtImportacao = txtImportacaoDAO.findByNrAtendimento(tbodVenda.getPropostaDcms());
-			for (TbodTxtImportacao tbodTxtImportacao : listTbodTxtImportacao) {
-				//201805111000 - esert - nao listar critica sem descricao porque significa que nao houve critica (vide Fernando@ODPV)
-				if(
-					tbodTxtImportacao.getDsErroRegistro()==null 
-					|| 
-					tbodTxtImportacao.getDsErroRegistro().isEmpty() 
-				) {
-					continue; //201805111000 - esert - nao listar registros sem descricao porque significa que nao houve critica (vide Fernando@ODPV)
+			if(tbodVenda.getPropostaDcms()!=null) { //201805171657 - esert - protecao
+				List<TbodTxtImportacao> listTbodTxtImportacao = txtImportacaoDAO.findByNrAtendimento(tbodVenda.getPropostaDcms());
+				if(listTbodTxtImportacao!=null) { //201805171657 - esert - protecao
+					for (TbodTxtImportacao tbodTxtImportacao : listTbodTxtImportacao) {
+						//201805111000 - esert - nao listar critica sem descricao porque significa que nao houve critica (vide Fernando@ODPV)
+						if(
+							tbodTxtImportacao.getDsErroRegistro()==null 
+							|| 
+							tbodTxtImportacao.getDsErroRegistro().isEmpty() 
+						) {
+							continue; //201805111000 - esert - nao listar registros sem descricao porque significa que nao houve critica (vide Fernando@ODPV)
+						}
+						
+						listTxtImportacao.add(
+								ConvertObjectUtil.translateTbodTxtImportacaoToTxtImportacao(
+										tbodTxtImportacao));
+					}
 				}
-				
-				listTxtImportacao.add(
-						ConvertObjectUtil.translateTbodTxtImportacaoToTxtImportacao(
-								tbodTxtImportacao));
 			}
 			vendaCritica.setCriticas(listTxtImportacao);
 			
