@@ -469,7 +469,6 @@ public class EmpresaServiceImpl implements EmpresaService {
 		log.info("updateEmpresaEmailAceite - fim");
 
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), empresaAtualizadaAceite);  //201805181310 - esert - COR-171
-
 	}
 
 }
