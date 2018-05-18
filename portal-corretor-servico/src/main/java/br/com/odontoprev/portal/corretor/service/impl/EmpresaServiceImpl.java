@@ -446,7 +446,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 		
 		log.info("updateEmpresaEmailAceite - fim");
 
-		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
+		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada, enviado e-mail de Aceite.");
 
 	}
 
