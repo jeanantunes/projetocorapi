@@ -10,6 +10,7 @@ import javax.swing.text.MaskFormatter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,12 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Autowired
 	PlanoService planoService;
+
+    @Value("${mensagem.empresa.atualizada.dcms}")
+	private String empresaAtualizadaDCMS; //201805181310 - esert - COR-160
+
+    @Value("${mensagem.empresa.atualizada.aceite}")
+	private String empresaAtualizadaAceite; //201805181310 - esert - COR-171
 
 	@Override
 	@Transactional
@@ -133,7 +140,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [" + e.getMessage() + "]");
 		}
 
-		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
+		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), empresaAtualizadaDCMS);
 
 	}
 
@@ -378,6 +385,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			cnpjDadosAceite.setRazaoSocial(tbodEmpresa.getRazaoSocial());
 			cnpjDadosAceite.setCnpj(tbodEmpresa.getCnpj());				
 			cnpjDadosAceite.setEmpDcms(tbodEmpresa.getEmpDcms()); //201805102039 - esert - COR-169
+			cnpjDadosAceite.setEmail(tbodEmpresa.getEmail()); //201805181249 - esert - COR-169
 		}
 		log.info("translateTbodEmpresaToCnpjDadosAceite - fim");
 		return cnpjDadosAceite;
@@ -460,7 +468,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 		
 		log.info("updateEmpresaEmailAceite - fim");
 
-		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa atualizada.");
+		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), empresaAtualizadaAceite);  //201805181310 - esert - COR-171
 
 	}
 
