@@ -25,18 +25,19 @@ import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dto.CnpjDados;
 import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
-import br.com.odontoprev.portal.corretor.dto.EmailAceite;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
-import br.com.odontoprev.portal.corretor.dto.Plano;
+import br.com.odontoprev.portal.corretor.dto.TokenAceite;
+import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 import br.com.odontoprev.portal.corretor.service.PlanoService;
+import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
@@ -76,6 +77,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Value("${mensagem.empresa.atualizada.aceite}")
 	private String empresaAtualizadaAceite; //201805181310 - esert - COR-171
+
+    @Autowired
+	private TokenAceiteService tokenAceiteService; //201805181856 - esert - COR-171
 
 	@Override
 	@Transactional
@@ -437,38 +441,67 @@ public class EmpresaServiceImpl implements EmpresaService {
 					return (new EmpresaResponse(empresaEmail.getCdVenda(), "TbodVenda nao encontrado para empresaEmail.getCdVenda("+ empresaEmail.getCdVenda() +")!"));
 				}
 				
-				TbodTokenAceite tbodTokenAceite = tokenAceiteDAO.findByTbodVendaCdVenda(empresaEmail.getCdVenda());
-				if(tbodTokenAceite==null) {
-					return (new EmpresaResponse(empresaEmail.getCdVenda(), "TbodTokenAceite nao encontrado para empresaEmail.getCdVenda(" + empresaEmail.getCdVenda() + ")!"));
+//				LocalDateTime dataHoraAtual = LocalDateTime.now();
+//				TbodTokenAceitePK tokenAceitePK = new TbodTokenAceitePK();
+//				tokenAceitePK.setCdVenda(tbodVenda.getCdVenda());
+//				String token = this.gerarToken(tbodVenda.getCdVenda().toString()+dataHoraAtual.toString().replace("=", ""));
+//				tokenAceitePK.setCdToken(token.replace("=", ""));		
+//				System.out.println(tokenAceitePK.getCdToken());
+//				
+//				TbodTokenAceite tbodTokenAceite = new TbodTokenAceite();
+//				tbodTokenAceite.setId(tokenAceitePK);
+//				tbodTokenAceite.setEmailEnvio(tbodVenda.getTbodEmpresa().getEmail());
+//				tbodTokenAceite.setDtEnvio(new Date());
+//				
+//				Calendar c = Calendar.getInstance();
+//				Long expiracao = Long.valueOf(EXPIRACAO_TOKEN_ACEITE_EMAIL);
+//			    c.add(Calendar.DAY_OF_MONTH, expiracao.intValue());
+//			    tbodTokenAceite.setDtExpiracao(c.getTime());
+//				
+//				tbodTokenAceite = tokenAceiteDAO.save(tbodTokenAceite);
+//				
+//				EmailAceite emailAceite = new EmailAceite();
+//				emailAceite.setNomeCorretor(tbodVenda.getTbodForcaVenda().getNome());
+//				emailAceite.setNomeCorretora(tbodVenda.getTbodForcaVenda().getTbodCorretora().getNome());
+//				emailAceite.setNomeEmpresa(tbodVenda.getTbodEmpresa().getRazaoSocial());
+//				emailAceite.setEmailEnvio(tbodVenda.getTbodEmpresa().getEmail());
+//				emailAceite.setToken(tbodTokenAceite.getId().getCdToken());
+//				
+//				List<Plano> planos = planoService.findPlanosByEmpresa(tbodVenda.getTbodEmpresa().getCdEmpresa());
+//											
+//				emailAceite.setPlanos(planos);
+//				sendMailAceite.sendMail(emailAceite);
+				
+				TokenAceite tokenAceite = new TokenAceite(); //201805181904 - esert - COR-171
+				tokenAceite.setCdTokenAceite(null); //sera atribuido dentro de addTokenAceite() //201805181904 - esert - COR-171
+				tokenAceite.setCdVenda(tbodVenda.getCdVenda());
+				tokenAceite.setDataAceite(null); //sera atribuido dentro de addTokenAceite() //201805181904 - esert - COR-171
+				tokenAceite.setDataEnvio(null); //sera atribuido dentro de addTokenAceite() //201805181904 - esert - COR-171
+				tokenAceite.setDataExpiracao(null); //sera atribuido dentro de addTokenAceite() //201805181904 - esert - COR-171
+				tokenAceite.setEmail(null); //sera atribuido dentro de addTokenAceite() //201805181904 - esert - COR-171
+				tokenAceite.setIp(null); //sera atribuido dentro de addTokenAceite() //201805181904 - esert - COR-171
+				tokenAceite.setToken(null); //sera atribuido dentro de addTokenAceite() //201805181904 - esert - COR-171
+				
+				TokenAceiteResponse tokenAceiteResponse = tokenAceiteService.addTokenAceite(tokenAceite); //201805181904 - esert - COR-171
+				
+				if(tokenAceiteResponse!= null) {
+					if(tokenAceiteResponse.getId()==0L) {
+						throw new Exception("updateEmpresaEmailAceite :: Erro ao gerar token ou enviar email aceite ! na chamada de addTokenAceite( CdVenda([" + tbodVenda.getCdVenda() + "])); tokenAceiteResponse.getMensagem([" + tokenAceiteResponse.getMensagem() + "]); tokenAceiteResponse.getId([" + tokenAceiteResponse.getId() + "])"); //201805181916 - esert - COR-171
+					}
 				}
 				
-				EmailAceite emailAceite = new EmailAceite();
-				emailAceite.setNomeCorretor(tbodVenda.getTbodForcaVenda().getNome());
-				emailAceite.setNomeCorretora(tbodVenda.getTbodForcaVenda().getTbodCorretora().getNome());
-				emailAceite.setNomeEmpresa(tbodVenda.getTbodEmpresa().getRazaoSocial());
-				
-				emailAceite.setEmailEnvio(tbodVenda.getTbodEmpresa().getEmail());
-				//OU ??????
-//				emailAceite.setEmailEnvio(tbEmpresa.getEmail()); //201805171133 - esert
-				
-				emailAceite.setToken(tbodTokenAceite.getId().getCdToken());
-				
-				List<Plano> planos = planoService.findPlanosByEmpresa(tbodVenda.getTbodEmpresa().getCdEmpresa());
-											
-				emailAceite.setPlanos(planos);
-				sendMailAceite.sendMail(emailAceite);
 			} else {
-				throw new Exception("CdEmpresa nao encontrado [" + empresaEmail.getCdEmpresa() + "] !"); //201705172015 - esert
+				throw new Exception("CdEmpresa [" + empresaEmail.getCdEmpresa() + "] nao encontrado !"); //201705172015 - esert
 			}
 
 		} catch (Exception e) {
-			log.error("EmpresaServiceImpl :: Erro ao atualizar empresaDcms. Detalhe: [" + e.getMessage() + "]");
-			return new EmpresaResponse(0, "Erro ao cadastrar empresaDcms. Favor, entre em contato com o suporte. Detalhe: [" + e.getMessage() + "]");
+			log.error("EmpresaServiceImpl : updateEmpresaEmailAceite : Erro ao atualizar empresaDcms. Detalhe: [" + e.getMessage() + "]");
+			return new EmpresaResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erro ao salvar email da empresa. Favor, entre em contato com o suporte. Detalhe: [" + e.getMessage() + "][" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()) + "]");
 		}
 		
 		log.info("updateEmpresaEmailAceite - fim");
 
-		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), empresaAtualizadaAceite);  //201805181310 - esert - COR-171
+		return new EmpresaResponse(HttpStatus.OK.value(), empresaAtualizadaAceite);  //201805181310 - esert - COR-171
 	}
 
 }
