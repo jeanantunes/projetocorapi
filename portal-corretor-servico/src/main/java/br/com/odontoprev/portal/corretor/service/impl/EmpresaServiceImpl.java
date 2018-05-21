@@ -3,6 +3,7 @@ package br.com.odontoprev.portal.corretor.service.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.text.MaskFormatter;
@@ -291,9 +292,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 					tbodEmpresa = empresaDAO.findByCnpj(cnpj);
 				}
 				
-				if(tbodEmpresa == null) {
-					cnpjDadosAceite.setObservacao("CNPJ não encontrado!!!");
-				} else {
+				if(tbodEmpresa != null) {
 					cnpjDadosAceite = translateTbodEmpresaToCnpjDadosAceite(cnpjDadosAceite, tbodEmpresa);
 					
 					List<TbodVenda> listTbodVenda = vendaDAO.findByTbodEmpresaCdEmpresa(tbodEmpresa.getCdEmpresa());
@@ -318,26 +317,47 @@ public class EmpresaServiceImpl implements EmpresaService {
 						}
 					}
 					
-					if(tbodVenda == null) {
-						cnpjDadosAceite.setObservacao("Venda não encontrado !!!");
-					} else {
+					if(tbodVenda != null) {
 						
 						cnpjDadosAceite.setCdVenda(tbodVenda.getCdVenda());
 						cnpjDadosAceite.setDtVenda(tbodVenda.getDtVenda()); //201805111519 - esert - informativo de desempate
 						
-						tbodTokenAceite = tokenAceiteDAO.findByTbodVendaCdVenda(tbodVenda.getCdVenda());
+//						tbodTokenAceite = tokenAceiteDAO.findByTbodVendaCdVenda(tbodVenda.getCdVenda());
+						List<TbodTokenAceite> listTbodTokenAceite = tokenAceiteDAO.findTokenPorVenda(tbodVenda.getCdVenda()); //201805211602 - esert - pega ultimo token da venda
+						if(listTbodTokenAceite!=null) {
+							if(listTbodTokenAceite.size()>0) {
+								if(listTbodTokenAceite.size()==1) {
+									tbodTokenAceite = listTbodTokenAceite.get(listTbodTokenAceite.size()-1); //pega unico 									
+								} else {
+									Date maiorDtEnvio = (new GregorianCalendar(1900,1,1).getTime());
+									for(TbodTokenAceite itemTokenAceite : listTbodTokenAceite) {
+										if(itemTokenAceite.getDtEnvio().getTime() > maiorDtEnvio.getTime()) { //fica 											
+											maiorDtEnvio = itemTokenAceite.getDtEnvio();
+											tbodTokenAceite = itemTokenAceite; //pega maior data envio
+										}
+									}
+								} //else //if(listTbodTokenAceite.size()==1)
 						
-						if(tbodTokenAceite==null) {
-							cnpjDadosAceite.setObservacao("TokenAceite não encontrado !!!");							
+								if(tbodTokenAceite!=null) {
+									cnpjDadosAceite = translateTbodTokenAceiteToCnpjDadosAceite(cnpjDadosAceite, tbodTokenAceite);
+								} else {
+									cnpjDadosAceite.setObservacao("TokenAceite não definido !!!");							
+								} //if(tbodTokenAceite!=null)
+							} else {
+								cnpjDadosAceite.setObservacao("TokenAceite não encontrado !!!");														
+							} //if(listTbodTokenAceite.size()>0)
 						} else {
-							cnpjDadosAceite = translateTbodTokenAceiteToCnpjDadosAceite(cnpjDadosAceite, tbodTokenAceite);
-						}
-					}
-				}
-				
+							cnpjDadosAceite.setObservacao("TokenAceite não encontrado !!!");														
+						} //if(listTbodTokenAceite==null)
+					} else {
+						cnpjDadosAceite.setObservacao("Venda não encontrado !!!");
+					} //if(tbodVenda != null)
+				} else {
+					cnpjDadosAceite.setObservacao("CNPJ não encontrado!!!");
+				} //if(tbodEmpresa != null)				
 			} else {
 				cnpjDadosAceite.setObservacao("CNPJ obrigatório informar 14 digitos!!!");
-			}
+			} //if ( cnpj.length() == 14)
 			
 		} catch (Exception e) {
 			log.error("Exception e:["+ e.getMessage() +"]");
