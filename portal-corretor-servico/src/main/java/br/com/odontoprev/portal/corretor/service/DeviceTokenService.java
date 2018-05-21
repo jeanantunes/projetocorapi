@@ -6,6 +6,7 @@ import br.com.odontoprev.portal.corretor.dto.DeviceToken;
 
 public interface DeviceTokenService {
 
-	public void inserir(DeviceToken device, Long codigoLogin);	
-	public List<DeviceToken> buscarPorTokenLogin(String idToken, Long codigoLogin); 
+	public void inserir(DeviceToken device, Long codigoForcaVenda);	
+	public List<DeviceToken> buscarPorTokenLogin(String idToken, Long codigoLogin);
+	public void atualizar(DeviceToken deviceToken,Long codigoForcaVenda); 
 }

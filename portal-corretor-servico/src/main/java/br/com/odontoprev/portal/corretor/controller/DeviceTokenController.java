@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.controller;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,11 @@ public class DeviceTokenController implements Serializable {
 		if(mensagens != null) {
 			return ResponseEntity.ok(new BaseResponse(mensagens));
 		}		
-		List<DeviceToken> token = service.buscarPorTokenLogin(request.getToken(), codigo);
-		if(!token.isEmpty()){
+		List<DeviceToken> tokens = service.buscarPorTokenLogin(request.getToken(), codigo);
+		if(!tokens.isEmpty()){
+			DeviceToken deviceToken = tokens.get(0);
+			deviceToken.setDataAtualizacao(new Date());
+			service.atualizar(deviceToken,codigo);
 			return ResponseEntity.ok().build();
 		}
 		service.inserir(request,codigo);

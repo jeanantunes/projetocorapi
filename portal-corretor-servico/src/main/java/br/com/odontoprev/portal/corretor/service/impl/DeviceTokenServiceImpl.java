@@ -39,5 +39,17 @@ public class DeviceTokenServiceImpl implements DeviceTokenService {
 	public List<DeviceToken> buscarPorTokenLogin(String idToken, Long codigoForcaVenda) {				
 		return dao.findByTokenAndLoginTbodForcaVendasCdForcaVenda(idToken, codigoForcaVenda).stream().map((token) -> new DeviceToken(token)).collect(Collectors.toList());		
 	}
+	
+	@Override
+	public void atualizar(DeviceToken deviceToken, Long codigoForcaVenda) {
+		TbodDeviceToken token = new TbodDeviceToken();	
+		token.setCodigo(deviceToken.getCodigo());
+		token.setModelo(deviceToken.getModelo());
+		token.setSistemaOperacional(deviceToken.getSistemaOperacional());
+		token.setToken(deviceToken.getToken());
+		TbodForcaVenda forcaVenda = vendaDAO.findOne(codigoForcaVenda);						
+		token.setLogin(forcaVenda.getTbodLogin());
+		dao.save(token);
+	}
 
 }

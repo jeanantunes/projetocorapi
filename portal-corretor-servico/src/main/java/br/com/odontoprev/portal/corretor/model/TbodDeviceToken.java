@@ -47,6 +47,9 @@ public class TbodDeviceToken  implements Serializable {
      
 	@Column(name="DT_INCLUSAO")
 	private Date dataInclusao = new Date();
+	
+	@Column(name="DT_ATUALIZACAO")
+	private Date dataAtualizacao = new Date();
 
 	public Long getCodigo() {
 		return codigo;
@@ -94,6 +97,14 @@ public class TbodDeviceToken  implements Serializable {
 
 	public void setDataInclusao(Date dataInclusao) {
 		this.dataInclusao = dataInclusao;
-	}    
+	}
+
+	public Date getDataAtualizacao() {
+		return dataAtualizacao;
+	}
+
+	public void setDataAtualizacao(Date dataAtualizacao) {
+		this.dataAtualizacao = dataAtualizacao;
+	}
 	
 }
