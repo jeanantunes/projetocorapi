@@ -24,8 +24,8 @@ public class TbodLogEmailBoasVindasPME implements Serializable {
 	@Id
 	@SequenceGenerator(name = "SEQ_TBOD_LOG_EMAIL_BOASVINDASPME", sequenceName = "SEQ_TBOD_LOG_EMAIL_BOASVINDASPME", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_LOG_EMAIL_BOASVINDASPME")
-	@Column(name = "CD_LOG_EMAIL_BOASVINDASPME")
-	private Long cdLogin;
+	@Column(name = "ID")
+	private Long id;
 
 	//- Data do Envio 
 	@Column(name = "DT_ENVIO")
@@ -46,11 +46,11 @@ public class TbodLogEmailBoasVindasPME implements Serializable {
 	public TbodLogEmailBoasVindasPME() {
 	}
 
-	public Long getCdLogin() {
-		return cdLogin;
+	public Long getId() {
+		return id;
 	}
-	public void setCdLogin(Long cdLogin) {
-		this.cdLogin = cdLogin;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Date getDtEnvio() {
@@ -83,8 +83,8 @@ public class TbodLogEmailBoasVindasPME implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TbodLogEmailBoasVindasPME [cdLogin=" + cdLogin + ", dtEnvio=" + dtEnvio + ", email=" + email
-				+ ", cdEmpresa=" + cdEmpresa + ", razaoSocial=" + razaoSocial + "]";
+		return "TbodLogEmailBoasVindasPME [id=" + id + ", dtEnvio=" + dtEnvio + ", email=" + email + ", cdEmpresa="
+				+ cdEmpresa + ", razaoSocial=" + razaoSocial + "]";
 	}
 
 }
