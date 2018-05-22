@@ -22,6 +22,7 @@ import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
 import br.com.odontoprev.portal.corretor.business.SendMailAceite;
 import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
+import br.com.odontoprev.portal.corretor.dao.LogEmailBoasVindasPMEDAO;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dto.CnpjDados;
@@ -33,6 +34,7 @@ import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
+import br.com.odontoprev.portal.corretor.model.TbodLogEmailBoasVindasPME;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
@@ -57,6 +59,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 	
 	@Autowired
 	TokenAceiteDAO tokenAceiteDAO;
+
+	@Autowired
+	LogEmailBoasVindasPMEDAO logEmailBoasVindasPMEDAO; //201805221245 - esert - COR-225 - Serviço - LOG Envio e-mail de Boas Vindas PME
 
 	@Autowired
 	EmpresaBusiness empresaBusiness;
@@ -178,16 +183,22 @@ public class EmpresaServiceImpl implements EmpresaService {
 			List<TbodVenda> tbodVendas = vendaDAO.findByTbodEmpresaCdEmpresa(cdEmpresa);
 			
 			if(tbodVendas!=null) {				
-				log.info("tbodVendas.size():[" + tbodVendas.size() + "]");				
-				for (TbodVenda tbodVenda : tbodVendas) {
-					//201805101616 - esert - arbitragem : fica com a ultima venda suposta mais recente
-					longDiaVencimentoFatura = tbodVenda.getFaturaVencimento();
-					log.info("longDiaVencimentoFatura:[" + longDiaVencimentoFatura + "]");				
-					dateDataVenda = tbodVenda.getDtVenda();
-					log.info("dateDataVenda:[" + (new SimpleDateFormat("dd/MM/yyyy")).format(dateDataVenda) + "]");				
+				log.info("tbodVendas.size():[" + tbodVendas.size() + "]"); //201805221233 - esert				
+				if(tbodVendas.size()>0) { //201805221233 - esert - protecao
+					for (TbodVenda tbodVenda : tbodVendas) {
+						//201805101616 - esert - arbitragem : fica com a ultima venda suposta mais recente
+						longDiaVencimentoFatura = tbodVenda.getFaturaVencimento();
+						log.info("longDiaVencimentoFatura:[" + longDiaVencimentoFatura + "]");				
+						dateDataVenda = tbodVenda.getDtVenda();
+						log.info("dateDataVenda:[" + (new SimpleDateFormat("dd/MM/yyyy")).format(dateDataVenda) + "]");				
+					}
+				} else {
+					log.info("tbodVendas.size == 0 ZERO para cdEmpresa:[" + cdEmpresa + "]!!!"); //201805221233 - esert - protecao
+					throw new Exception("tbodVendas.size == 0 ZERO para cdEmpresa:[" + cdEmpresa + "]!!!"); //201805221233 - esert - protecao
 				}
 			} else {
-				log.info("tbodVendas==null");				
+				log.info("tbodVendas == null para cdEmpresa:[" + cdEmpresa + "]"); //201805221233 - esert - protecao
+				throw new Exception("tbodVendas == null para cdEmpresa:[" + cdEmpresa + "]!!!"); //201805221233 - esert - protecao
 			}
 
 			log.info("longDiaVencimentoFatura:[" + longDiaVencimentoFatura + "]");				
@@ -210,6 +221,14 @@ public class EmpresaServiceImpl implements EmpresaService {
 				strDataVigencia, //dataVigencia, 
 				strDiaVencimentoFatura //diaVencimentoFatura
 				);
+			
+			//201805221245 - esert - COR-225 - Serviço - LOG Envio e-mail de Boas Vindas PME
+			TbodLogEmailBoasVindasPME tbodLogEmailBoasVindasPME = new TbodLogEmailBoasVindasPME();
+			tbodLogEmailBoasVindasPME.setCdEmpresa(tbodEmpresa.getCdEmpresa());
+			tbodLogEmailBoasVindasPME.setRazaoSocial(tbodEmpresa.getRazaoSocial());
+			tbodLogEmailBoasVindasPME.setEmail(tbodEmpresa.getEmail());
+			tbodLogEmailBoasVindasPME.setDtEnvio(new Date());
+			logEmailBoasVindasPMEDAO.save(tbodLogEmailBoasVindasPME);
 			
 			EmpresaDcms empresaDcms = new EmpresaDcms();
 			empresaDcms.setCdEmpresa(tbodEmpresa.getCdEmpresa());
