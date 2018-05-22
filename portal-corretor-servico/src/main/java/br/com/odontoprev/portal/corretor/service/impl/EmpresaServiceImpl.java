@@ -133,7 +133,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				//201805091745 - esert
 				//201805101609 - esert - criar servico independente para Email Boas Vindas PME vide Fernando@ODPV em 20180510
 				//201805101941 - esert - excluido param cnpj
-				ResponseEntity<EmpresaDcms> res = this.sendEmailBoasVindasPME(empresaDcms.getCdEmpresa());
+				ResponseEntity<EmpresaDcms> res = this.sendMailBoasVindasPME(empresaDcms.getCdEmpresa());
 				log.info("res:[" + res.toString() + "]");
 			}
 			else {
@@ -152,8 +152,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 	//201805091745 - esert
 	//201805101941 - esert - excluido param cnpj
 	//201805101947 - esert - service para reenvio de emails vide Fernando@ODPV
+	//201805221057 - esert - refactor sendEmailBoasVindasPME para sendMailBoasVindasPME mantendo padrao
 	@Override
-	public ResponseEntity<EmpresaDcms> sendEmailBoasVindasPME(Long cdEmpresa) {
+	public ResponseEntity<EmpresaDcms> sendMailBoasVindasPME(Long cdEmpresa) {
 		Long longDiaVencimentoFatura = 0L;
 		Date dateDataVenda = null;
 		
@@ -213,7 +214,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 			EmpresaDcms empresaDcms = new EmpresaDcms();
 			empresaDcms.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 			empresaDcms.setEmpDcms(tbodEmpresa.getEmpDcms());
-			empresaDcms.setCnpj("email:".concat(tbodEmpresa.getEmail())); //QG so para mostrar email de destino no retorno json
+			empresaDcms.setCnpj(tbodEmpresa.getCnpj()); //201805221106 - esert - COR-160 - refactor - semm qg no cnpj
+			empresaDcms.setEmail(tbodEmpresa.getEmail()); //201805221106 - esert - COR-160 - refactor - inc campo especifico para email
 			return ResponseEntity.ok(empresaDcms);
 			
 		} catch (Exception e) {

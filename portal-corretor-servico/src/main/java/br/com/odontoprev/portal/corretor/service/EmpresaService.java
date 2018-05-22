@@ -19,7 +19,7 @@ public interface EmpresaService {
 	
 	public CnpjDados findDadosEmpresaByCnpj(String cnpj) throws ParseException; 
 
-	public ResponseEntity<EmpresaDcms> sendEmailBoasVindasPME(Long cdEmpresa);
+	public ResponseEntity<EmpresaDcms> sendMailBoasVindasPME(Long cdEmpresa);
 
 	public CnpjDadosAceite findDadosEmpresaAceiteByCnpj(String cnpj) throws ParseException; //201805111131 - esert - COR-172 - Serviço - Consultar dados empresa PME
 
