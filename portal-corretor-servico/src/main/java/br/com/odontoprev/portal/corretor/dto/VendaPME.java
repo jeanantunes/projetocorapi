@@ -39,7 +39,10 @@ public class VendaPME implements Serializable {
 
 	@Override
 	public String toString() {
-		return "VendaPME [" + "empresas.size()=" + (empresas != null ? empresas.size() : "null") + ", titulares.size()="
-				+ (titulares != null ? titulares.size() : "null") + "]";
+		return "VendaPME ["
+		+ "cdForcaVenda=" + cdForcaVenda //201805241355 - esert/yalm
+		+ ", empresas.size()=" + (empresas != null ? empresas.size() : "null") 
+		+ ", titulares.size()="	+ (titulares != null ? titulares.size() : "null") 
+		+ "]";
 	}
 }

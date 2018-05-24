@@ -107,9 +107,13 @@ public class BeneficiarioBusiness {
 	
 						TbodVida tbVidaDependente = new TbodVida();
 						tbVidaDependente.setNome(dependente.getNome());
-						tbVidaDependente.setCpf(dependente.getCpf().replace(".", "").replace("-", ""));
+						if(dependente.getCpf()!=null) { //201805241505 - esert/yalm - protecão
+							tbVidaDependente.setCpf(dependente.getCpf().replace(".", "").replace("-", ""));
+						}
 						tbVidaDependente.setSexo(dependente.getSexo());
-						tbVidaDependente.setDataNascimento(DataUtil.dateParse(dependente.getDataNascimento()));
+						if(dependente.getDataNascimento()!=null) { //201805241505 - esert/yalm - protegato
+							tbVidaDependente.setDataNascimento(DataUtil.dateParse(dependente.getDataNascimento()));
+						}
 						tbVidaDependente.setNomeMae(dependente.getNomeMae());
 						tbVidaDependente.setCelular(dependente.getCelular());
 						tbVidaDependente.setEmail(dependente.getEmail());
