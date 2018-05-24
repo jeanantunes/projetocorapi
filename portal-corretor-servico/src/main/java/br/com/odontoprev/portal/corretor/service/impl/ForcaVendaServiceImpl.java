@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.odontoprev.portal.corretor.dao.*;
+import br.com.odontoprev.portal.corretor.dto.*;
 import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
 import br.com.odontoprev.portal.corretor.enums.TipoMensagem;
 import br.com.odontoprev.portal.corretor.model.*;
@@ -27,16 +28,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
-import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.DCSSLoginResponse;
-import br.com.odontoprev.portal.corretor.dto.Endereco;
-import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
-import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
 import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
+
+import javax.persistence.Table;
 
 @Service
 public class ForcaVendaServiceImpl implements ForcaVendaService {
@@ -764,18 +762,32 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	}
 
-    @Override
-    public String envioMensagemAtivo(TbodForcaVenda forcaVenda) {
-        String mensagemComParametros;
-        SubstituirParametrosUtil substituirParametrosUtil = new SubstituirParametrosUtil();
-        Map<String, String> mensagemComParametrosMap = new HashMap<String,String>();
-        TbodMensagemPadrao tbodMensagemPadrao = new TbodMensagemPadrao();
+	@Override
+	public String envioMensagemAtivo(TbodForcaVenda forcaVenda) {
+		String mensagemComParametros;
+		SubstituirParametrosUtil substituirParametrosUtil = new SubstituirParametrosUtil();
+		Map<String, String> mensagemComParametrosMap = new HashMap<String, String>();
+		TbodMensagemPadrao tbodMensagemPadrao = new TbodMensagemPadrao();
+		PushNotification pushNotification = new PushNotification();
+		TbodSistemaPush tbodSistemaPush = new TbodSistemaPush();
+		Class<?> t = TbodDeviceToken.class;
+		Table nomeTabela = t.getAnnotation(Table.class);
 
-        tbodMensagemPadrao = notificacaoDAO.findbyTipo(TipoMensagem.ATIVO.name());
+		tbodMensagemPadrao = notificacaoDAO.findbyTipo(TipoMensagem.ATIVO.name());
 
-        mensagemComParametros = tbodMensagemPadrao.getMensagem();
-        mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMEFORCAVENDA.name(),forcaVenda.getNome());
+		mensagemComParametros = tbodMensagemPadrao.getMensagem();
+		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMEFORCAVENDA.name(), forcaVenda.getNome());
+		pushNotification.setMessage(substituirParametrosUtil.substituirParametrosMensagem(mensagemComParametros, mensagemComParametrosMap));
+		//Obtem o nome da tabela da entidade
+		pushNotification.setTitle(nomeTabela.name());
+//		pushNotification.setDados();
+//		pushNotification.setDestinations();
+//		pushNotification.setPrivateKey();
+//		pushNotification.setSenderSystem();
+//		pushNotification.setSystemOperation();
+//		pushNotification.setProjetoFirebase();
 
-        return substituirParametrosUtil.substituirParametrosMensagem(mensagemComParametros,mensagemComParametrosMap);
-    }
+
+		return "PUSH TODO";
+	}
 }
