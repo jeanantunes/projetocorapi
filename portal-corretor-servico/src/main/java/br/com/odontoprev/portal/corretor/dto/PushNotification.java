@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Map;
 
 public class PushNotification implements Serializable {
@@ -76,4 +77,17 @@ public class PushNotification implements Serializable {
         this.projetoFirebase = projetoFirebase;
     }
 
+    @Override
+    public String toString() {
+        return "PushNotification{" +
+                "destinations=" + Arrays.toString(destinations) +
+                ", title='" + title + '\'' +
+                ", message='" + message + '\'' +
+                ", dados=" + dados +
+                ", systemOperation='" + systemOperation + '\'' +
+                ", senderSystem='" + senderSystem + '\'' +
+                ", privateKey='" + privateKey + '\'' +
+                ", projetoFirebase='" + projetoFirebase + '\'' +
+                '}';
+    }
 }
