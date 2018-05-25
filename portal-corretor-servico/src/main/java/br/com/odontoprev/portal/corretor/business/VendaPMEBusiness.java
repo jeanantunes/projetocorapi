@@ -8,6 +8,7 @@ import javax.annotation.ManagedBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
@@ -37,6 +38,7 @@ public class VendaPMEBusiness {
 	@Autowired
 	TokenAceiteService tokenAceiteService;
 	
+	@Transactional //201805242012 - inc 
 	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(VendaPME vendaPME) {
 
 		log.info("[salvarVendaPMEComEmpresasPlanosTitularesDependentes]");

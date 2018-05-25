@@ -53,6 +53,7 @@ public class BeneficiarioBusiness {
 	@Autowired
 	PlanoDAO planoDao;
 
+	//201805241505 - esert/yalm - adicionada protecão para dependente com Cpf null
 	public BeneficiarioResponse salvarTitularComDependentes(List<Beneficiario> titulares) {
 
 		log.info("[salvarTitularComDependentes]");
@@ -84,7 +85,9 @@ public class BeneficiarioBusiness {
 					TbodVida tbVidaTitular = new TbodVida();
 	
 					tbVidaTitular.setNome(titular.getNome());
-					tbVidaTitular.setCpf(titular.getCpf().replace(".", "").replace("-", ""));
+					if(titular.getCpf()!=null) { //201805241938 - esert - protecao extra
+						tbVidaTitular.setCpf(titular.getCpf().replace(".", "").replace("-", ""));
+					}
 					tbVidaTitular.setSexo(titular.getSexo());
 					tbVidaTitular.setDataNascimento(DataUtil.dateParse(titular.getDataNascimento()));
 					tbVidaTitular.setNomeMae(titular.getNomeMae());
@@ -107,9 +110,10 @@ public class BeneficiarioBusiness {
 	
 						TbodVida tbVidaDependente = new TbodVida();
 						tbVidaDependente.setNome(dependente.getNome());
-						if(dependente.getCpf()!=null) { //201805241505 - esert/yalm - protecão
+						//201805241939 - desligado para teste de rollback de transacao
+//						if(dependente.getCpf()!=null) { //201805241505 - esert/yalm - protecão
 							tbVidaDependente.setCpf(dependente.getCpf().replace(".", "").replace("-", ""));
-						}
+//						}
 						tbVidaDependente.setSexo(dependente.getSexo());
 						if(dependente.getDataNascimento()!=null) { //201805241505 - esert/yalm - protegato
 							tbVidaDependente.setDataNascimento(DataUtil.dateParse(dependente.getDataNascimento()));

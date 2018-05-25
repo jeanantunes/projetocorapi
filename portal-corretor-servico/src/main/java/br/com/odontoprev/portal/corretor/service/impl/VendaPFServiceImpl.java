@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
 import br.com.odontoprev.portal.corretor.business.VendaPMEBusiness;
@@ -13,6 +15,7 @@ import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.service.VendaPFService;
 
 @Service
+@Transactional(isolation = Isolation.SERIALIZABLE) //201805242036 - inc //201805242118 - alt
 public class VendaPFServiceImpl implements VendaPFService {
 
 	private static final Log log = LogFactory.getLog(VendaPFServiceImpl.class);
@@ -32,6 +35,7 @@ public class VendaPFServiceImpl implements VendaPFService {
 	}
 
 	@Override
+	@Transactional //201805241930 - inc //201805242012 - exc
 	public VendaResponse addVendaPME(VendaPME vendaPME) {
 	
 		log.info("[VendaPFServiceImpl::addVendaPME]");
