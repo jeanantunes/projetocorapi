@@ -6,10 +6,10 @@ public class SubstituirParametrosUtil {
 
 
     public String substituirParametrosMensagem(String mensagemComParametros, Map<String, String> mensagem) {
-        String mensagemFinal = "";
+        String mensagemFinal = mensagemComParametros.replace("<","").replace(">","");
         for (Map.Entry<String, String> msg : mensagem.entrySet()) {
-            mensagemFinal = mensagemComParametros.replace(msg.getKey(), msg.getValue());
-        }
+            mensagemFinal = mensagemFinal.replace(msg.getKey(), msg.getValue());
+            }
         return mensagemFinal;
     }
 }

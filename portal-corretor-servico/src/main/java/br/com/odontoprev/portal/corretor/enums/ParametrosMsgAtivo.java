@@ -3,7 +3,8 @@ package br.com.odontoprev.portal.corretor.enums;
 public enum ParametrosMsgAtivo {
 
     //Enum para auxiliar a obter/alterar parametros da mensagem
-    NOMEFORCAVENDA("<nomeforcavenda>");
+    NOMEFORCAVENDA("<nomeforcavenda>"),
+    NOMECORRETORA("<nomecorretora>");
 
     private String parametro;
 

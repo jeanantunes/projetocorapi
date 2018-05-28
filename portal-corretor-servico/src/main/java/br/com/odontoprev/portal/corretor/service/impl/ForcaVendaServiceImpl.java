@@ -686,7 +686,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			TbodCorretora tbCorretora = corretoraDao.findOne(tbForcaVendas.get(0).getTbodCorretora().getCdCorretora());
 
 			SendMailForcaStatus sendEmail = new SendMailForcaStatus();
-			sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
+			//sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaStatus :: Message: [" + e.getMessage() + "]");
@@ -768,15 +768,17 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		SubstituirParametrosUtil substituirParametrosUtil = new SubstituirParametrosUtil();
 		Map<String, String> mensagemComParametrosMap = new HashMap<String, String>();
 		TbodMensagemPadrao tbodMensagemPadrao = new TbodMensagemPadrao();
+		TbodNotificationTemplate tbodNotificationTemplate = new TbodNotificationTemplate();
 		PushNotification pushNotification = new PushNotification();
 		TbodSistemaPush tbodSistemaPush = new TbodSistemaPush();
 		Class<?> t = TbodDeviceToken.class;
 		Table nomeTabela = t.getAnnotation(Table.class);
 
-		tbodMensagemPadrao = notificacaoDAO.findbyTipo(TipoMensagem.ATIVO.name());
+		tbodNotificationTemplate = notificacaoDAO.findbyTipo(TipoMensagem.ATIVO.name());
 
-		mensagemComParametros = tbodMensagemPadrao.getMensagem();
+		mensagemComParametros = tbodNotificationTemplate.getMensagem();
 		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMEFORCAVENDA.name(), forcaVenda.getNome());
+		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMECORRETORA.name(), forcaVenda.getTbodCorretora().getNome() );
 		pushNotification.setMessage(substituirParametrosUtil.substituirParametrosMensagem(mensagemComParametros, mensagemComParametrosMap));
 		//Obtem o nome da tabela da entidade
 		pushNotification.setTitle(nomeTabela.name());
