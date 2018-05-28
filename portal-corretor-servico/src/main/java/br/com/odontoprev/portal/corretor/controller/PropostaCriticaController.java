@@ -24,8 +24,7 @@ public class PropostaCriticaController {
 
 	//201805081530 - esert
 	//201805101441 - esert - REST - ResponseEntity
-	//@RequestMapping(value = "/propostaCritica/buscarPropostaCritica/{cd_venda}", method = { RequestMethod.GET }) //201805281645 - esert - excluido
-	@RequestMapping(value = "/proposta/dados/critica/venda/{cd_venda}", method = { RequestMethod.GET }) //201805281645 - esert - incluido vide roberto@odpv via rocket . chat em 28/05/2018 17:31
+	@RequestMapping(value = "/propostaCritica/buscarPropostaCritica/{cd_venda}", method = { RequestMethod.GET })
 	public ResponseEntity<PropostaCritica> buscarPropostaCritica_CD_VENDA(@PathVariable String cd_venda) {
 		log.info("cd_venda:[" + cd_venda + "]");
 		
