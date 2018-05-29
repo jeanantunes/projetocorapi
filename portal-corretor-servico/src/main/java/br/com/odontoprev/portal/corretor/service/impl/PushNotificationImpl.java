@@ -9,35 +9,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
-
+@Service
 public class PushNotificationImpl implements PushNotificationService {
 
-    private static final Log log = LogFactory.getLog(PushNotificationImpl.class);
+    private static final Log log = LogFactory.getLog(PushNotificationServiceImpl.class);
 
     @Value("${PUSH_NOTIFICATION_URL}")
-    private String pushNotificatinUrl;
+    private String pushNotificatinUrl = "http://localhost:7001/est-pushnotification-api-rs-1.0-SNAPSHOT";
 
-    @Autowired
-    private ApiManagerTokenServiceImpl apiManagerTokenService;
 
 
     @Override
-    public String envioMensagemPush(PushNotification pushNotification) throws ApiTokenException {
+    public String envioMensagemPush(PushNotification pushNotification, ApiManagerTokenServiceImpl apiManagerTokenService) throws ApiTokenException {
         HttpHeaders headers = new HttpHeaders();
 
-        headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
-
+        // headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
+        headers.setContentType(MediaType.APPLICATION_JSON);
         final RestTemplate restTemplate = new RestTemplate();
 
-//        HttpEntity<?> request = new HttpEntity<Map<String, Object>>(pushNotification.toString(), headers);
-//     ResponseEntity response = restTemplate.postForEntity(pushNotificatinUrl + "/push/", request);
+        HttpEntity<?> request = new HttpEntity<>(pushNotification, headers);
+        ResponseEntity response = restTemplate.postForEntity(pushNotificatinUrl+"/push", request,String.class);
 
-        //      return response.getBody().toString();
-        return "";
+        return response.getBody().toString();
+
     }
 }
 
