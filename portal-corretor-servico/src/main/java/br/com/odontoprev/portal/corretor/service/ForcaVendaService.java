@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 
 public interface ForcaVendaService {
@@ -24,7 +25,7 @@ public interface ForcaVendaService {
 
 	public ForcaVendaResponse updateForcaVendaStatusByCpf(ForcaVenda forcaVenda);
 
-	public String envioMensagemAtivo(TbodForcaVenda forcaVenda);
+	public String envioMensagemAtivo(TbodForcaVenda forcaVenda) throws ApiTokenException;
 	
 	/***** status excluir ou reprovar - Força *****/
 	ForcaVendaResponse updateForcaVendaStatusByCpf(ForcaVenda forcaVenda, String opcaoStatus) throws Exception;

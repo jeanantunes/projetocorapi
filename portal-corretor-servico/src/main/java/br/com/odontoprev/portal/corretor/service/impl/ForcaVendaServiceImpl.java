@@ -58,6 +58,12 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	private LoginDAO loginDao;
 
 	@Autowired
+	private SistemaPushDAO sistemaPushDAO;
+
+	@Autowired
+	DeviceTokenDAO deviceTokenDAO;
+
+	@Autowired
 	private ApiManagerTokenServiceImpl apiManagerTokenService;
 
 	@Value("${DCSS_URL}")
@@ -763,31 +769,39 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	}
 
 	@Override
-	public String envioMensagemAtivo(TbodForcaVenda forcaVenda) {
+	public String envioMensagemAtivo(TbodForcaVenda forcaVenda) throws ApiTokenException {
 		String mensagemComParametros;
 		SubstituirParametrosUtil substituirParametrosUtil = new SubstituirParametrosUtil();
 		Map<String, String> mensagemComParametrosMap = new HashMap<String, String>();
-		TbodMensagemPadrao tbodMensagemPadrao = new TbodMensagemPadrao();
 		TbodNotificationTemplate tbodNotificationTemplate = new TbodNotificationTemplate();
 		PushNotification pushNotification = new PushNotification();
+		TbodDeviceToken tbodDeviceToken = new TbodDeviceToken();
 		TbodSistemaPush tbodSistemaPush = new TbodSistemaPush();
 		Class<?> t = TbodDeviceToken.class;
 		Table nomeTabela = t.getAnnotation(Table.class);
 
 		tbodNotificationTemplate = notificacaoDAO.findbyTipo(TipoMensagem.ATIVO.name());
+		tbodSistemaPush = sistemaPushDAO.findbyNmSistema("CORRETOR");
+		//TODO DUVIDA NESSE PONTO PASSAR TAMBEM O IDTOKEN
+        //DeviceToken = deviceTokenDAO.findByTokenAndLoginTbodForcaVendasCdForcaVenda(IDTOKEN, forcaVenda.getTbodLogin().getCdLogin())
 
 		mensagemComParametros = tbodNotificationTemplate.getMensagem();
 		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMEFORCAVENDA.name(), forcaVenda.getNome());
-		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMECORRETORA.name(), forcaVenda.getTbodCorretora().getNome() );
+		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMECORRETORA.name(), forcaVenda.getTbodCorretora().getNome());
 		pushNotification.setMessage(substituirParametrosUtil.substituirParametrosMensagem(mensagemComParametros, mensagemComParametrosMap));
 		//Obtem o nome da tabela da entidade
+		Map<String, String> dadosTituloMensagem = new HashMap<>();
+		dadosTituloMensagem.put(tbodNotificationTemplate.getTitulo(), tbodNotificationTemplate.getMensagem());
+
 		pushNotification.setTitle(nomeTabela.name());
-//		pushNotification.setDados();
+		pushNotification.setDados(dadosTituloMensagem);
 //		pushNotification.setDestinations();
-//		pushNotification.setPrivateKey();
-//		pushNotification.setSenderSystem();
-//		pushNotification.setSystemOperation();
-//		pushNotification.setProjetoFirebase();
+		pushNotification.setPrivateKey(tbodSistemaPush.getTextoPrivateKey());
+		pushNotification.setSenderSystem(tbodSistemaPush.getSistema());
+		pushNotification.setProjetoFirebase(tbodSistemaPush.getProjetoFirebase());
+		PushNotificationImpl pushNotification1mpl = new PushNotificationImpl();
+
+		pushNotification1mpl.envioMensagemPush(pushNotification);
 
 
 		return "PUSH TODO";

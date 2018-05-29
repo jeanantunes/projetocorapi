@@ -1,7 +1,6 @@
 package br.com.odontoprev.portal.corretor.dao;
 
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
-import br.com.odontoprev.portal.corretor.model.TbodMensagemPadrao;
 import br.com.odontoprev.portal.corretor.model.TbodNotificationTemplate;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
