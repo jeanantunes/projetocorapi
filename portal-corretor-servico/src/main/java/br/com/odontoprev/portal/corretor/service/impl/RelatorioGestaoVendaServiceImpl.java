@@ -90,6 +90,8 @@ public class RelatorioGestaoVendaServiceImpl implements RelatorioGestaoVendaServ
 			rel.setValorAnual(String.valueOf(obj[16]));
 			/*tipo Plano*/
 			rel.setTipoPlano(String.valueOf(obj[17]));
+			/*forca Nome*/
+			rel.setForcaNome(String.valueOf(obj[18])); //201805301905 - esert/jack - COR-8 - ajuste
 					
 			gestaoVendas.add(rel);
 		}

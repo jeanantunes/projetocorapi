@@ -53,7 +53,8 @@ public class CsvUtil {
 						"NomePlano",
 						"TipoPlano",
 						"ValorMensal",
-						"ValorAnual"
+						"ValorAnual",
+						"ForcaNome" //201805301905 - esert/jack - COR-8 - ajuste
 					};
 
 				csvWriter.writeHeader(header);
