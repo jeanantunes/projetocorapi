@@ -801,8 +801,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		pushNotification.setProjetoFirebase(tbodSistemaPush.getProjetoFirebase());
 		PushNotificationServiceImpl  pushNotificationService = new PushNotificationServiceImpl();
 
-		//TODO VALIDAR POR FAVOR GABRIEL
-        pushNotificationService.envioMensagemPush(pushNotification, apiManagerTokenService);
+
+        pushNotificationService.envioMensagemPush(pushNotification);
 
 		return "PUSH TODO";
 	}

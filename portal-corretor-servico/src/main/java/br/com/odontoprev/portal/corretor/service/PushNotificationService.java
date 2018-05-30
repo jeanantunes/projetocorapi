@@ -6,6 +6,6 @@ import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl
 
 public interface PushNotificationService {
 
-    public String envioMensagemPush(PushNotification pushNotification, ApiManagerTokenServiceImpl apiManagerTokenService)throws ApiTokenException;
+    public String envioMensagemPush(PushNotification pushNotification)throws ApiTokenException;
 
 }

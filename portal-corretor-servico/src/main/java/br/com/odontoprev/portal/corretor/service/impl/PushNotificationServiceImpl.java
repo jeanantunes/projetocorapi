@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import br.com.odontoprev.api.manager.client.token.util.ConfigurationUtils;
 import br.com.odontoprev.portal.corretor.dto.PushNotification;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.service.PushNotificationService;
@@ -19,20 +20,25 @@ public class PushNotificationServiceImpl implements PushNotificationService {
     private static final Log log = LogFactory.getLog(PushNotificationServiceImpl.class);
 
     @Value("${PUSH_NOTIFICATION_URL}")
-    private String pushNotificatinUrl = "http://localhost:7001/est-pushnotification-api-rs-1.0-SNAPSHOT";
+    private String pushNotificatinUrl;
 
+    ApiManagerTokenServiceImpl apiManagerTokenService;
 
 
     @Override
-    public String envioMensagemPush(PushNotification pushNotification, ApiManagerTokenServiceImpl apiManagerTokenService) throws ApiTokenException {
+    public String envioMensagemPush(PushNotification pushNotification) throws ApiTokenException {
         HttpHeaders headers = new HttpHeaders();
-
-        // headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
+        apiManagerTokenService =  new ApiManagerTokenServiceImpl();
+        headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
         headers.setContentType(MediaType.APPLICATION_JSON);
         final RestTemplate restTemplate = new RestTemplate();
 
         HttpEntity<?> request = new HttpEntity<>(pushNotification, headers);
-        ResponseEntity response = restTemplate.postForEntity(pushNotificatinUrl+"/push", request,String.class);
+        ResponseEntity response = restTemplate.postForEntity(
+                ConfigurationUtils.getURLGetToken()
+                        .replaceAll("/token", "/pushnotification/1.0")+"/push",
+                request,
+                String.class);
 
         return response.getBody().toString();
 
