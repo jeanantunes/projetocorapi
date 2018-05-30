@@ -10,7 +10,7 @@ import java.util.List;
  */
 //TODO CLASSE CRIADA SEM A EXISTENCIA DA TABELA, FAVOR REAVALIA-LA APÓS A CRIACAO DA MESMA
 @Entity
-@Table(name="TBOD_MENSAGEM_PADRAO")
+@Table(name="TBOD_NOTIFICATION_TEMPLATE")
 @NamedQuery(name="TbodNotificationTemplate.findAll", query="SELECT m FROM TbodNotificationTemplate m")
 public class TbodNotificationTemplate {
     private static final long serialVersionUID = 1L;

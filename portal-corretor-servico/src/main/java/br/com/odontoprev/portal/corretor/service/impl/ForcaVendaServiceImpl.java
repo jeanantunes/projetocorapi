@@ -54,6 +54,9 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 	@Autowired
 	private NotificacaoDAO notificacaoDAO;
 
+    @Autowired
+    private TokenDAO tokenDAO;
+
 	@Autowired
 	private LoginDAO loginDao;
 
@@ -785,7 +788,9 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		//TODO DUVIDA NESSE PONTO PASSAR TAMBEM O IDTOKEN
         //DeviceToken = deviceTokenDAO.findByTokenAndLoginTbodForcaVendasCdForcaVenda(IDTOKEN, forcaVenda.getTbodLogin().getCdLogin())
 
-		mensagemComParametros = tbodNotificationTemplate.getMensagem();
+		tbodDeviceToken = tokenDAO.findbyCdlogin(forcaVenda.getTbodLogin().getCdLogin());
+
+        mensagemComParametros = tbodNotificationTemplate.getMensagem();
 		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMEFORCAVENDA.name(), forcaVenda.getNome());
 		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMECORRETORA.name(), forcaVenda.getTbodCorretora().getNome());
 		pushNotification.setMessage(substituirParametrosUtil.substituirParametrosMensagem(mensagemComParametros, mensagemComParametrosMap));
