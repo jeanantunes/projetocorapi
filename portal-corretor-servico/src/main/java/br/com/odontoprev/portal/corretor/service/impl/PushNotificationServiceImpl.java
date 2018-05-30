@@ -5,7 +5,6 @@ import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.service.PushNotificationService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class PushNotificationImpl implements PushNotificationService {
+public class PushNotificationServiceImpl implements PushNotificationService {
 
     private static final Log log = LogFactory.getLog(PushNotificationServiceImpl.class);
 

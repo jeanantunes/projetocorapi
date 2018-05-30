@@ -799,10 +799,10 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		pushNotification.setPrivateKey(tbodSistemaPush.getTextoPrivateKey());
 		pushNotification.setSenderSystem(tbodSistemaPush.getSistema());
 		pushNotification.setProjetoFirebase(tbodSistemaPush.getProjetoFirebase());
-		PushNotificationImpl pushNotification1mpl = new PushNotificationImpl();
+		PushNotificationServiceImpl  pushNotificationService = new PushNotificationServiceImpl();
 
-		pushNotification1mpl.envioMensagemPush(pushNotification);
-
+		//TODO VALIDAR POR FAVOR GABRIEL
+        pushNotificationService.envioMensagemPush(pushNotification, apiManagerTokenService);
 
 		return "PUSH TODO";
 	}
