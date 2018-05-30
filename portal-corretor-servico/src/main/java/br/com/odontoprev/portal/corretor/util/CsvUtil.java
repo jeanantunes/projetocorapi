@@ -18,7 +18,7 @@ public class CsvUtil {
 
 		private static final Log log = LogFactory.getLog(CsvUtil.class);
 
-		public static void gerarCsv(HttpServletResponse response, List<RelatorioGestaoVenda> gestaoVendas) {
+		public static void gerarCsvRelatorioGestaoVendas(HttpServletResponse response, List<RelatorioGestaoVenda> gestaoVendas) {
 
 			log.info("gerarCsv");
 

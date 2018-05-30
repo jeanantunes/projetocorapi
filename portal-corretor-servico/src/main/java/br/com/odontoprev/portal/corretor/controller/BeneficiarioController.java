@@ -2,6 +2,8 @@ package br.com.odontoprev.portal.corretor.controller;
 
 import java.util.List;
 
+import javax.transaction.RollbackException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,22 @@ public class BeneficiarioController {
 	@Autowired
 	BeneficiarioService beneficiarioService;
 
+	//201805281830 - esert - informação: por conta da trstativa de erro, verificou-se nesta data que esta rota nao tem chamada nem web nem app
 	@RequestMapping(value = "/beneficiario", method = { RequestMethod.POST })
 	public BeneficiarioResponse addBeneficiario(@RequestBody List<Beneficiario> beneficiarios) {
+		BeneficiarioResponse beneficiarioResponse = new BeneficiarioResponse(0);
 		
 		log.info(beneficiarios);
 		
-		return beneficiarioService.add(beneficiarios);
+		try { //201805281830 - esert - incluido try/catch para tratar throws que causara rollback de toda transacao - teste
+			beneficiarioResponse = beneficiarioService.add(beneficiarios);
+		} catch (RollbackException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			log.error(e); //201805281830 - esert - incluido log
+		}
+		
+		return beneficiarioResponse; 
 	}
 	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.ManagedBean;
+import javax.transaction.RollbackException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,14 +55,18 @@ public class BeneficiarioBusiness {
 	PlanoDAO planoDao;
 
 	//201805241505 - esert/yalm - adicionada protecão para dependente com Cpf null
-	public BeneficiarioResponse salvarTitularComDependentes(List<Beneficiario> titulares) {
+	//201805281830 - esert - forcar erro para causar rollback de toda transacao - teste
+	//201805281830 - esert - incluido throws para subir erro e causar rollback de toda transacao - teste
+	public BeneficiarioResponse salvarTitularComDependentes(List<Beneficiario> titulares) throws RollbackException {
 
-		log.info("[salvarTitularComDependentes]");
+		log.info("[salvarTitularComDependentes] ini");
 
 		try {
 			if(titulares != null) {
 
+				log.info("titulares.size():["+ titulares.size() +"]");
 				for (Beneficiario titular : titulares) {
+					log.info("titular.getNome():["+ titular.getNome() +"]");
 	
 					Endereco enderecoTitular = titular.getEndereco();
 	
@@ -81,6 +86,7 @@ public class BeneficiarioBusiness {
 					}
 	
 					tbEnderecoTitular = enderecoDao.save(tbEnderecoTitular);
+					log.info("tbEnderecoTitular.getCdEndereco():["+ tbEnderecoTitular.getCdEndereco() +"]");
 	
 					TbodVida tbVidaTitular = new TbodVida();
 	
@@ -95,8 +101,8 @@ public class BeneficiarioBusiness {
 					tbVidaTitular.setEmail(titular.getEmail());
 					tbVidaTitular.setPfPj(titular.getPfPj());
 					tbVidaTitular.setTbodEndereco(tbEnderecoTitular);
-	
 					tbVidaTitular = vidaDao.save(tbVidaTitular);
+					log.info("tbVidaTitular.getCdVida():["+ tbVidaTitular.getCdVida() +"]");
 	
 					TbodVenda tbVenda = vendaDao.findOne(titular.getCdVenda());
 	
@@ -104,16 +110,20 @@ public class BeneficiarioBusiness {
 					tbVendaVidaTit.setTbodVenda(tbVenda);
 					tbVendaVidaTit.setCdPlano(titular.getCdPlano());
 					tbVendaVidaTit.setTbodVida(tbVidaTitular);
-					vendaVidaDao.save(tbVendaVidaTit);
+					tbVendaVidaTit = vendaVidaDao.save(tbVendaVidaTit);
+					log.info("tbVendaVidaTit.getCdVendaVida():["+ tbVendaVidaTit.getCdVendaVida() +"]" 
+							+ "; getCdVenda():["+ tbVendaVidaTit.getTbodVenda().getCdVenda() +"]" 
+							+ "; getCdVida():["+ tbVendaVidaTit.getTbodVida().getCdVida() +"]");
 	
 					for (Beneficiario dependente : titular.getDependentes()) {
+						log.info("dependente.getNome():["+ dependente.getNome() +"]");
 	
 						TbodVida tbVidaDependente = new TbodVida();
 						tbVidaDependente.setNome(dependente.getNome());
 						//201805241939 - desligado para teste de rollback de transacao
-//						if(dependente.getCpf()!=null) { //201805241505 - esert/yalm - protecão
+						if(dependente.getCpf()!=null) { //201805241505 - esert/yalm - protecão
 							tbVidaDependente.setCpf(dependente.getCpf().replace(".", "").replace("-", ""));
-//						}
+						}
 						tbVidaDependente.setSexo(dependente.getSexo());
 						if(dependente.getDataNascimento()!=null) { //201805241505 - esert/yalm - protegato
 							tbVidaDependente.setDataNascimento(DataUtil.dateParse(dependente.getDataNascimento()));
@@ -124,20 +134,26 @@ public class BeneficiarioBusiness {
 						tbVidaDependente.setPfPj(dependente.getPfPj());
 						tbVidaDependente.setTbodVida(tbVidaTitular);
 						tbVidaDependente = vidaDao.save(tbVidaDependente);
+						log.info("tbVidaDependente.getCdVida():["+ tbVidaDependente.getCdVida() +"]");
 	
 						TbodVendaVida tbVendaVidaDep = new TbodVendaVida();
 						tbVendaVidaDep.setTbodVenda(tbVenda);
 						tbVendaVidaDep.setCdPlano(titular.getCdPlano());
 						tbVendaVidaDep.setTbodVida(tbVidaDependente);
-						vendaVidaDao.save(tbVendaVidaDep);
+						tbVendaVidaDep = vendaVidaDao.save(tbVendaVidaDep);
+						log.info("tbVendaVidaDep.getCdVendaVida():["+ tbVendaVidaDep.getCdVendaVida() +"]" 
+								+ "; getCdVenda():["+ tbVendaVidaDep.getTbodVenda().getCdVenda() +"]" 
+								+ "; getCdVida():["+ tbVendaVidaDep.getTbodVida().getCdVida() +"]");
 					}
 				}
 			}
 		} catch (Exception e) {
 			log.error("salvarTitularComDependentes :: Erro ao cadastrar vidas. Detalhe: [" + e.getMessage() + "]");
-			return new BeneficiarioResponse(0, "Erro ao cadastrar vidas. []");
+			//return new BeneficiarioResponse(0, "Erro ao cadastrar vidas. []");
+			throw new RollbackException("Erro ao cadastrar vidas. Exception:[" + e.getMessage() + "]"); //201805281830 - esert - forcar erro para causar rollback de toda transacao - teste
 		}
 
+		log.info("[salvarTitularComDependentes] fim");
 		return new BeneficiarioResponse(1, "Vidas cadastradas.");
 	}
 

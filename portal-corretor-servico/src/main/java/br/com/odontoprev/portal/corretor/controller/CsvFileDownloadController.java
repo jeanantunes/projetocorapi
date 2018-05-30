@@ -33,7 +33,7 @@ public class CsvFileDownloadController {
 		List<RelatorioGestaoVenda> gestaoVendas = relatorioGestaoVendaService.findVendasByCorretora(cnpj);
 		
 		if(gestaoVendas != null && !gestaoVendas.isEmpty()) {
-			CsvUtil.gerarCsv(response, gestaoVendas);
+			CsvUtil.gerarCsvRelatorioGestaoVendas(response, gestaoVendas);
 		}
 		
 	}
