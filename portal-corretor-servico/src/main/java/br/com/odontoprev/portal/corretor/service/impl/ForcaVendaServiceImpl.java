@@ -679,7 +679,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 
-			envioMensagemAtivo(tbForcaVenda);
+			// Victor: Comentado parte do envio de mensagem pois foi identificado que o firewall esta bloqueando as APIs da google;
+			//envioMensagemAtivo(tbForcaVenda);
 
 			//TODO //201803041824 tratar erro no dcss e fazer rollback da alteracao de status
 			ForcaVenda forcaVendaParaDCSS = this.adaptEntityToDto(tbForcaVenda, forcaVenda); //201803041824 inc esert para fernando
@@ -695,7 +696,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			TbodCorretora tbCorretora = corretoraDao.findOne(tbForcaVendas.get(0).getTbodCorretora().getCdCorretora());
 
 			SendMailForcaStatus sendEmail = new SendMailForcaStatus();
-			//sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
+			sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaStatus :: Message: [" + e.getMessage() + "]");
