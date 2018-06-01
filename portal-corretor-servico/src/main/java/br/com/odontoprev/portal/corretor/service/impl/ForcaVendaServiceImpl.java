@@ -785,8 +785,6 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		tbodNotificationTemplate = notificacaoDAO.findbyTipo(TipoMensagem.ATIVO.name());
 		tbodSistemaPush = sistemaPushDAO.findbyNmSistema("CORRETOR");
-		//TODO DUVIDA NESSE PONTO PASSAR TAMBEM O IDTOKEN
-        //DeviceToken = deviceTokenDAO.findByTokenAndLoginTbodForcaVendasCdForcaVenda(IDTOKEN, forcaVenda.getTbodLogin().getCdLogin())
 
 		tbodDeviceToken = tokenDAO.findbyCdlogin(forcaVenda.getTbodLogin().getCdLogin());
 
@@ -800,15 +798,15 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		pushNotification.setTitle(nomeTabela.name());
 		pushNotification.setDados(dadosTituloMensagem);
-//		pushNotification.setDestinations();
+		pushNotification.setDestinations(new String [] {tbodDeviceToken.getToken()});
 		pushNotification.setPrivateKey(tbodSistemaPush.getTextoPrivateKey());
 		pushNotification.setSenderSystem(tbodSistemaPush.getSistema());
 		pushNotification.setProjetoFirebase(tbodSistemaPush.getProjetoFirebase());
 		PushNotificationServiceImpl  pushNotificationService = new PushNotificationServiceImpl();
 
 
-        pushNotificationService.envioMensagemPush(pushNotification);
 
-		return "PUSH TODO";
+
+		return pushNotificationService.envioMensagemPush(pushNotification);
 	}
 }
