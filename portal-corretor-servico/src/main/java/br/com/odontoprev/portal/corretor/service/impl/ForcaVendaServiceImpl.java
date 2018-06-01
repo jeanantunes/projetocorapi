@@ -679,8 +679,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 
-			// Victor: Comentado parte do envio de mensagem pois foi identificado que o firewall esta bloqueando as APIs da google;
-			//envioMensagemAtivo(tbForcaVenda);
+			envioMensagemAtivo(tbForcaVenda);
 
 			//TODO //201803041824 tratar erro no dcss e fazer rollback da alteracao de status
 			ForcaVenda forcaVendaParaDCSS = this.adaptEntityToDto(tbForcaVenda, forcaVenda); //201803041824 inc esert para fernando
