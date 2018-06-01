@@ -120,7 +120,6 @@ public class BeneficiarioBusiness {
 	
 						TbodVida tbVidaDependente = new TbodVida();
 						tbVidaDependente.setNome(dependente.getNome());
-						//201805241939 - desligado para teste de rollback de transacao
 						if(dependente.getCpf()!=null) { //201805241505 - esert/yalm - protecão
 							tbVidaDependente.setCpf(dependente.getCpf().replace(".", "").replace("-", ""));
 						}
