@@ -5,10 +5,13 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import br.com.odontoprev.portal.corretor.interceptor.LoggerFilter.ResettableStreamHttpServletRequest;
 
 public class LoggerInterceptor extends HandlerInterceptorAdapter {
 
@@ -27,7 +30,13 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 				+ request.getRequestURI()
 				+ getParameters(request)
 				);
+		
+		//ResettableStreamHttpServletRequest wrappedRequest = new ResettableStreamHttpServletRequest((HttpServletRequest) request); //201806041520 - esert
+		////// wrappedRequest.getInputStream().read();
+		//String body = IOUtils.toString(wrappedRequest.getReader());
 
+		//log.info("[preHandle]; body:[" + body + "]");
+		
 		return true;
 	}
 

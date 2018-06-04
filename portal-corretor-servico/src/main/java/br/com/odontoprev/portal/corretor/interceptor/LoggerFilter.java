@@ -17,6 +17,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.commons.io.IOUtils;
 //import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,9 +37,9 @@ public class LoggerFilter implements Filter {
 			throws IOException, ServletException {
 		ResettableStreamHttpServletRequest wrappedRequest = new ResettableStreamHttpServletRequest(
 				(HttpServletRequest) request);
-		// wrappedRequest.getInputStream().read();
-		//String body = IOUtils.toString(wrappedRequest.getReader());
-		//auditor.audit(wrappedRequest.getRequestURI(), wrappedRequest.getUserPrincipal(), body);
+		////// wrappedRequest.getInputStream().read();
+		String body = IOUtils.toString(wrappedRequest.getReader());
+		auditor.audit(wrappedRequest.getRequestURI(), wrappedRequest.getUserPrincipal(), body);
 		wrappedRequest.resetInputStream();
 		chain.doFilter(wrappedRequest, response);
 
@@ -48,7 +49,7 @@ public class LoggerFilter implements Filter {
 		// Nothing to do
 	}
 
-	private static class ResettableStreamHttpServletRequest extends HttpServletRequestWrapper {
+	public static class ResettableStreamHttpServletRequest extends HttpServletRequestWrapper {
 
 		private byte[] rawData;
 		private HttpServletRequest request;
@@ -67,7 +68,7 @@ public class LoggerFilter implements Filter {
 		@Override
 		public ServletInputStream getInputStream() throws IOException {
 			if (rawData == null) {
-				//rawData = IOUtils.toByteArray(this.request.getReader());
+				rawData = IOUtils.toByteArray(this.request.getReader());
 				servletStream.stream = new ByteArrayInputStream(rawData);
 			}
 			return servletStream;
@@ -76,7 +77,7 @@ public class LoggerFilter implements Filter {
 		@Override
 		public BufferedReader getReader() throws IOException {
 			if (rawData == null) {
-				//rawData = IOUtils.toByteArray(this.request.getReader());
+				rawData = IOUtils.toByteArray(this.request.getReader());
 				servletStream.stream = new ByteArrayInputStream(rawData);
 			}
 			return new BufferedReader(new InputStreamReader(servletStream));
