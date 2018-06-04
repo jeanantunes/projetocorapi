@@ -19,8 +19,6 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 
     private static final Log log = LogFactory.getLog(PushNotificationServiceImpl.class);
 
-    @Value("${PUSH_NOTIFICATION_URL}")
-    private String pushNotificatinUrl;
 
     ApiManagerTokenServiceImpl apiManagerTokenService;
 
@@ -40,7 +38,7 @@ public class PushNotificationServiceImpl implements PushNotificationService {
                 request,
                 String.class);
 
-        return response.getBody().toString();
+        return response.getStatusCode().toString();
 
     }
 }

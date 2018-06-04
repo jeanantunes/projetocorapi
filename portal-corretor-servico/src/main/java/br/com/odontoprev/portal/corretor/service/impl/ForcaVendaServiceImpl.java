@@ -780,8 +780,6 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		PushNotification pushNotification = new PushNotification();
 		TbodDeviceToken tbodDeviceToken = new TbodDeviceToken();
 		TbodSistemaPush tbodSistemaPush = new TbodSistemaPush();
-		Class<?> t = TbodDeviceToken.class;
-		Table nomeTabela = t.getAnnotation(Table.class);
 
 		tbodNotificationTemplate = notificacaoDAO.findbyTipo(TipoMensagem.ATIVO.name());
 		tbodSistemaPush = sistemaPushDAO.findbyNmSistema("CORRETOR");
@@ -792,20 +790,17 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMEFORCAVENDA.name(), forcaVenda.getNome());
 		mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMECORRETORA.name(), forcaVenda.getTbodCorretora().getNome());
 		pushNotification.setMessage(substituirParametrosUtil.substituirParametrosMensagem(mensagemComParametros, mensagemComParametrosMap));
-		//Obtem o nome da tabela da entidade
 		Map<String, String> dadosTituloMensagem = new HashMap<>();
-		dadosTituloMensagem.put(tbodNotificationTemplate.getTitulo(), tbodNotificationTemplate.getMensagem());
+		dadosTituloMensagem.put(tbodNotificationTemplate.getTitulo(), pushNotification.getMessage());
 
-		pushNotification.setTitle(nomeTabela.name());
+		pushNotification.setTitle(tbodNotificationTemplate.getTitulo());
 		pushNotification.setDados(dadosTituloMensagem);
 		pushNotification.setDestinations(new String [] {tbodDeviceToken.getToken()});
 		pushNotification.setPrivateKey(tbodSistemaPush.getTextoPrivateKey());
 		pushNotification.setSenderSystem(tbodSistemaPush.getSistema());
+		pushNotification.setSystemOperation(tbodDeviceToken.getSistemaOperacional());
 		pushNotification.setProjetoFirebase(tbodSistemaPush.getProjetoFirebase());
 		PushNotificationServiceImpl  pushNotificationService = new PushNotificationServiceImpl();
-
-
-
 
 		return pushNotificationService.envioMensagemPush(pushNotification);
 	}
