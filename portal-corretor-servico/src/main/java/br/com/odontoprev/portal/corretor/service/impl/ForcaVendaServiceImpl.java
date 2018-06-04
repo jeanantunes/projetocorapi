@@ -695,7 +695,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			TbodCorretora tbCorretora = corretoraDao.findOne(tbForcaVendas.get(0).getTbodCorretora().getCdCorretora());
 
 			SendMailForcaStatus sendEmail = new SendMailForcaStatus();
-			//sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
+			sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaStatus :: Message: [" + e.getMessage() + "]");
