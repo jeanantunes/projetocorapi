@@ -180,14 +180,6 @@
 		    <artifactId>spring-web</artifactId>
 		</dependency>
 
-<!-- 		201806051547 - esert - desligando dependencia ate finalizar-->
-<!-- 		201806051547 - esert - dependencia para interceptor versao alfa-->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.commons</groupId> -->
-<!-- 			<artifactId>commons-io</artifactId> -->
-<!-- 			<version>2.5</version> -->
-<!-- 		</dependency> -->
-
 	</dependencies>
 
 	<build>		
