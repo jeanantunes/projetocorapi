@@ -31,7 +31,8 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		log.info("[preHandle]; request.getMethod():[" + request.getMethod() + "]");
 		log.info("[preHandle]; request.getRequestURI():[" + request.getRequestURI() + "]");
 		log.info("[preHandle]; getParameters(request):[" + getParameters(request) + "]");
-		// log.info("[preHandle]; getBody:[" + getBody(request) + "]"); // 201806051824 - esert
+		//201806061147 - esert - desativado
+		//log.info("[preHandle]; getBody:[" + getBody(request) + "]"); // 201806051824 - esert
 		//log.info("[preHandle]; getRequestBody:[" + getRequestBody(request) + "]"); // 201806051911 - esert
 
 		return true;
@@ -41,6 +42,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 
+		//201806061147 - esert - desativado
 		// String body = null;
 		// ResettableStreamHttpServletRequest wrappedRequest = new
 		// ResettableStreamHttpServletRequest((HttpServletRequest) request);
@@ -51,6 +53,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		// log.info("[postHandle]; body:[" + body + "]");
 
 		log.info("[postHandle]; modelAndView:[" + modelAndView + "]"); // 201806051834 - esert
+		//201806061147 - esert - desativado
 		// log.info("[postHandle]; getBody:[" + getBody(request) + "]"); // 201806051819 - esert
 		//log.info("[postHandle]; getRequestBody:[" + getRequestBody(request) + "]"); // 201806051900 - esert
 
@@ -66,11 +69,13 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 
 		log.info("[afterCompletion]; request:[" + request + "]");
 		log.info("[afterCompletion]; exception:[" + ex + "]");
+		//201806061147 - esert - desativado
 		//log.info("[afterCompletion]; getBody:[" + getBody(request) + "]"); // 201806051824 - esert
 		//log.info("[afterCompletion]; getRequestBody:[" + getRequestBody(request) + "]"); // 201806051853 - esert
 	}
 
-	private String getParameters(HttpServletRequest request) {
+	//private String getParameters(HttpServletRequest request) {
+	public static String getParameters(HttpServletRequest request) { //2018060612334 - esert
 
 		StringBuffer posted = new StringBuffer();
 		Enumeration<?> enumeration = request.getParameterNames();
@@ -98,7 +103,8 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		return posted.toString();
 	}
 
-	private String getRemoteAddr(HttpServletRequest request) {
+	//private String getRemoteAddr(HttpServletRequest request) {
+	public static String getRemoteAddr(HttpServletRequest request) { //2018060612334 - esert
 		String ipFromHeader = request.getHeader("X-FORWARDED-FOR");
 		if (ipFromHeader != null && ipFromHeader.length() > 0) {
 			log.debug("ip from proxy - X-FORWARDED-FOR : " + ipFromHeader);
