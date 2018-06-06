@@ -21,8 +21,11 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	private static final Log log = LogFactory.getLog(LoggerInterceptor.class);
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	public boolean preHandle(
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			Object handler
+			) throws Exception {
 
 		log.info("[preHandle]; request:[" + request + "]");
 		log.info("[preHandle]; request.getMethod():[" + request.getMethod() + "]");
@@ -70,16 +73,16 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	private String getParameters(HttpServletRequest request) {
 
 		StringBuffer posted = new StringBuffer();
-		Enumeration<?> e = request.getParameterNames();
+		Enumeration<?> enumeration = request.getParameterNames();
 
-		if (e != null) {
+		if (enumeration != null) {
 			posted.append("?");
 		}
-		while (e.hasMoreElements()) {
+		while (enumeration.hasMoreElements()) {
 			if (posted.length() > 1) {
 				posted.append("&");
 			}
-			String curr = (String) e.nextElement();
+			String curr = (String) enumeration.nextElement();
 			posted.append(curr + "=");
 			if (curr.contains("password") || curr.contains("pass") || curr.contains("pwd")) {
 				posted.append("*****");
