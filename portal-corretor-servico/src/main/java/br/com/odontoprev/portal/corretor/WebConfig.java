@@ -36,7 +36,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	} 
 
 	//201806052013 - esert - interceptor com filter
-	@Bean
+	@Bean //201806071200 - esert/rmarques - faltava esta anotacao bean aqui - dica by roberto
 	public Filter odpvLogFilter() {
 	    //return new SomeFilter();
 	    return (Filter) new OdpvLogFilter();
