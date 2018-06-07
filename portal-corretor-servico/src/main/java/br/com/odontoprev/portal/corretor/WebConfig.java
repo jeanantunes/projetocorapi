@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import br.com.odontoprev.portal.corretor.interceptor.OdpvLogFilter;
 import br.com.odontoprev.portal.corretor.interceptor.LoggerInterceptor;
+import br.com.odontoprev.portal.corretor.interceptor.OdpvLogFilter;
 
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
@@ -36,6 +36,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	} 
 
 	//201806052013 - esert - interceptor com filter
+	@Bean
 	public Filter odpvLogFilter() {
 	    //return new SomeFilter();
 	    return (Filter) new OdpvLogFilter();
