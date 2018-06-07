@@ -326,7 +326,7 @@ public class VendaPFBusiness {
 		String propostaJson = gson.toJson(propostaDCMS);			
 		log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
 			
-        odpvAuditor.audit(dcssUrl + dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
+        odpvAuditor.audit(dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 
 		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
 		
