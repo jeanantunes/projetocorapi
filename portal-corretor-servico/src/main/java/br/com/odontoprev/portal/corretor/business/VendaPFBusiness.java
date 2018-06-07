@@ -47,6 +47,7 @@ import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
 import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
 
 @ManagedBean
@@ -85,6 +86,9 @@ public class VendaPFBusiness {
 	
 	@Autowired
 	ResponsavelContratualBusiness responsavelContratualBusiness;
+    
+    @Autowired
+	OdpvAuditorService odpvAuditor; //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
@@ -321,6 +325,8 @@ public class VendaPFBusiness {
 		Gson gson = new Gson();
 		String propostaJson = gson.toJson(propostaDCMS);			
 		log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
+			
+        odpvAuditor.audit(dcssUrl + dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 
 		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
 		
