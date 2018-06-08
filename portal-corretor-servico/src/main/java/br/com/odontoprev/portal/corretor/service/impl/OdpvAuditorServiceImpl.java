@@ -53,7 +53,7 @@ public class OdpvAuditorServiceImpl implements OdpvAuditorService {
 //				jsonRequest.setCdCorretora(tbodForcaVenda.getTbodCorretora().getCdCorretora());
 //			}
 //			jsonRequest.setUrl(vendaPF != null ? "/vendapf" : "/vendapme");
-			jsonRequest.setUrl(requestURI);
+			jsonRequest.setUrl(requestURI.substring(0,20)); //201806081223 - esert/vrodrigues - max 20 por enquanto so pra nao quebrar
 			jsonRequest.setJson(stringJsonBody);
 			jsonRequestDAO.save(jsonRequest);
 		} catch (Exception e) {
