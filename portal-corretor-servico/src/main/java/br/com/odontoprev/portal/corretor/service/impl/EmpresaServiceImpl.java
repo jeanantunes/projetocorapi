@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -50,6 +51,10 @@ import br.com.odontoprev.portal.corretor.util.XlsVidas;
 public class EmpresaServiceImpl implements EmpresaService {
 
 	private static final Log log = LogFactory.getLog(EmpresaServiceImpl.class);
+
+	private List<String> listaEmails = new ArrayList<>();
+
+	private String emailForcaVenda = "";
 
 	@Autowired
 	EmpresaDAO empresaDAO;
@@ -167,7 +172,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 			log.info("cdEmpresa:[" + cdEmpresa + "]");
 			
 			TbodEmpresa tbodEmpresa = empresaDAO.findOne(cdEmpresa);
-			
+			listaEmails.add(tbodEmpresa.getEmail());
+
 			if(tbodEmpresa==null) {
 				log.info("tbodEmpresa==null");
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -181,16 +187,23 @@ public class EmpresaServiceImpl implements EmpresaService {
 			log.info("tbodEmpresa.getEmpDcms():[" + tbodEmpresa.getEmpDcms() + "]");
 			
 			List<TbodVenda> tbodVendas = vendaDAO.findByTbodEmpresaCdEmpresa(cdEmpresa);
-			
-			if(tbodVendas!=null) {				
+
+			if(tbodVendas!=null) {
 				log.info("tbodVendas.size():[" + tbodVendas.size() + "]"); //201805221233 - esert				
 				if(tbodVendas.size()>0) { //201805221233 - esert - protecao
+
 					for (TbodVenda tbodVenda : tbodVendas) {
 						//201805101616 - esert - arbitragem : fica com a ultima venda suposta mais recente
 						longDiaVencimentoFatura = tbodVenda.getFaturaVencimento();
 						log.info("longDiaVencimentoFatura:[" + longDiaVencimentoFatura + "]");				
 						dateDataVenda = tbodVenda.getDtVenda();
-						log.info("dateDataVenda:[" + (new SimpleDateFormat("dd/MM/yyyy")).format(dateDataVenda) + "]");				
+						log.info("dateDataVenda:[" + (new SimpleDateFormat("dd/MM/yyyy")).format(dateDataVenda) + "]");
+
+						if(emailForcaVenda.isEmpty()){
+							emailForcaVenda = tbodVenda.getTbodForcaVenda().getEmail();
+							listaEmails.add(emailForcaVenda);
+						}
+
 					}
 				} else {
 					log.info("tbodVendas.size == 0 ZERO para cdEmpresa:[" + cdEmpresa + "]!!!"); //201805221233 - esert - protecao
@@ -211,9 +224,11 @@ public class EmpresaServiceImpl implements EmpresaService {
 			//http://git.odontoprev.com.br/esteira-digital/est-portalcorretor-app/blob/sprint6/VendasOdontoPrev/app/src/main/assets/app/pmeFaturaController.js
 			String strDataVigencia = DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda);
 			log.info("strDataVigencia:[" + strDataVigencia + "]");				
-			
+
+			// TESTE VICTOR
 			sendMailBoasVindasPME.sendMail(
-				tbodEmpresa.getEmail(), //email, 
+				//tbodEmpresa.getEmail(), //email,
+				listaEmails, //lista de emails,
 				tbodEmpresa.getNomeFantasia(), //nomeCorretora, 
 				tbodEmpresa.getEmpDcms(), //login, 
 				PropertiesUtils.getProperty(PropertiesUtils.SENHA_INICIAL_PORTAL_PME), //senha, 
@@ -545,4 +560,19 @@ public class EmpresaServiceImpl implements EmpresaService {
 		return new EmpresaResponse(HttpStatus.OK.value(), empresaAtualizadaAceite);  //201805181310 - esert - COR-171
 	}
 
+	public List<String> getListaEmails() {
+		return listaEmails;
+	}
+
+	public void setListaEmails(List<String> listaEmails) {
+		this.listaEmails = listaEmails;
+	}
+
+	public String getEmailForcaVenda() {
+		return emailForcaVenda;
+	}
+
+	public void setEmailForcaVenda(String emailForcaVenda) {
+		this.emailForcaVenda = emailForcaVenda;
+	}
 }
