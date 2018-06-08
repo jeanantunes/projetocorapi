@@ -36,7 +36,7 @@ public class PropostaController {
 	@RequestMapping(value = "/corretoratotalvidaspme", method = { RequestMethod.POST })
 	public List<VwodCorretoraTotalVidas> relatoriovendapme(@RequestBody DashBoardProposta dashBoardProposta) throws ParseException {
 		
-		log.info("relatoriovendapme");
+		log.info("corretoratotalvidaspme");
 		log.info(dashBoardProposta);
 		
 		return propostaService.findVwodCorretoraTotalVidasByFiltro(dashBoardProposta);
