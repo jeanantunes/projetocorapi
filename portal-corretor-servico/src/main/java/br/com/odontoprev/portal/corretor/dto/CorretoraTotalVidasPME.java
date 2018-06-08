@@ -8,22 +8,21 @@ public class CorretoraTotalVidasPME implements Serializable {
 	
 	private static final long serialVersionUID = 7629097794815722943L;
 	
-	private Date dtVendaInicio;
-	private Date dtVendaFim;
+	private String dtVendaInicio;
+	private String dtVendaFim;
 	private String cnpjCorretora;
 	
-	public Date getDtVendaInicio() {
+	public String getDtVendaInicio() {
 		return dtVendaInicio;
 	}
-	public void setDtVendaInicio(Date dtVendaInicio) {
+	public void setDtVendaInicio(String dtVendaInicio) {
 		this.dtVendaInicio = dtVendaInicio;
 	}
 	
-	
-	public Date getDtVendaFim() {
+	public String getDtVendaFim() {
 		return dtVendaFim;
 	}
-	public void setDtVendaFim(Date dtVendaFim) {
+	public void setDtVendaFim(String dtVendaFim) {
 		this.dtVendaFim = dtVendaFim;
 	}
 	

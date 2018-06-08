@@ -2,7 +2,9 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -212,9 +214,14 @@ public class PropostaServiceImpl implements PropostaService {
 
 	//201806081617 - esert - relatorio vendas pme
 	public List<VwodCorretoraTotalVidas> findVwodCorretoraTotalVidasByFiltro(CorretoraTotalVidasPME corretoraTotalVidasPME) throws ParseException {
+		final String TIME_ZONE_BRASILIA = "T00:00:00.000-0300";
+		final String LENIENT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+		SimpleDateFormat sdf = new SimpleDateFormat(LENIENT_DATETIME_FORMAT);
+		Date dateDtVendaInicio = sdf.parse(corretoraTotalVidasPME.getDtVendaInicio().concat(TIME_ZONE_BRASILIA)); 
+		Date dateDtVendaFim = sdf.parse(corretoraTotalVidasPME.getDtVendaFim().concat(TIME_ZONE_BRASILIA)); 
 		return vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVendasByFiltro(
-				corretoraTotalVidasPME.getDtVendaInicio(), 
-				corretoraTotalVidasPME.getDtVendaFim(), 
+				dateDtVendaInicio, 
+				dateDtVendaFim, 
 				corretoraTotalVidasPME.getCnpjCorretora() 
 				);		
 	}
