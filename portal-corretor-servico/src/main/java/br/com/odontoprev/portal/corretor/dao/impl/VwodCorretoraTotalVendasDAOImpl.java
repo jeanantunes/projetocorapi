@@ -12,7 +12,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.odontoprev.portal.corretor.controller.PropostaController;
 import br.com.odontoprev.portal.corretor.dao.VwodCorretoraTotalVendasDAO;
 import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
 
@@ -21,7 +20,7 @@ import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
 @Repository
 public class VwodCorretoraTotalVendasDAOImpl implements VwodCorretoraTotalVendasDAO {
 
-	private static final Log log = LogFactory.getLog(PropostaController.class);
+	private static final Log log = LogFactory.getLog(VwodCorretoraTotalVendasDAOImpl.class);
 	
 	@PersistenceContext
 	private EntityManager entityManager;

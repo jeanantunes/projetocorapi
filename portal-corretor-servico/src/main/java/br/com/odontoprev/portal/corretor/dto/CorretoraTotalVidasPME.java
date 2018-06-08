@@ -1,7 +1,6 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 //201806081711 - esert - relatorio corretora total vidas pme
 public class CorretoraTotalVidasPME implements Serializable {
