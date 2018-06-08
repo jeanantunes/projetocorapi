@@ -4,11 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.odontoprev.portal.corretor.dto.EmailBoasVindasPME;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
@@ -36,12 +36,14 @@ public class SendEmailController {
 //	}
 	
 	//201805221026 - esert - COR-160 - refactor - nova rota POST para reenvio de emails BoasVindasPME vide Fernando@ODPV
-	@RequestMapping(value = "/sendMail/BoasVindasPME", method = { RequestMethod.POST })
-	public ResponseEntity<EmpresaDcms> sendMailBoasVindasPME(EmailBoasVindasPME emailBoasVindasPMERequest) {
+	//201806081230 - esert/vrodrigues - alterado assinatura de (dto.EmailBoasVindasPME) para (@PathVariable Long cdEmpresa)
+	//201806081249 - esert/rmarques - rota nome toda minuscula
+	@RequestMapping(value = "/sendmail/boasvindaspme/{cdEmpresa}", method = { RequestMethod.POST })
+	public ResponseEntity<EmpresaDcms> sendMailBoasVindasPME(@PathVariable Long cdEmpresa) {
 		
 		log.info("Inicio sendMailBoasVindasPME");
 		
-		ResponseEntity<EmpresaDcms> res = empresaService.sendMailBoasVindasPME(emailBoasVindasPMERequest.getCdEmpresa());
+		ResponseEntity<EmpresaDcms> res = empresaService.sendMailBoasVindasPME(cdEmpresa);
 		
 		log.info("Fim sendMailBoasVindasPME");
 		

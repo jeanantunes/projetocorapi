@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.odontoprev.portal.corretor.dao.ConvertObjectDAO;
+import br.com.odontoprev.portal.corretor.dao.JsonRequestDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
@@ -20,9 +20,9 @@ import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 public class ConvertObjectServiceImpl implements ConvertObjectService {
 	
 	private static final Log log = LogFactory.getLog(ConvertObjectServiceImpl.class);
-
+ 
 	@Autowired
-	ConvertObjectDAO convertObjectDAO;
+	JsonRequestDAO jsonRequestDAO; //201806061156 - esert - rename de ConvertObjectDAO para JsonRequestDAO mantendo referencia ao model TbodJsonRequest correspondente
 	
 	@Autowired
 	ConvertObjectUtil convertService;
@@ -51,7 +51,7 @@ public class ConvertObjectServiceImpl implements ConvertObjectService {
 			}else {
 				jsonRequest.setJson(convertService.ConvertObjectToJson(null,vendaPME));
 			}			
-			convertObjectDAO.save(jsonRequest);
+			jsonRequestDAO.save(jsonRequest);
 		} catch (Exception e) {
 			log.error(e);
 			log.error("Erro ao cadastrar json de vendas PF e PME :: Detalhe: [" + e.getMessage() + "]");
