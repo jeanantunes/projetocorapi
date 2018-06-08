@@ -14,6 +14,7 @@ import br.com.odontoprev.portal.corretor.dao.PropostaDAO;
 import br.com.odontoprev.portal.corretor.dao.TxtImportacaoDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.ViewCorSumarioVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.VwodCorretoraTotalVendasDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.DashBoardProposta;
 import br.com.odontoprev.portal.corretor.dto.PropostaCritica;
@@ -29,6 +30,7 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.model.ViewCorSumarioVenda;
+import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
 import br.com.odontoprev.portal.corretor.service.PropostaService;
 import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 
@@ -42,13 +44,16 @@ public class PropostaServiceImpl implements PropostaService {
 	
 	@Autowired
 //	@Qualifier("ViewCorSumarioVendaDAOImpl")
-	ViewCorSumarioVendaDAO vendaDAO;
+	ViewCorSumarioVendaDAO ViewCorSumarioVendaDAO;
 
 	@Autowired
 	VendaDAO vendaDAOCritica;
 
 	@Autowired
 	TxtImportacaoDAO txtImportacaoDAO;
+
+	@Autowired
+	VwodCorretoraTotalVendasDAO vwodCorretoraTotalVendasDAO;
 	
 	@Override
 	public PropostasDashBoard findPropostasByFiltro(DashBoardProposta dashBoardProposta) throws ParseException {
@@ -114,7 +119,7 @@ public class PropostaServiceImpl implements PropostaService {
 	
 	
 	public List<ViewCorSumarioVenda> findViewCorSumarioByFiltro(DashBoardProposta dashBoardProposta) throws ParseException {
-		return vendaDAO.viewCorSumarioVendasByFiltro(dashBoardProposta.getDtInicio(), dashBoardProposta.getDtFim(), dashBoardProposta.getCdCorretora(), dashBoardProposta.getCdForcaVenda(), dashBoardProposta.getCpf(), dashBoardProposta.getCnpj(), dashBoardProposta.getDtVenda());		
+		return ViewCorSumarioVendaDAO.viewCorSumarioVendasByFiltro(dashBoardProposta.getDtInicio(), dashBoardProposta.getDtFim(), dashBoardProposta.getCdCorretora(), dashBoardProposta.getCdForcaVenda(), dashBoardProposta.getCpf(), dashBoardProposta.getCnpj(), dashBoardProposta.getDtVenda());		
 	}
 
 	//201805081530 - esert
@@ -202,6 +207,19 @@ public class PropostaServiceImpl implements PropostaService {
 		}
 		
 		return propostaCritica;
+	}
+
+	//201806081617 - esert - relatorio vendas pme
+	public List<VwodCorretoraTotalVidas> findVwodCorretoraTotalVidasByFiltro(DashBoardProposta dashBoardProposta) throws ParseException {
+		return vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVendasByFiltro(
+				dashBoardProposta.getDtInicio(), 
+				dashBoardProposta.getDtFim(), 
+				dashBoardProposta.getCdCorretora(), 
+				dashBoardProposta.getCdForcaVenda(), 
+				dashBoardProposta.getCpf(), 
+				dashBoardProposta.getCnpj(), 
+				dashBoardProposta.getDtVenda()
+				);		
 	}
 
 }
