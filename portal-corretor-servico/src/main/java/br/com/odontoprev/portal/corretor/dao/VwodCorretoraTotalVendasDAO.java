@@ -8,14 +8,10 @@ import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
 //201806081606 - esert - relatorio vendas pme
 public interface VwodCorretoraTotalVendasDAO {
 
-	public List<VwodCorretoraTotalVidas> vwodCorretoraTotalVendasByFiltro(
-			Date dtInicio, 
-			Date dtFim, 
-			long cdCorretora,
-			long cdForcaVenda, 
-			String cpf, 
-			String cnpj, 
-			Date dtVenda
-			);
+	List<VwodCorretoraTotalVidas> vwodCorretoraTotalVendasByFiltro(
+			Date dtVendaInicio, 
+			Date dtVendaFim, 
+			String cnpj
+	);
 
 }

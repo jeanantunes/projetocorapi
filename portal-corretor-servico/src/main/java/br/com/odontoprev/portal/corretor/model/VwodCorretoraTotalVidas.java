@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ public class VwodCorretoraTotalVidas implements Serializable {
 	//venda.dt_venda,
 	@Id
 	@Column(name="DT_VENDA")
-	private String dtVenda;
+	private Date dtVenda;
 
 	//cor.cnpj cnpj_corretora,
 	@Column(name="CNPJ_CORRETORA")
@@ -104,11 +105,11 @@ public class VwodCorretoraTotalVidas implements Serializable {
 	@Column(name="DIA_FATURA")
 	private Integer dia_fatura;
 
-	public String getDtVenda() {
+	public Date getDtVenda() {
 		return dtVenda;
 	}
 
-	public void setDtVenda(String dtVenda) {
+	public void setDtVenda(Date dtVenda) {
 		this.dtVenda = dtVenda;
 	}
 

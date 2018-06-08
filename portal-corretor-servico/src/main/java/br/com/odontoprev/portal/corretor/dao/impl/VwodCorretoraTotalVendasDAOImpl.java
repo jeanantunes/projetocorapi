@@ -25,65 +25,36 @@ public class VwodCorretoraTotalVendasDAOImpl implements VwodCorretoraTotalVendas
 
 	@Override
 	public List<VwodCorretoraTotalVidas> vwodCorretoraTotalVendasByFiltro(
-			Date dtInicio, 
-			Date dtFim, 
-			long cdCorretora,
-			long cdForcaVenda, 
-			String cpf, 
-			String cnpj, 
-			Date dtVenda
+			Date dtVendaInicio, 
+			Date dtVendaFim, 
+			String cnpjCorretora 
 	) {
 		String stringQuery = "from VwodCorretoraTotalVidas v where 1=1 ";
 		
-		/*
-		if(dtInicio != null && dtFim != null) {
-			squery += "v.dtVenda >= :dtInicio AND v.dtVenda < :dtFim ";
-		}
-		*/
-		
-		if(cdCorretora > 0L) {
-			stringQuery += " and v.codigoCorretora = :cdCorretora ";
+		if(dtVendaInicio != null) {
+			stringQuery += " AND v.dtVenda >= :dtVendaInicio";
 		}
 		
-		if(cdForcaVenda > 0L) {
-			stringQuery += " and v.codigoForcaVenda = :cdForcaVenda ";
+		if(dtVendaFim != null) {
+			stringQuery += " AND v.dtVenda <= :dtVendaFim ";
 		}
 		
-		if(cpf!= null) {
-			stringQuery += " and v.cpf = :cpf ";
+		if(cnpjCorretora != null) {
+			stringQuery += " AND v.cnpj_corretora = :cnpjCorretora ";
 		}
-		
-		if(cnpj != null) {
-			stringQuery += " and v.cnpj = :cnpj ";
-		}
-		
-		
+				
 		Query query = entityManager.createQuery(stringQuery, VwodCorretoraTotalVidas.class);
 		
-		/*
-		if(dtInicio != null && dtFim != null) {
-			query.setParameter("dtInicio", dtInicio);			
-			query.setParameter("dtFim", dtFim);
-		}
-		*/
-		if(cdCorretora > 0L) {			
-			query.setParameter("cdCorretora", cdCorretora);
+		if(dtVendaInicio != null) {
+			query.setParameter("dtVendaInicio", dtVendaInicio);			
 		}
 		
-		if(cdForcaVenda > 0L) {			
-			query.setParameter("cdForcaVenda", cdForcaVenda);
+		if(dtVendaFim != null) {
+			query.setParameter("dtVendaFim", dtVendaFim);			
 		}
 		
-		if(cnpj !=null) {			
-			query.setParameter("cnpj", cnpj);
-		}
-		
-		if(cpf != null) {			
-			query.setParameter("cpf", cpf);
-		}
-		
-		if(dtVenda != null) {
-			query.setParameter("dtVenda", dtVenda);
+		if(cnpjCorretora !=null) {			
+			query.setParameter("cnpjCorretora", cnpjCorretora);
 		}
 		
 		@SuppressWarnings("unchecked")

@@ -16,6 +16,7 @@ import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.ViewCorSumarioVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VwodCorretoraTotalVendasDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.CorretoraTotalVidasPME;
 import br.com.odontoprev.portal.corretor.dto.DashBoardProposta;
 import br.com.odontoprev.portal.corretor.dto.PropostaCritica;
 import br.com.odontoprev.portal.corretor.dto.PropostaPF;
@@ -210,15 +211,11 @@ public class PropostaServiceImpl implements PropostaService {
 	}
 
 	//201806081617 - esert - relatorio vendas pme
-	public List<VwodCorretoraTotalVidas> findVwodCorretoraTotalVidasByFiltro(DashBoardProposta dashBoardProposta) throws ParseException {
+	public List<VwodCorretoraTotalVidas> findVwodCorretoraTotalVidasByFiltro(CorretoraTotalVidasPME corretoraTotalVidasPME) throws ParseException {
 		return vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVendasByFiltro(
-				dashBoardProposta.getDtInicio(), 
-				dashBoardProposta.getDtFim(), 
-				dashBoardProposta.getCdCorretora(), 
-				dashBoardProposta.getCdForcaVenda(), 
-				dashBoardProposta.getCpf(), 
-				dashBoardProposta.getCnpj(), 
-				dashBoardProposta.getDtVenda()
+				corretoraTotalVidasPME.getDtVendaInicio(), 
+				corretoraTotalVidasPME.getDtVendaFim(), 
+				corretoraTotalVidasPME.getCnpjCorretora() 
 				);		
 	}
 
