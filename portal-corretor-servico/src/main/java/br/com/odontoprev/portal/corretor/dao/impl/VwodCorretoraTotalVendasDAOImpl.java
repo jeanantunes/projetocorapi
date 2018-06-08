@@ -33,7 +33,7 @@ public class VwodCorretoraTotalVendasDAOImpl implements VwodCorretoraTotalVendas
 			String cnpj, 
 			Date dtVenda
 	) {
-		String stringQuery = "from ViewCorSumarioVenda v where 1=1 ";
+		String stringQuery = "from VwodCorretoraTotalVidas v where 1=1 ";
 		
 		/*
 		if(dtInicio != null && dtFim != null) {
