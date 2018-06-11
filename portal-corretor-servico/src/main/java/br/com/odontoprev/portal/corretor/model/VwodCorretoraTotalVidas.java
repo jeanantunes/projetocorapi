@@ -20,89 +20,89 @@ public class VwodCorretoraTotalVidas implements Serializable {
 
 	//venda.dt_venda,
 	@Id
-	@Column(name="DT_VENDA")
+	@Column(name="DT_VENDA") //01 - apenas um contador para nao perder a conta //201806111532 - esert
 	private Date dtVenda;
 
 	//cor.cnpj cnpj_corretora,
-	@Column(name="CNPJ_CORRETORA")
+	@Column(name="CNPJ_CORRETORA") //02
 	private String cnpj_corretora;
 	
 	//cor.nome corretora,
-	@Column(name="CORRETORA")
+	@Column(name="CORRETORA") //03
 	private String corretora;
 	
 	//forca.cpf,
-	@Column(name="CPF")
+	@Column(name="CPF") //04
 	private String cpf;
 	
 	//forca.nome vendedor,	
-	@Column(name="VENDEDOR")
+	@Column(name="VENDEDOR") //05
 	private String vendedor;
 	
 	//empc.cnpj CNPJ_CLIENTE, 
-	@Column(name="CNPJ_CLIENTE")
+	@Column(name="CNPJ_CLIENTE") //06
 	private String cnpj_cliente;
 	
 	//empc.razao_social RAZAO_SOCIAL_CLIENTE, 
-	@Column(name="RAZAO_SOCIAL_CLIENTE")
+	@Column(name="RAZAO_SOCIAL_CLIENTE") //07
 	private String razao_social_cliente;
 
 	//emp.cd_empresa LOGIN_DCMS, 
-	@Column(name="LOGIN_DCMS")
+	@Column(name="LOGIN_DCMS") //08
 	private String login_dcms;
 
 	//ende.logradouro, 
-	@Column(name="LOGRADOURO")
+	@Column(name="LOGRADOURO") //09
 	private String logradouro;
 
 	//ende.numero, 
-	@Column(name="NUMERO")
+	@Column(name="NUMERO") //10
 	private String numero;
 
 	//ende.complemento, 
-	@Column(name="COMPLEMENTO")
+	@Column(name="COMPLEMENTO") //11
 	private String complemento;
 
 	//ende.bairro, 
-	@Column(name="BAIRRO")
+	@Column(name="BAIRRO") //12
 	private String bairro;
 
 	//ende.cidade, 
-	@Column(name="CIDADE")
+	@Column(name="CIDADE") //13
 	private String cidade;
 	
 	//ende.UF, 
-	@Column(name="UF")
+	@Column(name="UF") //14
 	private String uf;
 
 	//ende.cep, 
-	@Column(name="CEP")
+	@Column(name="CEP") //15
 	private String cep;
 
 	//empc.representante_legal, 
-	@Column(name="REPRESENTANTE_LEGAL")
+	@Column(name="REPRESENTANTE_LEGAL") //16
 	private String representante_legal;
 
 	//empc.celular,
-	@Column(name="CELULAR")
+	@Column(name="CELULAR") //17
 	private String celular;
 	
 	//empc.email,
-	@Column(name="EMAIL")
+	@Column(name="EMAIL") //18
 	private String email;
 
 	//--venda.cd_plano TOTAL_PLANOS, 
 
 	//plano.titulo PLANO,
-	@Column(name="PLANO")
+	@Column(name="PLANO") //19
 	private String plano;
 
 	//Count(vida.cd_vida) TOTAL_VIDAS, 
-	@Column(name="TOTAL_VIDAS")
+	@Column(name="TOTAL_VIDAS") //20
 	private Integer total_vidas;
 
 	//venda.fatura_vencimento DIA_FATURA 
-	@Column(name="DIA_FATURA")
+	@Column(name="DIA_FATURA") //21
 	private Integer dia_fatura;
 
 	public Date getDtVenda() {
