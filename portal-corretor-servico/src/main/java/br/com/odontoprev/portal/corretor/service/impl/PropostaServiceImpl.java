@@ -4,11 +4,14 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.impl.cookie.DateParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -214,11 +217,52 @@ public class PropostaServiceImpl implements PropostaService {
 
 	//201806081617 - esert - relatorio vendas pme
 	public List<VwodCorretoraTotalVidas> findVwodCorretoraTotalVidasByFiltro(CorretoraTotalVidasPME corretoraTotalVidasPME) throws ParseException {
+		log.info("findVwodCorretoraTotalVidasByFiltro - ini");
+		log.info("findVwodCorretoraTotalVidasByFiltro - getDtVendaInicio():[" + corretoraTotalVidasPME.getDtVendaInicio() + "]");
+		log.info("findVwodCorretoraTotalVidasByFiltro - getDtVendaFim():[" + corretoraTotalVidasPME.getDtVendaFim() + "]");
+		log.info("findVwodCorretoraTotalVidasByFiltro - getCnpjCorretora():[" + corretoraTotalVidasPME.getCnpjCorretora() + "]");
+		
 		final String TIME_ZONE_BRASILIA = "T00:00:00.000-0300";
 		final String LENIENT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 		SimpleDateFormat sdf = new SimpleDateFormat(LENIENT_DATETIME_FORMAT);
-		Date dateDtVendaInicio = sdf.parse(corretoraTotalVidasPME.getDtVendaInicio().concat(TIME_ZONE_BRASILIA)); 
-		Date dateDtVendaFim = sdf.parse(corretoraTotalVidasPME.getDtVendaFim().concat(TIME_ZONE_BRASILIA)); 
+		Date dateDtVendaInicio; 
+		Date dateDtVendaFim;
+		
+		//201806112000 - esert - se receber /0/0/cnpj
+		if(
+			corretoraTotalVidasPME.getDtVendaInicio().equals("0")
+			&&
+			corretoraTotalVidasPME.getDtVendaFim().equals("0")
+		) {
+			//201806112000 - esert - calcula de 90 dias atras ate hoje  
+			Calendar dataVenda = new GregorianCalendar();
+			dataVenda.setTime(new Date());
+			dataVenda = new GregorianCalendar(
+				dataVenda.get(Calendar.YEAR), 
+				dataVenda.get(Calendar.MONTH), 
+				dataVenda.get(Calendar.DATE)
+			);			
+			dateDtVendaFim = dataVenda.getTime();			
+			dataVenda.add(Calendar.DATE, -90);
+			dateDtVendaInicio = dataVenda.getTime(); 
+		} else {
+			//201806112000 - esert - senao usa datas do parametro
+			try {
+				dateDtVendaInicio = sdf.parse(corretoraTotalVidasPME.getDtVendaInicio().concat(TIME_ZONE_BRASILIA));
+			}catch (Exception e) {
+				throw new ParseException("getDtVendaInicio invalida [" + corretoraTotalVidasPME.getDtVendaInicio() + "]", 0);
+			}
+			
+			try {
+				dateDtVendaFim = sdf.parse(corretoraTotalVidasPME.getDtVendaFim().concat(TIME_ZONE_BRASILIA));
+			}catch (Exception e) {
+				throw new ParseException("getDtVendaFim invalida [" + corretoraTotalVidasPME.getDtVendaFim() + "]", 0);
+			}
+		}
+		
+		log.info("findVwodCorretoraTotalVidasByFiltro - fim");
+		log.info("chama vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVendasByFiltro([" + dateDtVendaInicio + "],["+ dateDtVendaFim +"],[" + corretoraTotalVidasPME.getCnpjCorretora() + "])");
+		
 		return vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVendasByFiltro(
 				dateDtVendaInicio, 
 				dateDtVendaFim, 

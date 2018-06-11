@@ -1,6 +1,8 @@
 package br.com.odontoprev.portal.corretor.controller;
 
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -15,46 +17,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.CorretoraTotalVidasPME;
-import br.com.odontoprev.portal.corretor.dto.RelatorioGestaoVenda;
 import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
 import br.com.odontoprev.portal.corretor.service.PropostaService;
-import br.com.odontoprev.portal.corretor.service.RelatorioGestaoVendaService;
-import br.com.odontoprev.portal.corretor.util.CsvUtil;
+import br.com.odontoprev.portal.corretor.util.XlsCorretoraTotalVidas;
 
 @RestController
-public class CsvFileDownloadController {
+public class XlsFileDownloadController {
 	
-	private static final Log log = LogFactory.getLog(CsvFileDownloadController.class);
-	
-	@Autowired
-	RelatorioGestaoVendaService relatorioGestaoVendaService;
-	
+	private static final Log log = LogFactory.getLog(XlsFileDownloadController.class);
+
 	@Autowired
 	PropostaService propostaService;
 	
-	@RequestMapping(value = "downloadCSV/{cnpj}", method = { RequestMethod.GET })
-	public void downloadCSV(@PathVariable String cnpj, HttpServletResponse response) {
-		
-		log.info("downloadCSV");
-		
-		List<RelatorioGestaoVenda> gestaoVendas = relatorioGestaoVendaService.findVendasByCorretora(cnpj);
-		
-		if(gestaoVendas != null && !gestaoVendas.isEmpty()) {
-			CsvUtil.gerarCsvRelatorioGestaoVendas(response, gestaoVendas);
-		}
-		
-	}
-
+	@Autowired
+	XlsCorretoraTotalVidas xlsCorretoraTotalVidas;
+	
 	//201806081840 - esert - relatorio venda pme deve retornar XLS
-	@RequestMapping(value = "downloadcsv/corretoratotalvidaspme/{dtVendaInicio}/{dtVendaFim}/{cnpjCorretora}", method = { RequestMethod.GET })
-	public void corretoratotalvidaspmeCSV(
+	@RequestMapping(value = "downloadxls/corretoratotalvidaspme/{dtVendaInicio}/{dtVendaFim}/{cnpjCorretora}", method = { RequestMethod.GET })
+	public void corretoratotalvidaspmeXLS(
 			@PathVariable String dtVendaInicio, //yyyy-MM-dd
 			@PathVariable String dtVendaFim, //yyyy-MM-dd
 			@PathVariable String cnpjCorretora,  //12345678901234 //ex.:64154543000146 Teste Corretora	38330982874	FERNANDO SETAI
 			HttpServletResponse response
 			) throws ParseException {
 		
-		log.info("corretoratotalvidaspmeCSV - ini");
+		log.info("corretoratotalvidaspmeXLS - ini");
 		
 		CorretoraTotalVidasPME corretoraTotalVidasPME = new CorretoraTotalVidasPME();
 		corretoraTotalVidasPME.setDtVendaInicio(dtVendaInicio);
@@ -62,17 +49,44 @@ public class CsvFileDownloadController {
 		corretoraTotalVidasPME.setCnpjCorretora(cnpjCorretora);
 		
 		log.info(corretoraTotalVidasPME);
-
+	
 		List<VwodCorretoraTotalVidas> corretoraTotalVidas = propostaService.findVwodCorretoraTotalVidasByFiltro(corretoraTotalVidasPME);
-
+	
 		if(corretoraTotalVidas != null && !corretoraTotalVidas.isEmpty()) {
 			log.info("corretoraTotalVidas.size():[" + corretoraTotalVidas.size() + "]");
-			CsvUtil.gerarCsvRelatorioCorretoraTotalVidasPME(response, corretoraTotalVidas);
+			//CsvUtil.gerarCsvRelatorioCorretoraTotalVidasPME(response, corretoraTotalVidas);
+			//String filename;
+			byte[] fileOut = null;
+			try {
+				//filename = (new XlsCorretoraTotalVidas()).gerarCorretoraTotalVidasXLS(corretoraTotalVidas);
+				fileOut = xlsCorretoraTotalVidas.gerarCorretoraTotalVidasXLS(corretoraTotalVidas);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//response.setContentType(String.valueOf(MediaType.TEXT_PLAIN_VALUE));
+			response.setContentType("application/vnd.ms-excel");
+
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"", "relatorio-pme.xls");
+			response.setHeader(headerKey, headerValue);
+			try {
+				response.getOutputStream().write(fileOut); //201806111930 - rmarques/esert
+				response.getOutputStream().flush(); //201806111930 - rmarques/esert
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		} else {
 			log.info("corretoraTotalVidas == null ou corretoraTotalVidas.isEmpty");			
 		}
 		
-		log.info("corretoratotalvidaspmeCSV - fim");
-
+		log.info("corretoratotalvidaspmeXLS - fim");
+	
 	}
 }

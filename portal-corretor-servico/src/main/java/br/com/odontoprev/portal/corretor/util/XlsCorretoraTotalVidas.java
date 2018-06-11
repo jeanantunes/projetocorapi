@@ -1,6 +1,6 @@
 package br.com.odontoprev.portal.corretor.util;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -11,10 +11,12 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.stereotype.Component;
 
 import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
 
 //201806111500 - esert
+@Component
 public class XlsCorretoraTotalVidas {
 
 	private static final Log log = LogFactory.getLog(XlsCorretoraTotalVidas.class);
@@ -25,19 +27,22 @@ public class XlsCorretoraTotalVidas {
 		return stringDate;
 	}
 
-	public void gerarCorretoraTotalVidasXLS(List<VwodCorretoraTotalVidas> vwodCorretoraTotalVidas) throws Exception {
+	//201806111930 - rmarques/esert - byte[]
+	public byte[] gerarCorretoraTotalVidasXLS(List<VwodCorretoraTotalVidas> vwodCorretoraTotalVidas) throws Exception { 
 
+		log.info("gerarCorretoraTotalVidasXLS - ini");
+		
 		String stringDataVenda = "";
 		String stringDataVendaDefault = "00/00/0000";
 		SimpleDateFormat sdfDataNascimento = new SimpleDateFormat("dd/MM/yyyy");
 
-		String pathVidas = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_VIDAS); //201803050304 2kill
+		//String pathVidas = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_VIDAS); //201803050304 2kill
 		//String pathVidas = PATH_XLS_VIDAS;
 
 		try {
 
 			//String filename = pathVidas + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
-			String filename = pathVidas + vwodCorretoraTotalVidas.get(0).getLogin_dcms() + "_" + formataData_yyyyMMddHHmmss() + ".xls";
+			//String filename = pathVidas + vwodCorretoraTotalVidas.get(0).getLogin_dcms() + "_" + formataData_yyyyMMddHHmmss() + ".xls";
 //			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("CorretoraTotalVidas");
@@ -114,22 +119,26 @@ public class XlsCorretoraTotalVidas {
 			
 			log.info("for (... item : vwodCorretoraTotalVidas); rowCount=[" + rowCount + "]");
 			
-			FileOutputStream fileOut = new FileOutputStream(filename);
+			//FileOutputStream fileOut = new FileOutputStream(filename);
+			ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
 			workbook.write(fileOut);
-			fileOut.close();
-			// workbook.close();
+			//fileOut.close();
+			workbook.close();
 
-			String msgOk = "GerarEmpresaXLS; OK; filename:["+ filename +"]";
-			log.info(msgOk);
+			//String msgOk = "gerarCorretoraTotalVidasXLS; OK; filename:["+ filename +"]";
+			//log.info(msgOk);
 
+			log.info("gerarCorretoraTotalVidasXLS - fim");
 			//System.out.println("Sucesso!");
+			//return filename;
+			return fileOut.toByteArray();
 
 		} catch (Exception e) {
 			//System.out.println("Fracasso!");
 			String msgErro = "GerarEmpresaXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
 			throw new Exception(msgErro, e);
 		}
-		log.info("Escreveu Planilha Vidas");
+		
 	}
 
 }
