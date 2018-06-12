@@ -54,10 +54,10 @@ public class OdpvAuditorServiceImpl implements OdpvAuditorService {
 //			}
 //			jsonRequest.setUrl(vendaPF != null ? "/vendapf" : "/vendapme");
 			int maxLen = requestURI.length();
-			//2018061122211 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos caracteres vide fernando@odpv
-			//if(maxLen > 20) {
-			//	maxLen = 20; //201806111649 - esert/vrodrigues - max 20 so quando maior que 20
-			//}
+			//2018061122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos caracteres vide fernando@odpv
+			if(maxLen > 200) {
+				maxLen = 200; //201806111649 - esert/vrodrigues - max 20 so quando maior que 20
+			}
 			jsonRequest.setUrl(requestURI.substring(0,maxLen)); //201806081223 - esert/vrodrigues - max 20 por enquanto so pra nao quebrar
 			jsonRequest.setJson(stringJsonBody);
 			jsonRequestDAO.save(jsonRequest);
