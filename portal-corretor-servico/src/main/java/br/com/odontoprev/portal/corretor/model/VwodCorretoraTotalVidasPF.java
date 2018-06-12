@@ -9,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 //201806121119 - esert - view para contagem de vidas venda PF
-@Table(name="VWOD_COR_TOTAL_VIDAS_PF")
+//201806121639 - esert - padronizacao do nome da view de (VWOD_COR_TOTAL_VIDAS_PF) para (VWOD_EMP_TOTAL_VIDAS_PF)
+@Table(name="VWOD_EMP_TOTAL_VIDAS_PF")
 @Entity
 public class VwodCorretoraTotalVidasPF implements Serializable {
 	
