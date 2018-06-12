@@ -144,7 +144,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				//201805101609 - esert - criar servico independente para Email Boas Vindas PME vide Fernando@ODPV em 20180510
 				//201805101941 - esert - excluido param cnpj
 				ResponseEntity<EmpresaDcms> res = this.sendMailBoasVindasPME(empresaDcms.getCdEmpresa());
-				log.info("res:[" + res.toString() + "]");
+				//log.info("res:[" + res.toString() + "]");
 			}
 			else {
 				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
