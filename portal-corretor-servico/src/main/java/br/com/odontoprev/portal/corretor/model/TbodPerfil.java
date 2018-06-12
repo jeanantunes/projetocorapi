@@ -13,6 +13,11 @@ import javax.persistence.Table;
 @Table(name="TBOD_PERFIL")
 public class TbodPerfil implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1910460023579260479L;
+
 	@Id
 	@Column(name="CD_PERFIL")
 	private Integer codigoPerfil;

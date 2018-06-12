@@ -23,8 +23,9 @@ public class OdpvLogFilter implements Filter {
 	 
 	private static final Log log = LogFactory.getLog(OdpvLogFilter.class);
 	
-    private static final String INDEX_DIR = "c:/temp/cache";
-    private FilterConfig filterConfig = null;
+    //private static final String INDEX_DIR = "c:/temp/cache";
+    @SuppressWarnings("unused")
+	private FilterConfig filterConfig = null;
     
     @Autowired
 	OdpvAuditorService odpvAuditor;
@@ -45,15 +46,17 @@ public class OdpvLogFilter implements Filter {
         String stringJsonBody = ((RequestWrapper) requestWrapper).getBody();
         
         //Principal userPrincipal = httpServletRequestWrapper.getUserPrincipal();
-        //String stringParams = LoggerInterceptor.getParameters(httpServletRequest);
         //String stringUserAgent = ((RequestWrapper) requestWrapper).getParameter("User-Agent");
         String stringUserAgent = ((RequestWrapper) requestWrapper).getHeader("User-Agent");
+        String stringHeader = LoggerInterceptor.logRequestHeader(httpServletRequest);
+        String stringParams = LoggerInterceptor.getParameters(httpServletRequest);
         
-        log.info("[doFilter] stringRequestURI:[" + stringRequestURI + "]"); //201806071209
-        log.info("[doFilter] stringUserAgent:[" + stringUserAgent + "]"); //201806071209
-        log.info("[doFilter] request.getBody():[" + stringJsonBody + "]");
+        //log.info("[doFilter] stringRequestURI:[" + stringRequestURI + "]"); //201806071209
+        //log.info("[doFilter] stringUserAgent:[" + stringUserAgent + "]"); //201806071209
+        //log.info("[doFilter] request.getBody():[" + stringJsonBody + "]");
         
-        odpvAuditor.audit(stringRequestURI, stringJsonBody, stringUserAgent); //201806052021 - esert
+        //odpvAuditor.audit(stringRequestURI, stringJsonBody, stringUserAgent); //201806052021 - esert
+        odpvAuditor.audit(stringRequestURI, null, stringJsonBody, stringUserAgent, stringHeader, stringParams); //201806052021 - esert
         ////////Auditor.audit(stringBody); //201806052021 - esert
  
         chain.doFilter(requestWrapper, servletResponse);
