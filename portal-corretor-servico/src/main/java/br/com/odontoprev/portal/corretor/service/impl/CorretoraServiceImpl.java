@@ -55,7 +55,7 @@ public class CorretoraServiceImpl implements CorretoraService {
 	LoginDAO loginDao;
 
 	@Override
-	@Transactional
+	//@Transactional
 	public CorretoraResponse addCorretora(Corretora corretora) {
 		
 		log.info("[addCorretora]");

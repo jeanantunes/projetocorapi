@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.odontoprev.portal.corretor.business.SendMailBusiness;
+import br.com.odontoprev.portal.corretor.business.SendMailAceite;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dto.EmailAceite;
 import br.com.odontoprev.portal.corretor.dto.Plano;
@@ -53,7 +53,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 		TbodVenda venda = vendaService.buscarVendaPorCodigo(tokenAceite.getCdVenda());
 		
 		if(venda == null) {
-			return new TokenAceiteResponse(204, "Código de venda não encontrado");
+			return new TokenAceiteResponse(HttpStatus.NO_CONTENT.value(), "Código de venda não encontrado [" + tokenAceite.getCdVenda() + "]"); //201805181925 - esert - COR-171 - evolucao msg erro
 		}
 
 		log.info("[addTokenAceite - insert]");
@@ -90,16 +90,16 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 										
 			emailAceite.setPlanos(planos);
 			
-			SendMailBusiness mail = new SendMailBusiness();
-			mail.sendMail(emailAceite);
+			SendMailAceite sendMailAceite = new SendMailAceite();
+			sendMailAceite.sendMail(emailAceite);
 			
 		} catch (Exception e) {
 			log.error(e);
 			log.error("Erro ao cadastrar token de aceite :: Detalhe: [" + e.getMessage() + "]");
-			return new TokenAceiteResponse(0, "Erro ao cadastrar token de aceite. Detalhe: [" + e.getMessage() + "]");
+			return new TokenAceiteResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erro ao cadastrar token de aceite. Detalhe: [" + e.getMessage() + "]"); //201805181937 - esert - evolucao status erro
 		}
 		
-		return new TokenAceiteResponse(200, HttpStatus.OK.toString());
+		return new TokenAceiteResponse(HttpStatus.OK.value(), HttpStatus.OK.toString()); //201805181937 - esert - evolucao status erro
 	}
 
 	@Override

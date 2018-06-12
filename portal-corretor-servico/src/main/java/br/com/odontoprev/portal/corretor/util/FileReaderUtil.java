@@ -14,14 +14,29 @@ public class FileReaderUtil {
 	private static final Log log = LogFactory.getLog(FileReaderUtil.class);
 
 	public String readHtmlFile(String tipoEmail) {
+		log.info("readHtmlFile(tipoEmail:[" + tipoEmail + "])"); //201805091625 - esert - inc
 		
 		String html = "";
 		
-		System.out.println(tipoEmail);
+		System.out.println("tipoEmail:[" + tipoEmail + "]");
 		
-		String emkt = (tipoEmail.equals("EmailAceite") ? "emkt.html" : "emktRecuperarSenha.html");				
+//		String emkt = (tipoEmail.equals("EmailAceite") ? "emkt.html" : "emktRecuperarSenha.html"); //201805091620 - esert - exc
+		
+		//201805091620 - esert - alt
+		String emkt = "";
+		switch(tipoEmail) {
+			case "EmailAceite":
+				emkt = "emkt.html";
+				break; //201806012119 - esert - inc
+			case "EsqueciMinhaSenha":
+				emkt = "emktRecuperarSenha.html";
+				break; //201806012119 - esert - inc
+			case "BoasVindasPME":
+				emkt = "emkt_boas_vindas_pme.html"; //201805091620 - esert - inc
+				break; //201806012119 - esert - inc
+		}
 
-		log.info("readHtmlFile");
+		log.info("readHtmlFile(tipoEmail:[" + tipoEmail + "]) -> emkt:[" + emkt + "]"); //201805091625 - esert - inc
 
 		try {
 			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("templates" + File.separatorChar + emkt);
@@ -41,7 +56,7 @@ public class FileReaderUtil {
 			br.close();
 
 		} catch (Exception e) {
-			log.error("Erro ao ler html email aceite! Detalhe: [" + e.getMessage() + "]");
+			log.error("Erro ao ler nome arq html email ! tipoEmail:[" + tipoEmail + "]; emkt:[" + emkt + "]; Detalhe: [" + e.getMessage() + "]"); //201805091620 - esert - alt
 			return "";
 		}
 

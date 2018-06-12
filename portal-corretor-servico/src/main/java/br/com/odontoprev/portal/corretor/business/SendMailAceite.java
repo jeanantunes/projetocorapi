@@ -22,52 +22,9 @@ import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 
 
 @ManagedBean
-public class SendMailBusiness {
+public class SendMailAceite {
 	
-	private static final Log log = LogFactory.getLog(SendMailBusiness.class);
-
-//	@Value("${SENDMAIL_ENDPOINT_URL}")
-//	private String SENDMAIL_ENDPOINT_URL;
-//	
-//	@Value("${requestmail.body.recepientname}")
-//	private String REQUESTMAIL_RECEPIENTNAME;
-//	
-//	@Value("${requestmail.body.sender}")
-//	private String REQUESTMAIL_SENDER;
-//	
-//	@Value("${requestmail.body.sendername}")
-//	private String REQUESTMAIL_SENDERNAME;
-//	
-//	@Value("${requestmail.body.type}")
-//	private String REQUESTMAIL_TYPE;
-//	
-//	@Value("${requestmail.body.subject}")
-//	private String REQUESTMAIL_SUBJECT;
-//	
-//	@Value("${img.email.base}")
-//	private String IMG_EMAIL_BASE;
-//	
-//	@Value("${img.email.header}")
-//	private String IMG_EMAIL_HEADER;
-//	
-//	@Value("${img.email.btn}")
-//	private String IMG_EMAIL_BTN;
-//	
-//	@Value("${img.email.ans}")
-//	private String IMG_EMAIL_ASN;
-//	
-//	@Value("${img.email.fb}")
-//	private String IMG_EMAIL_FB;
-//	
-//	@Value("${img.email.ld}")
-//	private String IMG_EMAIL_LD;
-//	
-//	@Value("${img.email.yt}")
-//	private String IMG_EMAIL_YT;
-//	
-//	@Value("${api.portalcorretor.token}")
-//	private String API_CORRETOR_TOKEN;
-	
+	private static final Log log = LogFactory.getLog(SendMailAceite.class);
 	
 	public void sendMail(EmailAceite email) {
 		

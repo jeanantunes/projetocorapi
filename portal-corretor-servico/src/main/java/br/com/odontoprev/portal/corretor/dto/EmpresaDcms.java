@@ -9,6 +9,7 @@ public class EmpresaDcms implements Serializable {
 	private Long cdEmpresa;
 	private String cnpj;
 	private String empDcms;
+	private String email; //201805221106 - esert - COR-160 - refactor - inc campo especifico para email
 
 	public Long getCdEmpresa() {
 		return cdEmpresa;
@@ -34,9 +35,18 @@ public class EmpresaDcms implements Serializable {
 		this.empDcms = empDcms;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
-		return "EmpresaDcms [cdEmpresa=" + cdEmpresa + ", cnpj=" + cnpj + ", empDcms=" + empDcms + "]";
+		return "EmpresaDcms [cdEmpresa=" + cdEmpresa + ", cnpj=" + cnpj + ", empDcms=" + empDcms + ", email=" + email
+				+ "]";
 	}
 
 }

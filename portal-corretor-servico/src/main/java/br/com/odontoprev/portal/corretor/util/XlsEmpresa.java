@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.transaction.RollbackException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -38,6 +40,7 @@ public class XlsEmpresa {
 	}
 
 	public void GerarEmpresaXLS(TbodEmpresa tbEmpresa, Empresa empresaDto, TbodForcaVenda forcaVenda) throws Exception {
+		log.info("GerarEmpresaXLS(); ini");
 
 		try {
 
@@ -74,13 +77,15 @@ public class XlsEmpresa {
 			// Tratamento de CNPJ
 			String newcnpj = empresaArr[0].replaceAll("[.]", "").replaceAll("/", "");
 			
-			String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA); //201803050304 2kill
+			String pathEmpresa = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_EMPRESA);
 			//String pathEmpresa = PATH_XLS_EMPRESA;
+			log.info("pathEmpresa:[" + pathEmpresa + "]");
 
 //			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
 			
 			//String filename = "C:\\planilhaUploadOdpv\\" + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
 			String filename = pathEmpresa + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
+			log.info("filename:[" + filename + "]");
 
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Empresa");
@@ -126,11 +131,14 @@ public class XlsEmpresa {
 			log.info(msgOk);
 
 			//System.out.println("Sucesso!");
+			log.info("GerarEmpresaXLS(); fim");
 
 		} catch (Exception e) {
 			//System.out.println("Fracasso!");
-			String msgErro = "GerarEmpresaXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
-			throw new Exception(msgErro, e);
+			String msgErro = "GerarEmpresaXLS; Erro; Message:["+ e.getMessage() +"]";
+			log.error(msgErro);
+//			throw new Exception(msgErro, e);
+			throw new RollbackException(msgErro); //201805281522 - esert - forcar erro transacao para causar rollback - teste 
 		}
 	}
 }

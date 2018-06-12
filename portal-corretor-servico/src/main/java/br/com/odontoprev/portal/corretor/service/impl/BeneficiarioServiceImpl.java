@@ -2,6 +2,8 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.util.List;
 
+import javax.transaction.RollbackException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,8 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 
 	@Override
 	@Transactional
-	public BeneficiarioResponse add(List<Beneficiario> titulares) {
+	//201805281830 - esert - incluido throws para subir erro e causar rollback de toda transacao - teste
+	public BeneficiarioResponse add(List<Beneficiario> titulares) throws RollbackException {
 
 		log.info("[BeneficiarioServiceImpl::add]");
 

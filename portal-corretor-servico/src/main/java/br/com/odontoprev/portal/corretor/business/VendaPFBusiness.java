@@ -47,6 +47,7 @@ import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
 import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
 
 @ManagedBean
@@ -85,6 +86,9 @@ public class VendaPFBusiness {
 	
 	@Autowired
 	ResponsavelContratualBusiness responsavelContratualBusiness;
+    
+    @Autowired
+	OdpvAuditorService odpvAuditor; //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 
 	@Value("${DCSS_URL}")
 	private String dcssUrl;
@@ -321,6 +325,8 @@ public class VendaPFBusiness {
 		Gson gson = new Gson();
 		String propostaJson = gson.toJson(propostaDCMS);			
 		log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
+			
+        odpvAuditor.audit(dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 
 		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
 		
@@ -452,7 +458,8 @@ public class VendaPFBusiness {
 				log.info("atribuirVendaPFParaPropostaDCMS; titular.getDataNascimento(String):[" + responsavelContratualVenda.getDataNascimento() + "]; e.getMessage():[" + e.getMessage() + "];");
 			}
 			SimpleDateFormat sdfJsonString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000Z");
+			//String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000Z"); //201806061853 - esert/fsetai/rmarques - excluida notacao GMT ZERO
+			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000-0300"); //201806061853 - esert/fsetai/rmarques - incluida notacao para GMT-3 Hora de Brasilia
 			responsavelContratualDCMS.setDataNascimento(stringDataNascimentoJSON);
 			
 			responsavelContratualDCMS.setEmail(responsavelContratualVenda.getEmail());
@@ -498,7 +505,8 @@ public class VendaPFBusiness {
 				log.info("atribuirVendaPFParaPropostaDCMS; titular.getDataNascimento(String):[" + titular.getDataNascimento() + "]; e.getMessage():[" + e.getMessage() + "];");
 			}
 			SimpleDateFormat sdfJsonString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000Z");
+			//String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000Z"); //201806061853 - esert/fsetai/rmarques - excluida notacao GMT ZERO
+			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000-0300"); //201806061853 - esert/fsetai/rmarques - incluida notacao para GMT-3 Hora de Brasilia
 			beneficiarioPropostaTitular.setDataNascimento(stringDataNascimentoJSON);
 			
 			beneficiarioPropostaTitular.setNomeMae(titular.getNomeMae());
@@ -545,7 +553,8 @@ public class VendaPFBusiness {
 					log.info("atribuirVendaPFParaPropostaDCMS; dependente.getDataNascimento(String):[" + titular.getDataNascimento() + "]; e.getMessage():[" + e.getMessage() + "];");
 				}
 				SimpleDateFormat sdfJsonStringDep = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000Z");
+				//String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000Z"); //201806061853 - esert/fsetai/rmarques - excluida notacao GMT ZERO
+				String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000-0300"); //201806061853 - esert/fsetai/rmarques - incluida notacao para GMT-3 Hora de Brasilia
 				beneficiarioPropostaDependente.setDataNascimento(stringDataNascimentoJSONDep);
 				
 				beneficiarioPropostaDependente.setNomeMae(dependente.getNomeMae());
