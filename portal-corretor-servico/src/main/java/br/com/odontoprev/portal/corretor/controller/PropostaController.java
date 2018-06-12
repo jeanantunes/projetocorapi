@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.odontoprev.portal.corretor.dto.CorretoraTotalVidasPME;
 import br.com.odontoprev.portal.corretor.dto.DashBoardProposta;
 import br.com.odontoprev.portal.corretor.model.ViewCorSumarioVenda;
-import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
+import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidasPME;
 import br.com.odontoprev.portal.corretor.service.PropostaService;
 
 @RestController
@@ -35,7 +35,7 @@ public class PropostaController {
 
 	//201806081635 - esert - relatorio venda pme
 	@RequestMapping(value = "/corretoratotalvidaspme", method = { RequestMethod.POST })
-	public List<VwodCorretoraTotalVidas> relatoriovendapme(@RequestBody CorretoraTotalVidasPME corretoraTotalVidasPME) throws ParseException {
+	public List<VwodCorretoraTotalVidasPME> relatoriovendapme(@RequestBody CorretoraTotalVidasPME corretoraTotalVidasPME) throws ParseException {
 		
 		log.info("corretoratotalvidaspme");
 		log.info(corretoraTotalVidasPME);

@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.impl.cookie.DateParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,7 @@ import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.ViewCorSumarioVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VwodCorretoraTotalVendasDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.CorretoraTotalVidasPF;
 import br.com.odontoprev.portal.corretor.dto.CorretoraTotalVidasPME;
 import br.com.odontoprev.portal.corretor.dto.DashBoardProposta;
 import br.com.odontoprev.portal.corretor.dto.PropostaCritica;
@@ -36,7 +36,8 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.model.ViewCorSumarioVenda;
-import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
+import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidasPME;
+import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidasPF;
 import br.com.odontoprev.portal.corretor.service.PropostaService;
 import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 
@@ -216,11 +217,11 @@ public class PropostaServiceImpl implements PropostaService {
 	}
 
 	//201806081617 - esert - relatorio vendas pme
-	public List<VwodCorretoraTotalVidas> findVwodCorretoraTotalVidasByFiltro(CorretoraTotalVidasPME corretoraTotalVidasPME) throws ParseException {
+	public List<VwodCorretoraTotalVidasPME> findVwodCorretoraTotalVidasByFiltro(CorretoraTotalVidasPME corretoraTotalVidasPME) throws ParseException {
 		log.info("findVwodCorretoraTotalVidasByFiltro - ini");
-		log.info("findVwodCorretoraTotalVidasByFiltro - getDtVendaInicio():[" + corretoraTotalVidasPME.getDtVendaInicio() + "]");
-		log.info("findVwodCorretoraTotalVidasByFiltro - getDtVendaFim():[" + corretoraTotalVidasPME.getDtVendaFim() + "]");
-		log.info("findVwodCorretoraTotalVidasByFiltro - getCnpjCorretora():[" + corretoraTotalVidasPME.getCnpjCorretora() + "]");
+		log.info("getDtVendaInicio():[" + corretoraTotalVidasPME.getDtVendaInicio() + "]");
+		log.info("getDtVendaFim():[" + corretoraTotalVidasPME.getDtVendaFim() + "]");
+		log.info("getCnpjCorretora():[" + corretoraTotalVidasPME.getCnpjCorretora() + "]");
 		
 		final String TIME_ZONE_BRASILIA = "T00:00:00.000-0300";
 		final String LENIENT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
@@ -263,10 +264,65 @@ public class PropostaServiceImpl implements PropostaService {
 		log.info("findVwodCorretoraTotalVidasByFiltro - fim");
 		log.info("chama vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVendasByFiltro([" + dateDtVendaInicio + "],["+ dateDtVendaFim +"],[" + corretoraTotalVidasPME.getCnpjCorretora() + "])");
 		
-		return vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVendasByFiltro(
+		return vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVidasPMEByFiltro(
 				dateDtVendaInicio, 
 				dateDtVendaFim, 
 				corretoraTotalVidasPME.getCnpjCorretora() 
+				);		
+	}
+
+	//201806121141 - esert - relatorio vendas pf
+	public List<VwodCorretoraTotalVidasPF> findVwodCorretoraTotalVidasPFByFiltro(CorretoraTotalVidasPF corretoraTotalVidasPF) throws ParseException {
+		log.info("findVwodCorretoraTotalVidasPFByFiltro - ini");
+		log.info("getDtVendaInicio():[" + corretoraTotalVidasPF.getDtVendaInicio() + "]");
+		log.info("getDtVendaFim():[" + corretoraTotalVidasPF.getDtVendaFim() + "]");
+		log.info("getCnpjCorretora():[" + corretoraTotalVidasPF.getCnpjCorretora() + "]");
+		
+		final String TIME_ZONE_BRASILIA = "T00:00:00.000-0300";
+		final String LENIENT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+		SimpleDateFormat sdf = new SimpleDateFormat(LENIENT_DATETIME_FORMAT);
+		Date dateDtVendaInicio; 
+		Date dateDtVendaFim;
+		
+		//201806121144 - esert - se receber /0/0/cnpj
+		if(
+			corretoraTotalVidasPF.getDtVendaInicio().equals("0")
+			&&
+			corretoraTotalVidasPF.getDtVendaFim().equals("0")
+		) {
+			//201806121144 - esert - calcula de 90 dias atras ate hoje  
+			Calendar dataVenda = new GregorianCalendar();
+			dataVenda.setTime(new Date());
+			dataVenda = new GregorianCalendar(
+				dataVenda.get(Calendar.YEAR), 
+				dataVenda.get(Calendar.MONTH), 
+				dataVenda.get(Calendar.DATE)
+			);			
+			dateDtVendaFim = dataVenda.getTime();			
+			dataVenda.add(Calendar.DATE, -90);
+			dateDtVendaInicio = dataVenda.getTime(); 
+		} else {
+			//201806121144 - esert - senao usa datas do parametro
+			try {
+				dateDtVendaInicio = sdf.parse(corretoraTotalVidasPF.getDtVendaInicio().concat(TIME_ZONE_BRASILIA));
+			}catch (Exception e) {
+				throw new ParseException("getDtVendaInicio invalida [" + corretoraTotalVidasPF.getDtVendaInicio() + "]", 0);
+			}
+			
+			try {
+				dateDtVendaFim = sdf.parse(corretoraTotalVidasPF.getDtVendaFim().concat(TIME_ZONE_BRASILIA));
+			}catch (Exception e) {
+				throw new ParseException("getDtVendaFim invalida [" + corretoraTotalVidasPF.getDtVendaFim() + "]", 0);
+			}
+		}
+		
+		log.info("findVwodCorretoraTotalVidasPFByFiltro - fim");
+		log.info("chama vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVendasByFiltro([" + dateDtVendaInicio + "],["+ dateDtVendaFim +"],[" + corretoraTotalVidasPF.getCnpjCorretora() + "])");
+		
+		return vwodCorretoraTotalVendasDAO.vwodCorretoraTotalVidasPFByFiltro(
+				dateDtVendaInicio, 
+				dateDtVendaFim, 
+				corretoraTotalVidasPF.getCnpjCorretora() 
 				);		
 	}
 

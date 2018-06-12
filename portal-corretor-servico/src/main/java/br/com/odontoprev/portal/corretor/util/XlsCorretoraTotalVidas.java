@@ -13,7 +13,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Component;
 
-import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
+import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidasPME;
+import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidasPF;
 
 //201806111500 - esert
 @Component
@@ -28,24 +29,18 @@ public class XlsCorretoraTotalVidas {
 	}
 
 	//201806111930 - rmarques/esert - byte[]
-	public byte[] gerarCorretoraTotalVidasXLS(List<VwodCorretoraTotalVidas> vwodCorretoraTotalVidas) throws Exception { 
+	public byte[] gerarCorretoraTotalVidasPMEXLS(List<VwodCorretoraTotalVidasPME> vwodCorretoraTotalVidas) throws Exception { 
 
-		log.info("gerarCorretoraTotalVidasXLS - ini");
+		log.info("gerarCorretoraTotalVidasPMEXLS - ini");
 		
 		String stringDataVenda = "";
 		String stringDataVendaDefault = "00/00/0000";
 		SimpleDateFormat sdfDataNascimento = new SimpleDateFormat("dd/MM/yyyy");
 
-		//String pathVidas = PropertiesUtils.getProperty(PropertiesUtils.PATH_XLS_VIDAS); //201803050304 2kill
-		//String pathVidas = PATH_XLS_VIDAS;
-
 		try {
 
-			//String filename = pathVidas + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
-			//String filename = pathVidas + vwodCorretoraTotalVidas.get(0).getLogin_dcms() + "_" + formataData_yyyyMMddHHmmss() + ".xls";
-//			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
 			HSSFWorkbook workbook = new HSSFWorkbook();
-			HSSFSheet sheet = workbook.createSheet("CorretoraTotalVidas");
+			HSSFSheet sheet = workbook.createSheet("CorretoraTotalVidasPME");
 
 			HSSFRow rowhead = sheet.createRow((short) 0);
 			rowhead.createCell(0).setCellValue("DT_VENDA");//01
@@ -72,7 +67,7 @@ public class XlsCorretoraTotalVidas {
 
 			int rowCount = 0;
 
-			for (VwodCorretoraTotalVidas item : vwodCorretoraTotalVidas) {
+			for (VwodCorretoraTotalVidasPME item : vwodCorretoraTotalVidas) {
 				
 				rowCount++;
 				Row row = sheet.createRow(rowCount);
@@ -81,7 +76,7 @@ public class XlsCorretoraTotalVidas {
 				try {
 					stringDataVenda = sdfDataNascimento.format(item.getDtVenda());
 				} catch (Exception e) {
-					log.error("gerarCorretoraTotalVidasXLS :: Erro ao formatar data venda. Detalhe: [" + e.getMessage() + "]");
+					log.error("gerarCorretoraTotalVidasPMEXLS :: Erro ao formatar data venda. Detalhe: [" + e.getMessage() + "]");
 				}
 				row.createCell(0).setCellValue(stringDataVenda);//01
 				row.createCell(1).setCellValue(item.getCnpj_corretora());//02
@@ -119,23 +114,122 @@ public class XlsCorretoraTotalVidas {
 			
 			log.info("for (... item : vwodCorretoraTotalVidas); rowCount=[" + rowCount + "]");
 			
-			//FileOutputStream fileOut = new FileOutputStream(filename);
 			ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
 			workbook.write(fileOut);
 			//fileOut.close();
 			workbook.close();
 
-			//String msgOk = "gerarCorretoraTotalVidasXLS; OK; filename:["+ filename +"]";
-			//log.info(msgOk);
-
-			log.info("gerarCorretoraTotalVidasXLS - fim");
-			//System.out.println("Sucesso!");
-			//return filename;
+			log.info("gerarCorretoraTotalVidasPMEXLS - fim");
 			return fileOut.toByteArray();
 
 		} catch (Exception e) {
-			//System.out.println("Fracasso!");
-			String msgErro = "GerarEmpresaXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
+			String msgErro = "gerarCorretoraTotalVidasPMEXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
+			throw new Exception(msgErro, e);
+		}
+		
+	}
+
+	//201806121211 - esert - byte[]
+	public byte[] gerarCorretoraTotalVidasPFXLS(List<VwodCorretoraTotalVidasPF> vwodCorretoraTotalVidasPF) throws Exception { 
+
+		log.info("gerarCorretoraTotalVidasPFXLS - ini");
+		
+		String stringDT_VENDA = "";
+		String stringPRIMEIRO_VENCIMENTO = "";
+		String stringDataDefault = "00/00/0000";
+		SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy");
+
+		try {
+
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			HSSFSheet sheet = workbook.createSheet("CorretoraTotalVidasPF");
+
+			HSSFRow rowhead = sheet.createRow((short) 0);
+			rowhead.createCell(0).setCellValue("NUM_PROPOSTA");//01
+			rowhead.createCell(1).setCellValue("DT_VENDA");//02
+			rowhead.createCell(2).setCellValue("PRIMEIRO_VENCIMENTO");//03
+			rowhead.createCell(3).setCellValue("CORRETORA");//04
+			rowhead.createCell(4).setCellValue("CNPJ_CORRETORA");//05
+			rowhead.createCell(5).setCellValue("NOME_FORCA");//06
+			rowhead.createCell(6).setCellValue("CPF_FORCA");//07
+			rowhead.createCell(7).setCellValue("PLANO_PF");//08
+			rowhead.createCell(8).setCellValue("TIPO_PLANO");//09
+			rowhead.createCell(9).setCellValue("VIDAS");//10
+			rowhead.createCell(10).setCellValue("CPF_TITULAR");//11
+			rowhead.createCell(11).setCellValue("NOME_TITULAR");//12
+			rowhead.createCell(12).setCellValue("LOGRADOURO");//13
+			rowhead.createCell(13).setCellValue("NUMERO");//14
+			rowhead.createCell(14).setCellValue("COMPLEMENTO");//15
+			rowhead.createCell(15).setCellValue("BAIRRO");//16
+			rowhead.createCell(16).setCellValue("CIDADE");//17
+			rowhead.createCell(17).setCellValue("UF");//18
+			rowhead.createCell(18).setCellValue("CEP");//19
+			rowhead.createCell(19).setCellValue("EMAIL");//20
+
+			int rowCount = 0;
+
+			for (VwodCorretoraTotalVidasPF item : vwodCorretoraTotalVidasPF) {
+				
+				rowCount++;
+				Row row = sheet.createRow(rowCount);
+
+				row.createCell(0).setCellValue(item.getNum_proposta());//01
+
+				stringDT_VENDA = stringDataDefault;
+				try {
+					stringDT_VENDA = sdf_ddMMyyyy.format(item.getDt_venda());
+				} catch (Exception e) {
+					log.error("gerarCorretoraTotalVidasPFXLS :: Erro ao formatar data venda. Detalhe: [" + e.getMessage() + "]");
+				}
+				row.createCell(1).setCellValue(stringDT_VENDA);//02
+				
+
+				stringPRIMEIRO_VENCIMENTO = stringDataDefault;
+				try {
+					stringPRIMEIRO_VENCIMENTO = sdf_ddMMyyyy.format(item.getPrimeiro_vencimento());
+				} catch (Exception e) {
+					log.error("gerarCorretoraTotalVidasPFXLS :: Erro ao formatar data PRIMEIRO_VENCIMENTO. Detalhe: [" + e.getMessage() + "]");
+				}
+				row.createCell(2).setCellValue(stringPRIMEIRO_VENCIMENTO);//03		
+				
+				row.createCell(3).setCellValue(item.getCorretora());//04
+				row.createCell(4).setCellValue(item.getCnpj_corretora());//05
+				row.createCell(5).setCellValue(item.getNome_forca());//06
+				row.createCell(6).setCellValue(item.getCpf_forca());//07
+				row.createCell(7).setCellValue(item.getPlano_pf());//08
+				row.createCell(8).setCellValue(item.getTipo_plano());//09
+
+				String strTotal_vidas = "(n/a)";
+				if(item.getVidas() != null) {
+					strTotal_vidas = item.getVidas().toString();
+				}
+				row.createCell(9).setCellValue(strTotal_vidas);//10
+
+				row.createCell(10).setCellValue(item.getCpf_titular());//11
+				row.createCell(11).setCellValue(item.getNome_titular());//12
+				row.createCell(12).setCellValue(item.getLogradouro());//13
+				row.createCell(13).setCellValue(item.getNumero());//14
+				row.createCell(14).setCellValue(item.getComplemento());//15
+				row.createCell(15).setCellValue(item.getBairro());//16
+				row.createCell(16).setCellValue(item.getCidade());//17
+				row.createCell(17).setCellValue(item.getUf());//18
+				row.createCell(18).setCellValue(item.getCep());//19
+				row.createCell(19).setCellValue(item.getEmail());//20
+	
+			}
+			
+			log.info("for (... item : vwodCorretoraTotalVidasPF); rowCount=[" + rowCount + "]");
+			
+			ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
+			workbook.write(fileOut);
+			//fileOut.close();
+			workbook.close();
+
+			log.info("gerarCorretoraTotalVidasPFXLS - fim");
+			return fileOut.toByteArray();
+
+		} catch (Exception e) {
+			String msgErro = "gerarCorretoraTotalVidasPFXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
 			throw new Exception(msgErro, e);
 		}
 		

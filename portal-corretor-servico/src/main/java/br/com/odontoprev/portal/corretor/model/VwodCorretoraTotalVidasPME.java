@@ -11,7 +11,7 @@ import javax.persistence.Table;
 //201806071143 - esert - view para contagem de vidas por dt_venda, cnpj corretora, cpf corretor forca venda
 @Table(name="VWOD_CORRETORA_TOTAL_VIDAS")
 @Entity
-public class VwodCorretoraTotalVidas implements Serializable {
+public class VwodCorretoraTotalVidasPME implements Serializable {
 	
 	/**
 	 * 

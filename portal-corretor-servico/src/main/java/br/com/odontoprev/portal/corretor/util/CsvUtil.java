@@ -15,7 +15,7 @@ import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import br.com.odontoprev.portal.corretor.dto.RelatorioGestaoVenda;
-import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
+import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidasPME;
 
 public class CsvUtil {
 
@@ -79,7 +79,7 @@ public class CsvUtil {
 		}
 
 		//201806081903 - esert - relatorio corretora total vidas pme deve retornar XLS
-		public static void gerarCsvRelatorioCorretoraTotalVidasPME(HttpServletResponse response, List<VwodCorretoraTotalVidas> corretoraTotalVidas) {
+		public static void gerarCsvRelatorioCorretoraTotalVidasPME(HttpServletResponse response, List<VwodCorretoraTotalVidasPME> corretoraTotalVidas) {
 			
 			log.info("gerarCsvRelatorioCorretoraTotalVidasPME - ini");
 			
@@ -124,7 +124,7 @@ public class CsvUtil {
 				
 				csvWriter.writeHeader(header);
 				
-				for (VwodCorretoraTotalVidas venda : corretoraTotalVidas) {
+				for (VwodCorretoraTotalVidasPME venda : corretoraTotalVidas) {
 					csvWriter.write(venda, header);
 				}
 				

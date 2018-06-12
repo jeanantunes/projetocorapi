@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.CorretoraTotalVidasPME;
 import br.com.odontoprev.portal.corretor.dto.RelatorioGestaoVenda;
-import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidas;
+import br.com.odontoprev.portal.corretor.model.VwodCorretoraTotalVidasPME;
 import br.com.odontoprev.portal.corretor.service.PropostaService;
 import br.com.odontoprev.portal.corretor.service.RelatorioGestaoVendaService;
 import br.com.odontoprev.portal.corretor.util.CsvUtil;
@@ -63,7 +63,7 @@ public class CsvFileDownloadController {
 		
 		log.info(corretoraTotalVidasPME);
 
-		List<VwodCorretoraTotalVidas> corretoraTotalVidas = propostaService.findVwodCorretoraTotalVidasByFiltro(corretoraTotalVidasPME);
+		List<VwodCorretoraTotalVidasPME> corretoraTotalVidas = propostaService.findVwodCorretoraTotalVidasByFiltro(corretoraTotalVidasPME);
 
 		if(corretoraTotalVidas != null && !corretoraTotalVidas.isEmpty()) {
 			log.info("corretoraTotalVidas.size():[" + corretoraTotalVidas.size() + "]");
