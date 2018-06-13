@@ -171,6 +171,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 //	}
 
     public static String logRequestHeader(HttpServletRequest request) {
+		log.info("[logRequestHeader] ini");
     	StringBuffer stringBufferRet = new StringBuffer();
 //        log.info("request.getMethod():["+ request.getMethod() +"]");
 //        log.info("request.getRequestURI():["+ request.getRequestURI() +"]");            	
@@ -178,7 +179,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
         Collections.list(request.getHeaderNames()).forEach(headerName ->
             Collections.list(request.getHeaders(headerName)).forEach(headerValue -> {
                 	String headerNameValue = "[" + headerName + "]:[" + headerValue + "]";
-            		log.info(headerNameValue);
+            		log.info("[logRequestHeader] " + headerNameValue);
             		if(stringBufferRet.length()>0) {
                 		stringBufferRet.append(",");
             		}
@@ -186,6 +187,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
             	}
             )
         );
+		log.info("[logRequestHeader] fim");
         return stringBufferRet.toString();
     }
 }
