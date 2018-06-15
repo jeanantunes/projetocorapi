@@ -3,6 +3,7 @@ package br.com.odontoprev.portal.corretor.business;
 import static br.com.odontoprev.portal.corretor.util.Constantes.NAO;
 import static br.com.odontoprev.portal.corretor.util.Constantes.SIM;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.ManagedBean;
@@ -103,6 +104,15 @@ public class EmpresaBusiness {
 					TbodVenda tbVenda = new TbodVenda();
 					tbVenda.setDtVenda(new Date());
 					tbVenda.setFaturaVencimento(empresa.getVencimentoFatura());
+					
+					SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+					if(empresa.getDataVigencia()!=null && !empresa.getDataVigencia().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+						tbVenda.setDtVigencia(sdf_ddMMyyyy.parse(empresa.getDataVigencia())); //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+					}
+					if(empresa.getDataMovimentacao()!=null && !empresa.getDataMovimentacao().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+						tbVenda.setDtMovimentacao(sdf_ddMMyyyy.parse(empresa.getDataMovimentacao())); //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+					}
+					
 					tbVenda.setTbodEmpresa(tbEmpresa);
 					tbVenda.setTbodPlano(tbPlano);
 					vendaDao.save(tbVenda);
@@ -122,26 +132,26 @@ public class EmpresaBusiness {
 
 	public EmpresaResponse salvarEmpresaEndereco(Empresa empresa, VendaPME vendaPME) {
 		
-		TbodEmpresa tbEmpresa = new TbodEmpresa();
+		TbodEmpresa tbodEmpresa = new TbodEmpresa();
 	
 		try {
-			TbodEndereco tbEndereco = new TbodEndereco();
+			TbodEndereco tbodEndereco = new TbodEndereco();
 			Endereco endereco = empresa.getEnderecoEmpresa();
 	
-			tbEndereco.setLogradouro(endereco.getLogradouro());
-			tbEndereco.setBairro(endereco.getBairro());
-			tbEndereco.setCep(endereco.getCep());
-			tbEndereco.setCidade(endereco.getCidade());
-			tbEndereco.setNumero(endereco.getNumero());
-			tbEndereco.setUf(endereco.getEstado());
-			tbEndereco.setComplemento(endereco.getComplemento());
+			tbodEndereco.setLogradouro(endereco.getLogradouro());
+			tbodEndereco.setBairro(endereco.getBairro());
+			tbodEndereco.setCep(endereco.getCep());
+			tbodEndereco.setCidade(endereco.getCidade());
+			tbodEndereco.setNumero(endereco.getNumero());
+			tbodEndereco.setUf(endereco.getEstado());
+			tbodEndereco.setComplemento(endereco.getComplemento());
 	
 			if (endereco.getTipoEndereco() != null) {
 				TbodTipoEndereco tbTipoEndereco = tipoEnderecoDao.findOne(endereco.getTipoEndereco());
-				tbEndereco.setTbodTipoEndereco(tbTipoEndereco);
+				tbodEndereco.setTbodTipoEndereco(tbTipoEndereco);
 			}
 	
-			tbEndereco = enderecoDao.save(tbEndereco);
+			tbodEndereco = enderecoDao.save(tbodEndereco);
 			
 			/****  contato empresa ****/
 			TbodEmpresaContato tbodContatoEmpresa = null;
@@ -154,28 +164,28 @@ public class EmpresaBusiness {
 				tbodContatoEmpresa.setNome(contatoEmpresa.getNome()  == null ? " " : contatoEmpresa.getNome());
 				tbodContatoEmpresa.setTelefone(contatoEmpresa.getTelefone()  == null ? " " : contatoEmpresa.getTelefone());			
 				tbodContatoEmpresa = empresaContatoDAO.save(tbodContatoEmpresa);				
-				tbEmpresa.setCdEmpresaContato(tbodContatoEmpresa.getCdContato());
+				tbodEmpresa.setCdEmpresaContato(tbodContatoEmpresa.getCdContato());
 			}		
 						
-			tbEmpresa.setCnpj(empresa.getCnpj());
-			tbEmpresa.setIncEstadual(empresa.getIncEstadual());
-			tbEmpresa.setRamoAtividade(empresa.getRamoAtividade());
-			tbEmpresa.setRazaoSocial(empresa.getRazaoSocial());
-			tbEmpresa.setNomeFantasia(empresa.getNomeFantasia());
-			tbEmpresa.setRepresentanteLegal(empresa.getRepresentanteLegal());
-			tbEmpresa.setContatoEmpresa(empresa.isContatoEmpresa() == true ? SIM : NAO);
-			tbEmpresa.setTelefone(empresa.getTelefone());
-			tbEmpresa.setCelular(empresa.getCelular());
-			tbEmpresa.setEmail(empresa.getEmail());
-			tbEmpresa.setTbodEndereco(tbEndereco);
-			tbEmpresa.setCnae(empresa.getCnae());
-			tbEmpresa = empresaDao.save(tbEmpresa);
+			tbodEmpresa.setCnpj(empresa.getCnpj());
+			tbodEmpresa.setIncEstadual(empresa.getIncEstadual());
+			tbodEmpresa.setRamoAtividade(empresa.getRamoAtividade());
+			tbodEmpresa.setRazaoSocial(empresa.getRazaoSocial());
+			tbodEmpresa.setNomeFantasia(empresa.getNomeFantasia());
+			tbodEmpresa.setRepresentanteLegal(empresa.getRepresentanteLegal());
+			tbodEmpresa.setContatoEmpresa(empresa.isContatoEmpresa() == true ? SIM : NAO);
+			tbodEmpresa.setTelefone(empresa.getTelefone());
+			tbodEmpresa.setCelular(empresa.getCelular());
+			tbodEmpresa.setEmail(empresa.getEmail());
+			tbodEmpresa.setTbodEndereco(tbodEndereco);
+			tbodEmpresa.setCnae(empresa.getCnae());
+			tbodEmpresa = empresaDao.save(tbodEmpresa);
 			
 			/***  dados forca venda ***/
-			TbodForcaVenda forcaVenda = forcaVendaDAO.findOne(vendaPME.getCdForcaVenda());
+			TbodForcaVenda tbodForcaVenda = forcaVendaDAO.findOne(vendaPME.getCdForcaVenda());
 		
 			XlsEmpresa xlsEmpresa = new XlsEmpresa();
-			xlsEmpresa.GerarEmpresaXLS(tbEmpresa, empresa, forcaVenda);
+			xlsEmpresa.GerarEmpresaXLS(tbodEmpresa, empresa, tbodForcaVenda);
 	
 		} catch (Exception e) {
 			String msgErro = "EmpresaBusiness.salvarEmpresaEndereco :: Erro ao cadastrar empresa; Message:[" + e.getMessage() + "]; Cause:[" + e.getCause() != null ? e.getCause().getMessage() : "NuLL" + "]";
@@ -183,7 +193,7 @@ public class EmpresaBusiness {
 			return new EmpresaResponse(0, msgErro);
 		}
 	
-		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa cadastrada.");
+		return new EmpresaResponse(tbodEmpresa.getCdEmpresa(), "Empresa cadastrada.");
 	}
 
 }
