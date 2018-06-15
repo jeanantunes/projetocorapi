@@ -467,6 +467,8 @@ public class ConvertObjectUtil {
 			}
 			
 			venda.setDataVenda(tbodVenda.getDtVenda());
+			venda.setDataVigencia(tbodVenda.getDtVigencia()); //201806142027 - esert - (COR-301 Alter Table TBOD_VENDA)
+			venda.setDataMovimentacao(tbodVenda.getDtMovimentacao()); //201806142027 - esert - (COR-301 Alter Table TBOD_VENDA)
 			
 			if(tbodVenda.getTbodStatusVenda()!=null) {
 				venda.setCdStatusVenda(tbodVenda.getTbodStatusVenda().getCdStatusVenda());
