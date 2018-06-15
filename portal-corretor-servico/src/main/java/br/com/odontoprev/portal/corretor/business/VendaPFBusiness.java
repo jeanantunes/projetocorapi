@@ -164,6 +164,14 @@ public class VendaPFBusiness {
 				tbVenda.setFaturaVencimento((long)0);				
 			}
 			
+			if(venda.getDataVigencia() != null) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+				tbVenda.setDtVigencia(venda.getDataVigencia()); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+			}
+			
+			if(venda.getDataMovimentacao() != null) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+				tbVenda.setDtMovimentacao(venda.getDataMovimentacao()); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+			}
+
 			if(venda.getTitulares() != null 
 				&& !venda.getTitulares().isEmpty()
 				&& venda.getTitulares().get(0) != null

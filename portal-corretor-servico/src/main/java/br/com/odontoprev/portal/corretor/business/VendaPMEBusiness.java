@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -72,6 +73,15 @@ public class VendaPMEBusiness {
 					venda.setDataVenda(new Date());
 					venda.setCdStatusVenda(1L); //TODO Alterar para status aguardando aprovacao para ser atualizado posteriormente 05.03.18 as 15:36
 					venda.setFaturaVencimento(empresa.getVencimentoFatura());
+										
+					SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+					if(empresa.getDataVigencia()!=null && !empresa.getDataVigencia().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+						venda.setDataVigencia(sdf_ddMMyyyy.parse(empresa.getDataVigencia())); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+					}
+					if(empresa.getDataMovimentacao()!=null && !empresa.getDataMovimentacao().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+						venda.setDataMovimentacao(sdf_ddMMyyyy.parse(empresa.getDataMovimentacao())); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+					}
+
 					venda.setCdForcaVenda(vendaPME.getCdForcaVenda());
 					
 					for (Beneficiario titular : vendaPME.getTitulares()) {
