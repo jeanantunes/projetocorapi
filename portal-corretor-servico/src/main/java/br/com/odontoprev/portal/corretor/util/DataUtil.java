@@ -8,10 +8,14 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 public class DataUtil {
 	
 	private static final Log log = LogFactory.getLog(DataUtil.class);
+	
+	@Value("${datautil.prazoDeImplantacaoEmDias}") //201806151614 - esert - parametro para prazo de implantacao vide camila@odpv 
+	private static int prazoDeImplantacaoEmDias; //201806151614 - esert - parametro para prazo de implantacao vide camila@odpv
 
 	public static final Date dateParse(String strData) throws Exception {
 
@@ -76,6 +80,13 @@ public class DataUtil {
 		log.info("dayDueDate:[" + dayDueDate + "]");
 		log.info("dateDataVenda:[" + sdf_ddMMyyyy.format(dateDataVenda) + "]");
 
+		log.info("prazoDeImplantacaoEmDias:[" + prazoDeImplantacaoEmDias + "] no applicaiton.properties");
+		if(prazoDeImplantacaoEmDias==0) {
+			log.info("prazoDeImplantacaoEmDias==0 -> nao encontrado no applicaiton.properties");
+			prazoDeImplantacaoEmDias = 12;
+			log.info("prazoDeImplantacaoEmDias:[" + prazoDeImplantacaoEmDias + "] ajustado valor default 12");
+		}
+		prazoDeImplantacaoEmDias = Math.abs(prazoDeImplantacaoEmDias) * -1; 
 		
 //		var currentTime = moment();	
 //		currentTime.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
@@ -87,7 +98,7 @@ public class DataUtil {
 		
 		Calendar dataHoje = new GregorianCalendar();
 		Calendar dataVenda = new GregorianCalendar();
-		Calendar olderDate_VencMenos11Dias = new GregorianCalendar();
+		Calendar olderDate_LimiteVenda_VencMenosXdias = new GregorianCalendar();
 		Calendar dataVencimento = new GregorianCalendar();
 
 		dataHoje.setTime(dateAgoraComHora);
@@ -106,50 +117,57 @@ public class DataUtil {
 //		var day = currentTime.format('DD');
 //		var year = currentTime.format('YYYY');
 		//201805101030 - esert
-		int month = dataHoje.get(Calendar.MONTH);
+		//int month = dataHoje.get(Calendar.MONTH); //201806151614 - esert - exc - deve usar data da venda AQUI TBM vide camila@odpv desde 201805101739
+		int month = dataVenda.get(Calendar.MONTH); //201806151614 - esert - inc - deve usar data da venda AQUI TBM vide camila@odpv desde 201805101739
 //		int day = calendarHoje.get(Calendar.DATE);
-		int year = dataHoje.get(Calendar.YEAR);
-//
+		//int year = dataHoje.get(Calendar.YEAR); //201806151614 - esert - exc - deve usar data da venda AQUI TBM vide camila@odpv desde 201805101739
+		int year = dataVenda.get(Calendar.YEAR); //201806151614 - esert - inc - deve usar data da venda AQUI TBM vide camila@odpv desde 201805101739
+
 //		$("#divProximoMes").addClass('hide');
-//
-//		switch (dayDueDate) {
+
+//        var vencimento;
+//        var dataVencimento = moment("05-" + month.toString() + "-" + year, "DD-MM-YYYY");
 		int intDayDueDate = (int)dayDueDate;
+		dataVencimento = new GregorianCalendar(year, month, intDayDueDate);
+		log.info("dataVencimento:[" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "]");
+		
+//		switch (dayDueDate) {
 	    switch (intDayDueDate) {
 //
 //			case "05":
 			case 5:
+
 			case 15: //201805101537 - esert|yalme - exceto dia 05, os demais usam mesma regra
 			case 25: //201805101537 - esert|yalme - exceto dia 05, os demais usam mesma regra
-//
-//	            var vencimento;
-//	            var dataVencimento = moment("05-" + month.toString() + "-" + year, "DD-MM-YYYY");
-				dataVencimento = new GregorianCalendar(year, month, intDayDueDate);
-				log.info("dataVencimento:[" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "]");
-				
+
+				log.info("escolhido dia do Vencimento:[" + dayDueDate + "]");
 				//201805101537 - esert|yalme - so qdo dia 05 cinco que incrementa um mes de inicio
 				if(intDayDueDate==5) { 
 //		            var dataVencimento = dataVencimento.add(1, 'M');
 					dataVencimento.add(Calendar.MONTH, 1); //incrementa um mes de inicio
-					log.info("dataVencimento:[" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "](ja adicionado um mes)"); //201806141233 - esert - nova linha log
-				}
+					log.info("dataVencimento:[" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "](qdo dia 05 ja adiciona +um mes)"); //201806141233 - esert - nova linha log
+				}				
 				
-//	            var olderDate = moment(dataVencimento).add(-11, "days");
-				olderDate_VencMenos11Dias.setTime(dataVencimento.getTime()); //inicializa com DataVencimento 
-				olderDate_VencMenos11Dias.add(Calendar.DATE, -11); //subtrai 11 dias = atrasa 11 dias
-				log.info("olderDate_VencMenos11Dias:[" + sdf_ddMMyyyy.format(olderDate_VencMenos11Dias.getTime()) + "]");
+//	            var olderDate = moment(dataVencimento).add(prazoDeImplantacaoEmDias, "days");
+				olderDate_LimiteVenda_VencMenosXdias.setTime(dataVencimento.getTime()); //inicializa com DataVencimento 
+				olderDate_LimiteVenda_VencMenosXdias.add(Calendar.DATE, prazoDeImplantacaoEmDias); //subtrai X dias = atrasa X dias
+				log.info("olderDate_LimiteVenda_VencMenosXdias:[" + sdf_ddMMyyyy.format(olderDate_LimiteVenda_VencMenosXdias.getTime()) + "]");
 
 //	            if (currentTime.isAfter(olderDate)) 
 				//201805101739 - esert - porem para WEB usara DataVenda ao inves de CurrentDate vide Camila@ODPV
-				if(dataVenda.getTimeInMillis() > olderDate_VencMenos11Dias.getTimeInMillis()) {
+				if(dataVenda.getTimeInMillis() > olderDate_LimiteVenda_VencMenosXdias.getTimeInMillis()) {
+					log.info("dataVenda eh > maior que olderDate_LimiteVenda_VencMenosXdias, entao adiciona mais+ um mesa data de vencimento."); //201806151831 - esert - nova linha log
 //					vencimento = dataVencimento.add(1, 'M');
 					dataVencimento.add(Calendar.MONTH, 1);
+					log.info("dataVencimento:[" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "]"); //201806151831 - esert - nova linha log
 //	            else 
 				} else {
+					log.info("dataVenda NAO eh > maior que olderDate_LimiteVenda_VencMenosXdias, entao data de vencimento fica como esta."); //201806151831 - esert - nova linha log
 //					vencimento = dataVencimento;
 					//dataVencimento = dataVencimento;
 				}
 
-//	            var dataDeCorteDeMovimentacao = moment(dataVencimento).add(-11, "days");
+//	            var dataDeCorteDeMovimentacao = moment(dataVencimento).add(prazoDeImplantacaoEmDias, "days");
 //	            $("#corte").html('Data de corte de movimentação:<br>' + dataDeCorteDeMovimentacao.format("DD/MM/YYYY"));
 //	            $("#vencimento").html('Data de vencimento:<br>' + vencimento.format("DD/MM/YYYY"));
 //	            $("#vigencia").html('Data de vigência:<br>' + vencimento.format("DD/MM/YYYY"));
@@ -159,6 +177,13 @@ public class DataUtil {
 				log.info("dataVigencia:[" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "]");
 
 	            break;
+	            
+//	        default: //201806151654 - esert - tratar excecao dia diferente dos esperados(05,15,25)
+//				log.info("escolhido dia do Vencimento: invalido [" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "]");
+//				Date dataVencimentoInvalida = new GregorianCalendar(1,0,1).getTime();
+//				log.info("retorno de erro [" + sdf_ddMMyyyy.format(dataVencimentoInvalida) + "]");
+//				return dataVencimentoInvalida;
+
 		} //switch (dayDueDate)
 	    
 		log.info("isEffectiveDate - fim"); //201806141315
