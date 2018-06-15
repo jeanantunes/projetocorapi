@@ -61,6 +61,7 @@ public class EmpresaBusiness {
 	EmpresaContatoDAO empresaContatoDAO;
 
 	public EmpresaResponse salvarEmpresaEnderecoVenda(Empresa empresa) {
+		log.info("salvarEmpresaEnderecoVenda - ini");
 		TbodEmpresa tbEmpresa = new TbodEmpresa();
 
 		try {
@@ -105,12 +106,12 @@ public class EmpresaBusiness {
 					tbVenda.setDtVenda(new Date());
 					tbVenda.setFaturaVencimento(empresa.getVencimentoFatura());
 					
-					SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
-					if(empresa.getDataVigencia()!=null && !empresa.getDataVigencia().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
-						tbVenda.setDtVigencia(sdf_ddMMyyyy.parse(empresa.getDataVigencia())); //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+					SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+					if(empresa.getDataVigencia()!=null && !empresa.getDataVigencia().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+						tbVenda.setDtVigencia(sdf_ddMMyyyy.parse(empresa.getDataVigencia())); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
 					}
-					if(empresa.getDataMovimentacao()!=null && !empresa.getDataMovimentacao().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
-						tbVenda.setDtMovimentacao(sdf_ddMMyyyy.parse(empresa.getDataMovimentacao())); //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+					if(empresa.getDataMovimentacao()!=null && !empresa.getDataMovimentacao().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+						tbVenda.setDtMovimentacao(sdf_ddMMyyyy.parse(empresa.getDataMovimentacao())); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
 					}
 					
 					tbVenda.setTbodEmpresa(tbEmpresa);
@@ -126,12 +127,13 @@ public class EmpresaBusiness {
 			log.error("EmpresaServiceImpl :: Erro ao cadastrar empresa. Detalhe: [" + e.getMessage() + "]");
 			return new EmpresaResponse(0, "Erro ao cadastrar empresa. Favor, entre em contato com o suporte.");
 		}
-
+		
+		log.info("salvarEmpresaEnderecoVenda - fim");
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa cadastrada.");
 	}
 
 	public EmpresaResponse salvarEmpresaEndereco(Empresa empresa, VendaPME vendaPME) {
-		
+		log.info("salvarEmpresaEndereco - ini");
 		TbodEmpresa tbodEmpresa = new TbodEmpresa();
 	
 		try {
@@ -192,7 +194,8 @@ public class EmpresaBusiness {
 			log.error(msgErro);
 			return new EmpresaResponse(0, msgErro);
 		}
-	
+		
+		log.info("salvarEmpresaEndereco - fim");
 		return new EmpresaResponse(tbodEmpresa.getCdEmpresa(), "Empresa cadastrada.");
 	}
 
