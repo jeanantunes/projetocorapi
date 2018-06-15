@@ -222,7 +222,10 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 			//201805101739 - esert - funcao isEffectiveDate copíada do App na versao abaixo porem usa DataVenda ao inves de CurrentDate vide Camila@ODPV
 			//http://git.odontoprev.com.br/esteira-digital/est-portalcorretor-app/blob/sprint6/VendasOdontoPrev/app/src/main/assets/app/pmeFaturaController.js
-			String strDataVigencia = DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda);
+			//String strDataVigencia = DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda); //201806141632 - esert - alterar retorno de String para Date para deixar formatacao para o uso final
+			SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141640 - esert - formato data para email
+			String strDataVigencia = sdf_ddMMyyyy.format(DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda)); //201806141640 - esert - formatar data para email
+
 			log.info("strDataVigencia:[" + strDataVigencia + "]");				
 
 			// TESTE VICTOR

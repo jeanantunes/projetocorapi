@@ -62,14 +62,17 @@ public class DataUtil {
 	//201805092100 - esert - inicial
 	//201805101525 - esert - calcula DataVigencia a partir do DiaVencimento
 	//201805101739 - esert - funcao isEffectiveDate copíada do App na versao abaixo 
-	//201805101739 - esert - porem usa DataVenda ao inves de CurrentDate vide Camila@ODPV
 	//h t t p : //git .odontoprev .com .br /esteira-digital/est-portalcorretor-app/blob/sprint6/VendasOdontoPrev/app/src/main/assets/app/pmeFaturaController.js
+	//201805101739 - esert - porem usa DataVenda ao inves de CurrentDate vide Camila@ODPV
 	//201805101900 - esert - ultimo teste unitario ok
-	public static final String isEffectiveDate(long dayDueDate, Date dateDataVenda) {
-		String strDataVigencia = "dd/MM/yyyy";
+	//201806141632 - esert - alterar retorno de String para Date para deixar formatacao para o uso final
+	//public static final String isEffectiveDate(long dayDueDate, Date dateDataVenda) {
+	public static final Date isEffectiveDate(long dayDueDate, Date dateDataVenda) {
+		String strDataVigencia = "dd/MM/yyyy"; //valor default de saida - nao eh um formato
 		SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy");
-//	function isEffectiveDate(dayDueDate) {
+		//	function isEffectiveDate(dayDueDate) {
 
+		log.info("isEffectiveDate - ini"); //201806141315
 		log.info("dayDueDate:[" + dayDueDate + "]");
 		log.info("dateDataVenda:[" + sdf_ddMMyyyy.format(dateDataVenda) + "]");
 
@@ -127,6 +130,7 @@ public class DataUtil {
 				if(intDayDueDate==5) { 
 //		            var dataVencimento = dataVencimento.add(1, 'M');
 					dataVencimento.add(Calendar.MONTH, 1); //incrementa um mes de inicio
+					log.info("dataVencimento:[" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "](ja adicionado um mes)"); //201806141233 - esert - nova linha log
 				}
 				
 //	            var olderDate = moment(dataVencimento).add(-11, "days");
@@ -157,7 +161,11 @@ public class DataUtil {
 	            break;
 		} //switch (dayDueDate)
 	    
-		return strDataVigencia;
+		log.info("isEffectiveDate - fim"); //201806141315
+		
+		//201806141632 - esert - alterar retorno de String para Date a fim de poupar dupla conversao
+		//return strDataVigencia;  
+		return dataVencimento.getTime();
 	}
 
 }
