@@ -48,8 +48,8 @@ public class OdpvLogFilter implements Filter {
         //Principal userPrincipal = httpServletRequestWrapper.getUserPrincipal();
         //String stringUserAgent = ((RequestWrapper) requestWrapper).getParameter("User-Agent");
         String stringUserAgent = ((RequestWrapper) requestWrapper).getHeader("User-Agent");
-        String stringHeader = LoggerInterceptor.logRequestHeader(httpServletRequest);
-        String stringParams = LoggerInterceptor.getParameters(httpServletRequest);
+        String stringHeader = LoggerInterceptor.getHeaders(httpServletRequest); //201806121747 - esert - inc Header + Parameter
+        String stringParams = LoggerInterceptor.getParameters(httpServletRequest); //201806121747 - esert - inc Header + Parameter
         
         //log.info("[doFilter] stringRequestURI:[" + stringRequestURI + "]"); //201806071209
         //log.info("[doFilter] stringUserAgent:[" + stringUserAgent + "]"); //201806071209

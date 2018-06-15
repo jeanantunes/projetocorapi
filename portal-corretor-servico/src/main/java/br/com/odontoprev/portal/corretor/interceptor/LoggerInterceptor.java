@@ -170,7 +170,9 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 //		return stringBuilder.toString();
 //	}
 
-    public static String logRequestHeader(HttpServletRequest request) {
+	//h t t p s :// gist .github .com /int128/e47217bebdb4c402b2ffa7cc199307ba
+	//201806121747 - esert - inc Header + Parameter
+    public static String getHeaders(HttpServletRequest request) {
 		log.info("[logRequestHeader] ini");
     	StringBuffer stringBufferRet = new StringBuffer();
 //        log.info("request.getMethod():["+ request.getMethod() +"]");
