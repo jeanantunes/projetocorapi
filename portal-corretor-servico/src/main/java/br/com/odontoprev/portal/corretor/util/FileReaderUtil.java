@@ -27,10 +27,13 @@ public class FileReaderUtil {
 		switch(tipoEmail) {
 			case "EmailAceite":
 				emkt = "emkt.html";
+				break; //201806012119 - esert - inc
 			case "EsqueciMinhaSenha":
-				emkt = "emktRecuperarSenha.html";				
+				emkt = "emktRecuperarSenha.html";
+				break; //201806012119 - esert - inc
 			case "BoasVindasPME":
 				emkt = "emkt_boas_vindas_pme.html"; //201805091620 - esert - inc
+				break; //201806012119 - esert - inc
 		}
 
 		log.info("readHtmlFile(tipoEmail:[" + tipoEmail + "]) -> emkt:[" + emkt + "]"); //201805091625 - esert - inc

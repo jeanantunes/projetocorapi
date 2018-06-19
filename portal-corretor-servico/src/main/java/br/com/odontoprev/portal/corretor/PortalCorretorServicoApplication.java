@@ -17,7 +17,8 @@ public class PortalCorretorServicoApplication extends SpringBootServletInitializ
 
 	public static void main(String[] args) {
 
-		log.info("[PortalCorretorServicoApplication][v.201802251422]");
+//		log.info("[PortalCorretorServicoApplication][v.201802251422]");
+		log.info("[PortalCorretorServicoApplication][v.201805301758]"); //201805301758 - esert - interceptor - teste
 
 		SpringApplication.run(PortalCorretorServicoApplication.class, args);
 	}

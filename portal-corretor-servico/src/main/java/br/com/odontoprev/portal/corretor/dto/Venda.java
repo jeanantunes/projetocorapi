@@ -26,6 +26,9 @@ public class Venda implements Serializable {
 	private Long cdDCSSUsuario;
 	
 	private ResponsavelContratual responsavelContratual;
+	
+	private Date dataVigencia; //201806141829 - esert - (COR-301 Alter Table TBOD_VENDA)
+	private Date dataMovimentacao; //201806141829 - esert - (COR-301 Alter Table TBOD_VENDA)
 
 	public Long getCdVenda() {
 		return cdVenda;
@@ -115,12 +118,29 @@ public class Venda implements Serializable {
 		this.responsavelContratual = responsavelContratual;
 	}
 
+	public Date getDataVigencia() {
+		return dataVigencia;
+	}
+
+	public void setDataVigencia(Date dataVigencia) {
+		this.dataVigencia = dataVigencia;
+	}
+
+	public Date getDataMovimentacao() {
+		return dataMovimentacao;
+	}
+
+	public void setDataMovimentacao(Date dataMovimentacao) {
+		this.dataMovimentacao = dataMovimentacao;
+	}
+
 	@Override
 	public String toString() {
 		return "Venda [cdVenda=" + cdVenda + ", cdEmpresa=" + cdEmpresa + ", cdPlano=" + cdPlano + ", cdForcaVenda="
 				+ cdForcaVenda + ", dataVenda=" + dataVenda + ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento="
 				+ faturaVencimento + ", tipoPagamento=" + tipoPagamento + ", titulares=" + titulares
-				+ ", cdDCSSUsuario=" + cdDCSSUsuario + ", responsavelContratual=" + responsavelContratual + "]";
+				+ ", cdDCSSUsuario=" + cdDCSSUsuario + ", responsavelContratual=" + responsavelContratual
+				+ ", dataVigencia=" + dataVigencia + ", dataMovimentacao=" + dataMovimentacao + "]";
 	}
 
 }

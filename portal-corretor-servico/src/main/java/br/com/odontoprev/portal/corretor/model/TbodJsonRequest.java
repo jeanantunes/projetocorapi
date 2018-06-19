@@ -27,15 +27,25 @@ public class TbodJsonRequest implements Serializable {
 	@Column(name = "DT_CRIACAO")
 	private Date dtCriacao;
 
+	@Column(name = "JSON")
 	private String json;
 
 	@Column(name = "MODELO_CELULAR")
 	private String modeloCelular;
 
+	@Column(name = "URL")
 	private String url;
 	
 	@Column(name="CD_CORRETORA")
 	private long cdCorretora;
+
+	//201806121714 - esert - inclusao campo para salvar header
+	@Column(name="HEADER")
+	private String header;
+
+	//201806121714 - esert - inclusao campo para salvar parameter
+	@Column(name="PARAMETER")
+	private String parameter;
 
 	public TbodJsonRequest() {
 	}
@@ -43,7 +53,6 @@ public class TbodJsonRequest implements Serializable {
 	public long getCdJsonRequest() {
 		return this.cdJsonRequest;
 	}
-
 	public void setCdJsonRequest(long cdJsonRequest) {
 		this.cdJsonRequest = cdJsonRequest;
 	}
@@ -51,7 +60,6 @@ public class TbodJsonRequest implements Serializable {
 	public long getCdForcaVenda() {
 		return cdForcaVenda;
 	}
-
 	public void setCdForcaVenda(long cdForcaVenda) {
 		this.cdForcaVenda = cdForcaVenda;
 	}
@@ -59,7 +67,6 @@ public class TbodJsonRequest implements Serializable {
 	public Date getDtCriacao() {
 		return this.dtCriacao;
 	}
-
 	public void setDtCriacao(Date dtCriacao) {
 		this.dtCriacao = dtCriacao;
 	}
@@ -67,7 +74,6 @@ public class TbodJsonRequest implements Serializable {
 	public String getJson() {
 		return this.json;
 	}
-
 	public void setJson(String json) {
 		this.json = json;
 	}
@@ -75,7 +81,6 @@ public class TbodJsonRequest implements Serializable {
 	public String getModeloCelular() {
 		return modeloCelular;
 	}
-
 	public void setModeloCelular(String modeloCelular) {
 		this.modeloCelular = modeloCelular;
 	}
@@ -83,7 +88,6 @@ public class TbodJsonRequest implements Serializable {
 	public String getUrl() {
 		return url;
 	}
-
 	public void setUrl(String url) {
 		this.url = url;
 	}
@@ -91,9 +95,36 @@ public class TbodJsonRequest implements Serializable {
 	public long getCdCorretora() {
 		return cdCorretora;
 	}
-
 	public void setCdCorretora(long cdCorretora) {
 		this.cdCorretora = cdCorretora;
 	}
-	
+
+	public String getHeader() {
+		return header;
+	}
+	public void setHeader(String header) {
+		this.header = header;
+	}
+
+	public String getParameter() {
+		return parameter;
+	}
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
+	}
+
+	@Override
+	public String toString() {
+		return "TbodJsonRequest [" 
+				+ "cdJsonRequest=" + cdJsonRequest 
+				+ ", cdForcaVenda=" + cdForcaVenda 
+				+ ", dtCriacao=" + dtCriacao 
+				+ ", json=" + json 
+				+ ", modeloCelular=" + modeloCelular 
+				+ ", url=" + url 
+				+ ", cdCorretora=" + cdCorretora 
+				+ ", header=" + header 
+				+ ", parameter=" + parameter 
+				+ "]";
+	}
 }

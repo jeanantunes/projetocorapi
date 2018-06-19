@@ -13,7 +13,8 @@ public class CnpjDadosAceite implements Serializable { //2018051102036 - esert -
 	private String observacao;
 	private Long cdVenda;
 	private Date dtVenda; //2018051111438 - esert - COR-172
-	private String empDcms; //2018051102036 - esert - COR-169
+	private String empDcms; //201805112036 - esert - COR-169
+	private String email; //201805181251 - esert - COR-169
 	private TokenAceite tokenAceite;
 	
 	public String getCnpj() {
@@ -60,6 +61,14 @@ public class CnpjDadosAceite implements Serializable { //2018051102036 - esert -
 	public void setEmpDcms(String empDcms) {
 		this.empDcms = empDcms;
 	}
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 	public TokenAceite getTokenAceite() {
 		return tokenAceite;
 	}
@@ -71,7 +80,7 @@ public class CnpjDadosAceite implements Serializable { //2018051102036 - esert -
 	public String toString() {
 		return "CnpjDadosAceite [cnpj=" + cnpj + ", cdEmpresa=" + cdEmpresa + ", razaoSocial=" + razaoSocial
 				+ ", observacao=" + observacao + ", cdVenda=" + cdVenda + ", dtVenda=" + dtVenda + ", empDcms="
-				+ empDcms + ", tokenAceite=" + tokenAceite + "]";
+				+ empDcms + ", email=" + email + ", tokenAceite=" + tokenAceite + "]";
 	}
 	
 }

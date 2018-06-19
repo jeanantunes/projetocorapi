@@ -12,7 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.BancoContaDAO;
 import br.com.odontoprev.portal.corretor.dao.CorretoraBancoDAO;
@@ -55,7 +54,7 @@ public class CorretoraServiceImpl implements CorretoraService {
 	LoginDAO loginDao;
 
 	@Override
-	@Transactional
+	//@Transactional
 	public CorretoraResponse addCorretora(Corretora corretora) {
 		
 		log.info("[addCorretora]");

@@ -24,6 +24,7 @@ public class RelatorioGestaoVenda implements Serializable {
 	private String tipoPlano;
 	private String valorMensal;
 	private String valorAnual;
+	private String forcaNome; //201805301905 - esert/jack - COR-8 - ajuste
 	
 	public String getDataVenda() {
 		return dataVenda;
@@ -133,12 +134,21 @@ public class RelatorioGestaoVenda implements Serializable {
 	public void setValorAnual(String valorAnual) {
 		this.valorAnual = valorAnual;
 	}
+	
+	public String getForcaNome() {
+		return forcaNome;
+	}
+	public void setForcaNome(String forcaNome) {
+		this.forcaNome = forcaNome;
+	}
+	
 	@Override
 	public String toString() {
 		return "RelatorioGestaoVenda [dataVenda=" + dataVenda + ", nome=" + nome + ", cpf=" + cpf + ", dataNascimento="
 				+ dataNascimento + ", nomeMae=" + nomeMae + ", celular=" + celular + ", email=" + email
 				+ ", logradouro=" + logradouro + ", cep=" + cep + ", cidade=" + cidade + ", complemento=" + complemento
 				+ ", bairro=" + bairro + ", uf=" + uf + ", numero=" + numero + ", nomePlano=" + nomePlano
-				+ ", tipoPlano=" + tipoPlano + ", valorMensal=" + valorMensal + ", valorAnual=" + valorAnual + "]";
+				+ ", tipoPlano=" + tipoPlano + ", valorMensal=" + valorMensal + ", valorAnual=" + valorAnual
+				+ ", forcaNome=" + forcaNome + "]";
 	}	
 }

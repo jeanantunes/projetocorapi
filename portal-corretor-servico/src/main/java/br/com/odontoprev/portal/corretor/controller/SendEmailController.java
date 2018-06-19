@@ -21,13 +21,29 @@ public class SendEmailController {
 	@Autowired
 	EmpresaService empresaService;
 	
-	//201805101947 - esert - rota para reenvio de emails BoasVindasPME vide Fernando@ODPV
-	@RequestMapping(value = "/sendMail/BoasVindasPME/{cdEmpresa}", method = { RequestMethod.GET })
+//	//201805101947 - esert - COR-160 - rota para reenvio de emails BoasVindasPME vide Fernando@ODPV
+//	//201805221026 - esert - COR-160 - refactor - excluida rota GET para reenvio de emails BoasVindasPME vide Fernando@ODPV
+//	@RequestMapping(value = "/sendMail/BoasVindasPME/{cdEmpresa}", method = { RequestMethod.GET })
+//	public ResponseEntity<EmpresaDcms> sendMailBoasVindasPME(@PathVariable Long cdEmpresa) {
+//		
+//		log.info("Inicio sendMailBoasVindasPME");
+//		
+//		ResponseEntity<EmpresaDcms> res = empresaService.sendMailBoasVindasPME(cdEmpresa);
+//		
+//		log.info("Fim sendMailBoasVindasPME");
+//		
+//		return res;
+//	}
+	
+	//201805221026 - esert - COR-160 - refactor - nova rota POST para reenvio de emails BoasVindasPME vide Fernando@ODPV
+	//201806081230 - esert/vrodrigues - alterado assinatura de (dto.EmailBoasVindasPME) para (@PathVariable Long cdEmpresa)
+	//201806081249 - esert/rmarques - rota nome toda minuscula
+	@RequestMapping(value = "/sendmail/boasvindaspme/{cdEmpresa}", method = { RequestMethod.POST })
 	public ResponseEntity<EmpresaDcms> sendMailBoasVindasPME(@PathVariable Long cdEmpresa) {
 		
 		log.info("Inicio sendMailBoasVindasPME");
 		
-		ResponseEntity<EmpresaDcms> res = empresaService.sendEmailBoasVindasPME(cdEmpresa);
+		ResponseEntity<EmpresaDcms> res = empresaService.sendMailBoasVindasPME(cdEmpresa);
 		
 		log.info("Fim sendMailBoasVindasPME");
 		

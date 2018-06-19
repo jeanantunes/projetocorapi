@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.business;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.ManagedBean;
 
@@ -25,7 +26,8 @@ public class SendMailBoasVindasPME {
 	private static final Log log = LogFactory.getLog(SendMailBoasVindasPME.class);
 	
 	public void sendMail(
-			String email, 
+			//String email,
+			List<String> listEmail,
 			String nomeEmpresa, 
 			String login, 
 			String senha, 
@@ -35,7 +37,7 @@ public class SendMailBoasVindasPME {
 			) {
 		
 		//201805091825 - esert
-		log.info("sendMail(email:["+ email +"])");
+		log.info("sendMail(email:["+ listEmail +"])");
 		log.info("sendMail(nomeEmpresa:["+ nomeEmpresa +"])");
 		log.info("sendMail(login:["+ login +"])");
 		log.info("sendMail(linkPortal:["+ linkPortal +"])");
@@ -72,7 +74,7 @@ public class SendMailBoasVindasPME {
 			
 			body.setBody(msg);
 			body.setRecepientName(recepientName);			
-			body.setRecepients(Arrays.asList(new String [] {email}));
+			body.setRecepients(listEmail);
 			body.setSender(sender);
 			body.setSenderName(senderName);
 			body.setType(type);
