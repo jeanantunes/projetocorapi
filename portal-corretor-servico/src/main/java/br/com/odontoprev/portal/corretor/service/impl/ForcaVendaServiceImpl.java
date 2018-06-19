@@ -10,12 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.odontoprev.portal.corretor.dao.*;
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
-import br.com.odontoprev.portal.corretor.enums.TipoMensagem;
-import br.com.odontoprev.portal.corretor.model.*;
-import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +22,36 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
+import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
+import br.com.odontoprev.portal.corretor.dao.DeviceTokenDAO;
+import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.LoginDAO;
+import br.com.odontoprev.portal.corretor.dao.NotificacaoDAO;
+import br.com.odontoprev.portal.corretor.dao.SistemaPushDAO;
+import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.TokenDAO;
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.DCSSLoginResponse;
+import br.com.odontoprev.portal.corretor.dto.Endereco;
+import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
+import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.dto.PushNotification;
+import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
 import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
+import br.com.odontoprev.portal.corretor.enums.TipoNotificationTemplate;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
+import br.com.odontoprev.portal.corretor.model.TbodCorretora;
+import br.com.odontoprev.portal.corretor.model.TbodDeviceToken;
+import br.com.odontoprev.portal.corretor.model.TbodEndereco;
+import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
+import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.model.TbodNotificationTemplate;
+import br.com.odontoprev.portal.corretor.model.TbodSistemaPush;
+import br.com.odontoprev.portal.corretor.model.TbodStatusForcaVenda;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
-
-import javax.persistence.Table;
+import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
 
 @Service
 public class ForcaVendaServiceImpl implements ForcaVendaService {
@@ -781,7 +798,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		TbodDeviceToken tbodDeviceToken = new TbodDeviceToken();
 		TbodSistemaPush tbodSistemaPush = new TbodSistemaPush();
 
-		tbodNotificationTemplate = notificacaoDAO.findbyTipo(TipoMensagem.ATIVO.name());
+		tbodNotificationTemplate = notificacaoDAO.findbyTipo(TipoNotificationTemplate.ATIVACAO_FORCA_VENDA.toString()); //201806191650 - esert - bug (result returns more than one elements) vide rmarques@odpv
+
 		tbodSistemaPush = sistemaPushDAO.findbyNmSistema("CORRETOR");
 
 		tbodDeviceToken = tokenDAO.findbyCdlogin(forcaVenda.getTbodLogin().getCdLogin());
