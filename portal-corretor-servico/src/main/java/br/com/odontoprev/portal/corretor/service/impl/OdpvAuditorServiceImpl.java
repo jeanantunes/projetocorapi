@@ -79,18 +79,28 @@ public class OdpvAuditorServiceImpl implements OdpvAuditorService {
 			
 			jsonRequest.setModeloCelular(stringUserAgent);
 
-			int maxLen = requestURI.length();
-			//2018061122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos caracteres vide fernando@odpv
-			if(maxLen > 200) {
-				maxLen = 200; //201806111649 - esert/vrodrigues - max 20 so quando maior que 20
+			int maxLenRequestURI = requestURI.length();
+			//201806122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos caracteres vide fernando@odpv
+			if(maxLenRequestURI > 200) {
+				maxLenRequestURI = 200;
 			}
-			jsonRequest.setUrl(requestURI.substring(0,maxLen)); //201806081223 - esert/vrodrigues - max 20 por enquanto so pra nao quebrar
+			jsonRequest.setUrl(requestURI.substring(0,maxLenRequestURI)); //201806122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos
 
 			jsonRequest.setJson(stringJsonBody);
 			
-			jsonRequest.setHeader(headers); //201806121747 - esert - inc Header + Parameter  
+			int maxLenHeaders = headers.length();
+			//201806191615 - esert - alt protecao limite tamanho header em 3000 vide bug gerado com cerca de 2200 em 2018061915xx visto em homolog por esert + fsetai@odpv + rmarques@odpv
+			if(maxLenHeaders > 3000) {
+				maxLenHeaders = 3000;
+			}
+			jsonRequest.setHeader(headers.substring(0, maxLenHeaders)); //201806191615 - esert - alt protecao limite tamanho headers em 3000  
 			
-			jsonRequest.setParameter(parameters); //201806121747 - esert - inc Header + Parameter
+			//201806191615 - esert - alt protecao limite tamanho parameters em 3000 
+			int maxLenParameters = parameters.length();
+			if(maxLenParameters > 3000) {
+				maxLenParameters = 3000; 
+			}
+			jsonRequest.setParameter(parameters.substring(0, maxLenParameters)); //201806191615 - esert - alt protecao limite tamanho parameters em 3000
 			
 			jsonRequestDAO.save(jsonRequest);
 		} catch (Exception e) {
