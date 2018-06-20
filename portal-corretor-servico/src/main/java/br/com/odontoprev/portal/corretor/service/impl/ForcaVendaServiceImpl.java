@@ -711,8 +711,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			/*** nome da corretora no email ***/
 			TbodCorretora tbCorretora = corretoraDao.findOne(tbForcaVendas.get(0).getTbodCorretora().getCdCorretora());
 
-			SendMailForcaStatus sendEmail = new SendMailForcaStatus();
-			sendEmail.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
+			SendMailForcaStatus sendMailForcaStatus = new SendMailForcaStatus();
+			sendMailForcaStatus.sendMail(tbForcaVendas.get(0).getEmail(), tbCorretora.getNome(), "APROVAR");
 
 		} catch (final Exception e) {
 			log.error("Erro ao atualizar ForcaVendaStatus :: Message: [" + e.getMessage() + "]");
@@ -723,7 +723,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				+ " Cpf:[" + tbForcaVenda.getCpf() + "];"
 				+ " CodigoDcssUsuario:[" + tbForcaVenda.getCodigoDcssUsuario() + "];"
 				+ " De:[" + ativoAnterior +"-"+ statusAnterior + "];"
-				+ " Para:[ " + tbForcaVenda.getAtivo() +"-"+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "].");
+				+ " Para:[" + tbForcaVenda.getAtivo() +"-"+ tbForcaVenda.getTbodStatusForcaVenda().getDescricao() + "].");
 	}
 
 	@Override
