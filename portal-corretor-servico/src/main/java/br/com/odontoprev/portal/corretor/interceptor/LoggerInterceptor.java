@@ -62,8 +62,13 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			ex.printStackTrace();
 		}
 
-		log.info("[afterCompletion]; request:[" + request + "]");
+		log.info("[afterCompletion]; request.getContextPath():[" + request.getContextPath() + "]"); //201806191843 - esert
+		log.info("[afterCompletion]; request.getContentLength():[" + request.getContentLength() + "]"); //201806191829 - esert
+		log.info("[afterCompletion]; response.getStatus():[" + response.getStatus() + "]"); //201806191829 - esert
 		log.info("[afterCompletion]; exception:[" + ex + "]");
+		if(ex!=null) { //201806191829 - esert
+			log.info("[afterCompletion]; exception.getMessage():[" + ex.getMessage() + "]"); //201806191829 - esert
+		}
 		//201806061147 - esert - desativado
 		//log.info("[afterCompletion]; getBody:[" + getBody(request) + "]"); // 201806051824 - esert
 		//log.info("[afterCompletion]; getRequestBody:[" + getRequestBody(request) + "]"); // 201806051853 - esert
