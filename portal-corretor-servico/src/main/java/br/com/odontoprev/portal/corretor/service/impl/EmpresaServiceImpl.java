@@ -238,13 +238,22 @@ public class EmpresaServiceImpl implements EmpresaService {
 				PropertiesUtils.getProperty(PropertiesUtils.LINK_PORTAL_PME_URL), //linkPortal, 
 				strDataVigencia, //dataVigencia, 
 				strDiaVencimentoFatura //diaVencimentoFatura
-				);
+			);
+			
+			String emails = ""; //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
+			for (String email : listaEmails) {
+				if(emails.length()>0) {
+					emails += ",";					
+				}
+				emails += email; //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
+			}
 			
 			//201805221245 - esert - COR-225 - Serviço - LOG Envio e-mail de Boas Vindas PME
 			TbodLogEmailBoasVindasPME tbodLogEmailBoasVindasPME = new TbodLogEmailBoasVindasPME();
 			tbodLogEmailBoasVindasPME.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 			tbodLogEmailBoasVindasPME.setRazaoSocial(tbodEmpresa.getRazaoSocial());
-			tbodLogEmailBoasVindasPME.setEmail(tbodEmpresa.getEmail());
+			//tbodLogEmailBoasVindasPME.setEmail(tbodEmpresa.getEmail());
+			tbodLogEmailBoasVindasPME.setEmail(emails); //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
 			tbodLogEmailBoasVindasPME.setDtEnvio(new Date());
 			logEmailBoasVindasPMEDAO.save(tbodLogEmailBoasVindasPME);
 			
@@ -252,7 +261,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 			empresaDcms.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 			empresaDcms.setEmpDcms(tbodEmpresa.getEmpDcms());
 			empresaDcms.setCnpj(tbodEmpresa.getCnpj()); //201805221106 - esert - COR-160 - refactor - semm qg no cnpj
-			empresaDcms.setEmail(tbodEmpresa.getEmail()); //201805221106 - esert - COR-160 - refactor - inc campo especifico para email
+			//empresaDcms.setEmail(tbodEmpresa.getEmail()); //201805221106 - esert - COR-160 - refactor - inc campo especifico para email
+			empresaDcms.setEmail(emails); //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
 			return ResponseEntity.ok(empresaDcms);
 			
 		} catch (Exception e) {
