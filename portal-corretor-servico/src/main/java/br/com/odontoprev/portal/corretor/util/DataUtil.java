@@ -9,13 +9,15 @@ import java.util.GregorianCalendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DataUtil {
 	
 	private static final Log log = LogFactory.getLog(DataUtil.class);
 	
 	@Value("${datautil.prazoDeImplantacaoEmDias}") //201806151614 - esert - parametro para prazo de implantacao vide camila@odpv 
-	private static int prazoDeImplantacaoEmDias; //201806151614 - esert - parametro para prazo de implantacao vide camila@odpv
+	private int prazoDeImplantacaoEmDias; //201806151614 - esert - parametro para prazo de implantacao vide camila@odpv
 
 	public static final Date dateParse(String strData) throws Exception {
 
@@ -71,8 +73,8 @@ public class DataUtil {
 	//201805101900 - esert - ultimo teste unitario ok
 	//201806141632 - esert - alterar retorno de String para Date para deixar formatacao para o uso final
 	//public static final String isEffectiveDate(long dayDueDate, Date dateDataVenda) {
-	public static final Date isEffectiveDate(long dayDueDate, Date dateDataVenda) {
-		String strDataVigencia = "dd/MM/yyyy"; //valor default de saida - nao eh um formato
+	public final Date isEffectiveDate(long dayDueDate, Date dateDataVenda) {
+		//String strDataVigencia = "dd/MM/yyyy"; //valor default de saida - nao eh um formato
 		SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy");
 		//	function isEffectiveDate(dayDueDate) {
 
@@ -80,9 +82,9 @@ public class DataUtil {
 		log.info("dayDueDate:[" + dayDueDate + "]");
 		log.info("dateDataVenda:[" + sdf_ddMMyyyy.format(dateDataVenda) + "]");
 
-		log.info("prazoDeImplantacaoEmDias:[" + prazoDeImplantacaoEmDias + "] no applicaiton.properties");
+		log.info("prazoDeImplantacaoEmDias:[" + prazoDeImplantacaoEmDias + "] no application.properties");
 		if(prazoDeImplantacaoEmDias==0) {
-			log.info("prazoDeImplantacaoEmDias==0 -> nao encontrado no applicaiton.properties");
+			log.info("prazoDeImplantacaoEmDias==0 -> nao encontrado no application.properties");
 			prazoDeImplantacaoEmDias = 12;
 			log.info("prazoDeImplantacaoEmDias:[" + prazoDeImplantacaoEmDias + "] ajustado valor default 12");
 		}
@@ -173,7 +175,7 @@ public class DataUtil {
 //	            $("#vigencia").html('Data de vigência:<br>' + vencimento.format("DD/MM/YYYY"));
 
 				//201805101530 - esert
-			    strDataVigencia = sdf_ddMMyyyy.format(dataVencimento.getTime());
+			    //strDataVigencia = sdf_ddMMyyyy.format(dataVencimento.getTime());
 				log.info("dataVigencia:[" + sdf_ddMMyyyy.format(dataVencimento.getTime()) + "]");
 
 	            break;
