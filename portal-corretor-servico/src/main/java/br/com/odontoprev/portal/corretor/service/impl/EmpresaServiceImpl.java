@@ -82,8 +82,12 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Autowired
 	PlanoService planoService;
+	
+	@Autowired
+	DataUtil dataUtil; //201806201702 - esert
 
     @Value("${mensagem.empresa.atualizada.dcms}")
+
 	private String empresaAtualizadaDCMS; //201805181310 - esert - COR-160
 
     @Value("${mensagem.empresa.atualizada.aceite}")
@@ -144,7 +148,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				//201805101609 - esert - criar servico independente para Email Boas Vindas PME vide Fernando@ODPV em 20180510
 				//201805101941 - esert - excluido param cnpj
 				ResponseEntity<EmpresaDcms> res = this.sendMailBoasVindasPME(empresaDcms.getCdEmpresa());
-				//log.info("res:[" + res.toString() + "]");
+				log.info("res[sendMailBoasVindasPME(" + empresaDcms.getCdEmpresa() + ")]:[" + res.toString() + "]"); //201806201636 - esert
 			}
 			else {
 				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
@@ -160,6 +164,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	//201805091745 - esert
+	@SuppressWarnings("unused") //201806201634 - linha 178 da warning de (dead code) mas tbodEmpresa sera null se findOne() nao achar cdEmpresa
 	//201805101941 - esert - excluido param cnpj
 	//201805101947 - esert - service para reenvio de emails vide Fernando@ODPV
 	//201805221057 - esert - refactor sendEmailBoasVindasPME para sendMailBoasVindasPME mantendo padrao
@@ -224,7 +229,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			//http://git.odontoprev.com.br/esteira-digital/est-portalcorretor-app/blob/sprint6/VendasOdontoPrev/app/src/main/assets/app/pmeFaturaController.js
 			//String strDataVigencia = DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda); //201806141632 - esert - alterar retorno de String para Date para deixar formatacao para o uso final
 			SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141640 - esert - formato data para email
-			String strDataVigencia = sdf_ddMMyyyy.format(DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda)); //201806141640 - esert - formatar data para email
+			String strDataVigencia = sdf_ddMMyyyy.format(dataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda)); //201806141640 - esert - formatar data para email //201806201630 - esert - DataUtil dinamico 
 
 			log.info("strDataVigencia:[" + strDataVigencia + "]");				
 
