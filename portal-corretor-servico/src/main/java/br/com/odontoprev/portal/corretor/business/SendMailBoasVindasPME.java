@@ -1,6 +1,5 @@
 package br.com.odontoprev.portal.corretor.business;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.ManagedBean;
