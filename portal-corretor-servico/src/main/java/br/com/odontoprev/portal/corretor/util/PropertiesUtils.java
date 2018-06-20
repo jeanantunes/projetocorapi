@@ -93,10 +93,19 @@ public class PropertiesUtils {
 			//PROPERTY = ResourceBundle.getBundle("application");
 			
 			stringSpringConfigLocation = System.getProperty(SPRING_CONFIG_LOCATION);
-
-			fileInputStream = new FileInputStream(stringSpringConfigLocation);
 			
-			propertyResourceBundle = new PropertyResourceBundle(fileInputStream);
+			if(stringSpringConfigLocation != null && !stringSpringConfigLocation.isEmpty()) { //201806201919 - esert - protecao para falta de configuracao
+
+				fileInputStream = new FileInputStream(stringSpringConfigLocation);
+				
+				propertyResourceBundle = new PropertyResourceBundle(fileInputStream);
+				
+
+			} else {
+				
+				propertyResourceBundle = null;
+
+			}
 		
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -107,16 +116,20 @@ public class PropertiesUtils {
 			//e.printStackTrace();
 			log.error("IOException; propertyResourceBundle = new PropertyResourceBundle(fis)", e); 
 		}
-		
+
 		PROPERTY = (ResourceBundle)propertyResourceBundle;
-		
+
 		log.info("PropertiesUtils.static - fim"); 
 	}
 
 	private PropertiesUtils() {}
 	
 	public static String getProperty(final String nome){
-		return PROPERTY.getString(nome);
+		if(PROPERTY != null) { //201806201933 - esert - protecao
+			return PROPERTY.getString(nome);
+		} else {
+			return null;
+		}
 	}
 	
 }
