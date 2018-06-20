@@ -1,8 +1,17 @@
 package br.com.odontoprev.portal.corretor.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class PropertiesUtils {
+	
+	private static final Log log = LogFactory.getLog(PropertiesUtils.class);
 	
 	private static final ResourceBundle PROPERTY;
 	
@@ -71,8 +80,37 @@ public class PropertiesUtils {
 
 	public static final String SENHA_INICIAL_PORTAL_PME = "senhainicial.portalcorretor.pme"; //201805091801 - esert
 
+	public static final String SPRING_CONFIG_LOCATION = "spring.config.location"; //201806201540 - esert
+
+	//201806201540 - esert - carga de PROPERTY a partir do arquivo no caminho (spring.config.location) definido nos parametros da JVM
 	static {
-		PROPERTY = ResourceBundle.getBundle("application");
+		log.info("PropertiesUtils.static - ini");
+		String stringSpringConfigLocation = new String();
+		FileInputStream fileInputStream = null;
+		PropertyResourceBundle propertyResourceBundle = null;
+		
+		try {
+			//PROPERTY = ResourceBundle.getBundle("application");
+			
+			stringSpringConfigLocation = System.getProperty(SPRING_CONFIG_LOCATION);
+
+			fileInputStream = new FileInputStream(stringSpringConfigLocation);
+			
+			propertyResourceBundle = new PropertyResourceBundle(fileInputStream);
+		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			log.error("FileNotFoundException; springConfigLocation:[" + stringSpringConfigLocation + "]", e); 
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			log.error("IOException; propertyResourceBundle = new PropertyResourceBundle(fis)", e); 
+		}
+		
+		PROPERTY = (ResourceBundle)propertyResourceBundle;
+		
+		log.info("PropertiesUtils.static - fim"); 
 	}
 
 	private PropertiesUtils() {}
