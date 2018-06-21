@@ -79,6 +79,10 @@ public class SendMailBoasVindasPME {
 			body.setType(type);
 			body.setSubject(subject);
 
+			//201806212034 - esert - ensaios de log do email completo
+			//String stringBody = new Gson().toJson(body, RequestEmail.class); //201806201026 - esert - RequestEmail em json para log. tam > 20.000 bytes devido utf8 - max oracle varchar 4000
+			//log.info("SendMailBoasVindasPME.sendMail; msg:[" + msg + "]"); //201806212034 - esert - apenas msg body em json para log. tam > 10.000 - max oracle varchar 4000
+			
 			apiInstance.sendEmail(body);
 		} catch (ApiException e) {
 			log.error(e.getResponseBody());
