@@ -52,10 +52,6 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	private static final Log log = LogFactory.getLog(EmpresaServiceImpl.class);
 
-	private List<String> listaEmails = new ArrayList<>();
-
-	private String emailForcaVenda = "";
-
 	@Autowired
 	EmpresaDAO empresaDAO;
 
@@ -87,7 +83,6 @@ public class EmpresaServiceImpl implements EmpresaService {
 	DataUtil dataUtil; //201806201702 - esert
 
     @Value("${mensagem.empresa.atualizada.dcms}")
-
 	private String empresaAtualizadaDCMS; //201805181310 - esert - COR-160
 
     @Value("${mensagem.empresa.atualizada.aceite}")
@@ -173,6 +168,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 		Long longDiaVencimentoFatura = 0L;
 		Date dateDataVenda = null;
 		
+		List<String> listaEmails = new ArrayList<>(); //201806211921 - esert - correcao bug email varios destinatarios - alterado escopo da variavel de (classe) para (metodo)
+		String emailForcaVenda = ""; //201806211921 - esert - correcao bug email varios destinatarios - alterado escopo da variavel de (classe) para (metodo)
+
 		try {
 			log.info("cdEmpresa:[" + cdEmpresa + "]");
 			
@@ -245,20 +243,25 @@ public class EmpresaServiceImpl implements EmpresaService {
 				strDiaVencimentoFatura //diaVencimentoFatura
 			);
 			
-			String emails = ""; //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
+			String stringListaEmails = ""; //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
 			for (String email : listaEmails) {
-				if(emails.length()>0) {
-					emails += ",";					
+				if(stringListaEmails.length()>0) {
+					stringListaEmails += ",";					
 				}
-				emails += email; //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
+				stringListaEmails += email; //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
 			}
+			int stringListaEmails_length = stringListaEmails.length();
+			if(stringListaEmails_length > 500) {
+				stringListaEmails_length = 500; //201806212037 - esert - novo limite tamanho campo EMAIL varchar 500 vide CORRET.TBOD_LOG_EMAIL_BVPME.MOD.EMAIL500.201806212029.sql
+			}
+			stringListaEmails = stringListaEmails.substring(0, stringListaEmails_length);
 			
 			//201805221245 - esert - COR-225 - Serviço - LOG Envio e-mail de Boas Vindas PME
 			TbodLogEmailBoasVindasPME tbodLogEmailBoasVindasPME = new TbodLogEmailBoasVindasPME();
 			tbodLogEmailBoasVindasPME.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 			tbodLogEmailBoasVindasPME.setRazaoSocial(tbodEmpresa.getRazaoSocial());
 			//tbodLogEmailBoasVindasPME.setEmail(tbodEmpresa.getEmail());
-			tbodLogEmailBoasVindasPME.setEmail(emails); //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
+			tbodLogEmailBoasVindasPME.setEmail(stringListaEmails); //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
 			tbodLogEmailBoasVindasPME.setDtEnvio(new Date());
 			logEmailBoasVindasPMEDAO.save(tbodLogEmailBoasVindasPME);
 			
@@ -267,7 +270,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			empresaDcms.setEmpDcms(tbodEmpresa.getEmpDcms());
 			empresaDcms.setCnpj(tbodEmpresa.getCnpj()); //201805221106 - esert - COR-160 - refactor - semm qg no cnpj
 			//empresaDcms.setEmail(tbodEmpresa.getEmail()); //201805221106 - esert - COR-160 - refactor - inc campo especifico para email
-			empresaDcms.setEmail(emails); //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
+			empresaDcms.setEmail(stringListaEmails); //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
 			return ResponseEntity.ok(empresaDcms);
 			
 		} catch (Exception e) {
@@ -576,21 +579,5 @@ public class EmpresaServiceImpl implements EmpresaService {
 		log.info("updateEmpresaEmailAceite - fim");
 
 		return new EmpresaResponse(HttpStatus.OK.value(), empresaAtualizadaAceite);  //201805181310 - esert - COR-171
-	}
-
-	public List<String> getListaEmails() {
-		return listaEmails;
-	}
-
-	public void setListaEmails(List<String> listaEmails) {
-		this.listaEmails = listaEmails;
-	}
-
-	public String getEmailForcaVenda() {
-		return emailForcaVenda;
-	}
-
-	public void setEmailForcaVenda(String emailForcaVenda) {
-		this.emailForcaVenda = emailForcaVenda;
 	}
 }
