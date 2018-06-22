@@ -49,6 +49,7 @@ public class XlsVidas {
 
 			String filename = pathVidas + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
 //			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
+			@SuppressWarnings("resource")
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Vidas");
 
