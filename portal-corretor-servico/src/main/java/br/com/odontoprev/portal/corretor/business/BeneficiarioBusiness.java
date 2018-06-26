@@ -27,6 +27,7 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 @ManagedBean
 public class BeneficiarioBusiness {
@@ -57,6 +58,7 @@ public class BeneficiarioBusiness {
 	//201805241505 - esert/yalm - adicionada protecão para dependente com Cpf null
 	//201805281830 - esert - forcar erro para causar rollback de toda transacao - teste
 	//201805281830 - esert - incluido throws para subir erro e causar rollback de toda transacao - teste
+	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public BeneficiarioResponse salvarTitularComDependentes(List<Beneficiario> titulares) throws RollbackException {
 
 		log.info("[salvarTitularComDependentes] ini");

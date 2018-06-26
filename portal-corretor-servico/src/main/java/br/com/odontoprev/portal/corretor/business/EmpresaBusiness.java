@@ -11,6 +11,7 @@ import javax.annotation.ManagedBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.EmpresaContatoDAO;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
@@ -59,7 +60,7 @@ public class EmpresaBusiness {
 	
 	@Autowired
 	EmpresaContatoDAO empresaContatoDAO;
-
+	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public EmpresaResponse salvarEmpresaEnderecoVenda(Empresa empresa) {
 		log.info("salvarEmpresaEnderecoVenda - ini");
 		TbodEmpresa tbEmpresa = new TbodEmpresa();

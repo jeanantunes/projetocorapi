@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -101,7 +102,7 @@ public class VendaPFBusiness {
 	
 	@Value("${DCSS_CODIGO_EMPRESA_DCMS}")
 	private String dcss_codigo_empresa_dcms; //201803021538 esertorio para moliveira
-	
+	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public VendaResponse salvarVendaComTitularesComDependentes(Venda venda, Boolean isIntegraDCSS) {
 
 		log.info("[salvarVendaPFComTitularesComDependentes]");
@@ -140,6 +141,9 @@ public class VendaPFBusiness {
 
 			if(venda.getCdForcaVenda() != null) {
 				TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
+				if(tbodForcaVenda == null) {
+					throw new Exception("tbodForcaVenda == null para venda.getCdForcaVenda():[" + venda.getCdForcaVenda() + "]"); //201806261245 - esert - protecao					
+				}				
 				tbVenda.setTbodForcaVenda(tbodForcaVenda);
 				venda.setCdDCSSUsuario(tbodForcaVenda.getCodigoDcssUsuario());
 			}

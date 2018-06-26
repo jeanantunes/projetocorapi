@@ -39,7 +39,7 @@ public class VendaPMEBusiness {
 	@Autowired
 	TokenAceiteService tokenAceiteService;
 	
-	@Transactional //201805242012 - inc 
+	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(VendaPME vendaPME) {
 
 		log.info("[salvarVendaPMEComEmpresasPlanosTitularesDependentes]");
