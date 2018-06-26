@@ -13,7 +13,7 @@ public class PropertiesUtils {
 	
 	private static final Log log = LogFactory.getLog(PropertiesUtils.class);
 	
-	private static final ResourceBundle PROPERTY;
+	private static ResourceBundle PROPERTY;
 	
 	public static final String REQUESTMAIL_RECEPIENTNAME_ESQUECISENHA = "requestmailEsqueciSenha.body.recepientname";
 	public static final String REQUESTMAIL_SENDER_ESQUECISENHA = "requestmailEsqueciSenha.body.sender";
@@ -88,26 +88,34 @@ public class PropertiesUtils {
 		String stringSpringConfigLocation = new String();
 		FileInputStream fileInputStream = null;
 		PropertyResourceBundle propertyResourceBundle = null;
-		
+
+		PROPERTY = ResourceBundle.getBundle("application"); //201806261925 - esert - volta ao default
+
 		try {
 			
 			stringSpringConfigLocation = System.getProperty(SPRING_CONFIG_LOCATION);
 			
 			if(stringSpringConfigLocation != null && !stringSpringConfigLocation.isEmpty()) { //201806201919 - esert - protecao para falta de configuracao
+				
 				log.info("PropertiesUtils.static; stringSpringConfigLocation:[" + stringSpringConfigLocation + "]"); //201806222035 - esert - log 
 
 				fileInputStream = new FileInputStream(stringSpringConfigLocation);
 				
-				propertyResourceBundle = new PropertyResourceBundle(fileInputStream);				
-			} 
-			else 
-			{
-				log.info("PropertiesUtils.static; ResourceBundle.getBundle(application)"); //201806222035 - esert - log
+				propertyResourceBundle = new PropertyResourceBundle(fileInputStream);
 				
-				//propertyResourceBundle = null;
-				propertyResourceBundle = (PropertyResourceBundle)ResourceBundle.getBundle("application"); //201806222035 - esert - default
-			}
-		
+				PROPERTY = (ResourceBundle)propertyResourceBundle; //201806261925 - esert
+
+			} 
+//			else 
+//			{
+//				log.info("PropertiesUtils.static; ResourceBundle.getBundle(application)"); //201806222035 - esert - log
+//				
+//				//propertyResourceBundle = null;
+//				propertyResourceBundle = (PropertyResourceBundle)ResourceBundle.getBundle("application"); //201806222035 - esert - default
+//
+//			}	
+//			PROPERTY = (ResourceBundle)propertyResourceBundle;
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -117,8 +125,6 @@ public class PropertiesUtils {
 			//e.printStackTrace();
 			log.error("IOException; propertyResourceBundle = new PropertyResourceBundle(fis)", e); 
 		}
-
-		PROPERTY = (ResourceBundle)propertyResourceBundle;
 				
 		log.info("PropertiesUtils.static - fim"); 
 	}
