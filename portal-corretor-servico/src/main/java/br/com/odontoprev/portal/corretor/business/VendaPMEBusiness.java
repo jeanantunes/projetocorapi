@@ -122,6 +122,7 @@ public class VendaPMEBusiness {
 		return vendaResponse;
 	}
 
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	private void buscarDadosCorretoraParaArquivoEmpresa(Long cdForcaVenda, Empresa empresa) {
 		
 		//Busca dados da corretora para arquivo de empresa - jalves 090320181011

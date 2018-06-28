@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.annotation.ManagedBean;
 import javax.transaction.RollbackException;
 
 import org.apache.commons.logging.Log;
@@ -11,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
@@ -18,6 +20,8 @@ import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 
+@ManagedBean //201806281739 - esert - COR-348 rollback vendapme
+@Transactional(rollbackFor={Exception.class}) //201806281719 - esert - rollback vendapme COR-348
 public class XlsEmpresa {
 
 //	@Value("${server.path.empresa}")
@@ -39,6 +43,7 @@ public class XlsEmpresa {
 		return total;
 	}
 
+	@Transactional(rollbackFor={Exception.class}) //201806281719 - esert - rollback vendapme COR-348
 	public void GerarEmpresaXLS(TbodEmpresa tbodEmpresa, Empresa empresaDto, TbodForcaVenda tbodForcaVenda) throws Exception {
 		log.info("GerarEmpresaXLS(); ini");
 

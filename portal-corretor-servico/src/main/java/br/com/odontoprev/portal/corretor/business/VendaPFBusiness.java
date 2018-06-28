@@ -52,6 +52,7 @@ import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
 
 @ManagedBean
+@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 public class VendaPFBusiness {
 
 	private static final Log log = LogFactory.getLog(VendaPFBusiness.class);
@@ -330,6 +331,7 @@ public class VendaPFBusiness {
 		}
 	}
 
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	public PropostaDCMSResponse chamarWsDcssLegado(Venda venda, TbodPlano tbodPlano) throws Exception {
 								
 		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
@@ -349,6 +351,7 @@ public class VendaPFBusiness {
 		return propostaDCMSResponse;
 	}
 
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda, TbodPlano tbodPlano) throws Exception {
 		
 		PropostaDCMS propostaDCMS = new PropostaDCMS();

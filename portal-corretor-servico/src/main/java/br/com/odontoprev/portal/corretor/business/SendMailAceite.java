@@ -22,10 +22,12 @@ import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 
 
 @ManagedBean
+//@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 public class SendMailAceite {
 	
 	private static final Log log = LogFactory.getLog(SendMailAceite.class);
-	
+
+	//@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348 //aqui nao mas so em teste
 	public void sendMail(EmailAceite email) {
 		
 		log.info("sendMail");

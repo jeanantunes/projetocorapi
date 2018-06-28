@@ -60,6 +60,10 @@ public class EmpresaBusiness {
 	
 	@Autowired
 	EmpresaContatoDAO empresaContatoDAO;
+
+	@Autowired
+	XlsEmpresa xlsEmpresa; //201806281739 - esert - COR-348 rollback vendapme
+
 	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public EmpresaResponse salvarEmpresaEnderecoVenda(Empresa empresa) {
 		log.info("salvarEmpresaEnderecoVenda - ini");
@@ -133,6 +137,7 @@ public class EmpresaBusiness {
 		return new EmpresaResponse(tbEmpresa.getCdEmpresa(), "Empresa cadastrada.");
 	}
 
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	public EmpresaResponse salvarEmpresaEndereco(Empresa empresa, VendaPME vendaPME) {
 		log.info("salvarEmpresaEndereco - ini");
 		TbodEmpresa tbodEmpresa = new TbodEmpresa();
@@ -187,7 +192,6 @@ public class EmpresaBusiness {
 			/***  dados forca venda ***/
 			TbodForcaVenda tbodForcaVenda = forcaVendaDAO.findOne(vendaPME.getCdForcaVenda());
 		
-			XlsEmpresa xlsEmpresa = new XlsEmpresa();
 			xlsEmpresa.GerarEmpresaXLS(tbodEmpresa, empresa, tbodForcaVenda);
 	
 		} catch (Exception e) {
