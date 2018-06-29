@@ -6,7 +6,7 @@ import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 
 public interface VendaPFService {
 
-	public VendaResponse addVenda(Venda vendaPF);
+	public VendaResponse addVenda(Venda vendaPF) throws Exception;
 	
 	public VendaResponse addVendaPME(VendaPME vendaPME);
 

@@ -6,6 +6,7 @@ import javax.annotation.ManagedBean;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.api.manager.client.token.ApiManagerToken;
 import br.com.odontoprev.api.manager.client.token.ApiManagerTokenFactory;
@@ -22,15 +23,15 @@ import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 
 
 @ManagedBean
-//@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
+@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348 //201806291448 - esert - robertinho acertou token em desenv
 public class SendMailAceite {
 	
 	private static final Log log = LogFactory.getLog(SendMailAceite.class);
 
-	//@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348 //aqui nao mas so em teste
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348 //aqui nao mas so em teste //201806291448 - esert - robertinho acertou token em desenv
 	public void sendMail(EmailAceite email) {
 		
-		log.info("sendMail");
+		log.info("sendMail - ini");
 		
 		try {
 			
@@ -61,12 +62,14 @@ public class SendMailAceite {
 
 			apiInstance.sendEmail(body);
 		} catch (ApiException e) {
-			log.error(e.getResponseBody());
-			log.error("Exception when calling DefaultApi#sendEmail");
+			log.error("SendMailAceite.sendMail(); getMessage:[" + e.getMessage() + "]"); 
+			log.error("SendMailAceite.sendMail(); getResponseBody:[" + e.getResponseBody() + "]");
 			e.printStackTrace();
 		} catch(Exception ex) {
 			log.error(ex.getLocalizedMessage());
 		}
+		
+		log.info("sendMail - fim");
 	}
 
 	private String montarBodyMsg(EmailAceite email) {
