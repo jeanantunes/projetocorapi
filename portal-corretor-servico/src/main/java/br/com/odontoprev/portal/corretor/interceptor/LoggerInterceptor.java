@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -178,7 +179,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	//h t t p s :// gist .github .com /int128/e47217bebdb4c402b2ffa7cc199307ba
 	//201806121747 - esert - inc Header + Parameter
     public static String getHeaders(HttpServletRequest request) {
-		log.info("[logRequestHeader] ini");
+		log.info("[getHeaders(HttpServletRequest)] ini");
     	StringBuffer stringBufferRet = new StringBuffer();
 //        log.info("request.getMethod():["+ request.getMethod() +"]");
 //        log.info("request.getRequestURI():["+ request.getRequestURI() +"]");            	
@@ -194,7 +195,24 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
             	}
             )
         );
-		log.info("[logRequestHeader] fim");
+		log.info("[getHeaders(HttpServletRequest)] fim");
         return stringBufferRet.toString();
     }
+
+	public static String getHeaders(HttpHeaders headers) {
+		log.info("[getHeaders(HttpHeaders)] ini");
+		StringBuffer stringBufferRet = new StringBuffer();
+		headers.forEach((headerName, hValue) ->
+			headers.get(headerName).forEach(headerValue -> {
+				String headerNameValue = "[" + headerName + "]:[" + headerValue + "]";
+				log.info("[getHeaders(HttpHeaders)]->" + headerNameValue);
+				if(stringBufferRet.length()>0) {
+					stringBufferRet.append(",");
+		  		}
+		      	stringBufferRet.append(headerNameValue);
+		  	})
+		);
+		log.info("[getHeaders(HttpHeaders)] fim");
+		return stringBufferRet.toString();
+	}
 }

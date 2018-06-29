@@ -27,6 +27,7 @@ public class VendaPFServiceImpl implements VendaPFService {
 	VendaPMEBusiness vendaPMEBusiness;
 	
 	@Override
+	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
 	public VendaResponse addVenda(Venda venda) {
 
 		log.info("[VendaPFServiceImpl::addVenda]");
@@ -35,7 +36,7 @@ public class VendaPFServiceImpl implements VendaPFService {
 	}
 
 	@Override
-	@Transactional //201805241930 - inc //201805242012 - exc
+	@Transactional(rollbackFor={Exception.class}) //201806280926 - esert - COR-348 rollback pme
 	public VendaResponse addVendaPME(VendaPME vendaPME) {
 	
 		log.info("[VendaPFServiceImpl::addVendaPME]");

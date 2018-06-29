@@ -79,28 +79,37 @@ public class OdpvAuditorServiceImpl implements OdpvAuditorService {
 			
 			jsonRequest.setModeloCelular(stringUserAgent);
 
-			int maxLenRequestURI = requestURI.length();
-			//201806122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos caracteres vide fernando@odpv
-			if(maxLenRequestURI > 200) {
-				maxLenRequestURI = 200;
+			int maxLenRequestURI = 0;
+			if(requestURI != null) {//201806291132 - esert - protecao - pq na chamada dcss nao tem header deu nullPointerException
+				maxLenRequestURI = requestURI.length();
+				//201806122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos caracteres vide fernando@odpv
+				if(maxLenRequestURI > 200) {
+					maxLenRequestURI = 200;
+				}
+				jsonRequest.setUrl(requestURI.substring(0,maxLenRequestURI)); //201806122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos
 			}
-			jsonRequest.setUrl(requestURI.substring(0,maxLenRequestURI)); //201806122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos
 
 			jsonRequest.setJson(stringJsonBody);
 			
-			int maxLenHeaders = headers.length();
-			//201806191615 - esert - alt protecao limite tamanho header em 3000 vide bug gerado com cerca de 2200 em 2018061915xx visto em homolog por esert + fsetai@odpv + rmarques@odpv
-			if(maxLenHeaders > 3000) {
-				maxLenHeaders = 3000;
+			int maxLenHeaders = 0;
+			if(headers != null) { //201806291132 - esert - protecao - pq na chamada dcss nao tem header deu nullPointerException
+				maxLenHeaders = headers.length();
+				//201806191615 - esert - alt protecao limite tamanho header em 3000 vide bug gerado com cerca de 2200 em 2018061915xx visto em homolog por esert + fsetai@odpv + rmarques@odpv
+				if(maxLenHeaders > 3000) {
+					maxLenHeaders = 3000;
+				}
+				jsonRequest.setHeader(headers.substring(0, maxLenHeaders)); //201806191615 - esert - alt protecao limite tamanho headers em 3000  
 			}
-			jsonRequest.setHeader(headers.substring(0, maxLenHeaders)); //201806191615 - esert - alt protecao limite tamanho headers em 3000  
 			
 			//201806191615 - esert - alt protecao limite tamanho parameters em 3000 
-			int maxLenParameters = parameters.length();
-			if(maxLenParameters > 3000) {
-				maxLenParameters = 3000; 
+			int maxLenParameters = 0;
+			if(parameters != null) { //201806291132 - esert - protecao - pq na chamada dcss nao tem header deu nullPointerException
+				maxLenParameters = parameters.length();
+				if(maxLenParameters > 3000) {
+					maxLenParameters = 3000; 
+				}
+				jsonRequest.setParameter(parameters.substring(0, maxLenParameters)); //201806191615 - esert - alt protecao limite tamanho parameters em 3000
 			}
-			jsonRequest.setParameter(parameters.substring(0, maxLenParameters)); //201806191615 - esert - alt protecao limite tamanho parameters em 3000
 			
 			jsonRequestDAO.save(jsonRequest);
 		} catch (Exception e) {

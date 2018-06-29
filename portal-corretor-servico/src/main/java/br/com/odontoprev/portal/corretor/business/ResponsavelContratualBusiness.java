@@ -5,6 +5,7 @@ import javax.annotation.ManagedBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
 import br.com.odontoprev.portal.corretor.dao.ResponsavelContratualDAO;
@@ -29,6 +30,7 @@ public class ResponsavelContratualBusiness {
 	@Autowired
 	ResponsavelContratualDAO responsavelContratualDao;
 
+	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
 	public TbodResponsavelContratual salvarResponsavelContratualComEndereco(
 			ResponsavelContratual responsavelContratual) {
 

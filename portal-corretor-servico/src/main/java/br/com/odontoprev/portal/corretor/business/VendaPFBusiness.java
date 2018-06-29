@@ -42,6 +42,7 @@ import br.com.odontoprev.portal.corretor.dto.ResponsavelContratual;
 import br.com.odontoprev.portal.corretor.dto.TipoCobrancaPropostaDCMS;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
+import br.com.odontoprev.portal.corretor.interceptor.LoggerInterceptor;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
@@ -103,6 +104,7 @@ public class VendaPFBusiness {
 	
 	@Value("${DCSS_CODIGO_EMPRESA_DCMS}")
 	private String dcss_codigo_empresa_dcms; //201803021538 esertorio para moliveira
+	
 	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public VendaResponse salvarVendaComTitularesComDependentes(Venda venda, Boolean isIntegraDCSS) {
 
@@ -295,8 +297,11 @@ public class VendaPFBusiness {
 		);
 	}
 
+	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
 	public void atualizarNumeroPropostaVenda(Venda venda, TbodVenda tbVenda, PropostaDCMSResponse propostaDCMSResponse) throws Exception 
 	{
+		log.info("atualizarNumeroPropostaVenda - ini");
+
 		TbodStatusVenda tbodStatusVenda;
 		TbodVenda tbodVendaUpdate = vendaDao.findOne(tbVenda.getCdVenda());
 		try {
@@ -315,7 +320,7 @@ public class VendaPFBusiness {
 					tbodVendaUpdate.setPropostaDcms(null);
 					tbodStatusVenda = statusVendaDao.findOne(new Long(2)); //2=Criticado
 					if(tbodStatusVenda == null) {
-						throw new Exception("atualizarNumeroPropostaVenda; Não achou tbodStatusVenda.getCdStatusVenda(1)");
+						throw new Exception("atualizarNumeroPropostaVenda; Não achou tbodStatusVenda.getCdStatusVenda(2)");
 					}
 				}
 				
@@ -323,31 +328,33 @@ public class VendaPFBusiness {
 				
 				tbodVendaUpdate = vendaDao.save(tbodVendaUpdate);
 				
+				log.info("atualizarNumeroPropostaVenda - fim");
 			} else {
-				throw new Exception("atualizarNumeroPropostaVenda; Não achou tbVenda.getCdVenda():["+ tbVenda.getCdVenda() +"]");
+				String message = "atualizarNumeroPropostaVenda; Não achou tbVenda.getCdVenda():["+ tbVenda.getCdVenda() +"]";
+				log.info(message);
+				throw new Exception(message);
 			}
 		} catch (Exception e) {
-			throw new Exception("atualizarNumeroPropostaVenda; e.getMessage():["+ e.getMessage() +"]; e.getCause().getMessage():["+ e.getCause() != null ? e.getCause().getMessage() : "null" +"]");
+			String message = "atualizarNumeroPropostaVenda; e.getMessage():["+ e.getMessage() +"]; e.getCause().getMessage():["+ e.getCause() != null ? e.getCause().getMessage() : "null" +"]";
+			log.info(message);
+			log.error(message);
+			throw new Exception(message);
 		}
 	}
 
-	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
+	@Transactional(rollbackFor={Exception.class}) //201806290936 - esert - COR-352 rollback pf
 	public PropostaDCMSResponse chamarWsDcssLegado(Venda venda, TbodPlano tbodPlano) throws Exception {
+		log.info("chamarWsDcssLegado - ini");
 								
 		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
 					
-		Gson gson = new Gson();
-		String propostaJson = gson.toJson(propostaDCMS);			
-		log.info("chamarWSLegadoPropostaPOST; propostaJson:[" + propostaJson + "];");
-			
-        odpvAuditor.audit(dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
-
 		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
 		
 		if(propostaDCMSResponse != null) {
-			log.info("chamarWSLegadoPropostaPOST; propostaResponse.getNumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; getMensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "]");
+			log.info("chamarWsDcssLegado; propostaDCMSResponse.getNumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; getMensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "]");
 		}
-			
+		
+		log.info("chamarWsDcssLegado - fim");
 		return propostaDCMSResponse;
 	}
 
@@ -611,8 +618,9 @@ public class VendaPFBusiness {
 	}
 
 	@SuppressWarnings({ })
-	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS proposta){
-		log.info("chamarWSLegadoPropostaPOST; ini;");
+	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
+	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS propostaDCMS){
+		log.info("chamarWSLegadoPropostaPOST - ini");
 		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse(); 
 //		ApiManagerToken apiManager = null;
 //		ApiToken apiToken = null;
@@ -621,6 +629,8 @@ public class VendaPFBusiness {
 		String msgErro = "";
 
 		try {
+			String URLAPI = dcssUrl + dcss_venda_propostaPath;
+
 //			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 //			apiToken = apiManager.generateToken();
 
@@ -630,10 +640,15 @@ public class VendaPFBusiness {
 			//headers.add("Content-Type", "application/x-www-form-urlencoded");
 			headers.add("Content-Type", "application/json");
 
-			HttpEntity<?> request = new HttpEntity<PropostaDCMS>(proposta, headers);
+			Gson gson = new Gson();
+			String propostaJson = gson.toJson(propostaDCMS);			
+			//log.info("propostaJson:[" + propostaJson + "];");
+	        //odpvAuditor.audit(dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 
-			String URLAPI = dcssUrl + dcss_venda_propostaPath;
+			odpvAuditor.audit(URLAPI, null, propostaJson, "VendaPFBusiness.chamarWsDcssLegado", LoggerInterceptor.getHeaders(headers), null); //201806291203 - esert - log do json com headers
 
+			HttpEntity<?> request = new HttpEntity<PropostaDCMS>(propostaDCMS, headers);
+			
 			response = restTemplate.exchange(
 					URLAPI, 
 					HttpMethod.POST, 
