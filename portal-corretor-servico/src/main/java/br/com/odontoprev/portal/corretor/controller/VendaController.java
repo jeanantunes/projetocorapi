@@ -31,7 +31,7 @@ public class VendaController {
 		
 		log.info(venda);
 		
-		convertObjectToJson.addJsonInTable(venda, null, userAgent);
+		//convertObjectToJson.addJsonInTable(venda, null, userAgent); //201806282101 - esert - desligamento total do log json antigo
 		
 		return vendaPFService.addVenda(venda);
 	}
@@ -41,7 +41,7 @@ public class VendaController {
 		
 		log.info(vendaPME);
 		
-		convertObjectToJson.addJsonInTable(null, vendaPME, userAgent);
+		//convertObjectToJson.addJsonInTable(null, vendaPME, userAgent); //201806282101 - esert - desligamento total do log json antigo
 		
 		return vendaPFService.addVendaPME(vendaPME);
 	}
