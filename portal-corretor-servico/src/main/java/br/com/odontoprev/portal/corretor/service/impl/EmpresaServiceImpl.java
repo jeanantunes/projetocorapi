@@ -42,6 +42,8 @@ import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 import br.com.odontoprev.portal.corretor.service.PlanoService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
+import br.com.odontoprev.portal.corretor.service.VendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
@@ -81,6 +83,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 	
 	@Autowired
 	DataUtil dataUtil; //201806201702 - esert
+
+	@Autowired
+	VendaService vendaService; //201806291953 - esert - COR-358 Serviço - Alterar serviço /empresa-dcms para atualizar o campo CD_STATUS_VENDA da tabela TBOD_VENDA.
 
     @Value("${mensagem.empresa.atualizada.dcms}")
 	private String empresaAtualizadaDCMS; //201805181310 - esert - COR-160
@@ -131,6 +136,23 @@ public class EmpresaServiceImpl implements EmpresaService {
 			if (tbEmpresa != null) {
 				tbEmpresa.setEmpDcms(empresaDcms.getEmpDcms());
 				empresaDAO.save(tbEmpresa);
+				
+				//201806291953 - esert - COR-358 Serviço - Alterar serviço /empresa-dcms para atualizar o campo CD_STATUS_VENDA da tabela TBOD_VENDA.
+				List<TbodVenda> listTbodVenda = vendaDAO.findByTbodEmpresaCdEmpresa(tbEmpresa.getCdEmpresa());
+				if(listTbodVenda != null) {
+					if(listTbodVenda.size() > 0) {
+						TbodVenda tbodVenda = listTbodVenda.get(listTbodVenda.size()-1); //arbitrariamente pega a ULTIMA venda como sendo a mais recente
+						if(tbodVenda != null) {
+							vendaService.atualizarStatusVenda(tbodVenda.getCdVenda(), Constantes.STATUS_VENDA_APROVADO);
+						} else {
+							throw new Exception("[updateEmpresa] tbodVenda == null");
+						}
+					} else {
+						throw new Exception("[updateEmpresa] listTbodVenda.size() == 0");
+					}
+				} else {
+					throw new Exception("[updateEmpresa] listTbodVenda == null");
+				}
 				
 				List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa());
 				
