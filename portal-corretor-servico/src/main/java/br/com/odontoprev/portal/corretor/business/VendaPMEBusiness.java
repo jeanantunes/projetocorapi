@@ -21,6 +21,7 @@ import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 
 @ManagedBean
 public class VendaPMEBusiness {
@@ -71,7 +72,10 @@ public class VendaPMEBusiness {
 //					venda.setPlanos(planos);
 					
 					venda.setDataVenda(new Date());
-					venda.setCdStatusVenda(1L); //TODO Alterar para status aguardando aprovacao para ser atualizado posteriormente 05.03.18 as 15:36
+
+					//venda.setCdStatusVenda(1L); //TODO Alterar para status aguardando aprovacao para ser atualizado posteriormente 05.03.18 as 15:36
+					venda.setCdStatusVenda(Constantes.STATUS_VENDA_ENVIADO); //1 //201807051747 - esert - (COR-357 Serviço - Definição de Códigos/Status)
+					
 					venda.setFaturaVencimento(empresa.getVencimentoFatura());
 										
 					SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
