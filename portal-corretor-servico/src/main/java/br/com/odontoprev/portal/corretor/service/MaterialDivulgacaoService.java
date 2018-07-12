@@ -9,6 +9,8 @@ public interface MaterialDivulgacaoService {
 
 	MaterialDivulgacao getMaterialDivulgacao(Long codigoMaterialDivulgacao);
 
+	MaterialDivulgacao saveArquivo(String nomeArquivo);
+
 }
 
 

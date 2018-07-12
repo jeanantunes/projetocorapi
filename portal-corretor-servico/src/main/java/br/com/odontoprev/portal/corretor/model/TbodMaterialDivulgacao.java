@@ -42,11 +42,11 @@ public class TbodMaterialDivulgacao implements Serializable {
 	@Column(name = "TIPO_CONTEUDO")
 	private String tipoConteudo;
 	
-//	@Column(name = "THUMBNAIL")
-//	private String thumbnail;
-//	
-//	@Column(name = "ARQUIVO")
-//	private String arquivo;
+	@Column(name = "THUMBNAIL")
+	private byte[] thumbnail;
+	
+	@Column(name = "ARQUIVO")
+	private byte[] arquivo;
 	
 	@Column(name = "ATIVO")
 	private String ativo; //S|N //201803031736 String seguindo padrao outras tabelas Corretora e ForcaVenda (esertorio@vector)(moliveira@odpv)
@@ -102,21 +102,21 @@ public class TbodMaterialDivulgacao implements Serializable {
 		this.tipoConteudo = tipoConteudo;
 	}
 
-//	public String getThumbnail() {
-//		return thumbnail;
-//	}
-//
-//	public void setThumbnail(String thumbnail) {
-//		this.thumbnail = thumbnail;
-//	}
+	public byte[] getThumbnail() {
+		return thumbnail;
+	}
 
-//	public String getArquivo() {
-//		return arquivo;
-//	}
-//
-//	public void setArquivo(String arquivo) {
-//		this.arquivo = arquivo;
-//	}
+	public void setThumbnail(byte[] thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public byte[] getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(byte[] arquivo) {
+		this.arquivo = arquivo;
+	}
 
 	public String getAtivo() {
 		return ativo;
@@ -135,8 +135,8 @@ public class TbodMaterialDivulgacao implements Serializable {
 				+ ", nome=" + nome 
 				+ ", descricao=" + descricao 
 				+ ", tipoConteudo=" + tipoConteudo 
-//				+ ", thumbnail=" + thumbnail 
-//				+ ", arquivo=" + arquivo
+				+ ", thumbnail=" + thumbnail!=null?String.valueOf(thumbnail.length):"NuLL" //201807121806
+				+ ", arquivo=" + arquivo!=null?String.valueOf(arquivo.length):"NuLL" //201807121806
 				+ ", ativo=" + ativo 
 				+ "]";
 	}

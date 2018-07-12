@@ -1,5 +1,9 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +29,9 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 	
 	@Autowired
 	MaterialDivulgacaoDAO materialDivulgacaoDAO;
-
+	
 	@Override
-	public MateriaisDivulgacao getMateriaisDivulgacao() {		
+	public MateriaisDivulgacao getMateriaisDivulgacao() { //201807111650 - esert - COR-405
 		log.info("getMateriaisDivulgacao - ini");
 		MateriaisDivulgacao materiaisDivulgacao = new MateriaisDivulgacao();
 		
@@ -110,6 +114,42 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 		MaterialDivulgacao materialDivulgacao = adaptEntityToDto(entity);
 		
 		log.info("getMaterialDivulgacao - fim");
+		return materialDivulgacao;
+	}
+
+	
+	@Override
+	public MaterialDivulgacao saveArquivo(String nomeArquivo) {
+		MaterialDivulgacao materialDivulgacao = new MaterialDivulgacao();
+				
+		TbodMaterialDivulgacao tbodMaterialDivulgacao = materialDivulgacaoDAO.findOne(1L);
+		tbodMaterialDivulgacao.setNome(nomeArquivo);
+		tbodMaterialDivulgacao.setDescricao(nomeArquivo);
+		tbodMaterialDivulgacao.setAtivo("S");
+		String tipoConteudo = "image/jpg"; //"image".concat(nomeArquivo.split(".")[1]);
+		tbodMaterialDivulgacao.setTipoConteudo(tipoConteudo);
+		
+		File imagePath = new File("c://arquivos_carregados//imagem//".concat(nomeArquivo.concat(".jpg")));
+		byte[] imageInBytes = new byte[(int)imagePath.length()];
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(imagePath);
+			fis.read(imageInBytes);
+			fis.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		tbodMaterialDivulgacao.setArquivo(imageInBytes);
+		
+		tbodMaterialDivulgacao = materialDivulgacaoDAO.save(tbodMaterialDivulgacao);
+		
+		materialDivulgacao = adaptEntityToDto(tbodMaterialDivulgacao);
+		
 		return materialDivulgacao;
 	}
 }

@@ -39,6 +39,22 @@ public class MaterialDivulgacaoController {
 		return ResponseEntity.ok(responseObject);
 	}
 
+	@RequestMapping(value = "/materialdivulgacao/carregarqg/{nomeArquivo}", method = { RequestMethod.GET })
+	public ResponseEntity<MaterialDivulgacao> carregarMaterialDivulgacao(@PathVariable String nomeArquivo) throws ParseException {
+		log.info("carregarMaterialDivulgacao - ini");	
+		MaterialDivulgacao responseObject = new MaterialDivulgacao();		
+		
+		try {
+			responseObject = materialDivulgacaoService.saveArquivo(nomeArquivo);
+		} catch (Exception e) {
+			log.error("ERRO em getMaterialDivulgacao()", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		
+		log.info("carregarMaterialDivulgacao - fim");	
+		return ResponseEntity.ok(responseObject);
+	}
+
 	@RequestMapping(value = "/materialdivulgacao/{codigoMaterialDivulgacao}", method = { RequestMethod.GET })
 	public ResponseEntity<MaterialDivulgacao> obterMaterialDivulgacao(@PathVariable Long codigoMaterialDivulgacao) throws ParseException {
 		log.info("obterMaterialDivulgacao - ini");	
