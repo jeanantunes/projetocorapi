@@ -11,7 +11,7 @@ public class MaterialDivulgacao implements Serializable{
 	private Long codigoSubCategoria;
 	private String nome;
 	private String descricao; //desc do material de divulgacao
-	private String contentType; //'img/jpg'
+	private String tipoConteudo; //'img/jpg'
 	private String thumbnail; //String base64
 	private String arquivo; //String base64
 	private String ativo; //S|N
@@ -46,11 +46,11 @@ public class MaterialDivulgacao implements Serializable{
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public String getContentType() {
-		return contentType;
+	public String getTipoConteudo() {
+		return tipoConteudo;
 	}
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
+	public void setTipoConteudo(String tipoConteudo) {
+		this.tipoConteudo = tipoConteudo;
 	}
 	public String getThumbnail() {
 		return thumbnail;
@@ -78,7 +78,7 @@ public class MaterialDivulgacao implements Serializable{
 				+ ", codigoSubCategoria=" + codigoSubCategoria 
 				+ ", nome=" + nome 
 				+ ", descricao=" + descricao 
-				+ ", contentType=" + contentType 
+				+ ", tipoConteudo=" + tipoConteudo 
 				+ ", thumbnail=" + thumbnail 
 				+ ", arquivo=" + arquivo
 				+ ", ativo=" + ativo 

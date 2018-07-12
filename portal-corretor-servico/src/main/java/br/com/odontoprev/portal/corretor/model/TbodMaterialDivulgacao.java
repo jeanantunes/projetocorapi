@@ -24,7 +24,6 @@ public class TbodMaterialDivulgacao implements Serializable {
 	@Id
 	@SequenceGenerator(name = "SEQ_TBOD_MAT_DIVULGA", sequenceName = "SEQ_TBOD_MAT_DIVULGA", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_MAT_DIVULGA")
-
 	@Column(name = "CD_MAT_DIVULGA")
 	private Long codigoMaterialDivulgacao;
 	

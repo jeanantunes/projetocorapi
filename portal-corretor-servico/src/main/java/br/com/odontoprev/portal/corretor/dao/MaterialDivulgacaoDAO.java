@@ -2,12 +2,13 @@ package br.com.odontoprev.portal.corretor.dao;
 
 import java.util.List;
 
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import br.com.odontoprev.portal.corretor.model.TbodMaterialDivulgacao;
 
-@org.springframework.stereotype.Repository
-public interface MaterialDivulgacaoDAO extends Repository<TbodMaterialDivulgacao, Long> {
+@Repository
+public interface MaterialDivulgacaoDAO extends CrudRepository<TbodMaterialDivulgacao, Long> {
 
 	public List<TbodMaterialDivulgacao> findAll();
 	

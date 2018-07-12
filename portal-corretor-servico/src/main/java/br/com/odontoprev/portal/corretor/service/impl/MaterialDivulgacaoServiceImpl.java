@@ -27,14 +27,11 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 	MaterialDivulgacaoDAO materialDivulgacaoDAO;
 
 	@Override
-	public MateriaisDivulgacao getMateriaisDivulgacao() {
-		
+	public MateriaisDivulgacao getMateriaisDivulgacao() {		
 		log.info("getMateriaisDivulgacao - ini");
 		MateriaisDivulgacao materiaisDivulgacao = new MateriaisDivulgacao();
 		
-		List<TbodMaterialDivulgacao> entities = new ArrayList<TbodMaterialDivulgacao>();
-		
-		entities = materialDivulgacaoDAO.findAll();
+		List<TbodMaterialDivulgacao> entities = materialDivulgacaoDAO.findAll();
 						
 		materiaisDivulgacao.setCategoriasMaterialDivulgacao(adaptEntityToDto(entities));
 		
@@ -86,7 +83,6 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 
 	private MaterialDivulgacao adaptEntityToDto(TbodMaterialDivulgacao entity) {
 		log.info("MaterialDivulgacao adaptEntityToDto(TbodMaterialDivulgacao entity) - ini");
-
 		MaterialDivulgacao materialDivulgacao = null;
 		if(entity != null) {
 			materialDivulgacao = new MaterialDivulgacao();
@@ -95,13 +91,25 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 			materialDivulgacao.setCodigoSubCategoria(entity.getCodigoSubCategoria());
 			materialDivulgacao.setNome(entity.getNome());
 			materialDivulgacao.setDescricao(entity.getDescricao());
-			materialDivulgacao.setContentType(entity.getTipoConteudo());
+			materialDivulgacao.setTipoConteudo(entity.getTipoConteudo());
 //			materialDivulgacao.setThumbnail(entity.getThumbnail());
 //			materialDivulgacao.setArquivo(entity.getArquivo());
 			materialDivulgacao.setAtivo(entity.getAtivo());		
-		}
-		
+		}		
 		log.info("MaterialDivulgacao adaptEntityToDto(TbodMaterialDivulgacao entity) - fim");
+		return materialDivulgacao;
+	}
+
+	
+	@Override
+	public MaterialDivulgacao getMaterialDivulgacao(Long codigoMaterialDivulgacao) {		
+		log.info("getMaterialDivulgacao - ini");		
+		
+		TbodMaterialDivulgacao entity = materialDivulgacaoDAO.findOne(codigoMaterialDivulgacao);
+						
+		MaterialDivulgacao materialDivulgacao = adaptEntityToDto(entity);
+		
+		log.info("getMaterialDivulgacao - fim");
 		return materialDivulgacao;
 	}
 }
