@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "TBOD_MAT_SUBCATEG")
-@NamedQuery(name = "TbodMaterialDivulgacaoSubCategoria.findAll", query = "SELECT t FROM TbodMaterialDivulgacaoSubCategoria t")
+@NamedQuery(name = "TbodMaterialDivulgacaoSubCategoria.findAll", query = "SELECT t FROM TbodMaterialDivulgacaoSubCategoria t where ativo = 'S'")
 public class TbodMaterialDivulgacaoSubCategoria implements Serializable {
 	private static final long serialVersionUID = 1L;
 

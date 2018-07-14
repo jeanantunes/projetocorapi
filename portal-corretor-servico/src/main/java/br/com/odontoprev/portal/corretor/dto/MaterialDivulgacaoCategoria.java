@@ -3,30 +3,40 @@ package br.com.odontoprev.portal.corretor.dto;
 import java.io.Serializable;
 import java.util.List;
 
-public class CategoriaMaterialDivulgacao implements Serializable{
+public class MaterialDivulgacaoCategoria implements Serializable{
 
 	private static final long serialVersionUID = 1463893192959157795L;
 	
-	private int codigoCategoria;
+	private Long codigoCategoria;
 	private String nome;
-	private List<SubCategoriaMaterialDivulgacao> subCategoriasMaterialDivulgacao;
+	private String descricao;
+	private List<MaterialDivulgacaoSubCategoria> subCategoriasMaterialDivulgacao;
 	
-	public int getCodigoCategoria() {
+	public Long getCodigoCategoria() {
 		return codigoCategoria;
 	}
-	public void setCodigoCategoria(int codigoCategoria) {
+	public void setCodigoCategoria(Long codigoCategoria) {
 		this.codigoCategoria = codigoCategoria;
 	}
+	
 	public String getNome() {
 		return nome;
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public List<SubCategoriaMaterialDivulgacao> getSubCategoriasMaterialDivulgacao() {
+	
+	public String getDescricao() {
+		return descricao;
+	}
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	
+	public List<MaterialDivulgacaoSubCategoria> getSubCategoriasMaterialDivulgacao() {
 		return subCategoriasMaterialDivulgacao;
 	}
-	public void setSubCategoriasMaterialDivulgacao(List<SubCategoriaMaterialDivulgacao> subCategoriasMaterialDivulgacao) {
+	public void setSubCategoriasMaterialDivulgacao(List<MaterialDivulgacaoSubCategoria> subCategoriasMaterialDivulgacao) {
 		this.subCategoriasMaterialDivulgacao = subCategoriasMaterialDivulgacao;
 	}
 	
@@ -35,6 +45,7 @@ public class CategoriaMaterialDivulgacao implements Serializable{
 		return "CategoriaMaterialDivulgacao [" 
 				+ "codigoCategoria=" + codigoCategoria 
 				+ ", nome=" + nome
+				+ ", descricao=" + descricao
 				+ ", subCategoriasMaterialDivulgacao=" + subCategoriasMaterialDivulgacao==null ? "NuLL" : subCategoriasMaterialDivulgacao.size()  
 				+ "]";
 	}

@@ -17,7 +17,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TBOD_MAT_DIVULGA")
-@NamedQuery(name = "TbodMaterialDivulgacao.findAll", query = "SELECT t FROM TbodMaterialDivulgacao t where ativo='S' order by codigoCategoria, codigoSubCategoria, codigoMaterialDivulgacao")
+@NamedQuery(
+		name = "TbodMaterialDivulgacao.findAllAtivo", 
+		query = "SELECT t FROM TbodMaterialDivulgacao t where t.ativo='S' order by codigoCategoria, codigoSubCategoria, codigoMaterialDivulgacao"
+		)
 public class TbodMaterialDivulgacao implements Serializable {
 	private static final long serialVersionUID = 1L;
 

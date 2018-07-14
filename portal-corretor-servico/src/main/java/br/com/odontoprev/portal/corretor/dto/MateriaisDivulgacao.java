@@ -7,12 +7,12 @@ public class MateriaisDivulgacao implements Serializable{
 
 	private static final long serialVersionUID = 7497003791805071250L;
 	
-	private List<CategoriaMaterialDivulgacao> categoriasMaterialDivulgacao;
+	private List<MaterialDivulgacaoCategoria> categoriasMaterialDivulgacao;
 
-	public List<CategoriaMaterialDivulgacao> getCategoriasMaterialDivulgacao() {
+	public List<MaterialDivulgacaoCategoria> getCategoriasMaterialDivulgacao() {
 		return categoriasMaterialDivulgacao;
 	}
-	public void setCategoriasMaterialDivulgacao(List<CategoriaMaterialDivulgacao> categoriasMaterialDivulgacao) {
+	public void setCategoriasMaterialDivulgacao(List<MaterialDivulgacaoCategoria> categoriasMaterialDivulgacao) {
 		this.categoriasMaterialDivulgacao = categoriasMaterialDivulgacao;
 	}
 

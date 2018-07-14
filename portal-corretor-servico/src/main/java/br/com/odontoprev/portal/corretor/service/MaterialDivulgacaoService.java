@@ -9,7 +9,7 @@ public interface MaterialDivulgacaoService {
 
 	MaterialDivulgacao getMaterialDivulgacao(Long codigoMaterialDivulgacao);
 
-	MaterialDivulgacao saveArquivo(String nomeArquivo);
+	MaterialDivulgacao save(MaterialDivulgacao materialDivulgacao, boolean isThumbnail, boolean isArquivo);
 
 }
 

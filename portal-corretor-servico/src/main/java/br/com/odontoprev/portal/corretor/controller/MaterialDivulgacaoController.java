@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,22 +40,6 @@ public class MaterialDivulgacaoController {
 		return ResponseEntity.ok(responseObject);
 	}
 
-	@RequestMapping(value = "/materialdivulgacao/carregarqg/{nomeArquivo}", method = { RequestMethod.GET })
-	public ResponseEntity<MaterialDivulgacao> carregarMaterialDivulgacao(@PathVariable String nomeArquivo) throws ParseException {
-		log.info("carregarMaterialDivulgacao - ini");	
-		MaterialDivulgacao responseObject = new MaterialDivulgacao();		
-		
-		try {
-			responseObject = materialDivulgacaoService.saveArquivo(nomeArquivo);
-		} catch (Exception e) {
-			log.error("ERRO em getMaterialDivulgacao()", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
-		
-		log.info("carregarMaterialDivulgacao - fim");	
-		return ResponseEntity.ok(responseObject);
-	}
-
 	@RequestMapping(value = "/materialdivulgacao/{codigoMaterialDivulgacao}", method = { RequestMethod.GET })
 	public ResponseEntity<MaterialDivulgacao> obterMaterialDivulgacao(@PathVariable Long codigoMaterialDivulgacao) throws ParseException {
 		log.info("obterMaterialDivulgacao - ini");	
@@ -68,6 +53,40 @@ public class MaterialDivulgacaoController {
 		}
 		
 		log.info("obterMaterialDivulgacao - fim");	
+		return ResponseEntity.ok(responseObject);
+	}
+
+	@RequestMapping(value = "/materialdivulgacao/carregar/arquivo", method = { RequestMethod.POST})
+	public ResponseEntity<MaterialDivulgacao> carregarMaterialDivulgacaoArquivo(@RequestBody MaterialDivulgacao materialDivulgacao) throws ParseException {
+		log.info("carregarMaterialDivulgacaoArquivo - ini");	
+		log.info("materialDivulgacao:[".concat(materialDivulgacao.toString()).concat("]"));	
+		MaterialDivulgacao responseObject = new MaterialDivulgacao();		
+		
+		try {
+			responseObject = materialDivulgacaoService.save(materialDivulgacao, false, true);
+		} catch (Exception e) {
+			log.error("ERRO em getMaterialDivulgacao()", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		
+		log.info("carregarMaterialDivulgacaoArquivo - fim");	
+		return ResponseEntity.ok(responseObject);
+	}
+
+	@RequestMapping(value = "/materialdivulgacao/carregar/thumbnail", method = { RequestMethod.POST})
+	public ResponseEntity<MaterialDivulgacao> carregarMaterialDivulgacaoThumbnail(@RequestBody MaterialDivulgacao materialDivulgacao) throws ParseException {
+		log.info("carregarMaterialDivulgacaoThumbnail - ini");	
+		log.info("materialDivulgacao:[".concat(materialDivulgacao.toString()).concat("]"));	
+		MaterialDivulgacao responseObject = new MaterialDivulgacao();		
+		
+		try {
+			responseObject = materialDivulgacaoService.save(materialDivulgacao, true, false);
+		} catch (Exception e) {
+			log.error("ERRO em getMaterialDivulgacao()", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		
+		log.info("carregarMaterialDivulgacaoThumbnail - fim");	
 		return ResponseEntity.ok(responseObject);
 	}
 

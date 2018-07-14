@@ -10,6 +10,6 @@ import br.com.odontoprev.portal.corretor.model.TbodMaterialDivulgacao;
 @Repository
 public interface MaterialDivulgacaoDAO extends CrudRepository<TbodMaterialDivulgacao, Long> {
 
-	public List<TbodMaterialDivulgacao> findAll();
+	public List<TbodMaterialDivulgacao> findAllAtivo();
 	
 }
