@@ -10,6 +10,9 @@ public class MaterialDivulgacaoSubCategoria implements Serializable{
 	private Long codigoSubCategoria;
 	private String nome;
 	private String descricao;
+	private String ativo;
+	private String app;
+	private String web;
 	private List<MaterialDivulgacao> materiaisDivulgacao;
 	
 	public Long getCodigoSubCategoria() {
@@ -33,6 +36,27 @@ public class MaterialDivulgacaoSubCategoria implements Serializable{
 		this.descricao = descricao;
 	}
 	
+	public String getAtivo() {
+		return ativo;
+	}
+	public void setAtivo(String ativo) {
+		this.ativo = ativo;
+	}
+	
+	public String getApp() {
+		return app;
+	}
+	public void setApp(String app) {
+		this.app = app;
+	}
+	
+	public String getWeb() {
+		return web;
+	}
+	public void setWeb(String web) {
+		this.web = web;
+	}
+	
 	public List<MaterialDivulgacao> getMateriaisDivulgacao() {
 		return materiaisDivulgacao;
 	}
@@ -45,6 +69,10 @@ public class MaterialDivulgacaoSubCategoria implements Serializable{
 		return "SubCategoriaMaterialDivulgacao [" 
 				+ "codigoSubCategoria=" + codigoSubCategoria 
 				+ ", nome=" + nome
+				+ ", descricao=" + descricao
+				+ ", ativo=" + ativo
+				+ ", app=" + app
+				+ ", web=" + web
 				+ ", materiaisDivulgacao=" + materiaisDivulgacao==null ? "NuLL" : materiaisDivulgacao.size()  
 				+ "]";
 	}

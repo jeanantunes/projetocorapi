@@ -26,6 +26,12 @@ public class TbodMaterialDivulgacaoSubCategoria implements Serializable {
 	
 	@Column(name = "ATIVO")
 	private String ativo; //S|N //201803031736 String seguindo padrao outras tabelas Corretora e ForcaVenda (esertorio@vector)(moliveira@odpv)
+	
+	@Column(name = "APP")
+	private String app; //S|N //201803031736 String S|N seguindo padrao outras tabelas Corretora e ForcaVenda (esertorio@vector)(moliveira@odpv)
+	
+	@Column(name = "WEB")
+	private String web; //S|N //201803031736 String S|N seguindo padrao outras tabelas Corretora e ForcaVenda (esertorio@vector)(moliveira@odpv)
 
 	public TbodMaterialDivulgacaoSubCategoria() {
 	}
@@ -62,11 +68,32 @@ public class TbodMaterialDivulgacaoSubCategoria implements Serializable {
 		this.ativo = ativo;
 	}
 
+	public String getApp() {
+		return app;
+	}
+
+	public void setApp(String app) {
+		this.app = app;
+	}
+
+	public String getWeb() {
+		return web;
+	}
+
+	public void setWeb(String web) {
+		this.web = web;
+	}
+
 	@Override
 	public String toString() {
-		return "TbodMaterialDivulgacaoSubCategoria [codigoMaterialDivulgacaoSubCategoria="
-				+ codigoMaterialDivulgacaoSubCategoria + ", nome=" + nome + ", descricao=" + descricao + ", ativo="
-				+ ativo + "]";
+		return "TbodMaterialDivulgacaoSubCategoria [" 
+				+ "codigoMaterialDivulgacaoSubCategoria=" + codigoMaterialDivulgacaoSubCategoria 
+				+ ", nome=" + nome 
+				+ ", descricao=" + descricao 
+				+ ", ativo=" + ativo 
+				+ ", app=" + app 
+				+ ", web=" + web 
+				+ "]";
 	}
 	
 }

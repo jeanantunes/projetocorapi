@@ -5,7 +5,7 @@ import br.com.odontoprev.portal.corretor.dto.MaterialDivulgacao;
 
 public interface MaterialDivulgacaoService {
 	
-	MateriaisDivulgacao getMateriaisDivulgacao();
+	MateriaisDivulgacao getMateriaisDivulgacao(String tipoInterface);
 
 	MaterialDivulgacao getMaterialDivulgacao(Long codigoMaterialDivulgacao, boolean isArquivo);
 

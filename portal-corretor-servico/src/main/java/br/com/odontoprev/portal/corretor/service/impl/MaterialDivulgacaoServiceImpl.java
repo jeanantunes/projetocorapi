@@ -43,19 +43,20 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 	MaterialDivulgacaoSubCategoriaDAO materialDivulgacaoSubCategoriaDAO;
 	
 	@Override
-	public MateriaisDivulgacao getMateriaisDivulgacao() { //201807111650 - esert - COR-405
+	public MateriaisDivulgacao getMateriaisDivulgacao(String tipoInterface) { //201807111650 - esert - COR-405
 		log.info("getMateriaisDivulgacao - ini");
+		log.info("tipoInterface:[" + tipoInterface + "]");
 		MateriaisDivulgacao materiaisDivulgacao = new MateriaisDivulgacao();
 		
 		List<TbodMaterialDivulgacao> entities = (List<TbodMaterialDivulgacao>)materialDivulgacaoDAO.findAllAtivo();
 						
-		materiaisDivulgacao.setCategoriasMaterialDivulgacao(adaptEntityToDto(entities));
+		materiaisDivulgacao.setCategoriasMaterialDivulgacao(adaptEntityToDto(entities, tipoInterface));
 		
 		log.info("getMateriaisDivulgacao - fim");
 		return materiaisDivulgacao;
 	}
 	
-	private List<MaterialDivulgacaoCategoria> adaptEntityToDto(List<TbodMaterialDivulgacao> entities){
+	private List<MaterialDivulgacaoCategoria> adaptEntityToDto(List<TbodMaterialDivulgacao> entities, String tipoInterface){
 		log.info("List<CategoriaMaterialDivulgacao> adaptEntityToDto(List<TbodMaterialDivulgacao> entities) - ini");
 
 		List<MaterialDivulgacaoCategoria> listCategoriaMaterialDivulgacao = new ArrayList<MaterialDivulgacaoCategoria>();
@@ -78,6 +79,9 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 				materialDivulgacaoCategoria.setSubCategoriasMaterialDivulgacao(new ArrayList<MaterialDivulgacaoSubCategoria>());
 				TbodMaterialDivulgacaoCategoria tbodMaterialDivulgacaoCategoria = materialDivulgacaoCategoriaDAO.findOne(entity.getCodigoCategoria());
 				if(tbodMaterialDivulgacaoCategoria!=null) {
+					if(!tbodMaterialDivulgacaoCategoria.getAtivo().equals(Constantes.ATIVO)) {
+						continue;
+					}
 					materialDivulgacaoCategoria.setCodigoCategoria(tbodMaterialDivulgacaoCategoria.getCodigoMaterialDivulgacaoCategoria());
 					materialDivulgacaoCategoria.setNome(tbodMaterialDivulgacaoCategoria.getNome());
 					materialDivulgacaoCategoria.setDescricao(tbodMaterialDivulgacaoCategoria.getDescricao());
@@ -91,10 +95,29 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 				materialDivulgacaoSubCategoria.setMateriaisDivulgacao(new ArrayList<MaterialDivulgacao>());
 				TbodMaterialDivulgacaoSubCategoria tbodMaterialDivulgacaoSubCategoria = materialDivulgacaoSubCategoriaDAO.findOne(entity.getCodigoSubCategoria());
 				if(tbodMaterialDivulgacaoSubCategoria!=null) {
+					if(!tbodMaterialDivulgacaoSubCategoria.getAtivo().equals(Constantes.ATIVO)) {
+						continue;
+					}
+					if(tipoInterface.equals(Constantes.TIPO_INTERFACE_APP)) {						
+						if(!tbodMaterialDivulgacaoSubCategoria.getApp().equals(Constantes.SIM)) {
+							continue;
+						}
+					} else if(tipoInterface.equals(Constantes.TIPO_INTERFACE_WEB)) {
+						if(!tbodMaterialDivulgacaoSubCategoria.getWeb().equals(Constantes.SIM)) {
+							continue;
+						}
+					} else {
+						continue; //nem app nem web						
+					}
+					
 					materialDivulgacaoSubCategoria.setCodigoSubCategoria(tbodMaterialDivulgacaoSubCategoria.getCodigoMaterialDivulgacaoSubCategoria());
 					materialDivulgacaoSubCategoria.setNome(tbodMaterialDivulgacaoSubCategoria.getNome());
 					materialDivulgacaoSubCategoria.setDescricao(tbodMaterialDivulgacaoSubCategoria.getDescricao());
+					materialDivulgacaoSubCategoria.setAtivo(tbodMaterialDivulgacaoSubCategoria.getAtivo());
+					materialDivulgacaoSubCategoria.setApp(tbodMaterialDivulgacaoSubCategoria.getApp());
+					materialDivulgacaoSubCategoria.setWeb(tbodMaterialDivulgacaoSubCategoria.getWeb());
 				}
+				
 				materialDivulgacaoCategoria.getSubCategoriasMaterialDivulgacao().add(materialDivulgacaoSubCategoria);
 				subAnt = sub; 
 			}
@@ -160,20 +183,27 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 	@Override
 	public MaterialDivulgacao save(MaterialDivulgacao materialDivulgacao, boolean isThumbnail, boolean isArquivo) {
 		log.info("save - ini");	
-
-		TbodMaterialDivulgacao tbodMaterialDivulgacao = 
-				materialDivulgacaoDAO.findOne(materialDivulgacao.getCodigoMaterialDivulgacao());
+		TbodMaterialDivulgacao tbodMaterialDivulgacao = null;
+		
+		if(materialDivulgacao.getCodigoMaterialDivulgacao() != null) { //201807161605 - esert
+			tbodMaterialDivulgacao = materialDivulgacaoDAO.findOne(materialDivulgacao.getCodigoMaterialDivulgacao());
+		}
 		
 		if(tbodMaterialDivulgacao==null) {
 			tbodMaterialDivulgacao = new TbodMaterialDivulgacao(); //se nao existe deve criar
 		}
 		
-		tbodMaterialDivulgacao.setCodigoMaterialDivulgacao(materialDivulgacao.getCodigoMaterialDivulgacao());
+		//tbodMaterialDivulgacao.setCodigoMaterialDivulgacao(materialDivulgacao.getCodigoMaterialDivulgacao());
+		
 		if(materialDivulgacao.getCodigoCategoria()!=null) {
 			tbodMaterialDivulgacao.setCodigoCategoria(materialDivulgacao.getCodigoCategoria());
+		} else {
+			tbodMaterialDivulgacao.setCodigoCategoria(1L); //201807161605 - esert - cat 1 default			
 		}
 		if(materialDivulgacao.getCodigoSubCategoria()!=null) {
 			tbodMaterialDivulgacao.setCodigoSubCategoria(materialDivulgacao.getCodigoSubCategoria());
+		} else {
+			tbodMaterialDivulgacao.setCodigoSubCategoria(1L); //201807161605 - esert - subcat 1 default 			
 		}
 		tbodMaterialDivulgacao.setNome(materialDivulgacao.getNome());
 		tbodMaterialDivulgacao.setDescricao(materialDivulgacao.getDescricao());

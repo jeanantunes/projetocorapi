@@ -26,13 +26,13 @@ public class MaterialDivulgacaoController {
 	@Autowired
 	private MaterialDivulgacaoService materialDivulgacaoService;
 
-	@RequestMapping(value = "/materiaisdivulgacao", method = { RequestMethod.GET })
-	public ResponseEntity<MateriaisDivulgacao> obterMateriaisDivulgacao() throws ParseException {
+	@RequestMapping(value = "/materiaisdivulgacao/{tipoInterface}", method = { RequestMethod.GET })
+	public ResponseEntity<MateriaisDivulgacao> obterMateriaisDivulgacao(@PathVariable("tipoInterface") String tipoInterface) throws ParseException {
 		log.info("obterMateriaisDivulgacao - ini");	
 		MateriaisDivulgacao responseObject = new MateriaisDivulgacao();		
 		
 		try {
-			responseObject = materialDivulgacaoService.getMateriaisDivulgacao();
+			responseObject = materialDivulgacaoService.getMateriaisDivulgacao(tipoInterface);
 		} catch (Exception e) {
 			log.error("ERRO em obterMateriaisDivulgacao()", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
