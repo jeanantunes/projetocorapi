@@ -4,8 +4,10 @@ import java.text.ParseException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,7 +48,7 @@ public class MaterialDivulgacaoController {
 		MaterialDivulgacao responseObject = new MaterialDivulgacao();		
 		
 		try {
-			responseObject = materialDivulgacaoService.getMaterialDivulgacao(codigoMaterialDivulgacao);
+			responseObject = materialDivulgacaoService.getMaterialDivulgacao(codigoMaterialDivulgacao, true);
 		} catch (Exception e) {
 			log.error("ERRO em getMaterialDivulgacao()", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -90,4 +92,17 @@ public class MaterialDivulgacaoController {
 		return ResponseEntity.ok(responseObject);
 	}
 
+	//201807161117 - esert - qg para validacao da imagem obtida
+	@RequestMapping(value = "/arquivo/{id}", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> getArquivo(@PathVariable("id") Long id) {
+	    byte[] image = Base64.decodeBase64(materialDivulgacaoService.getMaterialDivulgacao(id, true).getArquivo());
+	    return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+	}
+
+	//201807161117 - esert - qg para validacao da imagem obtida
+	@RequestMapping(value = "/thumbnail/{id}", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> getThumbnail(@PathVariable("id") Long id) {
+	    byte[] image = Base64.decodeBase64(materialDivulgacaoService.getMaterialDivulgacao(id, false).getThumbnail());
+	    return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+	}
 }

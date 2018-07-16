@@ -68,7 +68,7 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 		MaterialDivulgacaoSubCategoria materialDivulgacaoSubCategoria = null;
 
 		for (TbodMaterialDivulgacao entity : entities) {
-			MaterialDivulgacao materialDivulgacao = adaptEntityToDto(entity, true, false); //201807161100
+			MaterialDivulgacao materialDivulgacao = adaptEntityToDto(entity, true, false); //201807161100 thumbnail = true, arquivo=false
 
 			cat = entity.getCodigoCategoria();
 			sub = entity.getCodigoSubCategoria();
@@ -141,12 +141,17 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 	}
 	
 	@Override
-	public MaterialDivulgacao getMaterialDivulgacao(Long codigoMaterialDivulgacao) {		
+	public MaterialDivulgacao getMaterialDivulgacao(Long codigoMaterialDivulgacao, boolean isArquivo) {		
 		log.info("getMaterialDivulgacao - ini");		
 		
 		TbodMaterialDivulgacao entity = materialDivulgacaoDAO.findOne(codigoMaterialDivulgacao);
 						
-		MaterialDivulgacao materialDivulgacao = adaptEntityToDto(entity, false, true);
+		MaterialDivulgacao materialDivulgacao = null;
+		if(isArquivo) {
+			materialDivulgacao = adaptEntityToDto(entity, false, true);
+		} else {
+			materialDivulgacao = adaptEntityToDto(entity, true, false);			
+		}
 		
 		log.info("getMaterialDivulgacao - fim");
 		return materialDivulgacao;

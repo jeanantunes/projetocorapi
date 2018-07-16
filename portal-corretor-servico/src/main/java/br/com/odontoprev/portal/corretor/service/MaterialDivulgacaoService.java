@@ -7,7 +7,7 @@ public interface MaterialDivulgacaoService {
 	
 	MateriaisDivulgacao getMateriaisDivulgacao();
 
-	MaterialDivulgacao getMaterialDivulgacao(Long codigoMaterialDivulgacao);
+	MaterialDivulgacao getMaterialDivulgacao(Long codigoMaterialDivulgacao, boolean isArquivo);
 
 	MaterialDivulgacao save(MaterialDivulgacao materialDivulgacao, boolean isThumbnail, boolean isArquivo);
 
