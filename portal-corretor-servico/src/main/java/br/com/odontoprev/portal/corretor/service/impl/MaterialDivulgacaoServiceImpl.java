@@ -68,7 +68,7 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 		MaterialDivulgacaoSubCategoria materialDivulgacaoSubCategoria = null;
 
 		for (TbodMaterialDivulgacao entity : entities) {
-			MaterialDivulgacao materialDivulgacao = adaptEntityToDto(entity, false, false);
+			MaterialDivulgacao materialDivulgacao = adaptEntityToDto(entity, true, false); //201807161100
 
 			cat = entity.getCodigoCategoria();
 			sub = entity.getCodigoSubCategoria();
