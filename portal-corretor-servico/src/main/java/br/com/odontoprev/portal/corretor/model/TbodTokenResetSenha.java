@@ -100,6 +100,13 @@ public class TbodTokenResetSenha implements Serializable {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	@Override
+	public String toString() { //201807171728 - esert - COR-317
+		return "TbodTokenResetSenha [id=" + id + ", cpf=" + cpf + ", dataEnvioEmail=" + dataEnvioEmail
+				+ ", dataResetSenha=" + dataResetSenha + ", emailDestinatario=" + emailDestinatario + ", token=" + token
+				+ "]";
 	}	
 
 }

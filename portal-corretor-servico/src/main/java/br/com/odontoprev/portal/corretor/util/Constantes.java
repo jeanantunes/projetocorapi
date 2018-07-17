@@ -26,4 +26,7 @@ public final class Constantes {
 	
 	public static final Object TIPO_INTERFACE_APP = "app"; //201807161655 - esert - COR-222
 	public static final Object TIPO_INTERFACE_WEB = "web"; //201807161655 - esert - COR-222
+	
+	public static final int TAMANHO_CPF = 11; //123.456.789-01=11 //201807171752 - esert - COR-317
+	public static final int TAMANHO_CNPJ = 14; //12.345.678/9012-14=14 //201807171752 - esert - COR-317
 }
