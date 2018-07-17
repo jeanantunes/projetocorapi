@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.annotation.ManagedBean;
 import javax.transaction.RollbackException;
 
 import org.apache.commons.logging.Log;
@@ -11,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
@@ -18,6 +20,8 @@ import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 
+@ManagedBean //201806281739 - esert - COR-348 rollback vendapme
+@Transactional(rollbackFor={Exception.class}) //201806281719 - esert - rollback vendapme COR-348
 public class XlsEmpresa {
 
 //	@Value("${server.path.empresa}")
@@ -39,40 +43,42 @@ public class XlsEmpresa {
 		return total;
 	}
 
-	public void GerarEmpresaXLS(TbodEmpresa tbEmpresa, Empresa empresaDto, TbodForcaVenda forcaVenda) throws Exception {
+	@Transactional(rollbackFor={Exception.class}) //201806281719 - esert - rollback vendapme COR-348
+	public void GerarEmpresaXLS(TbodEmpresa tbodEmpresa, Empresa empresaDto, TbodForcaVenda tbodForcaVenda) throws Exception {
 		log.info("GerarEmpresaXLS(); ini");
 
 		try {
 
-			String[] empresaArr = new String[25];
-			empresaArr[0] = tbEmpresa.getCnpj();
-			empresaArr[1] = tbEmpresa.getIncEstadual();
-			empresaArr[2] = tbEmpresa.getRamoAtividade();
-			empresaArr[3] = tbEmpresa.getRazaoSocial();
-			empresaArr[4] = tbEmpresa.getNomeFantasia();
-			empresaArr[5] = tbEmpresa.getRepresentanteLegal();
-			empresaArr[6] = String.valueOf(tbEmpresa.getContatoEmpresa());
-			empresaArr[7] = tbEmpresa.getTelefone();
-			empresaArr[8] = tbEmpresa.getCelular();
-			empresaArr[9] = tbEmpresa.getEmail();
-			TbodEndereco tbEndereco = tbEmpresa.getTbodEndereco();
-			empresaArr[10] = tbEndereco.getCep();
-			empresaArr[11] = tbEndereco.getLogradouro();
-			empresaArr[12] = tbEndereco.getNumero();
-			empresaArr[13] = tbEndereco.getComplemento();
-			empresaArr[14] = tbEndereco.getBairro();
-			empresaArr[15] = tbEndereco.getCidade();
-			empresaArr[16] = tbEndereco.getUf();
+			String[] empresaArr = new String[27];
+			empresaArr[0] = tbodEmpresa.getCnpj();
+			empresaArr[1] = tbodEmpresa.getIncEstadual();
+			empresaArr[2] = tbodEmpresa.getRamoAtividade();
+			empresaArr[3] = tbodEmpresa.getRazaoSocial();
+			empresaArr[4] = tbodEmpresa.getNomeFantasia();
+			empresaArr[5] = tbodEmpresa.getRepresentanteLegal();
+			empresaArr[6] = String.valueOf(tbodEmpresa.getContatoEmpresa());
+			empresaArr[7] = tbodEmpresa.getTelefone();
+			empresaArr[8] = tbodEmpresa.getCelular();
+			empresaArr[9] = tbodEmpresa.getEmail();
+			TbodEndereco tbodEndereco = tbodEmpresa.getTbodEndereco();
+			empresaArr[10] = tbodEndereco.getCep();
+			empresaArr[11] = tbodEndereco.getLogradouro();
+			empresaArr[12] = tbodEndereco.getNumero();
+			empresaArr[13] = tbodEndereco.getComplemento();
+			empresaArr[14] = tbodEndereco.getBairro();
+			empresaArr[15] = tbodEndereco.getCidade();
+			empresaArr[16] = tbodEndereco.getUf();
 			// empresa[17] = String.valueOf(emp.isMesmo_endereco_correspondencia());
 			empresaArr[17] = "";
 			empresaArr[18] = String.valueOf(empresaDto.getVencimentoFatura());
-			empresaArr[19] = tbEmpresa.getCnae();
+			empresaArr[19] = tbodEmpresa.getCnae();
 			empresaArr[20] = empresaDto.getCnpjCorretora();
 			empresaArr[21] = empresaDto.getNomeCorretora();
-			empresaArr[22] = (forcaVenda != null ? forcaVenda.getNome() : " "); 
-			empresaArr[23] = (forcaVenda != null ? forcaVenda.getEmail() : " "); 
-			empresaArr[24] = (forcaVenda != null ? forcaVenda.getCelular() : " ");
-		
+			empresaArr[22] = (tbodForcaVenda != null ? tbodForcaVenda.getNome() : " "); 
+			empresaArr[23] = (tbodForcaVenda != null ? tbodForcaVenda.getEmail() : " "); 
+			empresaArr[24] = (tbodForcaVenda != null ? tbodForcaVenda.getCelular() : " ");
+			empresaArr[25] = empresaDto.getDataVigencia(); //201806141829 - esert - (COR-314 acrescentar os dois novos campos no arquivo empresa XLS)
+			empresaArr[26] = empresaDto.getDataMovimentacao(); //201806141829 - esert - (COR-314 acrescentar os dois novos campos no arquivo empresa XLS)		
 
 			// Tratamento de CNPJ
 			String newcnpj = empresaArr[0].replaceAll("[.]", "").replaceAll("/", "");
@@ -87,6 +93,7 @@ public class XlsEmpresa {
 			String filename = pathEmpresa + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
 			log.info("filename:[" + filename + "]");
 
+			@SuppressWarnings("resource")
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Empresa");
 
@@ -116,9 +123,12 @@ public class XlsEmpresa {
 			rowhead.createCell(22).setCellValue("NOME FORCA");
 			rowhead.createCell(23).setCellValue("EMAIL FORCA");
 			rowhead.createCell(24).setCellValue("TELEFONE FORCA");
+			rowhead.createCell(25).setCellValue("DATA VIGENCIA"); //201806141829 - esert - (COR-314 acrescentar os dois novos campos no arquivo empresa XLS)
+			rowhead.createCell(26).setCellValue("DATA MOVIMENTACAO"); //201806141829 - esert - (COR-314 acrescentar os dois novos campos no arquivo empresa XLS)
 
 			HSSFRow row = sheet.createRow((short) 1);
-			for (int i = 0; i < 25; i++) {
+//			for (int i = 0; i < 27; i++) {
+			for (int i = 0; i < rowhead.getPhysicalNumberOfCells(); i++) { //201806141855 - esert - teste com rowhead.getPhysicalNumberOfCells()
 				row.createCell(i).setCellValue(empresaArr[i]);
 			}
 
@@ -132,6 +142,7 @@ public class XlsEmpresa {
 
 			//System.out.println("Sucesso!");
 			log.info("GerarEmpresaXLS(); fim");
+			
 
 		} catch (Exception e) {
 			//System.out.println("Fracasso!");

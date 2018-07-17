@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
 import br.com.odontoprev.portal.corretor.dto.Plano;
@@ -15,6 +16,7 @@ import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.service.PlanoService;
 
 @Service
+@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 public class PlanoServiceImpl implements PlanoService {
 	
 	private static final Log log = LogFactory.getLog(PlanoServiceImpl.class);
@@ -35,6 +37,7 @@ public class PlanoServiceImpl implements PlanoService {
 	}
 
 	@Override
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	public List<Plano> findPlanosByEmpresa(long cdEmpresa) {
 		
 		log.info("[PlanoServiceImpl::findPlanosByEmpresa]");

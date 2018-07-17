@@ -51,7 +51,16 @@ public class TbodVenda implements Serializable {
 	
 	@Column(name = "PROPOSTA_DCMS")
 	private String propostaDcms;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DT_VIGENCIA")
+	private Date dtVigencia; //201806141529 - esert - [COR-301 alter table TBOD_VENDA]  
 
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DT_MOVIMENTACAO")
+	private Date dtMovimentacao; //201806141529 - esert - [COR-301 alter table TBOD_VENDA]
+	
+	
 	// bi-directional many-to-one association to TbodEmpresa
 	@ManyToOne
 	@JoinColumn(name = "CD_EMPRESA")
@@ -272,5 +281,51 @@ public class TbodVenda implements Serializable {
 	public void setTbodResponsavelContratual(TbodResponsavelContratual tbodResponsavelContratual) {
 		this.tbodResponsavelContratual = tbodResponsavelContratual;
 	}
+
+	public Date getDtVigencia() {
+		return dtVigencia;
+	}
+
+	public void setDtVigencia(Date dtVigencia) {
+		this.dtVigencia = dtVigencia;
+	}
+
+	public Date getDtMovimentacao() {
+		return dtMovimentacao;
+	}
+
+	public void setDtMovimentacao(Date dtMovimentacao) {
+		this.dtMovimentacao = dtMovimentacao;
+	}
+
+	//201806141628 - esert
+	@Override
+	public String toString() {
+		return "TbodVenda [" 
+				+ "cdVenda=" + cdVenda 
+				+ ", dtVenda=" + dtVenda 
+				+ ", faturaVencimento=" + faturaVencimento
+				+ ", tipoConta=" + tipoConta 
+				+ ", banco=" + banco 
+				+ ", agencia=" + agencia 
+				+ ", agenciaDv=" + agenciaDv
+				+ ", conta=" + conta 
+				+ ", contaDv=" + contaDv 
+				+ ", tipoPagamento=" + tipoPagamento 
+				+ ", propostaDcms=" + propostaDcms 
+				+ ", dtVigencia=" + dtVigencia 
+				+ ", dtMovimentacao=" + dtMovimentacao 
+				+ ", tbodEmpresa=" + tbodEmpresa 
+				+ ", tbodForcaVenda=" + tbodForcaVenda 
+				+ ", tbodPlano=" + tbodPlano 
+				+ ", tbodStatusVenda="	+ tbodStatusVenda 
+				+ ", tbodVendaVida=" + tbodVendaVida 
+				+ ", tbodVendaVidas=" + tbodVendaVidas
+				+ ", tbodTokenAceites=" + tbodTokenAceites 
+				+ ", tbodResponsavelContratual=" + tbodResponsavelContratual
+				+ "]";
+	}
+	
+	
 
 }

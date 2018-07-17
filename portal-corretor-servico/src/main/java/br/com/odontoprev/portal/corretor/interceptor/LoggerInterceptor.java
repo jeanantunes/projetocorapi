@@ -1,18 +1,14 @@
 package br.com.odontoprev.portal.corretor.interceptor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.auth.AuthenticationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -67,8 +63,13 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			ex.printStackTrace();
 		}
 
-		log.info("[afterCompletion]; request:[" + request + "]");
+		log.info("[afterCompletion]; request.getContextPath():[" + request.getContextPath() + "]"); //201806191843 - esert
+		log.info("[afterCompletion]; request.getContentLength():[" + request.getContentLength() + "]"); //201806191829 - esert
+		log.info("[afterCompletion]; response.getStatus():[" + response.getStatus() + "]"); //201806191829 - esert
 		log.info("[afterCompletion]; exception:[" + ex + "]");
+		if(ex!=null) { //201806191829 - esert
+			log.info("[afterCompletion]; exception.getMessage():[" + ex.getMessage() + "]"); //201806191829 - esert
+		}
 		//201806061147 - esert - desativado
 		//log.info("[afterCompletion]; getBody:[" + getBody(request) + "]"); // 201806051824 - esert
 		//log.info("[afterCompletion]; getRequestBody:[" + getRequestBody(request) + "]"); // 201806051853 - esert
@@ -115,64 +116,103 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 
 	// 201806051819 - esert - pega o bode
 	// h t t p s : // jaketrent .com /post /http-request-body-spring/
-	private String getBody(HttpServletRequest req) {
-		String body = "";
-		if (req.getMethod().equals("POST")) {
-			StringBuilder sb = new StringBuilder();
-			BufferedReader bufferedReader = null;
+//	private String getBody(HttpServletRequest req) {
+//		String body = "";
+//		if (req.getMethod().equals("POST")) {
+//			StringBuilder sb = new StringBuilder();
+//			BufferedReader bufferedReader = null;
+//
+//			try {
+//				bufferedReader = req.getReader();
+//				char[] charBuffer = new char[128];
+//				int bytesRead;
+//				while ((bytesRead = bufferedReader.read(charBuffer)) != -1) {
+//					sb.append(charBuffer, 0, bytesRead);
+//				}
+//			} catch (IOException ex) {
+//				// swallow silently -- can't get body, won't
+//			} finally {
+//				if (bufferedReader != null) {
+//					try {
+//						bufferedReader.close();
+//					} catch (IOException ex) {
+//						// swallow silently -- can't get body, won't
+//					}
+//				}
+//			}
+//			body = sb.toString();
+//		}
+//		return body;
+//	}
 
-			try {
-				bufferedReader = req.getReader();
-				char[] charBuffer = new char[128];
-				int bytesRead;
-				while ((bytesRead = bufferedReader.read(charBuffer)) != -1) {
-					sb.append(charBuffer, 0, bytesRead);
-				}
-			} catch (IOException ex) {
-				// swallow silently -- can't get body, won't
-			} finally {
-				if (bufferedReader != null) {
-					try {
-						bufferedReader.close();
-					} catch (IOException ex) {
-						// swallow silently -- can't get body, won't
-					}
-				}
-			}
-			body = sb.toString();
-		}
-		return body;
+//	private String getRequestBody(final HttpServletRequest request) throws AuthenticationException {
+//
+//		HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(request);
+//		StringBuilder stringBuilder = new StringBuilder();
+//		BufferedReader bufferedReader = null;
+//		try {
+//			InputStream inputStream = requestWrapper.getInputStream();
+//			if (inputStream != null) {
+//				bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//				char[] charBuffer = new char[128];
+//				int bytesRead = -1;
+//				while ((bytesRead = bufferedReader.read(charBuffer)) != -1) {
+//					stringBuilder.append(charBuffer, 0, bytesRead);
+//				}
+//			}
+//		} catch (IOException ex) {
+//			log.error("[LoggerInterceptor.getRequestBody(HttpServletRequest)] Error reading the request payload", ex);
+//			throw new AuthenticationException("[LoggerInterceptor.getRequestBody(HttpServletRequest)] Error reading the request payload", ex);
+//		} finally {
+//			if (bufferedReader != null) {
+//				try {
+//					bufferedReader.close();
+//				} catch (IOException iox) {
+//					// ignore
+//				}
+//			}
+//		}
+//
+//		return stringBuilder.toString();
+//	}
+
+	//h t t p s :// gist .github .com /int128/e47217bebdb4c402b2ffa7cc199307ba
+	//201806121747 - esert - inc Header + Parameter
+    public static String getHeaders(HttpServletRequest request) {
+		log.info("[getHeaders(HttpServletRequest)] ini");
+    	StringBuffer stringBufferRet = new StringBuffer();
+//        log.info("request.getMethod():["+ request.getMethod() +"]");
+//        log.info("request.getRequestURI():["+ request.getRequestURI() +"]");            	
+//        log.info("request.getQueryString():["+ request.getQueryString() +"]");            	
+        Collections.list(request.getHeaderNames()).forEach(headerName ->
+            Collections.list(request.getHeaders(headerName)).forEach(headerValue -> {
+                	String headerNameValue = "[" + headerName + "]:[" + headerValue + "]";
+            		log.info("[logRequestHeader] " + headerNameValue);
+            		if(stringBufferRet.length()>0) {
+                		stringBufferRet.append(",");
+            		}
+                	stringBufferRet.append(headerNameValue);
+            	}
+            )
+        );
+		log.info("[getHeaders(HttpServletRequest)] fim");
+        return stringBufferRet.toString();
+    }
+
+	public static String getHeaders(HttpHeaders headers) {
+		log.info("[getHeaders(HttpHeaders)] ini");
+		StringBuffer stringBufferRet = new StringBuffer();
+		headers.forEach((headerName, hValue) ->
+			headers.get(headerName).forEach(headerValue -> {
+				String headerNameValue = "[" + headerName + "]:[" + headerValue + "]";
+				log.info("[getHeaders(HttpHeaders)]->" + headerNameValue);
+				if(stringBufferRet.length()>0) {
+					stringBufferRet.append(",");
+		  		}
+		      	stringBufferRet.append(headerNameValue);
+		  	})
+		);
+		log.info("[getHeaders(HttpHeaders)] fim");
+		return stringBufferRet.toString();
 	}
-
-	private String getRequestBody(final HttpServletRequest request) throws AuthenticationException {
-
-		HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper(request);
-		StringBuilder stringBuilder = new StringBuilder();
-		BufferedReader bufferedReader = null;
-		try {
-			InputStream inputStream = requestWrapper.getInputStream();
-			if (inputStream != null) {
-				bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-				char[] charBuffer = new char[128];
-				int bytesRead = -1;
-				while ((bytesRead = bufferedReader.read(charBuffer)) != -1) {
-					stringBuilder.append(charBuffer, 0, bytesRead);
-				}
-			}
-		} catch (IOException ex) {
-			log.error("[LoggerInterceptor.getRequestBody(HttpServletRequest)] Error reading the request payload", ex);
-			throw new AuthenticationException("[LoggerInterceptor.getRequestBody(HttpServletRequest)] Error reading the request payload", ex);
-		} finally {
-			if (bufferedReader != null) {
-				try {
-					bufferedReader.close();
-				} catch (IOException iox) {
-					// ignore
-				}
-			}
-		}
-
-		return stringBuilder.toString();
-	}
-
 }

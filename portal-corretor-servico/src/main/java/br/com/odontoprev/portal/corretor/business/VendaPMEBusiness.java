@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,6 +21,7 @@ import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 
 @ManagedBean
 public class VendaPMEBusiness {
@@ -38,7 +40,7 @@ public class VendaPMEBusiness {
 	@Autowired
 	TokenAceiteService tokenAceiteService;
 	
-	@Transactional //201805242012 - inc 
+	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(VendaPME vendaPME) {
 
 		log.info("[salvarVendaPMEComEmpresasPlanosTitularesDependentes]");
@@ -70,8 +72,20 @@ public class VendaPMEBusiness {
 //					venda.setPlanos(planos);
 					
 					venda.setDataVenda(new Date());
-					venda.setCdStatusVenda(1L); //TODO Alterar para status aguardando aprovacao para ser atualizado posteriormente 05.03.18 as 15:36
+
+					//venda.setCdStatusVenda(1L); //TODO Alterar para status aguardando aprovacao para ser atualizado posteriormente 05.03.18 as 15:36
+					venda.setCdStatusVenda(Constantes.STATUS_VENDA_ENVIADO); //1 //201807051747 - esert - (COR-357 Serviço - Definição de Códigos/Status)
+					
 					venda.setFaturaVencimento(empresa.getVencimentoFatura());
+										
+					SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+					if(empresa.getDataVigencia()!=null && !empresa.getDataVigencia().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+						venda.setDataVigencia(sdf_ddMMyyyy.parse(empresa.getDataVigencia())); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+					}
+					if(empresa.getDataMovimentacao()!=null && !empresa.getDataMovimentacao().isEmpty()) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+						venda.setDataMovimentacao(sdf_ddMMyyyy.parse(empresa.getDataMovimentacao())); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
+					}
+
 					venda.setCdForcaVenda(vendaPME.getCdForcaVenda());
 					
 					for (Beneficiario titular : vendaPME.getTitulares()) {
@@ -112,6 +126,7 @@ public class VendaPMEBusiness {
 		return vendaResponse;
 	}
 
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	private void buscarDadosCorretoraParaArquivoEmpresa(Long cdForcaVenda, Empresa empresa) {
 		
 		//Busca dados da corretora para arquivo de empresa - jalves 090320181011

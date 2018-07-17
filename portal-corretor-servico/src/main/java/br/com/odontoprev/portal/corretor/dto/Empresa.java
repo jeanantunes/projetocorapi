@@ -25,6 +25,8 @@ public class Empresa implements Serializable  {
 	private String cnpjCorretora;
 	private String nomeCorretora;
 	private ContatoEmpresa contactEmpresa;
+	private String dataVigencia; //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+	private String dataMovimentacao; //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
 
 	public String getCnpj() {
 		return cnpj;
@@ -170,6 +172,22 @@ public class Empresa implements Serializable  {
 		this.contactEmpresa = contactEmpresa;
 	}
 
+	public String getDataVigencia() {
+		return dataVigencia;
+	}
+
+	public void setDataVigencia(String dataVigencia) {
+		this.dataVigencia = dataVigencia;
+	}
+
+	public String getDataMovimentacao() {
+		return dataMovimentacao;
+	}
+
+	public void setDataMovimentacao(String dataMovimentacao) {
+		this.dataMovimentacao = dataMovimentacao;
+	}
+
 	@Override
 	public String toString() {
 		return "Empresa [cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", incEstadual=" + incEstadual
@@ -178,7 +196,8 @@ public class Empresa implements Serializable  {
 				+ celular + ", email=" + email + ", vencimentoFatura=" + vencimentoFatura + ", cnae=" + cnae
 				+ ", dataVencimentoFatura=" + dataVencimentoFatura + ", enderecoEmpresa=" + enderecoEmpresa
 				+ ", planos=" + planos + ", cnpjCorretora=" + cnpjCorretora + ", nomeCorretora=" + nomeCorretora
-				+ ", contactEmpresa=" + contactEmpresa + "]";
+				+ ", contactEmpresa=" + contactEmpresa + ", dataVigencia=" + dataVigencia + ", dataMovimentacao="
+				+ dataMovimentacao + "]";
 	}
 
 	/*@Override

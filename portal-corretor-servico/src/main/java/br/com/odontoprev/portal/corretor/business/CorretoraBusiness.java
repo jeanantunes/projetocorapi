@@ -5,6 +5,7 @@ import javax.annotation.ManagedBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
@@ -19,6 +20,7 @@ public class CorretoraBusiness {
 	@Autowired
 	ForcaVendaDAO forcaVendaDao;
 	
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	public Corretora buscarCorretoraPorForcaVenda(Long cdForcaVenda) {
 		
 		log.info("[buscarCorretoraPorForcaVenda]");

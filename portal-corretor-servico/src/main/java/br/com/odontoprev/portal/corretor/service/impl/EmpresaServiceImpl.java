@@ -42,6 +42,8 @@ import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 import br.com.odontoprev.portal.corretor.service.PlanoService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
+import br.com.odontoprev.portal.corretor.service.VendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
@@ -51,10 +53,6 @@ import br.com.odontoprev.portal.corretor.util.XlsVidas;
 public class EmpresaServiceImpl implements EmpresaService {
 
 	private static final Log log = LogFactory.getLog(EmpresaServiceImpl.class);
-
-	private List<String> listaEmails = new ArrayList<>();
-
-	private String emailForcaVenda = "";
 
 	@Autowired
 	EmpresaDAO empresaDAO;
@@ -82,6 +80,12 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Autowired
 	PlanoService planoService;
+	
+	@Autowired
+	DataUtil dataUtil; //201806201702 - esert
+
+	@Autowired
+	VendaService vendaService; //201806291953 - esert - COR-358 Serviço - Alterar serviço /empresa-dcms para atualizar o campo CD_STATUS_VENDA da tabela TBOD_VENDA.
 
     @Value("${mensagem.empresa.atualizada.dcms}")
 	private String empresaAtualizadaDCMS; //201805181310 - esert - COR-160
@@ -133,6 +137,23 @@ public class EmpresaServiceImpl implements EmpresaService {
 				tbEmpresa.setEmpDcms(empresaDcms.getEmpDcms());
 				empresaDAO.save(tbEmpresa);
 				
+				//201806291953 - esert - COR-358 Serviço - Alterar serviço /empresa-dcms para atualizar o campo CD_STATUS_VENDA da tabela TBOD_VENDA.
+				List<TbodVenda> listTbodVenda = vendaDAO.findByTbodEmpresaCdEmpresa(tbEmpresa.getCdEmpresa());
+				if(listTbodVenda != null) {
+					if(listTbodVenda.size() > 0) {
+						TbodVenda tbodVenda = listTbodVenda.get(listTbodVenda.size()-1); //arbitrariamente pega a ULTIMA venda como sendo a mais recente
+						if(tbodVenda != null) {
+							vendaService.atualizarStatusVenda(tbodVenda.getCdVenda(), Constantes.STATUS_VENDA_APROVADO);
+						} else {
+							throw new Exception("[updateEmpresa] tbodVenda == null");
+						}
+					} else {
+						throw new Exception("[updateEmpresa] listTbodVenda.size() == 0");
+					}
+				} else {
+					throw new Exception("[updateEmpresa] listTbodVenda == null");
+				}
+				
 				List<TbodVida> vidas = beneficiarioBusiness.buscarVidasPorEmpresa(tbEmpresa.getCdEmpresa());
 				
 				if(vidas != null && !vidas.isEmpty()) {
@@ -144,7 +165,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				//201805101609 - esert - criar servico independente para Email Boas Vindas PME vide Fernando@ODPV em 20180510
 				//201805101941 - esert - excluido param cnpj
 				ResponseEntity<EmpresaDcms> res = this.sendMailBoasVindasPME(empresaDcms.getCdEmpresa());
-				//log.info("res:[" + res.toString() + "]");
+				log.info("res[sendMailBoasVindasPME(" + empresaDcms.getCdEmpresa() + ")]:[" + res.toString() + "]"); //201806201636 - esert
 			}
 			else {
 				throw new Exception("CdEmpresa nao relacionado com CNPJ!");
@@ -160,6 +181,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	//201805091745 - esert
+	@SuppressWarnings("unused") //201806201634 - linha 178 da warning de (dead code) mas tbodEmpresa sera null se findOne() nao achar cdEmpresa
 	//201805101941 - esert - excluido param cnpj
 	//201805101947 - esert - service para reenvio de emails vide Fernando@ODPV
 	//201805221057 - esert - refactor sendEmailBoasVindasPME para sendMailBoasVindasPME mantendo padrao
@@ -168,6 +190,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 		Long longDiaVencimentoFatura = 0L;
 		Date dateDataVenda = null;
 		
+		List<String> listaEmails = new ArrayList<>(); //201806211921 - esert - correcao bug email varios destinatarios - alterado escopo da variavel de (classe) para (metodo)
+		String emailForcaVenda = ""; //201806211921 - esert - correcao bug email varios destinatarios - alterado escopo da variavel de (classe) para (metodo)
+
 		try {
 			log.info("cdEmpresa:[" + cdEmpresa + "]");
 			
@@ -222,7 +247,10 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 			//201805101739 - esert - funcao isEffectiveDate copíada do App na versao abaixo porem usa DataVenda ao inves de CurrentDate vide Camila@ODPV
 			//http://git.odontoprev.com.br/esteira-digital/est-portalcorretor-app/blob/sprint6/VendasOdontoPrev/app/src/main/assets/app/pmeFaturaController.js
-			String strDataVigencia = DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda);
+			//String strDataVigencia = DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda); //201806141632 - esert - alterar retorno de String para Date para deixar formatacao para o uso final
+			SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141640 - esert - formato data para email
+			String strDataVigencia = sdf_ddMMyyyy.format(dataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda)); //201806141640 - esert - formatar data para email //201806201630 - esert - DataUtil dinamico 
+
 			log.info("strDataVigencia:[" + strDataVigencia + "]");				
 
 			// TESTE VICTOR
@@ -235,13 +263,27 @@ public class EmpresaServiceImpl implements EmpresaService {
 				PropertiesUtils.getProperty(PropertiesUtils.LINK_PORTAL_PME_URL), //linkPortal, 
 				strDataVigencia, //dataVigencia, 
 				strDiaVencimentoFatura //diaVencimentoFatura
-				);
+			);
+			
+			String stringListaEmails = ""; //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
+			for (String email : listaEmails) {
+				if(stringListaEmails.length()>0) {
+					stringListaEmails += ",";					
+				}
+				stringListaEmails += email; //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
+			}
+			int stringListaEmails_length = stringListaEmails.length();
+			if(stringListaEmails_length > 500) {
+				stringListaEmails_length = 500; //201806212037 - esert - novo limite tamanho campo EMAIL varchar 500 vide CORRET.TBOD_LOG_EMAIL_BVPME.MOD.EMAIL500.201806212029.sql
+			}
+			stringListaEmails = stringListaEmails.substring(0, stringListaEmails_length);
 			
 			//201805221245 - esert - COR-225 - Serviço - LOG Envio e-mail de Boas Vindas PME
 			TbodLogEmailBoasVindasPME tbodLogEmailBoasVindasPME = new TbodLogEmailBoasVindasPME();
 			tbodLogEmailBoasVindasPME.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 			tbodLogEmailBoasVindasPME.setRazaoSocial(tbodEmpresa.getRazaoSocial());
-			tbodLogEmailBoasVindasPME.setEmail(tbodEmpresa.getEmail());
+			//tbodLogEmailBoasVindasPME.setEmail(tbodEmpresa.getEmail());
+			tbodLogEmailBoasVindasPME.setEmail(stringListaEmails); //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
 			tbodLogEmailBoasVindasPME.setDtEnvio(new Date());
 			logEmailBoasVindasPMEDAO.save(tbodLogEmailBoasVindasPME);
 			
@@ -249,7 +291,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 			empresaDcms.setCdEmpresa(tbodEmpresa.getCdEmpresa());
 			empresaDcms.setEmpDcms(tbodEmpresa.getEmpDcms());
 			empresaDcms.setCnpj(tbodEmpresa.getCnpj()); //201805221106 - esert - COR-160 - refactor - semm qg no cnpj
-			empresaDcms.setEmail(tbodEmpresa.getEmail()); //201805221106 - esert - COR-160 - refactor - inc campo especifico para email
+			//empresaDcms.setEmail(tbodEmpresa.getEmail()); //201805221106 - esert - COR-160 - refactor - inc campo especifico para email
+			empresaDcms.setEmail(stringListaEmails); //201806201303 - esert - concatena lista de emails de destino MailBoasVindasPME
 			return ResponseEntity.ok(empresaDcms);
 			
 		} catch (Exception e) {
@@ -558,21 +601,5 @@ public class EmpresaServiceImpl implements EmpresaService {
 		log.info("updateEmpresaEmailAceite - fim");
 
 		return new EmpresaResponse(HttpStatus.OK.value(), empresaAtualizadaAceite);  //201805181310 - esert - COR-171
-	}
-
-	public List<String> getListaEmails() {
-		return listaEmails;
-	}
-
-	public void setListaEmails(List<String> listaEmails) {
-		this.listaEmails = listaEmails;
-	}
-
-	public String getEmailForcaVenda() {
-		return emailForcaVenda;
-	}
-
-	public void setEmailForcaVenda(String emailForcaVenda) {
-		this.emailForcaVenda = emailForcaVenda;
 	}
 }

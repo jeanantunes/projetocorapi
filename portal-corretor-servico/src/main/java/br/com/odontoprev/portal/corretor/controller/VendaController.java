@@ -3,6 +3,7 @@ package br.com.odontoprev.portal.corretor.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,11 +28,12 @@ public class VendaController {
 	ConvertObjectService convertObjectToJson;
 	
 	@RequestMapping(value = "/vendapf", method = { RequestMethod.POST })
-	public VendaResponse addVendaPF(@RequestBody Venda venda, @RequestHeader(value="User-Agent") String userAgent) {
+	@Transactional(rollbackFor= {Exception.class}) //201806291652 - esert/rmarques - COR-358 rollback pf
+	public VendaResponse addVendaPF(@RequestBody Venda venda, @RequestHeader(value="User-Agent") String userAgent) throws Exception {
 		
 		log.info(venda);
 		
-		convertObjectToJson.addJsonInTable(venda, null, userAgent);
+		//convertObjectToJson.addJsonInTable(venda, null, userAgent); //201806282101 - esert - desligamento total do log json antigo
 		
 		return vendaPFService.addVenda(venda);
 	}
@@ -41,7 +43,7 @@ public class VendaController {
 		
 		log.info(vendaPME);
 		
-		convertObjectToJson.addJsonInTable(null, vendaPME, userAgent);
+		//convertObjectToJson.addJsonInTable(null, vendaPME, userAgent); //201806282101 - esert - desligamento total do log json antigo
 		
 		return vendaPFService.addVendaPME(vendaPME);
 	}

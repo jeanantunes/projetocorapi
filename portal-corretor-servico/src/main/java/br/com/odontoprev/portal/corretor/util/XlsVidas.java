@@ -38,6 +38,7 @@ public class XlsVidas {
 
 	public void gerarVidasXLS(List<TbodVida> vidas, TbodEmpresa tbEmpresa) throws Exception {
 
+		log.info("gerarVidasXLS; ini");
 		String dataStr = "00/00/0000";
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -48,6 +49,7 @@ public class XlsVidas {
 
 			String filename = pathVidas + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
 //			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + tbEmpresa.getEmpDcms() + "_" + Data() + ".xls";
+			@SuppressWarnings("resource")
 			HSSFWorkbook workbook = new HSSFWorkbook();
 			HSSFSheet sheet = workbook.createSheet("Vidas");
 
@@ -187,16 +189,17 @@ public class XlsVidas {
 			fileOut.close();
 			// workbook.close();
 
-			String msgOk = "GerarEmpresaXLS; OK; filename:["+ filename +"]";
+			String msgOk = "gerarVidasXLS; OK; filename:["+ filename +"]";
 			log.info(msgOk);
 
 			//System.out.println("Sucesso!");
 
 		} catch (Exception e) {
 			//System.out.println("Fracasso!");
-			String msgErro = "GerarEmpresaXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
+			String msgErro = "gerarVidasXLS; Erro; Message:["+ e.getMessage() +"]; Cause:["+ e.getCause() +"]";
 			throw new Exception(msgErro, e);
 		}
-		log.info("Escreveu Planilha Vidas");
+		log.info("gerarVidasXLS Escreveu Planilha Vidas");
+		log.info("gerarVidasXLS; fim");
 	}
 }

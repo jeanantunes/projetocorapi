@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.business.SendMailAceite;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
@@ -27,6 +28,7 @@ import br.com.odontoprev.portal.corretor.service.VendaService;
 import br.com.odontoprev.portal.corretor.util.GerarTokenUtils;
 
 @Service
+@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 public class TokenAceiteServiceImpl implements TokenAceiteService {	
 	
 	private static final Log log = LogFactory.getLog(ForcaVendaServiceImpl.class);
@@ -39,11 +41,15 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 	
 	@Autowired
 	PlanoService planoService;
-	
+
+	@Autowired
+	SendMailAceite sendMailAceite; //201806282008 - esert - COR-348
+
 	@Value("${EXPIRACAO_TOKEN_ACEITE_EMAIL}")
 	private String EXPIRACAO_TOKEN_ACEITE_EMAIL;
 		
 	@Override
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	public TokenAceiteResponse addTokenAceite(TokenAceite tokenAceite) {
 		
 		//TODO: validaçoes
@@ -90,7 +96,6 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 										
 			emailAceite.setPlanos(planos);
 			
-			SendMailAceite sendMailAceite = new SendMailAceite();
 			sendMailAceite.sendMail(emailAceite);
 			
 		} catch (Exception e) {
@@ -129,6 +134,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 	}
 
 	@Override
+	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	public String gerarToken(String chave) {
 		return GerarTokenUtils.gerarHashToken(chave);
 	}
