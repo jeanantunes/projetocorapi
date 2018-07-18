@@ -41,7 +41,8 @@ public class TokenEsqueciSenhaServiceImpl implements TokenEsqueciSenhaService{
 	@Override
 	public TokenEsqueciSenhaResponse addTokenEsqueciSenha(TokenEsqueciSenha tokenEsqueciSenha) throws Exception {
 
-		log.info("[addTokenEsqueciSenha - validacao cpf existe]");
+		log.info("[addTokenEsqueciSenha - validacao cpf/cnpj existe]");
+		log.info("tokenEsqueciSenha.getCpfCnpj():[" + tokenEsqueciSenha.getCpfCnpj() + "]");
 		
 		List<TbodForcaVenda> tbForcaVendas = new ArrayList<TbodForcaVenda>();
 		TbodCorretora tbodCorretora = null; //201807171752 - esert - COR-317
@@ -50,38 +51,30 @@ public class TokenEsqueciSenhaServiceImpl implements TokenEsqueciSenhaService{
 		if(tokenEsqueciSenha.getCpfCnpj() == null) {
 			throw new Exception("Cpf ou Cnpj esta nulo.");
 		} else if(tokenEsqueciSenha.getCpfCnpj().trim().isEmpty()) {
-			throw new Exception("Cpf ou Cnpj esta vazio.");			
-		}
-		
-		if(tokenEsqueciSenha.getCpfCnpj().length() == Constantes.TAMANHO_CPF) {
+			throw new Exception("Cpf ou Cnpj esta vazio.");
+		} else if(tokenEsqueciSenha.getCpfCnpj().length() == Constantes.TAMANHO_CPF) {
 			log.info("[addTokenEsqueciSenha - detectado cpf]");
-			
 			/***O retorno eh uma lista, mas nao deve existir mais de uma forca de venda na base com o mesmo cpf***/
 			tbForcaVendas = forcaVendaDAO.findByCpf(tokenEsqueciSenha.getCpfCnpj());
-	
 			if (tbForcaVendas.isEmpty()) {
 				throw new Exception("ForcaVenda nao encontrada!");
 			} else if (tbForcaVendas.size() > 1) {
 				throw new Exception("CPF duplicado!");
 			}  else if (tbForcaVendas.get(0).getAtivo().equals(Constantes.INATIVO)) {
-				return new TokenEsqueciSenhaResponse(204, "Usuario inativo");			 
+				return new TokenEsqueciSenhaResponse(204, "Usuario Forca Venda inativo");			 
 			}
-			
 			emailDestinatarioToken = tbForcaVendas.get(0).getEmail();
 
 		} else if(tokenEsqueciSenha.getCpfCnpj().length() == Constantes.TAMANHO_CNPJ) { //201807171752 - esert - COR-317
 			log.info("[addTokenEsqueciSenha - detectado cnpj]");
-			
 			tbodCorretora = corretoraDAO.findByCnpj(tokenEsqueciSenha.getCpfCnpj()); //201807171752 - esert - COR-317
-	
 			if (tbodCorretora == null) {
 				throw new Exception("Corretora nao encontrada!");
 //			} else if (tbForcaVendas.size() > 1) {
 //				throw new Exception("CPF duplicado!");
 			}  else if (tbodCorretora.getAtivo().equals(Constantes.INATIVO)) {
-				return new TokenEsqueciSenhaResponse(204, "Usuario/Corretora inativo");			 
+				return new TokenEsqueciSenhaResponse(204, "Usuario Corretora inativo");			 
 			}
-			
 			emailDestinatarioToken = tbodCorretora.getEmail();
 
 		} else {
