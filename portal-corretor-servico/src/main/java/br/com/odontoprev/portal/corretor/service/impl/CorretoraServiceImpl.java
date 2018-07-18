@@ -31,6 +31,7 @@ import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
 import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.service.CorretoraService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 
 @Service
@@ -144,11 +145,11 @@ public class CorretoraServiceImpl implements CorretoraService {
 	}
 
 	@Override
-	public CorretoraResponse updateCorretora(Corretora corretora) {
+	public CorretoraResponse updateCorretoraLogin(Corretora corretora) { //201807181255 - esert - COR-319
 		
-		log.info("[updateCorretora]");
+		log.info("[updateCorretoraLogin - ini]");
 		
-		TbodCorretora tbCorretora;
+		TbodCorretora tbodCorretora;
 		
 		try {
 			
@@ -156,63 +157,70 @@ public class CorretoraServiceImpl implements CorretoraService {
 				throw new Exception("CdCorretora nao informado. Corretora nao atualizada!");
 			}
 			
-			tbCorretora = corretoraDao.findOne(corretora.getCdCorretora());
+			tbodCorretora = corretoraDao.findOne(corretora.getCdCorretora());
 			
-			if(tbCorretora != null) {
+			if(tbodCorretora != null) {
 				
-				tbCorretora.setTelefone(corretora.getTelefone());
-				tbCorretora.setCelular(corretora.getCelular());
-				tbCorretora.setEmail(corretora.getEmail());
+				tbodCorretora.setTelefone(corretora.getTelefone());
+				tbodCorretora.setCelular(corretora.getCelular());
+				tbodCorretora.setEmail(corretora.getEmail());
 				
 				//Update Login
-				if (corretora.getLogin() != null && corretora.getLogin().getSenha() != null && corretora.getLogin().getSenha() != "") {
+				///if (corretora.getLogin() != null && corretora.getLogin().getSenha() != null && corretora.getLogin().getSenha() != "") {
+				if (corretora.getSenha() != null && !corretora.getSenha().isEmpty()) {
 					
 					TbodLogin tbLogin = null;
 	
-					if (tbCorretora.getTbodLogin() == null) {
-						log.info("updateCorretora - criando novo TbodLogin para tbCorretora.getTbodLogin():["
-								+ tbCorretora.getCdCorretora() + "], getCpf():[" + tbCorretora.getCdCorretora()
+					if (tbodCorretora.getTbodLogin() == null) {
+						log.info("updateCorretoraLogin - criando novo TbodLogin para tbCorretora.getTbodLogin():["
+								+ tbodCorretora.getCdCorretora() + "], getCpf():[" + tbodCorretora.getCdCorretora()
 								+ "] pq TbodLogin() == null.");
 						tbLogin = new TbodLogin();
 					} else {
-						if (tbCorretora.getTbodLogin().getCdLogin() == null) {
-							log.info(" updateCorretora - criando novo TbodLogin para tbCorretora.getTbodLogin():["
-									+ tbCorretora.getCdCorretora() + "], getCnpj():[" + tbCorretora.getCnpj()
+						if (tbodCorretora.getTbodLogin().getCdLogin() == null) {
+							log.info(" updateCorretoraLogin - criando novo TbodLogin para tbCorretora.getTbodLogin():["
+									+ tbodCorretora.getCdCorretora() + "], getCnpj():[" + tbodCorretora.getCnpj()
 									+ "] pq TbodLogin().getCdLogin() == null.");
 							tbLogin = new TbodLogin();
 						} else {
-							tbLogin = loginDao.findOne(tbCorretora.getTbodLogin().getCdLogin());
+							tbLogin = loginDao.findOne(tbodCorretora.getTbodLogin().getCdLogin());
 							if (tbLogin == null) {
-								log.info("updateCorretora - criando novo TbodLogin para tbCorretora.getCdCorretora():["
-										+ tbCorretora.getCdCorretora() + "], getCnpj():[" + tbCorretora.getCnpj()
-										+ "] pq TbodLogin().getCdLogin():[" + tbCorretora.getTbodLogin().getCdLogin()
+								log.info("updateCorretoraLogin - criando novo TbodLogin para tbCorretora.getCdCorretora():["
+										+ tbodCorretora.getCdCorretora() + "], getCnpj():[" + tbodCorretora.getCnpj()
+										+ "] pq TbodLogin().getCdLogin():[" + tbodCorretora.getTbodLogin().getCdLogin()
 										+ "] NAO ENCONTRADO.");
 								tbLogin = new TbodLogin();
 							}
 						}
 					}
 	
-					tbLogin.setCdTipoLogin((long) 1); // TODO
-					tbLogin.setSenha(corretora.getLogin().getSenha());
+					log.info("[updateCorretoraLogin - loginDao.save()]");
+					tbLogin.setCdTipoLogin(Constantes.TIPO_LOGIN_UM); // TODO
+					//tbLogin.setSenha(corretora.getLogin().getSenha());
+					tbLogin.setSenha(corretora.getSenha()); //208107181400 - esert - COR-319
 					tbLogin = loginDao.save(tbLogin);
-					tbCorretora.setTbodLogin(tbLogin);
+					tbodCorretora.setTbodLogin(tbLogin);
 				}
 				
 				//Update Dados Bancarios - Confirmar com Fernando os campos 
 //				if (corretora.getConta() != null && corretora.getConta().get != null && corretora.getLogin().getSenha() != "") {
 //				}
 	
-				tbCorretora = corretoraDao.save(tbCorretora);
+				log.info("[updateCorretoraLogin - corretoraDao.save()]");
+				tbodCorretora = corretoraDao.save(tbodCorretora);
 				
-				return new CorretoraResponse(tbCorretora.getCdCorretora(),
-						"ForcaVenda atualizada. CPF [" + tbCorretora.getCnpj() + "]");
+				log.info("[updateCorretoraLogin - fim]");
+				return new CorretoraResponse(tbodCorretora.getCdCorretora(),
+						"Corretora atualizada. CNPJ [" + tbodCorretora.getCnpj() + "]");
 			}
 			else {
+				log.info("[updateCorretoraLogin - fim]");
 				return new CorretoraResponse(corretora.getCdCorretora(),
 						"Corretora não encontrada. cdCorretora [" + corretora.getCdCorretora() + "]");
 			}
 			
 		} catch (Exception e) {
+			log.info("[updateCorretoraLogin - erro]");
 			log.error("updateCorretora :: Detalhe: [" + e.getMessage() + "]");
 			return new CorretoraResponse(0, "updateCorretora; Erro:[" + e.getMessage() + "]");
 		}

@@ -29,4 +29,6 @@ public final class Constantes {
 	
 	public static final int TAMANHO_CPF = 11; //123.456.789-01=11 //201807171752 - esert - COR-317
 	public static final int TAMANHO_CNPJ = 14; //12.345.678/9012-14=14 //201807171752 - esert - COR-317
+	
+	public static final Long TIPO_LOGIN_UM = 1L; //201807181255 - esert - COR-319
 }

@@ -45,8 +45,12 @@ public class Conta implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Conta [cdBancoConta=" + cdBancoConta + ", codigoAgencia=" + codigoAgencia + ", codigoBanco="
-				+ codigoBanco + ", numeroConta=" + numeroConta + "]";
+		return "Conta [" 
+				+ "cdBancoConta=" + cdBancoConta 
+				+ ", codigoAgencia=" + codigoAgencia 
+				+ ", codigoBanco=" + codigoBanco 
+				+ ", numeroConta=" + numeroConta 
+				+ "]";
 	}
 
 }

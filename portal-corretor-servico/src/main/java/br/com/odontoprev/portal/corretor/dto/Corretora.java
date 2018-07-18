@@ -20,6 +20,9 @@ public class Corretora implements Serializable {
 	private Endereco enderecoCorretora;
 	private Conta conta;
 	private Login login;
+	
+	private String senha; //201807181317 - esert - COR-319 - incluida senha para json do put de troca de senha
+	
 	private List<Representante> representantes;
 
 	public long getCdCorretora() {
@@ -126,6 +129,14 @@ public class Corretora implements Serializable {
 		this.login = login;
 	}
 
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
 	public List<Representante> getRepresentantes() {
 		return representantes;
 	}
@@ -136,11 +147,23 @@ public class Corretora implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Corretora [cdCorretora=" + cdCorretora + ", cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", cnae="
-				+ cnae + ", telefone=" + telefone + ", celular=" + celular + ", email=" + email + ", statusCnpj="
-				+ statusCnpj + ", simplesNacional=" + simplesNacional + ", dataAbertura=" + dataAbertura
-				+ ", enderecoCorretora=" + enderecoCorretora + ", conta=" + conta + ", login=" + login
-				+ ", representantes=" + representantes + "]";
+		return "Corretora [" 
+				+ "cdCorretora=" + cdCorretora 
+				+ ", cnpj=" + cnpj 
+				+ ", razaoSocial=" + razaoSocial 
+				+ ", cnae=" + cnae 
+				+ ", telefone=" + telefone 
+				+ ", celular=" + celular 
+				+ ", email=" + email 
+				+ ", statusCnpj=" + statusCnpj 
+				+ ", simplesNacional=" + simplesNacional 
+				+ ", dataAbertura=" + dataAbertura
+				+ ", enderecoCorretora=" + (enderecoCorretora!=null?enderecoCorretora.toString():"NuLL") 
+				+ ", conta=" + (conta!=null?conta.toString():"NuLL") 
+				+ ", login=" + (login!=null?login.toString():"NuLL") 
+				+ ", senha=" + senha 
+				+ ", representantes=" + (representantes!=null?String.valueOf(representantes.size()):"NuLL") 
+				+ "]";
 	}
 
 }
