@@ -160,10 +160,11 @@ public class CorretoraServiceImpl implements CorretoraService {
 			tbodCorretora = corretoraDao.findOne(corretora.getCdCorretora());
 			
 			if(tbodCorretora != null) {
-				
-				tbodCorretora.setTelefone(corretora.getTelefone());
-				tbodCorretora.setCelular(corretora.getCelular());
-				tbodCorretora.setEmail(corretora.getEmail());
+
+//201807181551 - 2kill - desnecessario
+//				tbodCorretora.setTelefone(corretora.getTelefone());
+//				tbodCorretora.setCelular(corretora.getCelular());
+//				tbodCorretora.setEmail(corretora.getEmail());
 				
 				//Update Login
 				///if (corretora.getLogin() != null && corretora.getLogin().getSenha() != null && corretora.getLogin().getSenha() != "") {

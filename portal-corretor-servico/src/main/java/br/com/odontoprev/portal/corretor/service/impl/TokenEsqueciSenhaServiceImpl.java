@@ -41,7 +41,7 @@ public class TokenEsqueciSenhaServiceImpl implements TokenEsqueciSenhaService{
 	@Override
 	public TokenEsqueciSenhaResponse addTokenEsqueciSenha(TokenEsqueciSenha tokenEsqueciSenha) throws Exception {
 
-		log.info("[addTokenEsqueciSenha - validacao cpf/cnpj existe]");
+		log.info("[addTokenEsqueciSenha - ini]");
 		log.info("tokenEsqueciSenha.getCpfCnpj():[" + tokenEsqueciSenha.getCpfCnpj() + "]");
 		
 		List<TbodForcaVenda> tbForcaVendas = new ArrayList<TbodForcaVenda>();
@@ -110,7 +110,7 @@ public class TokenEsqueciSenhaServiceImpl implements TokenEsqueciSenhaService{
 		}
 				
 		log.info("[addTokenEsqueciSenha - fim]");
-		return new TokenEsqueciSenhaResponse(200, "Token de reset de senha gerado com sucesso para Cpf/Cnpj:[" + tokenEsqueciSenha.getCpfCnpj() + "]. Enviado para o e-mail:[" + emailDestinatarioToken + "]");
+		return new TokenEsqueciSenhaResponse(200, "Token de reset de senha gerado com sucesso para Cpf/Cnpj[" + tokenEsqueciSenha.getCpfCnpj() + "]. Enviado para o e-mail: " + emailDestinatarioToken + "");
 	}
 
 	@Override
