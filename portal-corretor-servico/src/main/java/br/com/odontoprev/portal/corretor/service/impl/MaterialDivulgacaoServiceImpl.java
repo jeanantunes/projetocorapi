@@ -198,12 +198,16 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 		if(materialDivulgacao.getCodigoCategoria()!=null) {
 			tbodMaterialDivulgacao.setCodigoCategoria(materialDivulgacao.getCodigoCategoria());
 		} else {
-			tbodMaterialDivulgacao.setCodigoCategoria(1L); //201807161605 - esert - cat 1 default			
+			if(tbodMaterialDivulgacao.getCodigoCategoria()==null) { //201807181220 - esert - cat 1 default
+				tbodMaterialDivulgacao.setCodigoCategoria(1L); //201807161605 - esert - cat 1 default
+			}
 		}
 		if(materialDivulgacao.getCodigoSubCategoria()!=null) {
 			tbodMaterialDivulgacao.setCodigoSubCategoria(materialDivulgacao.getCodigoSubCategoria());
 		} else {
-			tbodMaterialDivulgacao.setCodigoSubCategoria(1L); //201807161605 - esert - subcat 1 default 			
+			if(tbodMaterialDivulgacao.getCodigoSubCategoria()==null) { //201807181220 - esert - cat 1 default
+				tbodMaterialDivulgacao.setCodigoSubCategoria(1L); //201807161605 - esert - subcat 1 default
+			}
 		}
 		tbodMaterialDivulgacao.setNome(materialDivulgacao.getNome());
 		tbodMaterialDivulgacao.setDescricao(materialDivulgacao.getDescricao());
@@ -213,32 +217,56 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 			tbodMaterialDivulgacao.setAtivo(Constantes.ATIVO); //se nao existe define com ATIVO='S'
 		}
 		
-		File imagePath = new File(materialDivulgacao.getCaminhoCarga().concat(materialDivulgacao.getNome()));
-		byte[] imageInBytes = new byte[(int)imagePath.length()];
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream(imagePath);
-			fis.read(imageInBytes);
-			fis.close();
+		if(materialDivulgacao.getCaminhoCarga()!=null && !materialDivulgacao.getCaminhoCarga().isEmpty()) {
+			File imagePath = new File(materialDivulgacao.getCaminhoCarga().concat(materialDivulgacao.getNome()));
+			byte[] imageInBytes = new byte[(int)imagePath.length()];
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(imagePath);
+				fis.read(imageInBytes);
+				fis.close();
+				
+				if(isThumbnail) {
+					tbodMaterialDivulgacao.setThumbnail(imageInBytes);
+				}
+				
+				if(isArquivo) {
+					tbodMaterialDivulgacao.setArquivo(imageInBytes);
+				}
+				
+				tbodMaterialDivulgacao = materialDivulgacaoDAO.save(tbodMaterialDivulgacao);
+				
+				materialDivulgacao = adaptEntityToDto(tbodMaterialDivulgacao, false, false);
+	
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
 			
-			if(isThumbnail) {
-				tbodMaterialDivulgacao.setThumbnail(imageInBytes);
+				if(isThumbnail) {
+					byte[] imageInBytes = Base64.decodeBase64(materialDivulgacao.getThumbnail());
+					tbodMaterialDivulgacao.setThumbnail(imageInBytes);
+				}
+				
+				if(isArquivo) {
+					byte[] imageInBytes = Base64.decodeBase64(materialDivulgacao.getArquivo());
+					tbodMaterialDivulgacao.setArquivo(imageInBytes);
+				}
+				
+				tbodMaterialDivulgacao = materialDivulgacaoDAO.save(tbodMaterialDivulgacao);
+				
+				materialDivulgacao = adaptEntityToDto(tbodMaterialDivulgacao, false, false);
+	
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
-			if(isArquivo) {
-				tbodMaterialDivulgacao.setArquivo(imageInBytes);
-			}
-			
-			tbodMaterialDivulgacao = materialDivulgacaoDAO.save(tbodMaterialDivulgacao);
-			
-			materialDivulgacao = adaptEntityToDto(tbodMaterialDivulgacao, false, false);
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 		log.info("save - fim");	
