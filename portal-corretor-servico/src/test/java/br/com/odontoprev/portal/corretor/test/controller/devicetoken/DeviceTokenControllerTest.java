@@ -1,97 +1,106 @@
 package br.com.odontoprev.portal.corretor.test.controller.devicetoken;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.google.gson.Gson;
 
-import br.com.odontoprev.portal.corretor.controller.DeviceTokenController;
 import br.com.odontoprev.portal.corretor.dto.DeviceToken;
 import br.com.odontoprev.portal.corretor.service.DeviceTokenService;
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(DeviceTokenController.class)
-//@ComponentScan("br.com.odontoprev.portal.corretor.test.controller.devicetoken")
-@ContextConfiguration(classes = { MockitoServiceProvider.class })
+@ContextConfiguration(classes = { DeviceTokenControllerTestConfig.class })
+@WebAppConfiguration
 public class DeviceTokenControllerTest {
 	
-	   @Autowired
+	   
 	   private MockMvc mvc;
-
-	   @MockBean
-	   private DeviceTokenController deviceControllerMock;	   
+	   
+	   @Autowired
+	   private WebApplicationContext context;
+	   
+	   @Before
+	   public void setup() {
+			mvc = MockMvcBuilders
+					.webAppContextSetup(context)
+		
+					.build();
+		}
+	    
 	   
 	   @Autowired	
 	   private DeviceTokenService service;
 
 	   @Test
-	   public void testInclusaoRotaOK() throws Exception {
-	       DeviceToken deviceToken = new DeviceToken();
-	       Long codigoForcaVenda = 0L;
-	       	       
-	       given(deviceControllerMock.inserirDeviceToken(codigoForcaVenda, deviceToken)).willReturn(ResponseEntity.ok().build());
-
-	       mvc.perform(post("/devicetoken/forcavenda/0").content(new Gson().toJson(deviceToken))	               
-	               .contentType(APPLICATION_JSON))
-	               .andExpect(status().isOk());
-	   }
-	   
-	   @Test
-	   public void testInclusaoRotaBadRequest() throws Exception {
-	       DeviceToken deviceToken = new DeviceToken();
-	       Long codigoForcaVenda = 0L;
-	       	       
-	       given(deviceControllerMock.inserirDeviceToken(codigoForcaVenda, deviceToken)).willReturn(ResponseEntity.ok().build());
-
-	       mvc.perform(post("/devicetoken/forcavenda/0")	               
-	               .contentType(APPLICATION_JSON))
-	               .andExpect(status().isBadRequest());
-	   }
-	   
-	   
-	   @Test
-	   public void testInclusaoRotaNotFound() throws Exception {
-	       DeviceToken deviceToken = new DeviceToken();
-	       Long codigoForcaVenda = 0L;
-	       	       
-	       given(deviceControllerMock.inserirDeviceToken(codigoForcaVenda, deviceToken)).willReturn(ResponseEntity.ok().build());
-
-	       mvc.perform(post("/devicetoken/forcavenda2/0")	               
-	               .contentType(APPLICATION_JSON))
-	               .andExpect(status().isNotFound());
-	   }
-	   
-	   
-	  /* @Test
-	   public void testInclusaoRotaLogica() throws Exception {
-	       DeviceToken deviceToken = new DeviceToken();
-	       Long codigoForcaVenda = 0L;	       	       	    
-	       	       
-	       verify(service,times(1)).buscarPorTokenLogin(Mockito.any(), Mockito.any());
-	       given(service.buscarPorTokenLogin(deviceToken.getToken(), codigoForcaVenda)).willReturn(Arrays.asList(new DeviceToken()));
+	   public void testAtualizacaoDeviceToken() throws Exception {
+	       //Montando Request
+		   DeviceToken deviceToken = new DeviceToken();
+	       deviceToken.setToken("TOKEN");	       
+	       deviceToken.setModelo("MODELO");
+	       deviceToken.setSistemaOperacional("SO");
+	       deviceToken.setDataInclusao(null);
+	       deviceToken.setCodigo(2L);
+	       Long codigoForcaVenda = 1L;
 	       
-	       mvc.perform(post("/devicetoken/forcavenda/0").content(new Gson().toJson(deviceToken))	               
+	       
+	       //Mockando Service que busca no banco de dados 
+	       given(service.buscarPorTokenLogin(deviceToken.getToken(), codigoForcaVenda)).willReturn(Arrays.asList(deviceToken));	       
+	       
+	       //Efetua a requisição na rota e espera um status code
+	       mvc.perform(post("/devicetoken/forcavenda/"+codigoForcaVenda).content(new Gson().toJson(deviceToken))	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isOk());
+	       
+	       //Verifica se os metódos da lógica interna foram chamados
+	       BDDMockito.verify(service).buscarPorTokenLogin(deviceToken.getToken(), codigoForcaVenda);
+	       BDDMockito.verify(service).atualizar(deviceToken, codigoForcaVenda);
 	               
 	       
-	   }*/
+	   }
+	   
+	   @Test
+	   public void testInclusaoDeviceToken() throws Exception {
+	       //Montando Request
+		   DeviceToken deviceToken = new DeviceToken();
+	       deviceToken.setToken("TOKEN");	       
+	       deviceToken.setModelo("MODELO");
+	       deviceToken.setSistemaOperacional("SO");
+	       deviceToken.setDataInclusao(null);
+	       deviceToken.setCodigo(2L);
+	       Long codigoForcaVenda = 1L;
+	       
+	       
+	       //Mockando Service que busca no banco de dados 
+	       given(service.buscarPorTokenLogin(deviceToken.getToken(), codigoForcaVenda)).willReturn(Collections.EMPTY_LIST);	       
+	       
+	       //Efetua a requisição na rota e espera um status code
+	       mvc.perform(post("/devicetoken/forcavenda/"+codigoForcaVenda).content(new Gson().toJson(deviceToken))	               
+	               .contentType(APPLICATION_JSON))
+	               .andExpect(status().isOk());
+	       
+	       //Verifica se os metódos da lógica interna foram chamados
+	       BDDMockito.verify(service).buscarPorTokenLogin(deviceToken.getToken(), codigoForcaVenda);
+	       BDDMockito.verify(service).inserir(deviceToken, codigoForcaVenda);
+	               
+	       
+	   }
 }
