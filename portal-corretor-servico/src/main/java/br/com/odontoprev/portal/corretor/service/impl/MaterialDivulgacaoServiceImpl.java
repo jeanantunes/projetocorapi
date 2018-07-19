@@ -272,6 +272,83 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 		log.info("save - fim");	
 		return materialDivulgacao;
 	}
+
+	@Override
+	public MaterialDivulgacao saveArquivoThumbnail(MaterialDivulgacao materialDivulgacao) {
+		log.info("saveArquivoThumbnail - ini");	
+		TbodMaterialDivulgacao tbodMaterialDivulgacao = null;
+		
+		if(materialDivulgacao.getCodigoMaterialDivulgacao() != null) { //201807161605 - esert
+			tbodMaterialDivulgacao = materialDivulgacaoDAO.findOne(materialDivulgacao.getCodigoMaterialDivulgacao());
+		}
+		
+		if(tbodMaterialDivulgacao==null) {
+			tbodMaterialDivulgacao = new TbodMaterialDivulgacao(); //se nao existe deve criar
+		}
+		
+		//tbodMaterialDivulgacao.setCodigoMaterialDivulgacao(materialDivulgacao.getCodigoMaterialDivulgacao());
+		
+		if(materialDivulgacao.getCodigoCategoria()!=null) {
+			tbodMaterialDivulgacao.setCodigoCategoria(materialDivulgacao.getCodigoCategoria());
+		} else {
+			if(tbodMaterialDivulgacao.getCodigoCategoria()==null) { //201807181220 - esert - cat 1 default
+				tbodMaterialDivulgacao.setCodigoCategoria(1L); //201807161605 - esert - cat 1 default
+			}
+		}
+		if(materialDivulgacao.getCodigoSubCategoria()!=null) {
+			tbodMaterialDivulgacao.setCodigoSubCategoria(materialDivulgacao.getCodigoSubCategoria());
+		} else {
+			if(tbodMaterialDivulgacao.getCodigoSubCategoria()==null) { //201807181220 - esert - cat 1 default
+				tbodMaterialDivulgacao.setCodigoSubCategoria(1L); //201807161605 - esert - subcat 1 default
+			}
+		}
+		tbodMaterialDivulgacao.setNome(materialDivulgacao.getNome());
+		tbodMaterialDivulgacao.setDescricao(materialDivulgacao.getDescricao());
+		tbodMaterialDivulgacao.setTipoConteudo(materialDivulgacao.getTipoConteudo());
+		tbodMaterialDivulgacao.setAtivo(materialDivulgacao.getAtivo());
+		if(tbodMaterialDivulgacao.getAtivo() == null || tbodMaterialDivulgacao.getAtivo().isEmpty()) {
+			tbodMaterialDivulgacao.setAtivo(Constantes.ATIVO); //se nao existe define com ATIVO='S'
+		}
+		
+		if(materialDivulgacao.getCaminhoCarga()!=null && !materialDivulgacao.getCaminhoCarga().isEmpty()) {
+			try {
+								
+				if(materialDivulgacao.getThumbnail()!=null && !materialDivulgacao.getThumbnail().isEmpty()) {
+					File imagePathThumbnail = new File(materialDivulgacao.getCaminhoCarga().concat(materialDivulgacao.getThumbnail()));
+					byte[] imageInBytesThumbnail = new byte[(int)imagePathThumbnail.length()];
+					FileInputStream fisThumbnail;
+					fisThumbnail = new FileInputStream(imagePathThumbnail);
+					fisThumbnail.read(imageInBytesThumbnail);
+					fisThumbnail.close();
+					tbodMaterialDivulgacao.setThumbnail(imageInBytesThumbnail);
+				}
+				
+				if(materialDivulgacao.getArquivo()!=null && !materialDivulgacao.getArquivo().isEmpty()) {
+					File imagePathArquivo = new File(materialDivulgacao.getCaminhoCarga().concat(materialDivulgacao.getArquivo()));
+					byte[] imageInBytesArquivo = new byte[(int)imagePathArquivo.length()];
+					FileInputStream fisArquivo;
+					fisArquivo = new FileInputStream(imagePathArquivo);
+					fisArquivo.read(imageInBytesArquivo);
+					fisArquivo.close();
+					tbodMaterialDivulgacao.setArquivo(imageInBytesArquivo);
+				}
+				
+				tbodMaterialDivulgacao = materialDivulgacaoDAO.save(tbodMaterialDivulgacao);
+				
+				materialDivulgacao = adaptEntityToDto(tbodMaterialDivulgacao, false, false);
 	
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		log.info("saveArquivoThumbnail - fim");	
+		return materialDivulgacao;
+	}
+
 }
 

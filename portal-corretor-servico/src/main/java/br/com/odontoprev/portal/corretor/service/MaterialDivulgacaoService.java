@@ -11,6 +11,8 @@ public interface MaterialDivulgacaoService {
 
 	MaterialDivulgacao save(MaterialDivulgacao materialDivulgacao, boolean isThumbnail, boolean isArquivo);
 
+	MaterialDivulgacao saveArquivoThumbnail(MaterialDivulgacao materialDivulgacao);
+
 }
 
 

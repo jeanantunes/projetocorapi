@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.MateriaisDivulgacao;
+import br.com.odontoprev.portal.corretor.dto.MateriaisDivulgacaoCarga;
 import br.com.odontoprev.portal.corretor.dto.MaterialDivulgacao;
 import br.com.odontoprev.portal.corretor.service.MaterialDivulgacaoService;
 
@@ -99,10 +101,32 @@ public class MaterialDivulgacaoController {
 	    return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
 	}
 
-	//201807161117 - esert - qg para validacao da imagem obtida
+	//201807181117 - esert - qg para carga de imagens em atacado
 	@RequestMapping(value = "/thumbnail/{id}", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> getThumbnail(@PathVariable("id") Long id) {
 	    byte[] image = Base64.decodeBase64(materialDivulgacaoService.getMaterialDivulgacao(id, false).getThumbnail());
 	    return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+	}
+
+	@RequestMapping(value = "/materialdivulgacao/carregar/lista", method = { RequestMethod.POST})
+	public ResponseEntity<MateriaisDivulgacaoCarga> carregarMaterialDivulgacaoLista(@RequestBody MateriaisDivulgacaoCarga materiaisDivulgacaoCarga) throws ParseException {
+		log.info("carregarMaterialDivulgacaoLista - ini");	
+		log.info("materiaisDivulgacaoCarga.size:[".concat(materiaisDivulgacaoCarga.toString()).concat("]"));
+		
+		MateriaisDivulgacaoCarga responseObject = new MateriaisDivulgacaoCarga();		
+		responseObject.setMateriaisDivulgacao(new ArrayList<MaterialDivulgacao>());
+		try {
+			if(materiaisDivulgacaoCarga.getMateriaisDivulgacao()!=null) {
+				for(MaterialDivulgacao materialDivulgacao : materiaisDivulgacaoCarga.getMateriaisDivulgacao()){
+					responseObject.getMateriaisDivulgacao().add(materialDivulgacaoService.saveArquivoThumbnail(materialDivulgacao));				
+				}
+			}
+		} catch (Exception e) {
+			log.error("ERRO em materialDivulgacaoService.save()", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		
+		log.info("carregarMaterialDivulgacaoLista - fim");	
+		return ResponseEntity.ok(responseObject);
 	}
 }
