@@ -33,7 +33,7 @@ public class DeviceTokenController implements Serializable {
 		}
 		String mensagens = this.validar(request);		
 		if(mensagens != null) {
-			return ResponseEntity.ok(new BaseResponse(mensagens));
+			return ResponseEntity.badRequest().body(new BaseResponse(mensagens));
 		}		
 		List<DeviceToken> tokens = service.buscarPorTokenLogin(request.getToken(), codigo);
 		if(!tokens.isEmpty()){
