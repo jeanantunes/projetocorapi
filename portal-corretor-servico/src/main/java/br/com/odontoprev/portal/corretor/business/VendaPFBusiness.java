@@ -355,12 +355,12 @@ public class VendaPFBusiness {
 								
 		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
 					
-		//PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
+		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
 		
-		//mock-teste
-		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();//mock-teste
-		propostaDCMSResponse.setNumeroProposta("APP999999999999");//mock-teste
-		propostaDCMSResponse.setMensagemErro("chamarWSLegadoPropostaPOST(fake)");//mock-teste
+		//201807201529 - esert - mock-teste
+		//PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();//mock-teste
+		//propostaDCMSResponse.setNumeroProposta("APP999999999999");//mock-teste
+		//propostaDCMSResponse.setMensagemErro("chamarWSLegadoPropostaPOST(fake)");//mock-teste
 		
 		if(propostaDCMSResponse != null) {
 			log.info("chamarWsDcssLegado; propostaDCMSResponse.getNumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; getMensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "]");
