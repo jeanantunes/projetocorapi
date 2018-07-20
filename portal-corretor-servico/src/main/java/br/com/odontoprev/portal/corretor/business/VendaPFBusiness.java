@@ -180,6 +180,8 @@ public class VendaPFBusiness {
 				tbVenda.setDtMovimentacao(venda.getDataMovimentacao()); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
 			}
 
+			tbVenda.setPlataforma(venda.getPlataforma()); //201807201122 - esert - COR-431
+			
 			if(venda.getTitulares() != null 
 				&& !venda.getTitulares().isEmpty()
 				&& venda.getTitulares().get(0) != null
@@ -353,7 +355,12 @@ public class VendaPFBusiness {
 								
 		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
 					
-		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
+		//PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
+		
+		//mock-teste
+		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();//mock-teste
+		propostaDCMSResponse.setNumeroProposta("APP999999999999");//mock-teste
+		propostaDCMSResponse.setMensagemErro("chamarWSLegadoPropostaPOST(fake)");//mock-teste
 		
 		if(propostaDCMSResponse != null) {
 			log.info("chamarWsDcssLegado; propostaDCMSResponse.getNumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; getMensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "]");

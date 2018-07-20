@@ -88,6 +88,8 @@ public class VendaPMEBusiness {
 
 					venda.setCdForcaVenda(vendaPME.getCdForcaVenda());
 					
+					venda.setPlataforma(vendaPME.getPlataforma()); //201807201122 - esert - COR-431 
+					
 					for (Beneficiario titular : vendaPME.getTitulares()) {
 					
 						if(
