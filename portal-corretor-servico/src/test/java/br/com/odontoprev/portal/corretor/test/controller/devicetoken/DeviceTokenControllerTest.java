@@ -7,17 +7,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -39,16 +41,18 @@ public class DeviceTokenControllerTest {
 	   private WebApplicationContext context;
 	   
 	   @Before
-	   public void setup() {
+	   public void setUpClass() {
 			mvc = MockMvcBuilders
 					.webAppContextSetup(context)
 		
 					.build();
+			Mockito.reset(service);
 		}
 	    
 	   
 	   @Autowired	
 	   private DeviceTokenService service;
+	  
 
 	   @Test
 	   public void testAtualizacaoDeviceToken() throws Exception {
@@ -102,5 +106,43 @@ public class DeviceTokenControllerTest {
 	       BDDMockito.verify(service).inserir(deviceToken, codigoForcaVenda);
 	               
 	       
+	   }
+	   
+	   @Test
+	   public void testBadRequest() throws Exception {  
+	       Long codigoForcaVenda = 0L;
+	       //Efetua a requisição na rota e espera um status code
+	       mvc.perform(post("/devicetoken/forcavenda/"+codigoForcaVenda)	               
+	               .contentType(APPLICATION_JSON))
+	               .andExpect(status().isBadRequest());	       	       
+	               
+	       
+	   }
+	   
+	   @Test
+	   public void testBadRequestJsonNaoPassado() throws Exception {  
+	       Long codigoForcaVenda = 0L;
+	       //Efetua a requisição na rota e espera um status code
+	       mvc.perform(post("/devicetoken/forcavenda/"+codigoForcaVenda)	               
+	               .contentType(APPLICATION_JSON))
+	               .andExpect(status().isBadRequest());	       	       	               	       
+	   }
+	   
+	   @Test
+	   public void testBadRequestCamposObrigatoriosNaoPassado() throws Exception {  
+		   //Montando Request
+		   DeviceToken deviceToken = new DeviceToken();
+	       deviceToken.setToken("TOKEN");	       	       
+	       deviceToken.setSistemaOperacional("SO");
+	       deviceToken.setDataInclusao(null);
+	       deviceToken.setCodigo(2L);
+	       Long codigoForcaVenda = 1L;
+	       
+	       
+	       //Efetua a requisição na rota e espera um status code
+	       mvc.perform(post("/devicetoken/forcavenda/"+codigoForcaVenda).content(new Gson().toJson(deviceToken))	               
+	               .contentType(APPLICATION_JSON))
+	       		   .andExpect(MockMvcResultMatchers.jsonPath("$.mensagem").value("modelo nao informado"))
+	               .andExpect(status().isBadRequest());	       	       	               	       
 	   }
 }
