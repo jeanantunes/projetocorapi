@@ -35,4 +35,10 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 		return beneficiarioResponse;
 	}
 
+	@Override
+	//201807241900 - esert - COR-398
+	public Beneficiario get(Long cdVida) {
+		return beneficiarioBusiness.get(cdVida);
+	}
+
 }

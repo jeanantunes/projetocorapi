@@ -24,4 +24,6 @@ public interface EmpresaService {
 	public CnpjDadosAceite findDadosEmpresaAceiteByCnpj(String cnpj) throws ParseException; //201805111131 - esert - COR-172 - Serviço - Consultar dados empresa PME
 
 	public EmpresaResponse updateEmpresaEmailAceite(EmpresaEmailAceite empresaEmail); //201805111544 - esert - COR-171 - Serviço - Atualizar email cadastrado empresa
+
+	public Empresa findByCdEmpresa(Long cdEmpresa);
 }

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
 import br.com.odontoprev.portal.corretor.dto.DadosBancariosVenda;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
@@ -31,6 +32,7 @@ import br.com.odontoprev.portal.corretor.dto.TxtImportacao;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaCritica;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
+import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
 import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
@@ -530,6 +532,19 @@ public class ConvertObjectUtil {
 		}
 		log.info("translateTbodTokenAceiteToTokenAceite - fim");
 		return tokenAceite;
+	}
+
+	public static ContatoEmpresa translateTbodEmpresaContatoToEmpresaContato(TbodEmpresaContato tbodEmpresaContato) {
+		ContatoEmpresa contatoEmpresa = null;
+		if(tbodEmpresaContato!=null) {
+			contatoEmpresa = new ContatoEmpresa();
+			contatoEmpresa.setCelular(tbodEmpresaContato.getCelular());
+			//contatoEmpresa.setCorretora();
+			contatoEmpresa.setEmail(tbodEmpresaContato.getEmail());
+			contatoEmpresa.setNome(tbodEmpresaContato.getNome());
+			contatoEmpresa.setTelefone(tbodEmpresaContato.getTelefone());
+		}
+		return contatoEmpresa;
 	}	
 	
 }

@@ -26,6 +26,7 @@ import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
+import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -192,4 +193,8 @@ public class BeneficiarioBusiness {
 		}
 	}
 
+	//201807241918 - esert - COR-398
+	public Beneficiario get(Long cdVida) {
+		return ConvertObjectUtil.translateTbodVidaToBeneficiario(vidaDao.findOne(cdVida));
+	}
 }

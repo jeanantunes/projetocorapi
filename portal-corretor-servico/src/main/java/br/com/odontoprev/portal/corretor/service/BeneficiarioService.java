@@ -11,4 +11,7 @@ public interface BeneficiarioService {
 
 	//201805281830 - esert - incluido throws para subir erro e causar rollback de toda transacao - teste
 	public BeneficiarioResponse add(List<Beneficiario> beneficiarios) throws RollbackException;
+
+	//201807241900 - esert - COR-398	
+	public Beneficiario get(Long cdVida);
 }
