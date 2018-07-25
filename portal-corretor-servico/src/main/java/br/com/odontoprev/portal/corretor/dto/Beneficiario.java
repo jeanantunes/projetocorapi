@@ -23,8 +23,8 @@ public class Beneficiario implements Serializable {
 	private String nomeMae;
 	private String pfPj;
 	private String sexo;
-	private long cdPlano;
-	private long cdVenda;
+	private Long cdPlano; //201807251618 - esert - trocado tipo (long)(primitivo) por (Long)(objeto) para suportar (null) no JSON
+	private Long cdVenda; //201807251618 - esert - trocado tipo (long)(primitivo) por (Long)(objeto) para suportar (null) no JSON
 		
 	private DadosBancariosVenda dadosBancarios;
 
@@ -120,19 +120,19 @@ public class Beneficiario implements Serializable {
 		this.sexo = sexo;
 	}
 
-	public long getCdPlano() {
+	public Long getCdPlano() {
 		return cdPlano;
 	}
 
-	public void setCdPlano(long cdPlano) {
+	public void setCdPlano(Long cdPlano) {
 		this.cdPlano = cdPlano;
 	}
 
-	public long getCdVenda() {
+	public Long getCdVenda() {
 		return cdVenda;
 	}
 
-	public void setCdVenda(long cdVenda) {
+	public void setCdVenda(Long cdVenda) {
 		this.cdVenda = cdVenda;
 	}
 	
