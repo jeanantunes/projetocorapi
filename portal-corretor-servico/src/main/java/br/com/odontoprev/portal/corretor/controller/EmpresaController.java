@@ -87,19 +87,24 @@ public class EmpresaController {
 		return response;
 	}
 
+	//201807241859 - esert - COR-398 - COR-479 - COR-472
 	@RequestMapping(value = "/empresa/{cdEmpresa}", method = { RequestMethod.GET })
 	public ResponseEntity<Empresa> findEmpresa(@PathVariable Long cdEmpresa) throws ParseException { //201807241620 - esert - COR-398
-		
-		log.info("findEmpresa - ini");	
-		
-		Empresa empresa = empresaService.findByCdEmpresa(cdEmpresa);
-
-		if(empresa==null) {
-			return (ResponseEntity<Empresa>) ResponseEntity.status(HttpStatus.NOT_FOUND);			
+		try {
+			log.info("findEmpresa - ini");	
+			Empresa empresa = empresaService.findByCdEmpresa(cdEmpresa);
+			
+			if(empresa==null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();			
+			}
+			
+			log.info("findEmpresa - fim");	
+			return ResponseEntity.ok(empresa);
+			
+		}catch (Exception e) {
+			log.info("findEmpresa - erro");	
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();			
 		}
-		log.info("findEmpresa - fim");	
-
-		return ResponseEntity.ok(empresa);
 	}
-
 }
