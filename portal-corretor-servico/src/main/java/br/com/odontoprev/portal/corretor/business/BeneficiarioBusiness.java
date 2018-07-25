@@ -19,6 +19,7 @@ import br.com.odontoprev.portal.corretor.dao.VendaVidaDAO;
 import br.com.odontoprev.portal.corretor.dao.VidaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
+import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
@@ -196,5 +197,50 @@ public class BeneficiarioBusiness {
 	//201807241918 - esert - COR-398
 	public Beneficiario get(Long cdVida) {
 		return ConvertObjectUtil.translateTbodVidaToBeneficiario(vidaDao.findOne(cdVida));
+	}
+
+	//201807251650 - esert - COR-471 beneficiarios da empresa PME paginados FAKE
+	public Beneficiarios getPageFake(Long cdEmpresa, Long tamPag, Long numPag) {
+		Beneficiarios beneficiarios = new Beneficiarios();
+		beneficiarios.setQtdRegistros(13L);
+		beneficiarios.setQtdPaginas(4L);
+		beneficiarios.setTamPagina(tamPag);
+		beneficiarios.setNumPagina(numPag);
+		beneficiarios.setTitulares(new ArrayList<>());		
+		for(Long i=1L; i<=tamPag; i++) {
+			Long cdVida = ( ( numPag * tamPag ) - tamPag ) + i;
+			
+			Beneficiario benefTitular = new Beneficiario();
+			
+			benefTitular.setCdVida(cdVida);
+			benefTitular.setNome("nome beneficiario [".concat(cdVida.toString()).concat("]"));
+			
+			benefTitular.setEndereco(new Endereco());
+			
+			benefTitular.setDependentes(new ArrayList<>());
+			for(Long j=1L; j<=3; j++) {
+				Beneficiario benefDepend = new Beneficiario();
+				
+				benefDepend.setCdVida(cdVida * 10L + j);
+				benefDepend.setCdTitular(cdVida);
+				benefDepend.setNome("nome dependente [".concat(cdVida.toString()).concat(".").concat(j.toString()).concat("]"));
+				
+				benefTitular.getDependentes().add(benefDepend);
+			}
+			
+			beneficiarios.getTitulares().add(benefTitular);
+		}
+		return beneficiarios;		
+	}
+	
+	//201807251650 - esert - COR-471 beneficiarios da empresa PME paginados FAKE
+	public Beneficiarios getPage(Long cdEmpresa, Long tamPag, Long numPag) {
+		Beneficiarios beneficiarios = new Beneficiarios();
+		beneficiarios.setCodEmpresa(cdEmpresa);
+		beneficiarios.setTamPagina(tamPag);
+		beneficiarios.setNumPagina(numPag);
+		beneficiarios.setTitulares(new ArrayList<>());
+		
+		return beneficiarios;
 	}
 }

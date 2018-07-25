@@ -1,6 +1,5 @@
 package br.com.odontoprev.portal.corretor.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.RollbackException;
@@ -8,6 +7,7 @@ import javax.transaction.RollbackException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
 import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
-import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
+import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 
 @RestController
 public class BeneficiarioController {
@@ -29,6 +30,9 @@ public class BeneficiarioController {
 	
 	@Autowired
 	BeneficiarioService beneficiarioService;
+	
+	@Autowired
+	BeneficiarioBusiness beneficiarioBusiness;
 
 	//201805281830 - esert - informação: por conta da trstativa de erro, verificou-se nesta data que esta rota nao tem chamada nem web nem app
 	@RequestMapping(value = "/beneficiario", method = { RequestMethod.POST })
@@ -49,58 +53,47 @@ public class BeneficiarioController {
 	}
 
 
-	//201807241851 - esert - COR-398
-	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}/ps/{pageSize}/pn/{pageNum}", method = { RequestMethod.GET })
+	//201807241851 - esert - COR-398 - COR-471 - PoC
+	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}/tampag/{tamPag}/numpag/{numPag}", method = { RequestMethod.GET })
 	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresa2(
 			@PathVariable Long cdEmpresa, 
-			@PathVariable Long pageSize, 
-			@PathVariable Long pageNum) {
+			@PathVariable Long tamPag, 
+			@PathVariable Long numPag) {
 		
-		return getBeneficiariosEmpresa(cdEmpresa, pageSize, pageNum);
+		return getBeneficiariosEmpresa(cdEmpresa, tamPag, numPag);
 	}
 	
-	//201807241723 - esert - COR-398
+	//201807241723 - esert - COR-398 - COR-471
 	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}", method = { RequestMethod.GET })
 	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresa(
 			@PathVariable Long cdEmpresa, 
 			@RequestParam("tamPag") Long tamPag, 
 			@RequestParam("numPag") Long numPag) {
-		Beneficiarios beneficiarios = new Beneficiarios();
-		beneficiarios.setQtdRegistros(13L);
-		beneficiarios.setQtdPaginas(4L);
-		beneficiarios.setTamPagina(tamPag);
-		beneficiarios.setNumPagina(numPag);
-		beneficiarios.setTitulares(new ArrayList<>());		
-		for(Long i=1L; i<=tamPag; i++) {
-			Long cdVida = ( ( numPag * tamPag ) - tamPag ) + i;
-			
-			Beneficiario benefTitular = new Beneficiario();
-			
-			benefTitular.setCdVida(cdVida);
-			benefTitular.setNome("nome beneficiario [".concat(cdVida.toString()).concat("]"));
-			
-			benefTitular.setEndereco(new Endereco());
-			
-			benefTitular.setDependentes(new ArrayList<>());
-			for(Long j=1L; j<=3; j++) {
-				Beneficiario benefDepend = new Beneficiario();
-				
-				benefDepend.setCdVida(cdVida * 10L + j);
-				benefDepend.setCdTitular(cdVida);
-				benefDepend.setNome("nome dependente [".concat(cdVida.toString()).concat(".").concat(j.toString()).concat("]"));
-				
-				benefTitular.getDependentes().add(benefDepend);
+		try {
+			Beneficiarios beneficiarios = beneficiarioBusiness.getPageFake(cdEmpresa, tamPag, numPag);
+			if(beneficiarios==null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
-			
-			beneficiarios.getTitulares().add(benefTitular);
-		}
-		return ResponseEntity.ok(beneficiarios);
+			return ResponseEntity.ok(beneficiarios);
+		} catch (Exception e) {
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		} 
 	}
 
-	//201807241859 - esert - COR-398
+	//201807241859 - esert - COR-398 - COR-479 - COR-477
 	@RequestMapping(value = "/beneficiario/{cdVida}", method = { RequestMethod.GET })
-	public ResponseEntity<Beneficiario> getBeneficiario(@PathVariable Long cdVida) {		
-		return ResponseEntity.ok(beneficiarioService.get(cdVida)); 
+	public ResponseEntity<Beneficiario> getBeneficiario(@PathVariable Long cdVida) {
+		try {
+			Beneficiario beneficiario = beneficiarioService.get(cdVida);
+			if(beneficiario==null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+			return ResponseEntity.ok(beneficiario);
+		} catch (Exception e) {
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		} 
 	}
 
 }

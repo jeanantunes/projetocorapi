@@ -6,11 +6,9 @@ import java.util.List;
 //201807241734 - esert - COR-398
 public class Beneficiarios implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5718299865615169423L;
 	
+	Long codEmpresa;
 	Long tamPagina;
 	Long numPagina;
 	Long qtdPaginas;
@@ -18,12 +16,12 @@ public class Beneficiarios implements Serializable {
 	
 	List<Beneficiario> titulares;
 
-	public List<Beneficiario> getTitulares() {
-		return titulares;
+	public Long getCodEmpresa() {
+		return codEmpresa;
 	}
 
-	public void setTitulares(List<Beneficiario> titulares) {
-		this.titulares = titulares;
+	public void setCodEmpresa(Long codEmpresa) {
+		this.codEmpresa = codEmpresa;
 	}
 
 	public Long getTamPagina() {
@@ -58,10 +56,19 @@ public class Beneficiarios implements Serializable {
 		this.qtdRegistros = qtdRegistros;
 	}
 
+	public List<Beneficiario> getTitulares() {
+		return titulares;
+	}
+
+	public void setTitulares(List<Beneficiario> titulares) {
+		this.titulares = titulares;
+	}
+
 	@Override
 	public String toString() {
 		return "Beneficiarios [" 
-				+ "tamPagina=" + tamPagina 
+				+ "codEmpresa=" + codEmpresa 
+				+ ", tamPagina=" + tamPagina 
 				+ ", numPagina=" + numPagina 
 				+ ", qtdPaginas=" + qtdPaginas
 				+ ", qtdRegistros=" + qtdRegistros 

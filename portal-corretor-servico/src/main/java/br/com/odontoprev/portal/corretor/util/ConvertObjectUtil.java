@@ -545,6 +545,18 @@ public class ConvertObjectUtil {
 			contatoEmpresa.setTelefone(tbodEmpresaContato.getTelefone());
 		}
 		return contatoEmpresa;
+	}
+
+	//201807251640 - esert - COR-471
+	public static List<Beneficiario> translateTbodVidasToBeneficiarios(List<TbodVida> listTbodVida) {
+		List<Beneficiario> listBeneficiario = null;
+		if(listTbodVida!=null) {
+			listBeneficiario = new ArrayList<>();
+			for (TbodVida tbodVida : listTbodVida) {
+				listBeneficiario.add(ConvertObjectUtil.translateTbodVidaToBeneficiario(tbodVida));
+			}
+		}
+		return listBeneficiario;
 	}	
 	
 }
