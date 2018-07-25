@@ -12,8 +12,8 @@ public class Beneficiario implements Serializable {
 
 	private static final long serialVersionUID = 3103017260669982091L;
 
-	private long cdVida;
-	private long cdTitular;
+	private Long cdVida; //201807251618 - esert - trocado tipo (long)(primitivo) por (Long)(objeto) para suportar (null) no JSON 
+	private Long cdTitular; //201807251618 - esert - trocado tipo (long)(primitivo) por (Long)(objeto) para suportar (null) no JSON
 	private String celular;
 	private String cpf;
 	private String cnpj;
@@ -32,19 +32,19 @@ public class Beneficiario implements Serializable {
 	
 	List<Beneficiario> dependentes;
 
-	public long getCdVida() {
+	public Long getCdVida() {
 		return cdVida;
 	}
 
-	public void setCdVida(long cdVida) {
+	public void setCdVida(Long cdVida) {
 		this.cdVida = cdVida;
 	}
 
-	public long getCdTitular() {
+	public Long getCdTitular() {
 		return cdTitular;
 	}
 
-	public void setCdTitular(long cdTitular) {
+	public void setCdTitular(Long cdTitular) {
 		this.cdTitular = cdTitular;
 	}
 
