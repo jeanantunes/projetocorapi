@@ -6,6 +6,7 @@ import java.text.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
+
 
 @RestController
 public class EmpresaController {
@@ -92,6 +94,9 @@ public class EmpresaController {
 		
 		Empresa empresa = empresaService.findByCdEmpresa(cdEmpresa);
 
+		if(empresa==null) {
+			return (ResponseEntity<Empresa>) ResponseEntity.status(HttpStatus.NOT_FOUND);			
+		}
 		log.info("findEmpresa - fim");	
 
 		return ResponseEntity.ok(empresa);
