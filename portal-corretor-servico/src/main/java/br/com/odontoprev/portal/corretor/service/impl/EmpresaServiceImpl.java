@@ -636,6 +636,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			empresa.setNomeFantasia(tbodEmpresa.getNomeFantasia());
 			empresa.setRamoAtividade(tbodEmpresa.getRamoAtividade());
 			empresa.setRepresentanteLegal(tbodEmpresa.getRepresentanteLegal());
+			empresa.setCpfRepresentante(tbodEmpresa.getCpfRepresentante()); //201807251530 - esert - COR-513
 			empresa.setTelefone(tbodEmpresa.getTelefone());
 			empresa.setCelular(tbodEmpresa.getCelular());
 			empresa.setEmail(tbodEmpresa.getEmail());			

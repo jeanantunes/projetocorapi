@@ -29,6 +29,7 @@ public class Empresa implements Serializable  {
 	private String dataMovimentacao; //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
 	private Long cdEmpresa; //201807241630 - esert - COR-398
 	private String empDcms; //201807241630 - esert - COR-398
+	private String cpfRepresentante; //201807251530 - esert - COR-513
 
 
 	public Long getCdEmpresa() {
@@ -207,6 +208,14 @@ public class Empresa implements Serializable  {
 		this.empDcms = empDcms;
 	}
 
+	public String getCpfRepresentante() {
+		return cpfRepresentante;
+	}
+
+	public void setCpfRepresentante(String cpfRepresentante) {
+		this.cpfRepresentante = cpfRepresentante;
+	}
+
 	@Override
 	public String toString() {
 		return "Empresa [" 
@@ -232,6 +241,7 @@ public class Empresa implements Serializable  {
 				+ ", dataVigencia=" + dataVigencia 
 				+ ", dataMovimentacao=" + dataMovimentacao 
 				+ ", empDcms=" + empDcms //201807241630 - esert - COR-398
+				+ ", cpfRepresentante=" + cpfRepresentante //201807251530 - esert - COR-513
 				+ "]";
 	}
 
