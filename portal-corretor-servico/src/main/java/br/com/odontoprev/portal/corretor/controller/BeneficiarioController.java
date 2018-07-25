@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.odontoprev.portal.corretor.dao.VidaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
 import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
-import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 
 @RestController
 public class BeneficiarioController {
@@ -65,16 +63,16 @@ public class BeneficiarioController {
 	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}", method = { RequestMethod.GET })
 	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresa(
 			@PathVariable Long cdEmpresa, 
-			@RequestParam("ps") Long pageSize, 
-			@RequestParam("pn") Long pageNum) {
+			@RequestParam("tamPag") Long tamPag, 
+			@RequestParam("numPag") Long numPag) {
 		Beneficiarios beneficiarios = new Beneficiarios();
 		beneficiarios.setQtdRegistros(13L);
 		beneficiarios.setQtdPaginas(4L);
-		beneficiarios.setTamPagina(pageSize);
-		beneficiarios.setNumPagina(pageNum);
+		beneficiarios.setTamPagina(tamPag);
+		beneficiarios.setNumPagina(numPag);
 		beneficiarios.setTitulares(new ArrayList<>());		
-		for(Long i=1L; i<=pageSize; i++) {
-			Long cdVida = ( ( pageNum * pageSize ) - pageSize ) + i;
+		for(Long i=1L; i<=tamPag; i++) {
+			Long cdVida = ( ( numPag * tamPag ) - tamPag ) + i;
 			
 			Beneficiario benefTitular = new Beneficiario();
 			
@@ -86,9 +84,11 @@ public class BeneficiarioController {
 			benefTitular.setDependentes(new ArrayList<>());
 			for(Long j=1L; j<=3; j++) {
 				Beneficiario benefDepend = new Beneficiario();
+				
 				benefDepend.setCdVida(cdVida * 10L + j);
 				benefDepend.setCdTitular(cdVida);
 				benefDepend.setNome("nome dependente [".concat(cdVida.toString()).concat(".").concat(j.toString()).concat("]"));
+				
 				benefTitular.getDependentes().add(benefDepend);
 			}
 			

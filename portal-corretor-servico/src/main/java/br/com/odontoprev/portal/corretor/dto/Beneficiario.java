@@ -3,6 +3,11 @@ package br.com.odontoprev.portal.corretor.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+//h t t p s : / / s t a c k o v e r f l o w . c o m  /questions /11757487 /how-to-tell-jackson-to-ignore-a-field-during-serialization-if-its-value-is-null
+@JsonInclude(Include.NON_NULL) //201807251320 - rmarq/esert - omitir nomes dos campos com valor nulo
 public class Beneficiario implements Serializable {
 
 	private static final long serialVersionUID = 3103017260669982091L;
