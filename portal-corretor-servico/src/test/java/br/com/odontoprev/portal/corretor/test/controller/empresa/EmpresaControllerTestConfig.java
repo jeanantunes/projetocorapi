@@ -16,13 +16,11 @@ import br.com.odontoprev.portal.corretor.service.EmpresaService;
 //Classe responsável por configurar objetos que queremos mockar
 @Configuration
 @ComponentScan(
-    value = "br.com.odontoprev.portal.corretor.controller",
-    useDefaultFilters = false,
-    includeFilters = {
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = EmpresaController.class)
-    }
-)
-
+	    value = "br.com.odontoprev.portal.corretor.controller",
+	    useDefaultFilters = false,
+	    includeFilters = {
+	        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = EmpresaController.class)
+	    })
 @EnableWebMvc
 public class EmpresaControllerTestConfig {
 

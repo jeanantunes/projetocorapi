@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.test.controller.empresa;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
 
@@ -34,8 +36,7 @@ public class EmpresaControllerTest {
 	   @Before
 	   public void setUpClass() {
 			mvc = MockMvcBuilders
-					.webAppContextSetup(context)
-		
+					.webAppContextSetup(context)		
 					.build();
 			Mockito.reset(service);
 		}
@@ -47,35 +48,29 @@ public class EmpresaControllerTest {
 	   @Test
 	   public void testOk200() throws Exception {  
 	       Long codigoEmpresa = 1683L;
-	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(get("/emnpresa/"+codigoEmpresa)	               
+		   	    
+		   //Mockando Service que busca no banco de dados 
+		   given(service.findByCdEmpresa(1683L)).willReturn(new Empresa());	       
+
+		   //Efetua a requisição na rota e espera um status code
+	       mvc.perform(get("/empresa/"+codigoEmpresa)	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isOk())
 	               ;
 	   }
 	   
 	   @Test
-	   public void testBadRequestCodigoZer0() throws Exception {  
+	   public void testNoContent204() throws Exception {  
 	       Long codigoEmpresa = 0L;
+	   	    
+		   //Mockando Service que busca no banco de dados 
+		   given(service.findByCdEmpresa(1683L)).willReturn(new Empresa());
+		   
 	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(get("/empresa/"+codigoEmpresa)	               
+	       mvc.perform(get("/empresa/"+codigoEmpresa) //chama com id zer0	               
 	               .contentType(APPLICATION_JSON))
-	               .andExpect(status().isNotFound())
+	               .andExpect(status().isNoContent()) //e nao deve retornar resultado
 	               ;	       	       	               	       
 	   }
-	   
-	   @Test
-	   public void testCamposComValor() throws Exception {  
-	       Long codigoEmpresa = 1683L;
-	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(get("/empresa/"+codigoEmpresa)	               
-	    		   .contentType(APPLICATION_JSON))
-	       			.andExpect(status().isOk())
-	       			.andExpect(MockMvcResultMatchers.jsonPath("$.cnpj").value("12.029.694/0001-79")) //"cnpj": "12.029.694/0001-79",
-	       			.andExpect(MockMvcResultMatchers.jsonPath("$.razaoSocial").value("KAIUS MAGNO DE AMORIM OLIVEIRA 13469116733")) //"razaoSocial": "KAIUS MAGNO DE AMORIM OLIVEIRA 13469116733"
-	       			.andExpect(MockMvcResultMatchers.jsonPath("$.nomeFantasia").value("KAIUS MAGNO DE AMORIM OLIVEIRA")) //"nomeFantasia": "KAIUS MAGNO DE AMORIM OLIVEIRA",
-	       			;	       	       	               	       
-	   }
-	   
 
 }
