@@ -21,7 +21,6 @@ import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
 import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
-import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 
 @RestController
 public class BeneficiarioController {

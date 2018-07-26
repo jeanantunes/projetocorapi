@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.business;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.ManagedBean;
 import javax.transaction.RollbackException;
@@ -18,6 +19,7 @@ import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaVidaDAO;
 import br.com.odontoprev.portal.corretor.dao.VidaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.BeneficiarioPaginacao;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
 import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
@@ -210,12 +212,25 @@ public class BeneficiarioBusiness {
 		for(Long i=1L; i<=tamPag; i++) {
 			Long cdVida = ( ( numPag * tamPag ) - tamPag ) + i;
 			
-			Beneficiario benefTitular = new Beneficiario();
+			BeneficiarioPaginacao benefTitular = new BeneficiarioPaginacao(); //201807261140 - yalm/esert - novo model com (cod e desc Plano) e QtdeDep
 			
+			//201807261140 - yalm/esert - cod e desc de plano
+			Random r = new Random();
+			int min = 1;
+			int max = 2;
+			Long cdPlano = (long) (r.nextInt(max - min + 1) + min);
+			benefTitular.setCdPlano(cdPlano);			
+			benefTitular.setDescPlano(cdPlano==1?"Integral DOC LE":"Master PME LE");
+
 			benefTitular.setCdVida(cdVida);
 			benefTitular.setNome("nome beneficiario [".concat(cdVida.toString()).concat("]"));
+			benefTitular.setNomeMae("nome mae beneficiario [".concat(cdVida.toString()).concat("]"));
+			benefTitular.setSexo(cdPlano==1L?"m":"f");
+			benefTitular.setDataNascimento("01/02/2018");;
+			benefTitular.setCpf("123.456.789-01");;
 			
 			benefTitular.setEndereco(new Endereco());
+			benefTitular.getEndereco().setCep("12345-678");
 			
 			benefTitular.setDependentes(new ArrayList<>());
 			for(Long j=1L; j<=3; j++) {
@@ -227,6 +242,7 @@ public class BeneficiarioBusiness {
 				
 				benefTitular.getDependentes().add(benefDepend);
 			}
+			benefTitular.setQtdeDep((long)benefTitular.getDependentes().size()); //201807261140 - yalm/esert - qtde deps 
 			
 			beneficiarios.getTitulares().add(benefTitular);
 		}
