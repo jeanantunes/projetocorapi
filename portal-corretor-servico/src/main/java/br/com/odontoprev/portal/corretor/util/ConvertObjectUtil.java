@@ -1,6 +1,9 @@
 package br.com.odontoprev.portal.corretor.util;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -11,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.BeneficiarioPaginacao;
 import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
 import br.com.odontoprev.portal.corretor.dto.DadosBancariosVenda;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
@@ -550,13 +554,66 @@ public class ConvertObjectUtil {
 	//201807251640 - esert - COR-471
 	public static List<Beneficiario> translateTbodVidasToBeneficiarios(List<TbodVida> listTbodVida) {
 		List<Beneficiario> listBeneficiario = null;
-		if(listTbodVida!=null) {
+		if(listTbodVida!=null && listTbodVida.size()>0) {
 			listBeneficiario = new ArrayList<>();
 			for (TbodVida tbodVida : listTbodVida) {
 				listBeneficiario.add(ConvertObjectUtil.translateTbodVidaToBeneficiario(tbodVida));
 			}
 		}
 		return listBeneficiario;
+	}
+
+	public static BeneficiarioPaginacao translateObjectToBeneficiarioPaginacao(Object[] objectVector) {
+		BeneficiarioPaginacao benPag = null;
+		if(objectVector!=null) {
+			benPag = new BeneficiarioPaginacao();
+			//+"ROWNUM rn, " //0
+			//+" ve.CD_EMPRESA " //1
+			//+",ve.CD_VENDA " //2
+			//+",vv.CD_VENDA_VIDA " //3
+			//+",ve.CD_PLANO " //4
+			if(objectVector[4]!=null) {
+				benPag.setCdPlano((Long)((BigDecimal)objectVector[4]).longValue());
+			}
+			//+",vi.CD_VIDA " //5
+			if(objectVector[5]!=null) {
+				benPag.setCdVida((Long)((BigDecimal)objectVector[5]).longValue());
+			}
+			//+",vi.CD_TITULAR " //6
+			if(objectVector[6]!=null) {
+				benPag.setCdTitular((Long)((BigDecimal)objectVector[6]).longValue());
+			}
+			//+",vi.NOME " //7
+			if(objectVector[7]!=null) {
+				benPag.setNome(objectVector[7].toString());
+			}
+			//+",vi.CPF " //8
+			if(objectVector[8]!=null) {
+				benPag.setCpf(objectVector[8].toString());
+			}
+			//+",vi.DATA_NASCIMENTO " //9
+			if(objectVector[9]!=null) {
+				benPag.setDataNascimento(new SimpleDateFormat("dd/MM/yyyy").format((Date)objectVector[9]));
+			}
+			//+",vi.SEXO " //10
+			if(objectVector[10]!=null) {
+				benPag.setSexo(objectVector[10].toString());
+			}
+			//+",vi.NOME_MAE " //11
+			if(objectVector[11]!=null) {
+				benPag.setNomeMae(objectVector[11].toString());
+			}
+			//+",en.CEP " //12
+			benPag.setEndereco(new Endereco());
+			if(objectVector[12]!=null) {
+				benPag.getEndereco().setCep(objectVector[12].toString());
+			}
+			//+",pl.TITULO " //13
+			if(objectVector[13]!=null) {
+				benPag.setDescPlano(objectVector[13].toString());
+			}
+		}
+		return benPag;
 	}	
 	
 }

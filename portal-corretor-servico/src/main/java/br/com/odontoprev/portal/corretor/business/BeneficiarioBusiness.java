@@ -10,6 +10,7 @@ import javax.transaction.RollbackException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.BeneficiarioDAO;
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
@@ -31,7 +32,6 @@ import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
 import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
-import org.springframework.transaction.annotation.Transactional;
 
 @ManagedBean
 public class BeneficiarioBusiness {
@@ -256,6 +256,36 @@ public class BeneficiarioBusiness {
 		beneficiarios.setTamPagina(tamPag);
 		beneficiarios.setNumPagina(numPag);
 		beneficiarios.setTitulares(new ArrayList<>());
+		
+		if(tamPag==null || tamPag<1L || numPag==null || numPag<1L) { //201807261710 - filtro minimo
+			return null; //201807261710 - devolve nullo 
+		}
+		
+		//4 * 1 - 4 + 1 = 1   	
+		//4 * 2 - 4 + 1 = 5   	
+		//4 * 3 - 4 + 1 = 9   	
+		Long primeiroReg = tamPag * numPag - tamPag + 1;
+		//4 * 1 = 4   	
+		//4 * 2 = 8   	
+		//4 * 3 = 12   	
+		Long ultimoReg = tamPag * numPag;;;;;;;;;;;;;;;;;;;; //ta olhando o que ? nao ha erro de sintaxe aqui ! vai aprender C e volta ++tarde
+
+		List<BeneficiarioPaginacao> listBeneficiarioPaginacao = null; 
+		
+		List<Object[]> listObject = vidaDao.findVidaByCdEmpresaPrimeiroRegUltimoReg(cdEmpresa, primeiroReg, ultimoReg);
+		
+		if(listObject!=null) {
+			listBeneficiarioPaginacao = new ArrayList<>();
+			for (Object[] objectVector : listObject) {				
+				BeneficiarioPaginacao beneficiarioPaginacao = ConvertObjectUtil.translateObjectToBeneficiarioPaginacao(objectVector);
+				beneficiarioPaginacao.setDependentes(
+						ConvertObjectUtil.translateTbodVidasToBeneficiarios(
+								vidaDao.findByCdTitular(beneficiarioPaginacao.getCdVida())));
+				listBeneficiarioPaginacao.add(beneficiarioPaginacao);
+			}
+		}
+		
+		beneficiarios.setTitulares(listBeneficiarioPaginacao);
 		
 		return beneficiarios;
 	}

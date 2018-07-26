@@ -14,7 +14,7 @@ public class Beneficiarios implements Serializable {
 	Long qtdPaginas;
 	Long qtdRegistros;
 	
-	List<Beneficiario> titulares;
+	List<BeneficiarioPaginacao> titulares;
 
 	public Long getCodEmpresa() {
 		return codEmpresa;
@@ -56,11 +56,11 @@ public class Beneficiarios implements Serializable {
 		this.qtdRegistros = qtdRegistros;
 	}
 
-	public List<Beneficiario> getTitulares() {
+	public List<BeneficiarioPaginacao> getTitulares() {
 		return titulares;
 	}
 
-	public void setTitulares(List<Beneficiario> titulares) {
+	public void setTitulares(List<BeneficiarioPaginacao> titulares) {
 		this.titulares = titulares;
 	}
 

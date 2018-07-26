@@ -54,24 +54,25 @@ public class BeneficiarioController {
 
 	//201807241851 - esert - COR-398 - COR-471 - PoC
 	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}/tampag/{tamPag}/numpag/{numPag}", method = { RequestMethod.GET })
-	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresa2(
+	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresaPorPagina2(
 			@PathVariable Long cdEmpresa, 
 			@PathVariable Long tamPag, 
 			@PathVariable Long numPag) {
 		
-		return getBeneficiariosEmpresa(cdEmpresa, tamPag, numPag);
+		return getBeneficiariosEmpresaPorPagina(cdEmpresa, tamPag, numPag);
 	}
 	
 	//201807241723 - esert - COR-398 - COR-471
 	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}", method = { RequestMethod.GET })
-	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresa(
+	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresaPorPagina(
 			@PathVariable Long cdEmpresa, 
 			@RequestParam("tamPag") Long tamPag, 
 			@RequestParam("numPag") Long numPag) {
 		try {
-			Beneficiarios beneficiarios = beneficiarioBusiness.getPageFake(cdEmpresa, tamPag, numPag);
+			//Beneficiarios beneficiarios = beneficiarioBusiness.getPageFake(cdEmpresa, tamPag, numPag);
+			Beneficiarios beneficiarios = beneficiarioBusiness.getPage(cdEmpresa, tamPag, numPag);
 			if(beneficiarios==null) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 			}
 			return ResponseEntity.ok(beneficiarios);
 		} catch (Exception e) {

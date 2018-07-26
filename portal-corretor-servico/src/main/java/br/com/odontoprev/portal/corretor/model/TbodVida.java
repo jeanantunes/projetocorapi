@@ -20,6 +20,11 @@ public class TbodVida implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_VIDA")
 	@Column(name = "CD_VIDA")
 	private Long cdVida;
+	
+	//201807262019 - teste
+	//201807262024 - insertable=false, updatable=false
+	@Column(name = "CD_TITULAR", insertable=false, updatable=false)
+	private Long cdTitular;
 
 	@Column(name = "CELULAR")
 	private String celular;
