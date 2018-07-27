@@ -1,6 +1,5 @@
-package br.com.odontoprev.portal.corretor.test.controller.empresa;
+package br.com.odontoprev.portal.corretor.test.controller.beneficiario;
 
-import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,14 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
 
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = { EmpresaControllerTestConfig.class })
+@ContextConfiguration(classes = { BeneficiarioControllerTestConfig.class })
 @WebAppConfiguration
-public class EmpresaControllerTest {
+public class BeneficiarioControllerTest {
 	
 	   
 	   private MockMvc mvc;
@@ -42,17 +40,19 @@ public class EmpresaControllerTest {
 	    
 	   
 	   @Autowired	
-	   private EmpresaService service;
+	   private BeneficiarioService service;
 	  	   
 	   @Test
 	   public void testOk200() throws Exception {  
-	       Long codigoEmpresa = 1683L;
+	       Long codigoBeneficiario = 1659L;
+	       Long tampag = 3L;
+	       Long numpag = 3L;
 		   	    
 		   //Mockando Service que busca no banco de dados 
-		   given(service.findByCdEmpresa(1683L)).willReturn(new Empresa());	       
+		   //given(service.findByCdBeneficiario(1659L)).willReturn(new Beneficiario());	       
 
 		   //Efetua a requisição na rota e espera um status code
-	       mvc.perform(get("/empresa/"+codigoEmpresa)	               
+	       mvc.perform(get("/beneficiarios/empresa/" + codigoBeneficiario + "?tampag=" + tampag + "&numpag=" + numpag)	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isOk())
 	               ;
@@ -60,13 +60,15 @@ public class EmpresaControllerTest {
 	   
 	   @Test
 	   public void testNoContent204() throws Exception {  
-	       Long codigoEmpresa = 0L;
-	   	    
+	       Long codigoBeneficiario = 1659L;
+	       Long tampag = 0L;
+	       Long numpag = 0L;
+		   	    
 		   //Mockando Service que busca no banco de dados 
-		   given(service.findByCdEmpresa(1683L)).willReturn(new Empresa());
-		   
-	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(get("/empresa/"+codigoEmpresa) //chama com id zer0	               
+		   //given(service.findByCdBeneficiario(1659L)).willReturn(new Beneficiario());	       
+
+		   //Efetua a requisição na rota e espera um status code
+	       mvc.perform(get("/beneficiarios/empresa/" + codigoBeneficiario + "?tampag=" + tampag + "&numpag=" + numpag)	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isNoContent()) //e nao deve retornar resultado
 	               ;	       	       	               	       
