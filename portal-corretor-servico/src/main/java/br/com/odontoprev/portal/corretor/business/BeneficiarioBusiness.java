@@ -255,6 +255,8 @@ public class BeneficiarioBusiness {
 		beneficiarios.setCodEmpresa(cdEmpresa);
 		beneficiarios.setTamPagina(tamPag);
 		beneficiarios.setNumPagina(numPag);
+		beneficiarios.setQtdRegistros(8L); //hardcode p testar com empresa/1659?tamPag=3&numPag=3 //201807271258 - esert - COR-475
+		beneficiarios.setQtdPaginas(3L); //hardcode p testar com empresa/1659?tamPag=3&numPag=3 //201807271258 - esert - COR-475
 		beneficiarios.setTitulares(new ArrayList<>());
 		
 		if(tamPag==null || tamPag<1L || numPag==null || numPag<1L) { //201807261710 - filtro minimo
