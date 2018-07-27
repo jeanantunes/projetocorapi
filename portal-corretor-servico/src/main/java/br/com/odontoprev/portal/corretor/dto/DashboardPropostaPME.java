@@ -1,8 +1,10 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 public class DashboardPropostaPME {
+
 	private Long cdEmpresa;
 	private String nome;
+	private String nomeFantasia;  // [COR-488] yalm-201807271234
 	private String statusVenda;
 	private String dataVenda;
 	private String cnpj;
@@ -28,6 +30,14 @@ public class DashboardPropostaPME {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getNomeFantasia() {
+		return nomeFantasia;
+	}
+
+	public void setNomeFantasia(String nomeFantasia) {
+		this.nomeFantasia = nomeFantasia;
 	}
 
 	public String getStatusVenda() {

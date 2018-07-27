@@ -14,6 +14,7 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
     @Query(value = " SELECT emp.CD_EMPRESA, " +
 					"  emp.CNPJ, " +
 					"  emp.RAZAO_SOCIAL, " +
+					"  emp.NOME_FANTASIA, " + // [COR-488] yalm-201807271234
 					"  venda.DT_VENDA, " +
 					"  status.DESCRICAO, " +
 					"  SUM(plano.valor_anual + plano.valor_mensal) valor " +
@@ -41,6 +42,7 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 					"GROUP BY emp.CD_EMPRESA, " +
 					"  emp.CNPJ, " +
 					"  emp.RAZAO_SOCIAL, " +
+					"  emp.NOME_FANTASIA, " +
 					"  venda.DT_VENDA, " +
 					"  status.DESCRICAO " +
 				"ORDER BY venda.dt_venda DESC ", nativeQuery = true)
