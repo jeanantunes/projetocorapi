@@ -81,7 +81,7 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				dashboardPropostaPME.setCdEmpresa(obj[0] != null ? new Long(String.valueOf(obj[0])) : null); // emp.CD_EMPRESA //0
 				dashboardPropostaPME.setCnpj(obj[1] != null ? String.valueOf(obj[1]) : ""); // emp.CNPJ //1
 				dashboardPropostaPME.setNome(obj[2] != null ? String.valueOf(obj[2]) : ""); // emp.RAZAO_SOCIAL //2
-				dashboardPropostaPME.setNomeFantasia(obj[3] != null ? String.valueOf(obj[3]) : ""); // emp.NOME_FANTASIA //3 // COR-488 201807271221
+				dashboardPropostaPME.setNomeFantasia(obj[3] != null ? String.valueOf(obj[3]) : ""); // emp.NOME_FANTASIA //3 // COR-488 yalm 201807271221
 				dashboardPropostaPME.setDataVenda(sdf.format(d));
 				dashboardPropostaPME.setStatusVenda(obj[5] != null ? String.valueOf(obj[5]) : ""); // status.DESCRICAO //5
 				dashboardPropostaPME.setValor(obj[6] != null ? Double.parseDouble(obj[6].toString()) : 0); // SUM(plano.valor_anual + plano.valor_mensal) //6

@@ -11,13 +11,13 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 @org.springframework.stereotype.Repository
 public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 
-    @Query(value = " SELECT emp.CD_EMPRESA, " + // 0
-					"  emp.CNPJ, " +			// 1
-					"  emp.RAZAO_SOCIAL, " +	// 2
-					"  emp.NOME_FANTASIA, " +	// 3
-					"  venda.DT_VENDA, " +		// 4
-					"  status.DESCRICAO, " +	// 5
-					"  SUM(plano.valor_anual + plano.valor_mensal) valor " + // 6
+    @Query(value = " SELECT emp.CD_EMPRESA, " +
+					"  emp.CNPJ, " +
+					"  emp.RAZAO_SOCIAL, " +
+					"  emp.NOME_FANTASIA, " + // [COR-488] yalm-201807271234
+					"  venda.DT_VENDA, " +
+					"  status.DESCRICAO, " +
+					"  SUM(plano.valor_anual + plano.valor_mensal) valor " +
 					"FROM tbod_corretora corretora " +
 						"INNER JOIN tbod_forca_venda forca " +
 						"ON forca.CD_CORRETORA = corretora.CD_CORRETORA " +
