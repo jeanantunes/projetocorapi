@@ -71,19 +71,20 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			for (Object object : objects) {
 				Object[] obj = (Object[]) object;
 
-				Timestamp ts = (Timestamp) obj[3];
+				Timestamp ts = (Timestamp) obj[4];  // venda.DT_VENDA //4
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(ts.getTime());
 				Date d = cal.getTime();
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 				DashboardPropostaPME dashboardPropostaPME = new DashboardPropostaPME();
-				dashboardPropostaPME.setCdEmpresa(obj[0] != null ? new Long(String.valueOf(obj[0])) : null);
-				dashboardPropostaPME.setCnpj(obj[1] != null ? String.valueOf(obj[1]) : "");
-				dashboardPropostaPME.setNome(obj[2] != null ? String.valueOf(obj[2]) : "");
+				dashboardPropostaPME.setCdEmpresa(obj[0] != null ? new Long(String.valueOf(obj[0])) : null); // emp.CD_EMPRESA //0
+				dashboardPropostaPME.setCnpj(obj[1] != null ? String.valueOf(obj[1]) : ""); // emp.CNPJ //1
+				dashboardPropostaPME.setNome(obj[2] != null ? String.valueOf(obj[2]) : ""); // emp.RAZAO_SOCIAL //2
+				dashboardPropostaPME.setNomeFantasia(obj[3] != null ? String.valueOf(obj[3]) : ""); // emp.NOME_FANTASIA //3 // COR-488 201807271221
 				dashboardPropostaPME.setDataVenda(sdf.format(d));
-				dashboardPropostaPME.setStatusVenda(obj[4] != null ? String.valueOf(obj[4]) : "");
-				dashboardPropostaPME.setValor(obj[5] != null ? Double.parseDouble(obj[5].toString()) : 0);
+				dashboardPropostaPME.setStatusVenda(obj[5] != null ? String.valueOf(obj[5]) : ""); // status.DESCRICAO //5
+				dashboardPropostaPME.setValor(obj[6] != null ? Double.parseDouble(obj[6].toString()) : 0); // SUM(plano.valor_anual + plano.valor_mensal) //6
 				propostasPME.add(dashboardPropostaPME);
 			}
 			
