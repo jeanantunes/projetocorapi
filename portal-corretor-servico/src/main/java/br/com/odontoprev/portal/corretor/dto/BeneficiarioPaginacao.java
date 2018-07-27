@@ -12,7 +12,7 @@ public class BeneficiarioPaginacao extends Beneficiario implements Serializable 
 
 	private Long cdPlano;
 	private String descPlano;
-	private Long qtdeDep;
+	private Long qtdDependentes;
 	
 	public Long getCdPlano() {
 		return cdPlano;
@@ -20,25 +20,29 @@ public class BeneficiarioPaginacao extends Beneficiario implements Serializable 
 	public void setCdPlano(Long cdPlano) {
 		this.cdPlano = cdPlano;
 	}
+	
 	public String getDescPlano() {
 		return descPlano;
 	}
 	public void setDescPlano(String descPlano) {
 		this.descPlano = descPlano;
 	}
-	public Long getQtdeDep() {
-		return qtdeDep;
+
+	public Long getQtdDependentes() {
+		//return qtdDependentes;
+		//return (this.getDependentes()!=null?this.getDependentes().size():-1L); //201807271609 - esert - COR-475
+		return (this.getDependentes()!=null?this.getDependentes().size():0L); //201807271732 - esert - COR-475
 	}
-	public void setQtdeDep(Long qtdeDep) {
-		this.qtdeDep = qtdeDep;
-	}
+//	public void setQtdDependentes(Long qtdDependentes) {
+//		this.qtdDependentes = qtdDependentes;
+//	}
 	
 	@Override
 	public String toString() {
 		return "BeneficiarioPaginacao [" 
 				+ "cdPlano=" + cdPlano 
 				+ ", descPlano=" + descPlano 
-				+ ", qtdeDep=" + qtdeDep 
+				+ ", qtdDependentes=" + qtdDependentes 
 				+ "]";
 	}
 }

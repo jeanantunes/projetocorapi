@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
 import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
@@ -29,9 +28,6 @@ public class BeneficiarioController {
 	
 	@Autowired
 	BeneficiarioService beneficiarioService;
-	
-	@Autowired
-	BeneficiarioBusiness beneficiarioBusiness;
 
 	//201805281830 - esert - informação: por conta da trstativa de erro, verificou-se nesta data que esta rota nao tem chamada nem web nem app
 	@RequestMapping(value = "/beneficiario", method = { RequestMethod.POST })
@@ -51,16 +47,15 @@ public class BeneficiarioController {
 		return beneficiarioResponse; 
 	}
 
-
-	//201807241851 - esert - COR-398 - COR-471 - PoC
-	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}/tampag/{tamPag}/numpag/{numPag}", method = { RequestMethod.GET })
-	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresaPorPagina2(
-			@PathVariable Long cdEmpresa, 
-			@PathVariable Long tamPag, 
-			@PathVariable Long numPag) {
-		
-		return getBeneficiariosEmpresaPorPagina(cdEmpresa, tamPag, numPag);
-	}
+//	//201807241851 - esert - COR-398 - COR-471 - PoC
+//	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}/tampag/{tamPag}/numpag/{numPag}", method = { RequestMethod.GET })
+//	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresaPorPagina2(
+//			@PathVariable Long cdEmpresa, 
+//			@PathVariable Long tamPag, 
+//			@PathVariable Long numPag) {
+//		
+//		return getBeneficiariosEmpresaPorPagina(cdEmpresa, tamPag, numPag);
+//	}
 	
 	//201807241723 - esert - COR-398 - COR-471
 	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}", method = { RequestMethod.GET })
@@ -70,7 +65,7 @@ public class BeneficiarioController {
 			@RequestParam("numPag") Long numPag) {
 		try {
 			//Beneficiarios beneficiarios = beneficiarioBusiness.getPageFake(cdEmpresa, tamPag, numPag);
-			Beneficiarios beneficiarios = beneficiarioBusiness.getPage(cdEmpresa, tamPag, numPag);
+			Beneficiarios beneficiarios = beneficiarioService.getPage(cdEmpresa, tamPag, numPag);
 			if(beneficiarios==null) {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 			}
