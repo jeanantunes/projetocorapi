@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.test.controller.beneficiario;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,8 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
-
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = { BeneficiarioControllerTestConfig.class })
@@ -48,7 +49,7 @@ public class BeneficiarioControllerTest {
 	       Long numpag = 3L;
 		   	    
 		   //Mockando Service que busca no banco de dados 
-		   //given(service.getPage(1659L, 3L, 3L)).willReturn(new Beneficiarios());	       
+		   given(service.getPage(1659L, 3L, 3L)).willReturn(new Beneficiarios());	       
 
 		   //Efetua a requisição na rota e espera um status code
 	       mvc.perform(get("/beneficiarios/empresa/" + cdEmpresa + "?tampag=" + tampag + "&numpag=" + numpag)	               
@@ -64,7 +65,7 @@ public class BeneficiarioControllerTest {
 	       Long numpag = 0L;
 		   	    
 		   //Mockando Service que busca no banco de dados 
-		   //given(service.getPage(1659L, 3L, 3L)).willReturn(new Beneficiarios());	       
+		   given(service.getPage(1659L, 3L, 3L)).willReturn(new Beneficiarios());	       
 
 		   //Efetua a requisição na rota e espera um status code
 	       mvc.perform(get("/beneficiarios/empresa/" + cdEmpresa + "?tampag=" + tampag + "&numpag=" + numpag)	               

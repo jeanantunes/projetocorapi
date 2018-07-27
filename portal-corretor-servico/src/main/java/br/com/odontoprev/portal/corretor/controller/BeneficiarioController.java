@@ -61,8 +61,8 @@ public class BeneficiarioController {
 	@RequestMapping(value = "/beneficiarios/empresa/{cdEmpresa}", method = { RequestMethod.GET })
 	public ResponseEntity<Beneficiarios> getBeneficiariosEmpresaPorPagina(
 			@PathVariable Long cdEmpresa, 
-			@RequestParam("tamPag") Long tamPag, 
-			@RequestParam("numPag") Long numPag) {
+			@RequestParam("tampag") Long tamPag, 
+			@RequestParam("numpag") Long numPag) {
 		try {
 			//Beneficiarios beneficiarios = beneficiarioBusiness.getPageFake(cdEmpresa, tamPag, numPag);
 			Beneficiarios beneficiarios = beneficiarioService.getPage(cdEmpresa, tamPag, numPag);
