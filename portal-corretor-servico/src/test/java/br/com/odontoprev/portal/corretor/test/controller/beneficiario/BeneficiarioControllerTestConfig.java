@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.controller.BeneficiarioController;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
 
@@ -30,13 +29,5 @@ public class BeneficiarioControllerTestConfig {
 	 @Scope("application")
      public BeneficiarioService service() { 
 		 return Mockito.mock(BeneficiarioService.class); 
-	 }	 	 
-
-	 //Mocando business que injetado no Controller
-	 @Bean
-	 @Primary
-	 @Scope("application")
-     public BeneficiarioBusiness business() { 
-		 return Mockito.mock(BeneficiarioBusiness.class); 
 	 }	 	 
 }

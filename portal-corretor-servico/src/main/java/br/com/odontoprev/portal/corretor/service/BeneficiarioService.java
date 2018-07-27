@@ -17,11 +17,11 @@ public interface BeneficiarioService {
 	public Beneficiario get(Long cdVida);
 	
 	//201807251650 - esert - COR-471 beneficiarios da empresa PME paginados FAKE
-	//201807271700 - esert - COR-475 migrado de business para service
+	//201807271700 - esert - COR-475 getPage() migrado de business para service
 	public Beneficiarios getPage(Long cdEmpresa, Long tamPag, Long numPag);
 	
 	//201807251650 - esert - COR-471 beneficiarios da empresa PME paginados FAKE
-	//201807271700 - esert - COR-475 migrado de business para service
+	//201807271700 - esert - COR-475 getPageFake() migrado de business para service
 	public Beneficiarios getPageFake(Long cdEmpresa, Long tamPag, Long numPag);
 
 }

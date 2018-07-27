@@ -53,6 +53,7 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 
 	//201807251650 - esert - COR-471 beneficiarios da empresa PME paginados FAKE
 	//201807271700 - esert - COR-475 getPage() migrado de business para service
+	@Override
 	public Beneficiarios getPage(Long cdEmpresa, Long tamPag, Long numPag) {
 		Beneficiarios beneficiarios = new Beneficiarios();
 		beneficiarios.setCodEmpresa(cdEmpresa);
@@ -80,6 +81,7 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 		Long qtdRegistros = vidaDao.countVidasTitularByCdEmpresa(cdEmpresa);
 		beneficiarios.setQtdRegistros(qtdRegistros);
 		
+		//h t t p : / / w w  w . g u j . c o m . b r /t /resolvido-parte-inteira-da-divisao/75989/3
 		Long qtdPaginasInteiro = Math.floorDiv(qtdRegistros, tamPag);
 		Long qtdPaginasResto = Math.floorMod(qtdRegistros, tamPag);
 		Long qtdPaginas = qtdPaginasInteiro + (qtdPaginasResto==0?0L:1L);
@@ -109,6 +111,7 @@ public class BeneficiarioServiceImpl implements BeneficiarioService {
 
 	//201807251650 - esert - COR-471 beneficiarios da empresa PME paginados FAKE
 	//201807271700 - esert - COR-475 getPageFake() migrado de business para service
+	@Override
 	public Beneficiarios getPageFake(Long cdEmpresa, Long tamPag, Long numPag) {
 		Beneficiarios beneficiarios = new Beneficiarios();
 		beneficiarios.setQtdRegistros(13L);

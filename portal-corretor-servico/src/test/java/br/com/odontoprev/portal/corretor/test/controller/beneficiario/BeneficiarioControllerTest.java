@@ -38,21 +38,20 @@ public class BeneficiarioControllerTest {
 			Mockito.reset(service);
 		}
 	    
-	   
-	   @Autowired	
+	   @Autowired
 	   private BeneficiarioService service;
 	  	   
 	   @Test
 	   public void testOk200() throws Exception {  
-	       Long codigoBeneficiario = 1659L;
+	       Long cdEmpresa = 1659L;
 	       Long tampag = 3L;
 	       Long numpag = 3L;
 		   	    
 		   //Mockando Service que busca no banco de dados 
-		   //given(service.findByCdBeneficiario(1659L)).willReturn(new Beneficiario());	       
+		   //given(service.getPage(1659L, 3L, 3L)).willReturn(new Beneficiarios());	       
 
 		   //Efetua a requisição na rota e espera um status code
-	       mvc.perform(get("/beneficiarios/empresa/" + codigoBeneficiario + "?tampag=" + tampag + "&numpag=" + numpag)	               
+	       mvc.perform(get("/beneficiarios/empresa/" + cdEmpresa + "?tampag=" + tampag + "&numpag=" + numpag)	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isOk())
 	               ;
@@ -60,15 +59,15 @@ public class BeneficiarioControllerTest {
 	   
 	   @Test
 	   public void testNoContent204() throws Exception {  
-	       Long codigoBeneficiario = 1659L;
+	       Long cdEmpresa = 1659L;
 	       Long tampag = 0L;
 	       Long numpag = 0L;
 		   	    
 		   //Mockando Service que busca no banco de dados 
-		   //given(service.findByCdBeneficiario(1659L)).willReturn(new Beneficiario());	       
+		   //given(service.getPage(1659L, 3L, 3L)).willReturn(new Beneficiarios());	       
 
 		   //Efetua a requisição na rota e espera um status code
-	       mvc.perform(get("/beneficiarios/empresa/" + codigoBeneficiario + "?tampag=" + tampag + "&numpag=" + numpag)	               
+	       mvc.perform(get("/beneficiarios/empresa/" + cdEmpresa + "?tampag=" + tampag + "&numpag=" + numpag)	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isNoContent()) //e nao deve retornar resultado
 	               ;	       	       	               	       
