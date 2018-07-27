@@ -274,7 +274,19 @@ public class BeneficiarioBusiness {
 
 		List<BeneficiarioPaginacao> listBeneficiarioPaginacao = null; 
 		
-		List<Object[]> listObject = vidaDao.findVidaByCdEmpresaPrimeiroRegUltimoReg(cdEmpresa, primeiroReg, ultimoReg);
+		Long qtdRegistros = vidaDao.countVidasTitularByCdEmpresa(cdEmpresa);
+		beneficiarios.setQtdRegistros(qtdRegistros);
+		
+		Long qtdPaginasInteiro = Math.floorDiv(qtdRegistros, tamPag);
+		Long qtdPaginasResto = Math.floorMod(qtdRegistros, tamPag);
+		Long qtdPaginas = qtdPaginasInteiro + (qtdPaginasResto==0?0L:1L);
+		beneficiarios.setQtdPaginas(qtdPaginas);
+		
+		if(beneficiarios.getNumPagina() > beneficiarios.getQtdPaginas()) {
+			return null; //forca NO_CONTENT //201807271522
+		}
+		
+		List<Object[]> listObject = vidaDao.findVidasTitularByCdEmpresaPrimeiroRegUltimoReg(cdEmpresa, primeiroReg, ultimoReg);
 		
 		if(listObject!=null) {
 			listBeneficiarioPaginacao = new ArrayList<>();
