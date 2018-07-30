@@ -7,6 +7,8 @@ public class ForcaDadosTrocaSenha implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long cdForcaVenda;
+	private Long cdCorretora; //201807172133 - esert - COR-318
+	private Long cdCorretoraForcaVenda;
 	private String nome;
 	private String celular;
 	private String email;
@@ -16,6 +18,18 @@ public class ForcaDadosTrocaSenha implements Serializable {
 	}
 	public void setCdForcaVenda(Long cdForcaVenda) {
 		this.cdForcaVenda = cdForcaVenda;
+	}
+	public Long getCdCorretora() {
+		return cdCorretora;
+	}
+	public void setCdCorretora(Long cdCorretora) {
+		this.cdCorretora = cdCorretora;
+	}
+	public Long getCdCorretoraForcaVenda() {
+		return cdCorretoraForcaVenda;
+	}
+	public void setCdCorretoraForcaVenda(Long cdCorretoraForcaVenda) {
+		this.cdCorretoraForcaVenda = cdCorretoraForcaVenda;
 	}
 	public String getNome() {
 		return nome;
@@ -38,8 +52,8 @@ public class ForcaDadosTrocaSenha implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "ForcaDadosTrocaSenha [cdForcaVenda=" + cdForcaVenda + ", nome=" + nome + ", celular=" + celular
-				+ ", email=" + email + "]";
+		return "ForcaDadosTrocaSenha [cdForcaVenda=" + cdForcaVenda + ", cdCorretora=" + cdCorretora + ", nome=" + nome
+				+ ", celular=" + celular + ", email=" + email + "]";
 	}
 	
 	

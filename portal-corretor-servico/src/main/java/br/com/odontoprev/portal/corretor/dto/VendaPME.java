@@ -9,10 +9,12 @@ public class VendaPME implements Serializable {
 
 	private Long cdForcaVenda;
 
+	private String plataforma; //201807201122 - esert/yalm - COR-431
+
 	private List<Empresa> empresas;
 
 	private List<Beneficiario> titulares;
-
+	
 	public Long getCdForcaVenda() {
 		return cdForcaVenda;
 	}
@@ -37,10 +39,19 @@ public class VendaPME implements Serializable {
 		this.titulares = titulares;
 	}
 
+	public String getPlataforma() {
+		return plataforma;
+	}
+
+	public void setPlataforma(String plataforma) {
+		this.plataforma = plataforma;
+	}
+
 	@Override
 	public String toString() {
 		return "VendaPME ["
 		+ "cdForcaVenda=" + cdForcaVenda //201805241355 - esert/yalm
+		+ "plataforma=" + plataforma //201807201427 - esert/yalm - COR-431
 		+ ", empresas.size()=" + (empresas != null ? empresas.size() : "null") 
 		+ ", titulares.size()="	+ (titulares != null ? titulares.size() : "null") 
 		+ "]";

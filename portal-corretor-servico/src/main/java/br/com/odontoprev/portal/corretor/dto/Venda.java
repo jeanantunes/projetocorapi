@@ -30,6 +30,8 @@ public class Venda implements Serializable {
 	private Date dataVigencia; //201806141829 - esert - (COR-301 Alter Table TBOD_VENDA)
 	private Date dataMovimentacao; //201806141829 - esert - (COR-301 Alter Table TBOD_VENDA)
 
+	private String plataforma; //201807201122 - esert/jantu - COR-431
+
 	public Long getCdVenda() {
 		return cdVenda;
 	}
@@ -134,13 +136,32 @@ public class Venda implements Serializable {
 		this.dataMovimentacao = dataMovimentacao;
 	}
 
+	public String getPlataforma() {
+		return plataforma;
+	}
+
+	public void setPlataforma(String plataforma) {
+		this.plataforma = plataforma;
+	}
+
 	@Override
 	public String toString() {
-		return "Venda [cdVenda=" + cdVenda + ", cdEmpresa=" + cdEmpresa + ", cdPlano=" + cdPlano + ", cdForcaVenda="
-				+ cdForcaVenda + ", dataVenda=" + dataVenda + ", cdStatusVenda=" + cdStatusVenda + ", faturaVencimento="
-				+ faturaVencimento + ", tipoPagamento=" + tipoPagamento + ", titulares=" + titulares
-				+ ", cdDCSSUsuario=" + cdDCSSUsuario + ", responsavelContratual=" + responsavelContratual
-				+ ", dataVigencia=" + dataVigencia + ", dataMovimentacao=" + dataMovimentacao + "]";
+		return "Venda [" 
+				+ "cdVenda=" + cdVenda 
+				+ ", cdEmpresa=" + cdEmpresa 
+				+ ", cdPlano=" + cdPlano 
+				+ ", cdForcaVenda="	+ cdForcaVenda 
+				+ ", dataVenda=" + dataVenda 
+				+ ", cdStatusVenda=" + cdStatusVenda 
+				+ ", faturaVencimento=" + faturaVencimento 
+				+ ", tipoPagamento=" + tipoPagamento 
+				+ ", titulares=" + titulares 
+				+ ", cdDCSSUsuario=" + cdDCSSUsuario 
+				+ ", responsavelContratual=" + responsavelContratual
+				+ ", dataVigencia=" + dataVigencia 
+				+ ", dataMovimentacao=" + dataMovimentacao 
+				+ ", plataforma=" + plataforma //201807201122 - esert - COR-431
+				+ "]";
 	}
 
 }

@@ -7,7 +7,7 @@ public interface CorretoraService {
 
 	public CorretoraResponse addCorretora(Corretora corretora);
 
-	public CorretoraResponse updateCorretora(Corretora corretora);
+	public CorretoraResponse updateCorretoraLogin(Corretora corretora);
 
 	public Corretora buscaCorretoraPorCnpj(String cnpj);
 	

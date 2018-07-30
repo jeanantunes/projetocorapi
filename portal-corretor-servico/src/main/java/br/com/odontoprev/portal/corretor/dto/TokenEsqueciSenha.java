@@ -13,6 +13,7 @@ public class TokenEsqueciSenha implements Serializable {
 	private String dataReset;	
 	private String dataEnvioEmail;
 	private String cpf;
+	private String cnpj; //201807171752 - esert - COR-317
 	
 	public Long getCdForca() {
 		return cdForca;
@@ -50,10 +51,33 @@ public class TokenEsqueciSenha implements Serializable {
 	public void setDataEnvioEmail(String dataEnvioEmail) {
 		this.dataEnvioEmail = dataEnvioEmail;
 	}
+	
 	public String getCpf() {
 		return cpf;
 	}
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
-	}	
+	}
+	
+	public String getCnpj() {
+		return cnpj;
+	}
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+	
+	@Override
+	public String toString() {
+		return "TokenEsqueciSenha [" 
+				+ "cdForca=" + cdForca 
+				+ ", cdCorretora=" + cdCorretora 
+				+ ", email=" + email 
+				+ ", token=" + token 
+				+ ", dataReset=" + dataReset 
+				+ ", dataEnvioEmail=" + dataEnvioEmail 
+				+ ", cpf=" + cpf 
+				+ ", cnpj=" + cnpj //201807171718 - esert - COR-317 
+				+ "]";
+	}
+	
 }

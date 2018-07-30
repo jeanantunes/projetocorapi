@@ -89,22 +89,30 @@ public class PropertiesUtils {
 		FileInputStream fileInputStream = null;
 		PropertyResourceBundle propertyResourceBundle = null;
 
-		PROPERTY = ResourceBundle.getBundle("application"); //201806261925 - esert - volta ao default
+		try {
+			PROPERTY = ResourceBundle.getBundle("application"); //201806261925 - esert - volta ao default
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			//e1.printStackTrace();
+			log.info("nao achou application.properties .");
+			log.error(e1);
+		}
 
 		try {
 			
 			stringSpringConfigLocation = System.getProperty(SPRING_CONFIG_LOCATION);
+			log.info("vai procurar [" + SPRING_CONFIG_LOCATION + "] em [" + stringSpringConfigLocation + "]...");
 			
 			if(stringSpringConfigLocation != null && !stringSpringConfigLocation.isEmpty()) { //201806201919 - esert - protecao para falta de configuracao
 				
-				log.info("PropertiesUtils.static; stringSpringConfigLocation:[" + stringSpringConfigLocation + "]"); //201806222035 - esert - log 
+				log.info("PropertiesUtils.static; achou stringSpringConfigLocation:[" + stringSpringConfigLocation + "]"); //201806222035 - esert - log 
 
 				fileInputStream = new FileInputStream(stringSpringConfigLocation);
 				
 				propertyResourceBundle = new PropertyResourceBundle(fileInputStream);
 				
 				PROPERTY = (ResourceBundle)propertyResourceBundle; //201806261925 - esert
-
+				
 			} 
 //			else 
 //			{

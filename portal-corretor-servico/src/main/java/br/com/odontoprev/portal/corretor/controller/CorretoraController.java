@@ -41,18 +41,21 @@ public class CorretoraController {
 		
 	}
 
-	@RequestMapping(value = "/corretora", method = { RequestMethod.PUT })
-	public ResponseEntity<CorretoraResponse> updateCorretora(@RequestBody Corretora corretora) {
+	@RequestMapping(value = "/corretora/login", method = { RequestMethod.PUT })
+	public ResponseEntity<CorretoraResponse> updateCorretoraLogin(@RequestBody Corretora corretora) { //201807181255 - esert - COR-319
 		
+		log.info("updateCorretoraLogin - ini");
 		log.info(corretora);
 		
 		try {
 			
-			CorretoraResponse corretoraResponse = corretoraService.updateCorretora(corretora);
-			
+			CorretoraResponse corretoraResponse = corretoraService.updateCorretoraLogin(corretora); //201807181255 - esert - COR-319
+
+			log.info("updateCorretoraLogin - fim");
 			return ResponseEntity.ok(corretoraResponse);
 			
 		} catch (final Exception e) {
+			log.info("updateCorretoraLogin - erro");
 			log.error("ERROR: ", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}

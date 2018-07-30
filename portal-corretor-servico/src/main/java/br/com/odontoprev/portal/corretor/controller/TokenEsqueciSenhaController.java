@@ -37,7 +37,7 @@ public class TokenEsqueciSenhaController {
 	@RequestMapping(value = "/esqueciMinhaSenha/{token}", method = { RequestMethod.GET })
 	public ResponseEntity<ForcaDadosTrocaSenha> findDadosForcaTrocaSenha(@PathVariable String token) {
 	
-		log.info("[API findDadosForcaTrocaSenha]");	
+		log.info("[API findDadosForcaTrocaSenha ini]");	
 		
 		log.info("[Busca CPF atraves do token - TBOD_TOKEN_RESET_SENHA]");
 		
@@ -47,6 +47,7 @@ public class TokenEsqueciSenhaController {
 		
 		ForcaDadosTrocaSenha forcaDadosTrocaSenha = forcaDadosTrocaSenhaService.buscarDadosForcaVendaPorCPF(tokenEsqueciSenha.getCpf());
 		
+		log.info("[API findDadosForcaTrocaSenha fim]");	
 		return ResponseEntity.ok(forcaDadosTrocaSenha);
 	}
 	

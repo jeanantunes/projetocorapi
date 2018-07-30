@@ -60,6 +60,9 @@ public class TbodVenda implements Serializable {
 	@Column(name = "DT_MOVIMENTACAO")
 	private Date dtMovimentacao; //201806141529 - esert - [COR-301 alter table TBOD_VENDA]
 	
+	@Column(name = "PLATAFORMA")
+	private String plataforma; //201807201122 - esert - COR-431
+
 	
 	// bi-directional many-to-one association to TbodEmpresa
 	@ManyToOne
@@ -298,6 +301,14 @@ public class TbodVenda implements Serializable {
 		this.dtMovimentacao = dtMovimentacao;
 	}
 
+	public String getPlataforma() {
+		return plataforma;
+	}
+
+	public void setPlataforma(String plataforma) {
+		this.plataforma = plataforma;
+	}
+
 	//201806141628 - esert
 	@Override
 	public String toString() {
@@ -323,6 +334,7 @@ public class TbodVenda implements Serializable {
 				+ ", tbodVendaVidas=" + tbodVendaVidas
 				+ ", tbodTokenAceites=" + tbodTokenAceites 
 				+ ", tbodResponsavelContratual=" + tbodResponsavelContratual
+				+ ", plataforma=" + plataforma //201807201122 - esert - COR-431
 				+ "]";
 	}
 	
