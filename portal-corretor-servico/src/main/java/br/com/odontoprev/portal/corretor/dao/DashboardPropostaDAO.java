@@ -22,7 +22,9 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 						"INNER JOIN tbod_forca_venda forca " +
 						"ON forca.CD_CORRETORA = corretora.CD_CORRETORA " +
 						"INNER JOIN tbod_venda venda " +
-						"ON venda.cd_forca_vendas = forca.cd_forca_venda " +
+						//"ON ( venda.cd_forca_vendas = forca.cd_forca_venda " + //201807301937 - esert - COR-496 - exc
+						"ON ( venda.cd_forca_vendas = forca.cd_forca_venda " + //201807301937 - esert - COR-496 - alt
+						"and venda.cd_corretora = corretora.cd_corretora )" + //201807301937 - esert - COR-496 - inc
 						"INNER JOIN tbod_plano plano " +
 						"ON plano.cd_plano = venda.cd_plano " +
 						"INNER JOIN tbod_empresa emp " +
