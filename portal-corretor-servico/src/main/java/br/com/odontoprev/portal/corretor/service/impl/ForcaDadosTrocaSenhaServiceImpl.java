@@ -46,6 +46,7 @@ public class ForcaDadosTrocaSenhaServiceImpl implements ForcaDadosTrocaSenhaServ
 					forcaDadosTrocaSenha.setNome(forcaVenda.getNome());
 					forcaDadosTrocaSenha.setEmail(forcaVenda.getEmail());
 					forcaDadosTrocaSenha.setCelular(forcaVenda.getCelular());
+					forcaDadosTrocaSenha.setCdCorretoraForcaVenda(forcaVenda.getCorretora().getCdCorretora());
 				}
 				
 			} else if(cpfCnpj.length() == Constantes.TAMANHO_CNPJ) { //201807172152 - esert - COR-318
