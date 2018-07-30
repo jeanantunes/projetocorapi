@@ -47,6 +47,7 @@ public class BeneficiarioControllerTest {
 	   @Autowired
 	   private BeneficiarioService service;
 	   
+	   //201807271700 - esert - COR-478 tdd beneficiario paginacao
 	   @Test
 	   public void testOk200Tampag3Numpag3() throws Exception {  
 		   Long cdEmpresa = 1659L;
@@ -66,7 +67,8 @@ public class BeneficiarioControllerTest {
 		   .andExpect(status().isOk())
 		   ;
 	   }
-	  	   
+	
+	   //201807271700 - esert - COR-478 tdd beneficiario paginacao
 	   @Test
 	   public void testOk200Tampag3Numpag2() throws Exception {  
 	       Long cdEmpresa = 1659L;
@@ -110,7 +112,8 @@ public class BeneficiarioControllerTest {
 	               .andExpect(MockMvcResultMatchers.jsonPath("$.titulares[1].nome").value("beneficiario titular [8]"))
 	               ;
 	   }
-	   
+
+	   //201807271700 - esert - COR-478 tdd beneficiario paginacao
 	   @Test
 	   public void testNoContent204Tampag0Numpag0() throws Exception {  
 	       Long cdEmpresa = 1659L;
@@ -127,4 +130,39 @@ public class BeneficiarioControllerTest {
 	               ;	       	       	               	       
 	   }
 
+	   //201807301238 - esert - COR-477 tdd dependentes
+	   @Test
+	   public void testOk200Dependente() throws Exception {  
+		   Long cdVidaSvc = 3885L;
+		   Long cdVidaGet = 3885L;
+		   
+		   Beneficiario beneficiario = new Beneficiario();
+		   
+		   //Mockando Service que busca no banco de dados 
+		   given(service.get(cdVidaSvc)).willReturn(beneficiario);	       
+		   
+		   //Efetua a requisição na rota e espera um status code
+		   mvc.perform(get("/beneficiario/" + cdVidaGet)
+				   .contentType(APPLICATION_JSON))
+		   		 	.andExpect(status().isOk())
+				    ;
+	   }
+	   
+	   //201807301238 - esert - COR-477 tdd dependentes
+	   @Test
+	   public void testNoContent204Dependente() throws Exception {  
+		   Long cdVidaSvc = 3885L;
+		   Long cdVidaGet = 0L;
+		   
+		   Beneficiario beneficiario = new Beneficiario();
+		   
+		   //Mockando Service que busca no banco de dados 
+		   given(service.get(cdVidaSvc)).willReturn(beneficiario);	       
+		   
+		   //Efetua a requisição na rota e espera um status code
+		   mvc.perform(get("/beneficiario/" + cdVidaGet)	               
+				.contentType(APPLICATION_JSON))
+           		.andExpect(status().isNoContent()) //e nao deve retornar resultado
+           		;	       	       	               	       
+	   }
 }

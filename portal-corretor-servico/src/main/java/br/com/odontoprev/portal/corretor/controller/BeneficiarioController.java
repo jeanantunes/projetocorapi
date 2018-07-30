@@ -82,7 +82,7 @@ public class BeneficiarioController {
 		try {
 			Beneficiario beneficiario = beneficiarioService.get(cdVida);
 			if(beneficiario==null) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //201807301238 - esert - trocado NOT_FOUND-404 por NO_CONTENT-204 - COR-477 
 			}
 			return ResponseEntity.ok(beneficiario);
 		} catch (Exception e) {
