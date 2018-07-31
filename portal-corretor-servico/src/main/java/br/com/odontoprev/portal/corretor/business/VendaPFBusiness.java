@@ -150,6 +150,8 @@ public class VendaPFBusiness {
 				}				
 				tbVenda.setTbodForcaVenda(tbodForcaVenda);
 				venda.setCdDCSSUsuario(tbodForcaVenda.getCodigoDcssUsuario());
+
+				tbVenda.setTbodCorretora(tbodForcaVenda.getTbodCorretora()); //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
 			}
 			
 			if(venda.getDataVenda() != null) {

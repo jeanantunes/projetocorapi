@@ -62,7 +62,6 @@ public class TbodVenda implements Serializable {
 	
 	@Column(name = "PLATAFORMA")
 	private String plataforma; //201807201122 - esert - COR-431
-
 	
 	// bi-directional many-to-one association to TbodEmpresa
 	@ManyToOne
@@ -101,6 +100,11 @@ public class TbodVenda implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="CD_RESPONSAVEL_CONTRATUAL")
 	private TbodResponsavelContratual tbodResponsavelContratual;
+	
+	// bi-directional many-to-one association to TbodEmpresa
+	@ManyToOne
+	@JoinColumn(name = "CD_CORRETORA")
+	private TbodCorretora tbodCorretora; //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
 
 	public TbodVenda() {
 	}
@@ -309,6 +313,14 @@ public class TbodVenda implements Serializable {
 		this.plataforma = plataforma;
 	}
 
+	public TbodCorretora getTbodCorretora() {
+		return tbodCorretora;
+	}
+
+	public void setTbodCorretora(TbodCorretora tbodCorretora) {
+		this.tbodCorretora = tbodCorretora;
+	}
+
 	//201806141628 - esert
 	@Override
 	public String toString() {
@@ -335,6 +347,7 @@ public class TbodVenda implements Serializable {
 				+ ", tbodTokenAceites=" + tbodTokenAceites 
 				+ ", tbodResponsavelContratual=" + tbodResponsavelContratual
 				+ ", plataforma=" + plataforma //201807201122 - esert - COR-431
+				+ ", tbodCorretora=" + tbodCorretora //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
 				+ "]";
 	}
 	

@@ -31,6 +31,8 @@ public class Venda implements Serializable {
 	private Date dataMovimentacao; //201806141829 - esert - (COR-301 Alter Table TBOD_VENDA)
 
 	private String plataforma; //201807201122 - esert/jantu - COR-431
+	
+	private Long cdCorretora; //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
 
 	public Long getCdVenda() {
 		return cdVenda;
@@ -144,6 +146,14 @@ public class Venda implements Serializable {
 		this.plataforma = plataforma;
 	}
 
+	public Long getCdCorretora() {
+		return cdCorretora;
+	}
+
+	public void setCdCorretora(Long cdCorretora) {
+		this.cdCorretora = cdCorretora;
+	}
+
 	@Override
 	public String toString() {
 		return "Venda [" 
@@ -161,6 +171,7 @@ public class Venda implements Serializable {
 				+ ", dataVigencia=" + dataVigencia 
 				+ ", dataMovimentacao=" + dataMovimentacao 
 				+ ", plataforma=" + plataforma //201807201122 - esert - COR-431
+				+ ", cdCorretora=" + cdCorretora //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
 				+ "]";
 	}
 
