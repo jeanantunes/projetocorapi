@@ -145,26 +145,30 @@ public class XlsCorretoraTotalVidas {
 			HSSFSheet sheet = workbook.createSheet("CorretoraTotalVidasPF");
 
 			HSSFRow rowhead = sheet.createRow((short) 0);
-			rowhead.createCell(0).setCellValue("NUM_PROPOSTA");//01
-			rowhead.createCell(1).setCellValue("DT_VENDA");//02
-			rowhead.createCell(2).setCellValue("PRIMEIRO_VENCIMENTO");//03
-			rowhead.createCell(3).setCellValue("CORRETORA");//04
-			rowhead.createCell(4).setCellValue("CNPJ_CORRETORA");//05
-			rowhead.createCell(5).setCellValue("NOME_FORCA");//06
-			rowhead.createCell(6).setCellValue("CPF_FORCA");//07
-			rowhead.createCell(7).setCellValue("PLANO_PF");//08
-			rowhead.createCell(8).setCellValue("TIPO_PLANO");//09
-			rowhead.createCell(9).setCellValue("VIDAS");//10
-			rowhead.createCell(10).setCellValue("CPF_TITULAR");//11
-			rowhead.createCell(11).setCellValue("NOME_TITULAR");//12
-			rowhead.createCell(12).setCellValue("LOGRADOURO");//13
-			rowhead.createCell(13).setCellValue("NUMERO");//14
-			rowhead.createCell(14).setCellValue("COMPLEMENTO");//15
-			rowhead.createCell(15).setCellValue("BAIRRO");//16
-			rowhead.createCell(16).setCellValue("CIDADE");//17
-			rowhead.createCell(17).setCellValue("UF");//18
-			rowhead.createCell(18).setCellValue("CEP");//19
-			rowhead.createCell(19).setCellValue("EMAIL");//20
+			rowhead.createCell(0).setCellValue("NUM_PROPOSTA");
+			rowhead.createCell(1).setCellValue("DT_VENDA");
+			rowhead.createCell(2).setCellValue("PRIMEIRO_VENCIMENTO");
+			rowhead.createCell(3).setCellValue("CORRETORA");
+			rowhead.createCell(4).setCellValue("CNPJ_CORRETORA");
+			rowhead.createCell(5).setCellValue("NOME_FORCA");
+			rowhead.createCell(6).setCellValue("CPF_FORCA");
+			rowhead.createCell(7).setCellValue("PLANO_PF");
+			rowhead.createCell(8).setCellValue("TIPO_PLANO");
+			rowhead.createCell(9).setCellValue("VIDAS");
+
+			rowhead.createCell(10).setCellValue("VALOR_VENDA");
+			rowhead.createCell(11).setCellValue("STATUS_PROPOSTA");
+
+			rowhead.createCell(12).setCellValue("CPF_TITULAR");
+			rowhead.createCell(13).setCellValue("NOME_TITULAR");
+			rowhead.createCell(14).setCellValue("LOGRADOURO");
+			rowhead.createCell(15).setCellValue("NUMERO");
+			rowhead.createCell(16).setCellValue("COMPLEMENTO");
+			rowhead.createCell(17).setCellValue("BAIRRO");
+			rowhead.createCell(18).setCellValue("CIDADE");
+			rowhead.createCell(19).setCellValue("UF");
+			rowhead.createCell(20).setCellValue("CEP");
+			rowhead.createCell(21).setCellValue("EMAIL");
 
 			int rowCount = 0;
 
@@ -205,16 +209,19 @@ public class XlsCorretoraTotalVidas {
 				}
 				row.createCell(9).setCellValue(strTotal_vidas);//10
 
-				row.createCell(10).setCellValue(item.getCpf_titular());//11
-				row.createCell(11).setCellValue(item.getNome_titular());//12
-				row.createCell(12).setCellValue(item.getLogradouro());//13
-				row.createCell(13).setCellValue(item.getNumero());//14
-				row.createCell(14).setCellValue(item.getComplemento());//15
-				row.createCell(15).setCellValue(item.getBairro());//16
-				row.createCell(16).setCellValue(item.getCidade());//17
-				row.createCell(17).setCellValue(item.getUf());//18
-				row.createCell(18).setCellValue(item.getCep());//19
-				row.createCell(19).setCellValue(item.getEmail());//20
+				row.createCell(10).setCellValue(item.getValor_venda());
+				row.createCell(11).setCellValue(item.getStatus_proposta());
+
+				row.createCell(12).setCellValue(item.getCpf_titular());
+				row.createCell(13).setCellValue(item.getNome_titular());
+				row.createCell(14).setCellValue(item.getLogradouro());
+				row.createCell(15).setCellValue(item.getNumero());
+				row.createCell(16).setCellValue(item.getComplemento());
+				row.createCell(17).setCellValue(item.getBairro());
+				row.createCell(18).setCellValue(item.getCidade());
+				row.createCell(19).setCellValue(item.getUf());
+				row.createCell(20).setCellValue(item.getCep());
+				row.createCell(21).setCellValue(item.getEmail());
 	
 			}
 			

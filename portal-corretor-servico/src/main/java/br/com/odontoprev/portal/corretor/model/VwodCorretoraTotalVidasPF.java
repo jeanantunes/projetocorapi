@@ -60,6 +60,12 @@ public class VwodCorretoraTotalVidasPF implements Serializable {
 	@Column(name="VIDAS") //10
 	private String vidas;
 
+	@Column(name = "VALOR_VENDA")
+	private String valor_venda;
+
+	@Column(name = "STATUS_PROPOSTA")
+	private String status_proposta;
+
 	//vida.cpf CPF_TITULAR,  
 	@Column(name="CPF_TITULAR") //11
 	private String cpf_titular;
@@ -180,6 +186,22 @@ public class VwodCorretoraTotalVidasPF implements Serializable {
 		this.vidas = vidas;
 	}
 
+	public String getValor_venda() {
+		return valor_venda;
+	}
+
+	public void setValor_venda(String valor_venda) {
+		this.valor_venda = valor_venda;
+	}
+
+	public String getStatus_proposta() {
+		return status_proposta;
+	}
+
+	public void setStatus_proposta(String status_proposta) {
+		this.status_proposta = status_proposta;
+	}
+
 	public String getCpf_titular() {
 		return cpf_titular;
 	}
@@ -262,16 +284,33 @@ public class VwodCorretoraTotalVidasPF implements Serializable {
 
 	@Override
 	public String toString() {
-		return "VwodCorretoraTotalVidasPF [num_proposta=" + num_proposta + ", dt_venda=" + dt_venda
-				+ ", primeiro_vencimento=" + primeiro_vencimento + ", corretora=" + corretora + ", cnpj_corretora="
-				+ cnpj_corretora + ", nome_forca=" + nome_forca + ", cpf_forca=" + cpf_forca + ", plano_pf=" + plano_pf
-				+ ", tipo_plano=" + tipo_plano + ", vidas=" + vidas + ", cpf_titular=" + cpf_titular + ", nome_titular="
-				+ nome_titular + ", logradouro=" + logradouro + ", numero=" + numero + ", complemento=" + complemento
-				+ ", bairro=" + bairro + ", cidade=" + cidade + ", uf=" + uf + ", cep=" + cep + ", email=" + email
-				+ "]";
+		return "VwodCorretoraTotalVidasPF{" +
+				"num_proposta='" + num_proposta + '\'' +
+				", dt_venda=" + dt_venda +
+				", primeiro_vencimento=" + primeiro_vencimento +
+				", corretora='" + corretora + '\'' +
+				", cnpj_corretora='" + cnpj_corretora + '\'' +
+				", nome_forca='" + nome_forca + '\'' +
+				", cpf_forca='" + cpf_forca + '\'' +
+				", plano_pf='" + plano_pf + '\'' +
+				", tipo_plano='" + tipo_plano + '\'' +
+				", vidas='" + vidas + '\'' +
+				", valor_venda='" + valor_venda + '\'' +
+				", status_proposta='" + status_proposta + '\'' +
+				", cpf_titular='" + cpf_titular + '\'' +
+				", nome_titular='" + nome_titular + '\'' +
+				", logradouro='" + logradouro + '\'' +
+				", numero='" + numero + '\'' +
+				", complemento='" + complemento + '\'' +
+				", bairro='" + bairro + '\'' +
+				", cidade='" + cidade + '\'' +
+				", uf='" + uf + '\'' +
+				", cep='" + cep + '\'' +
+				", email='" + email + '\'' +
+				'}';
 	}
-	
-	
+
+
 }
 
 //filosofia T__ELA & TABELA
