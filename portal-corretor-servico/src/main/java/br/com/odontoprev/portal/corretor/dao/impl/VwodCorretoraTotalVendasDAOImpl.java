@@ -26,11 +26,9 @@ public class VwodCorretoraTotalVendasDAOImpl implements VwodCorretoraTotalVendas
 
     //201806081613 - esert - relatorio vendas pme
     @Override
-    public List<VwodCorretoraTotalVidasPME> vwodCorretoraTotalVidasPMEByFiltro(
-            Date dtVendaInicio,
-            Date dtVendaFim,
-            String cnpjCorretora
-    ) {
+    public List<VwodCorretoraTotalVidasPME> vwodCorretoraTotalVidasPMEByFiltro(Date dtVendaInicio,
+                                                                               Date dtVendaFim,
+                                                                               String cnpjCorretora) {
         log.info("vwodCorretoraTotalVidasPMEByFiltro - ini");
 
         String stringQuery = "from VwodCorretoraTotalVidasPME v where 1=1 ";
