@@ -722,12 +722,18 @@ public class VendaPFBusiness {
 			log.error(msgErro);
 			//e.printStackTrace();
 			propostaDCMSResponse.setMensagemErro(msgErro);
-			//return propostaDCMSResponse;
+			
 			throw new RollbackException(msgErro); //201806291524 - esert - se o DCMS falhar deve fazer rollback - COR-352 rollback pf
+			
+			//201808021330 - fake
+			//propostaDCMSResponse.setMensagemErro(propostaDCMSResponse.getMensagemErro().concat(";fake-999999"));
+			//propostaDCMSResponse.setNumeroProposta("999999");
+			//return propostaDCMSResponse;
 		}
+		propostaDCMSResponse = response.getBody();
 					
 		log.info("chamarWSLegadoPropostaPOST; fim;");
-		return response.getBody();
+		return propostaDCMSResponse;
 			
 	}
 
