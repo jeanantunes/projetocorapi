@@ -37,8 +37,9 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 	@Autowired
 	private ForcaVendaDAO forcaVendaDao;
 
+	//201808021440 - esert - COR-496 Corretora / COR-497 ForcaVenda
 	@Override
-	public DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status, String cnpj) {
+	public DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status, String cnpjCpf) {
 
 		log.info("[buscaPropostaPorStatusPME]");
 
@@ -52,20 +53,20 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			// findAll
 			if (status == 0) {
 
-				if (cnpj.length() > 11) {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L, cnpj, null);
+				if (cnpjCpf.length() > 11) {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCOR(0L, cnpjCpf);
 
 				} else {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L, null, cnpj);
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCpfFV(0L, cnpjCpf);
 				}
 
 			} else {
 
-				if (cnpj.length() > 11) {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status, cnpj, null);
+				if (cnpjCpf.length() > 11) {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCOR(status, cnpjCpf);
 
 				} else {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status, null, cnpj);
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCpfFV(status, cnpjCpf);
 				}
 			}
 
@@ -125,8 +126,9 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 		
 	}
 
+	//201808021440 - esert - COR-496 Corretora / COR-497 ForcaVenda
 	@Override
-	public DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status, String cpf) {
+	public DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status, String cnpjCpf) {
 
 		log.info("[buscaPropostaPorStatusPF]");
 
@@ -140,18 +142,18 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			// findAll
 			if (status == 0) {
 
-				if (cpf.length() > 11) {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, null, cpf);
+				if (cnpjCpf.length() > 11) {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCnpjCOR(0L, cnpjCpf);
 				} else {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, cpf, null);
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfFV(0L, cnpjCpf);
 				}
 
 			} else {
 
-				if (cpf.length() > 11) {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, null, cpf);
+				if (cnpjCpf.length() > 11) {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCnpjCOR(status, cnpjCpf);
 				} else {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, cpf, null);
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfFV(status, cnpjCpf);
 				}
 			}
 
