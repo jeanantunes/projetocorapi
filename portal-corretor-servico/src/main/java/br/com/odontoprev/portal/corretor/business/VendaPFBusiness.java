@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -140,6 +141,7 @@ public class VendaPFBusiness {
 			TbodPlano tbodPlano = null;
 			if(venda.getCdPlano() != null) {
 				tbodPlano = planoDao.findByCdPlano(venda.getCdPlano());
+				tbVenda.setValorPlano(tbodPlano.getValorMensal()); //20180802 - yalm - [COR-532]
 				tbVenda.setTbodPlano(tbodPlano);
 			}
 
@@ -183,13 +185,45 @@ public class VendaPFBusiness {
 			}
 
 			tbVenda.setPlataforma(venda.getPlataforma()); //201807201122 - esert - COR-431
-			
-			if(venda.getTitulares() != null 
+
+			long qtVidas = 0;
+
+			//20180802 - yalm - [COR-532]
+			if(
+				venda.getTitulares() != null
+				&&
+				!venda.getTitulares().isEmpty()
+			) {
+
+				for (Beneficiario titular : venda.getTitulares()) {
+
+					qtVidas++;
+
+					if (titular.getDependentes() != null){
+
+						qtVidas += titular.getDependentes().size();
+
+					}
+				}
+
+			}
+
+			//20180802 - yalm - [COR-532]
+			tbVenda.setQtVidas(qtVidas);
+
+			//20180802 - yalm - [COR-532]
+			if (tbVenda.getValorPlano() != null){
+
+				tbVenda.setValorTotal( BigDecimal.valueOf( (double)qtVidas * tbVenda.getValorPlano().doubleValue() ) );
+
+			}
+
+			if(venda.getTitulares() != null
 				&& !venda.getTitulares().isEmpty()
 				&& venda.getTitulares().get(0) != null
 				&& venda.getTitulares().get(0).getDadosBancarios() != null
 			) {
-					
+
 				DadosBancariosVenda dadosBancariosVenda = venda.getTitulares().get(0).getDadosBancarios();
 				
 				//Dados Bancarios
