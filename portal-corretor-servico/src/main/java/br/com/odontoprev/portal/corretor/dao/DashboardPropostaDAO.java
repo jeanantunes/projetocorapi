@@ -21,7 +21,10 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
 					"  SUM(plano.valor_anual + plano.valor_mensal) valor " + //7
 					"FROM tbod_venda venda " + //201807301937 - esert - COR-496 - alt
 						"INNER JOIN tbod_corretora corretora ON corretora.cd_corretora = venda.cd_corretora " + //201807301937 - esert - COR-496 - alt
-						"INNER JOIN tbod_forca_venda forca ON forca.cd_forca_venda = venda.cd_forca_vendas and forca.cd_corretora = corretora.cd_corretora " + //201807301937 - esert - COR-496 - alt 
+						//permite ver vendas do forca_venda apenas enquanto esta na corretora
+						//"INNER JOIN tbod_forca_venda forca ON forca.cd_forca_venda = venda.cd_forca_vendas and forca.cd_corretora = corretora.cd_corretora " + //201807301937 - esert - COR-496 - alt
+						//permite ver vendas do forca_venda antes de sair da corretora 
+						"INNER JOIN tbod_forca_venda forca ON forca.cd_forca_venda = venda.cd_forca_vendas " + //201807301937 - esert - COR-496 - alt 
 						"INNER JOIN tbod_plano plano ON plano.cd_plano = venda.cd_plano " +
 						"INNER JOIN tbod_empresa emp ON venda.cd_empresa = emp.cd_empresa " +
 						"INNER JOIN tbod_status_venda status ON status.cd_status_venda = venda.cd_status_venda " +
@@ -80,7 +83,10 @@ public interface DashboardPropostaDAO extends Repository<TbodVenda, Long> {
     		"  SUM(p.valor_anual + p.valor_mensal) valor "+ //6
     		"FROM tbod_venda venda "+ //201807301937 - esert - COR-496 - alt
     		"JOIN tbod_corretora c ON c.cd_corretora = venda.cd_corretora "+ //201807301937 - esert - COR-496 - alt
-    		"JOIN tbod_forca_venda f ON f.cd_forca_venda = venda.cd_forca_vendas AND f.cd_corretora = c.cd_corretora "+ //201807301937 - esert - COR-496 - alt
+			//permite ver vendas do forca_venda apenas enquanto esta na corretora
+    		//"JOIN tbod_forca_venda f ON f.cd_forca_venda = venda.cd_forca_vendas AND f.cd_corretora = c.cd_corretora "+ //201807301937 - esert - COR-496 - alt
+			//permite ver vendas do forca_venda mesmo apos sair da corretora
+    		"JOIN tbod_forca_venda f ON f.cd_forca_venda = venda.cd_forca_vendas "+ //201808012337 - esert - COR-496 - alt
     		"JOIN tbod_status_venda status ON status.cd_status_venda = venda.cd_status_venda "+
     		"JOIN tbod_venda_vida vv ON vv.cd_venda = venda.cd_venda "+
     		"JOIN tbod_vida vida ON vida.cd_vida = vv.cd_vida "+
