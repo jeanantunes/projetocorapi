@@ -204,11 +204,7 @@ public class PropostaServiceImpl implements PropostaService {
         Date dateDtVendaFim;
 
         //201806112000 - esert - se receber /0/0/cnpj
-        if (
-                corretoraTotalVidasPME.getDtVendaInicio().equals("0")
-                        &&
-                        corretoraTotalVidasPME.getDtVendaFim().equals("0")
-                ) {
+        if (corretoraTotalVidasPME.getDtVendaInicio().equals("0") && corretoraTotalVidasPME.getDtVendaFim().equals("0")) {
             //201806112000 - esert - calcula de 90 dias atras ate hoje
             Calendar dataVenda = new GregorianCalendar();
             dataVenda.setTime(new Date());
