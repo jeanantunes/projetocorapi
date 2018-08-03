@@ -123,19 +123,25 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 
 			if(tbTokenAceite != null) {
 
-				SimpleDateFormat sdfDDMMYYYY = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				SimpleDateFormat sdfDDMMYYYY = new SimpleDateFormat("dd/MM/yyyy");
 
 
 				if(tbTokenAceite.getDtAceite() != null){
 
-					return new TokenAceite(HttpStatus.ACCEPTED.value(), "Aceite ja realizado em '" + sdfDDMMYYYY.format(tbTokenAceite.getDtAceite()) + "'.");
+					tokenAceite.setId(HttpStatus.ACCEPTED.value());
+					tokenAceite.setMensagem("Aceite ja realizado em " + sdfDDMMYYYY.format(tbTokenAceite.getDtAceite()) + ".");
+					tokenAceite.setDataAceite(sdfDDMMYYYY.format(tbTokenAceite.getDtAceite()));
+					return tokenAceite;//new TokenAceite(HttpStatus.ACCEPTED.value(), "Aceite ja realizado em " + sdfDDMMYYYY.format(tbTokenAceite.getDtAceite()) + ".");
 
 				}
 
 				Date dateHoje = new Date();
 				if(tbTokenAceite.getDtExpiracao().getTime() < dateHoje.getTime()){
 
-					return new TokenAceite(HttpStatus.ACCEPTED.value(), "Token expirado em '" + sdfDDMMYYYY.format(tbTokenAceite.getDtExpiracao()) + "'.");
+					tokenAceite.setId(HttpStatus.ACCEPTED.value());
+					tokenAceite.setMensagem("Token expirado em '" + sdfDDMMYYYY.format(tbTokenAceite.getDtExpiracao()) + "'.");
+					tokenAceite.setDataExpiracao(sdfDDMMYYYY.format(tbTokenAceite.getDtExpiracao()));
+					return tokenAceite;//new TokenAceite(HttpStatus.ACCEPTED.value(), "Token expirado em '" + sdfDDMMYYYY.format(tbTokenAceite.getDtExpiracao()) + "'.");
 
 				}
 
