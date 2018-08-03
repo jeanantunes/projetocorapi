@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +11,7 @@ import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.transaction.RollbackException;
 
+import oracle.jdbc.driver.Const;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,7 @@ import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
+
 
 @ManagedBean
 @Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
@@ -236,10 +239,13 @@ public class VendaPFBusiness {
 				}
 				
 				if(dadosBancariosVenda.getAgencia() != null) {
-					dadosBancariosVenda.setAgencia(dadosBancariosVenda.getAgencia().replace("-", ""));
+					//dadosBancariosVenda.setAgencia(dadosBancariosVenda.getAgencia().replace("-", ""));
+
 					if(!dadosBancariosVenda.getAgencia().isEmpty()) {
-						String ag = dadosBancariosVenda.getAgencia().substring(0,dadosBancariosVenda.getAgencia().length()-1);
-						String agDV = dadosBancariosVenda.getAgencia().substring(dadosBancariosVenda.getAgencia().length()-1);
+
+						String agDV = calcularDigitoAgencia(dadosBancariosVenda.getAgencia(), dadosBancariosVenda.getCodigoBanco());
+						String ag = dadosBancariosVenda.getAgencia();
+
 						tbVenda.setAgencia(ag);
 						tbVenda.setAgenciaDv(agDV);
 					}
@@ -481,10 +487,12 @@ public class VendaPFBusiness {
 			if(dadosBancariosVenda.getAgencia() != null) {
 				dadosBancariosVenda.setAgencia(dadosBancariosVenda.getAgencia().replace("-", ""));
 				if(!dadosBancariosVenda.getAgencia().isEmpty()) {
-					String ag = dadosBancariosVenda.getAgencia().substring(0,dadosBancariosVenda.getAgencia().length()-1);
-					String agDV = dadosBancariosVenda.getAgencia().substring(dadosBancariosVenda.getAgencia().length()-1);
+
+					String agDV = calcularDigitoAgencia(dadosBancariosVenda.getAgencia(),dadosBancariosVenda.getCodigoBanco());
+					String ag = dadosBancariosVenda.getAgencia();
 					dadosBancariosPropostaDCMS.setAgencia(ag); 
-					dadosBancariosPropostaDCMS.setAgenciaDV(agDV); 
+					dadosBancariosPropostaDCMS.setAgenciaDV(agDV);
+
 				}
 			}
 			
@@ -769,6 +777,45 @@ public class VendaPFBusiness {
 		log.info("chamarWSLegadoPropostaPOST; fim;");
 		return propostaDCMSResponse;
 			
+	}
+
+	private String calcularDigitoAgencia(String agencia, String banco){
+
+		String digito;
+
+		switch (banco){
+
+			case Constantes.BRADESCO:
+
+				int multiplicador = 2;
+				int total = 0;
+
+				for (int i = 4; i > 0; i--) {
+
+					total += (multiplicador * agencia.charAt(i - 1));
+					multiplicador++;
+
+				}
+
+				int resto = total % 11;
+				int resultado = 11 - resto;
+
+				if (resultado >= 10) {
+
+					digito = "P";// += "P";
+
+				} else {
+
+					digito = String.valueOf(resultado);
+
+				}
+				break;
+
+				default:
+					return "";
+
+		}
+		return digito;
 	}
 
 }
