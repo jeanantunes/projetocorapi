@@ -792,7 +792,8 @@ public class VendaPFBusiness {
 
 				for (int i = 4; i > 0; i--) {
 
-					total += (multiplicador * agencia.charAt(i - 1));
+					String digitoSelecionado = String.valueOf(agencia.charAt(i - 1));
+					total += multiplicador * Integer.parseInt(digitoSelecionado);
 					multiplicador++;
 
 				}
