@@ -2,13 +2,12 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.text.MaskFormatter;
 
+import br.com.odontoprev.portal.corretor.dto.*;
+import br.com.odontoprev.portal.corretor.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +26,6 @@ import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.LogEmailBoasVindasPMEDAO;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
-import br.com.odontoprev.portal.corretor.dto.CnpjDados;
-import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
-import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
-import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
-import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
-import br.com.odontoprev.portal.corretor.dto.TokenAceite;
-import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
 import br.com.odontoprev.portal.corretor.model.TbodLogEmailBoasVindasPME;
@@ -46,11 +36,6 @@ import br.com.odontoprev.portal.corretor.service.EmpresaService;
 import br.com.odontoprev.portal.corretor.service.PlanoService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 import br.com.odontoprev.portal.corretor.service.VendaService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
-import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
-import br.com.odontoprev.portal.corretor.util.DataUtil;
-import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
-import br.com.odontoprev.portal.corretor.util.XlsVidas;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -92,6 +77,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Autowired
 	VendaService vendaService; //201806291953 - esert - COR-358 Serviço - Alterar serviço /empresa-dcms para atualizar o campo CD_STATUS_VENDA da tabela TBOD_VENDA.
+
+	@Autowired
+	XlsEmpresa xlsEmpresa;
 
     @Value("${mensagem.empresa.atualizada.dcms}")
 	private String empresaAtualizadaDCMS; //201805181310 - esert - COR-160
@@ -686,6 +674,78 @@ public class EmpresaServiceImpl implements EmpresaService {
 		}
 		log.info("translateTbodEmpresaToEmpresa - fim");
 		return empresa;
+	}
+
+	public EmpresaArquivoResponse gerarArquivoEmpresa(EmpresaArquivo cdEmpresas) {
+
+		EmpresaArquivoResponse empresaArquivoResponse = new EmpresaArquivoResponse();
+
+		try{
+
+			List<Long> listCdEmpresas = cdEmpresas.getCdEmpresa();
+
+			if (listCdEmpresas != null){
+
+				empresaArquivoResponse.setEmpresas(new ArrayList<EmpresaArquivoResponseItem>());
+
+				for (Long itemCdEmpresa : listCdEmpresas) {
+
+					List<TbodVenda> vendaEmpresa = vendaDAO.findByTbodEmpresaCdEmpresa(itemCdEmpresa);
+
+					if (vendaEmpresa != null){
+
+						if(vendaEmpresa.size() == 1 ){
+
+							try {
+
+								xlsEmpresa.GerarEmpresaXLS(vendaEmpresa.get(0));
+								EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(itemCdEmpresa, "Arquivo gerado com sucesso.");
+								empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+
+							}catch (Exception e){
+
+								EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(itemCdEmpresa, "Erro na geracao do arquivo: " + e);
+								empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+
+							}
+
+						} else if (vendaEmpresa.size() > 1){
+
+							EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(itemCdEmpresa, "Mais de uma venda encontrada.");
+							empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+
+						} else if (vendaEmpresa.size() == 0){
+
+							EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(itemCdEmpresa, "Empresa nao encontrada.");
+							empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+
+						}
+
+					} else {
+
+						EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(itemCdEmpresa, "Empresas nao encontradas (null)");
+						empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+
+					}
+				}
+			} else {
+
+				int erro = 0;
+				EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(Long.valueOf(erro), "Empresas nao encontradas (null)");
+				empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+
+			}
+
+		}catch (Exception e){
+
+			int erro = 0;
+			empresaArquivoResponse.setEmpresas(new ArrayList<EmpresaArquivoResponseItem>());
+			EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(Long.valueOf(erro), "Erro na geracao de arquivos de empresas: " + e);
+			empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+
+		}
+
+		return empresaArquivoResponse;
 	}
 
 }
