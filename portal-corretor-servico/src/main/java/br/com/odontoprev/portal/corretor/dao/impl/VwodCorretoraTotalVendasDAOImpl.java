@@ -38,7 +38,7 @@ public class VwodCorretoraTotalVendasDAOImpl implements VwodCorretoraTotalVendas
         }
 
         if (dtVendaFim != null) {
-            stringQuery += " AND v.dtVenda <= :dtVendaFim ";
+            stringQuery += " AND v.dtVenda < :dtVendaFim "; //201808022040 - esert - COR-529 - apenas operador < (menor) para nao deve pegar zer0h0ra do D+1
         }
 
         if (cnpjCorretora != null) {
@@ -83,7 +83,7 @@ public class VwodCorretoraTotalVendasDAOImpl implements VwodCorretoraTotalVendas
         }
 
         if (dtVendaFim != null) {
-            stringQuery += " AND v.dt_venda <= :dtVendaFim ";
+            stringQuery += " AND v.dt_venda < :dtVendaFim "; //201808022040 - esert - COR-529 - apenas operador < (menor) para nao deve pegar zer0h0ra do D+1
         }
 
         if (cnpjCorretora != null) {

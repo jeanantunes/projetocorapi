@@ -213,6 +213,7 @@ public class PropostaServiceImpl implements PropostaService {
                     dataVenda.get(Calendar.MONTH),
                     dataVenda.get(Calendar.DATE)
             );
+            dataVenda.add(Calendar.DATE, 1); //adiciona um dia para filtrar < zero hora (00:00:00) de D+1 //201808022030 - esert - COR
             dateDtVendaFim = dataVenda.getTime();
             dataVenda.add(Calendar.DATE, -90);
             dateDtVendaInicio = dataVenda.getTime();
@@ -259,8 +260,12 @@ public class PropostaServiceImpl implements PropostaService {
             //201806121144 - esert - calcula de 90 dias atras ate hoje
             Calendar dataVenda = new GregorianCalendar();
             dataVenda.setTime(new Date());
-            dataVenda = new GregorianCalendar(dataVenda.get(Calendar.YEAR), dataVenda.get(Calendar.MONTH), dataVenda.get(Calendar.DATE));
+            dataVenda = new GregorianCalendar(
+            		dataVenda.get(Calendar.YEAR), 
+            		dataVenda.get(Calendar.MONTH), 
+            		dataVenda.get(Calendar.DATE));
 
+            dataVenda.add(Calendar.DATE, 1); //adiciona um dia para filtrar < zero hora (00:00:00) de D+1 //201808022030 - esert - COR
             dateDtVendaFim = dataVenda.getTime();
             dataVenda.add(Calendar.DATE, -90);
             dateDtVendaInicio = dataVenda.getTime();
