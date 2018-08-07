@@ -23,7 +23,8 @@ public final class Constantes {
 	public static final long STATUS_VENDA_ENVIADO = 1; //1 Enviado //201807051747 - esert - (COR-357 Serviço - Definição de Códigos/Status)  
 	public static final long STATUS_VENDA_CRITICADO = 2; //2 Criticado //201807051747 - esert - (COR-357 Serviço - Definição de Códigos/Status)
 	public static final long STATUS_VENDA_APROVADO = 3; //3 Aprovado //201807051747 - esert - (COR-357 Serviço - Definição de Códigos/Status)
-	
+	public static final long STATUS_VENDA_AGUARDANDO = 5;
+
 	public static final Object TIPO_INTERFACE_APP = "app"; //201807161655 - esert - COR-222
 	public static final Object TIPO_INTERFACE_WEB = "web"; //201807161655 - esert - COR-222
 	

@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.annotation.ManagedBean;
 import javax.transaction.RollbackException;
 
+import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -44,10 +45,13 @@ public class XlsEmpresa {
 	}
 
 	@Transactional(rollbackFor={Exception.class}) //201806281719 - esert - rollback vendapme COR-348
-	public void GerarEmpresaXLS(TbodEmpresa tbodEmpresa, Empresa empresaDto, TbodForcaVenda tbodForcaVenda) throws Exception {
+	public void GerarEmpresaXLS(TbodVenda tbodVenda) throws Exception {
 		log.info("GerarEmpresaXLS(); ini");
 
 		try {
+
+			TbodEmpresa tbodEmpresa = tbodVenda.getTbodEmpresa();
+			TbodForcaVenda tbodForcaVenda = tbodVenda.getTbodForcaVenda();
 
 			String[] empresaArr = new String[27];
 			empresaArr[0] = tbodEmpresa.getCnpj();
@@ -70,15 +74,17 @@ public class XlsEmpresa {
 			empresaArr[16] = tbodEndereco.getUf();
 			// empresa[17] = String.valueOf(emp.isMesmo_endereco_correspondencia());
 			empresaArr[17] = "";
-			empresaArr[18] = String.valueOf(empresaDto.getVencimentoFatura());
+			empresaArr[18] = String.valueOf(tbodVenda.getFaturaVencimento());
 			empresaArr[19] = tbodEmpresa.getCnae();
-			empresaArr[20] = empresaDto.getCnpjCorretora();
-			empresaArr[21] = empresaDto.getNomeCorretora();
+			empresaArr[20] = tbodVenda.getTbodCorretora().getCnpj();
+			empresaArr[21] = tbodVenda.getTbodCorretora().getRazaoSocial();
 			empresaArr[22] = (tbodForcaVenda != null ? tbodForcaVenda.getNome() : " "); 
 			empresaArr[23] = (tbodForcaVenda != null ? tbodForcaVenda.getEmail() : " "); 
 			empresaArr[24] = (tbodForcaVenda != null ? tbodForcaVenda.getCelular() : " ");
-			empresaArr[25] = empresaDto.getDataVigencia(); //201806141829 - esert - (COR-314 acrescentar os dois novos campos no arquivo empresa XLS)
-			empresaArr[26] = empresaDto.getDataMovimentacao(); //201806141829 - esert - (COR-314 acrescentar os dois novos campos no arquivo empresa XLS)		
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			empresaArr[25] = sdf.format(tbodVenda.getDtVigencia()); //201806141829 - esert - (COR-314 acrescentar os dois novos campos no arquivo empresa XLS)
+			empresaArr[26] = sdf.format(tbodVenda.getDtMovimentacao()); //201806141829 - esert - (COR-314 acrescentar os dois novos campos no arquivo empresa XLS)
 
 			// Tratamento de CNPJ
 			String newcnpj = empresaArr[0].replaceAll("[.]", "").replaceAll("/", "");
@@ -90,7 +96,7 @@ public class XlsEmpresa {
 //			String filename = "C:\\Users\\Vm8.1\\Desktop\\ArquivosTestes\\" + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
 			
 			//String filename = "C:\\planilhaUploadOdpv\\" + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
-			String filename = pathEmpresa + empresaArr[16] + "_" + newcnpj + "_" + empresaDto.getNomeCorretora() + ".xls";
+			String filename = pathEmpresa + empresaArr[16] + "_" + newcnpj + "_" + tbodVenda.getTbodCorretora().getRazaoSocial() + ".xls";
 			log.info("filename:[" + filename + "]");
 
 			@SuppressWarnings("resource")
