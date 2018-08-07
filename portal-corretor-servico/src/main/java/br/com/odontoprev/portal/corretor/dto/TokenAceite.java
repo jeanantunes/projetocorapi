@@ -5,7 +5,9 @@ import java.io.Serializable;
 public class TokenAceite implements Serializable {
 		
 	private static final long serialVersionUID = -1407492746420389077L;
-	
+
+	private long id;
+	private String mensagem;
 	private Long cdTokenAceite;
 	private Long cdVenda;
 	private String ip;
@@ -14,14 +16,33 @@ public class TokenAceite implements Serializable {
 	private String dataEnvio;
 	private String dataExpiracao;
 	private String token;
-	
+
+	public TokenAceite() {
+	}
+
+	public TokenAceite(long id, String mensagem) {
+		this.id = id;
+		this.mensagem = mensagem;
+	}
+
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public String getMensagem() {
+		return mensagem;
+	}
+	public void setMensagem(String mensagem) {
+		this.mensagem = mensagem;
+	}
 	public Long getCdTokenAceite() {
 		return cdTokenAceite;
 	}
 	public void setCdTokenAceite(Long cdTokenAceite) {
 		this.cdTokenAceite = cdTokenAceite;
 	}
-	
 	public String getIp() {
 		return ip;
 	}
