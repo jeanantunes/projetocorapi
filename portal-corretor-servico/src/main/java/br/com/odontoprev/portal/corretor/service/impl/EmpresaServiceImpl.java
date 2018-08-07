@@ -639,6 +639,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 			empresa.setCpfRepresentante(tbodEmpresa.getCpfRepresentante()); //201807251530 - esert - COR-513
 			empresa.setTelefone(tbodEmpresa.getTelefone());
 			empresa.setCelular(tbodEmpresa.getCelular());
+			if(tbodEmpresa.getContatoEmpresa()!=null) { //201808071127 - esert - COR-472/COR-398
+				empresa.setContatoEmpresa(tbodEmpresa.getContatoEmpresa().equals(Constantes.SIM)); //201808071127 - esert - COR-472/COR-398
+			}
 			empresa.setEmail(tbodEmpresa.getEmail());			
 			empresa.setEmpDcms(tbodEmpresa.getEmpDcms());
 			
@@ -647,12 +650,16 @@ public class EmpresaServiceImpl implements EmpresaService {
 				empresa.setEnderecoEmpresa(ConvertObjectUtil.translateTbodEnderecoToEndereco(tbodEmpresa.getTbodEndereco())); //201807241928 - esert - COR-398
 			}
 			
-			if(tbodEmpresa.getCdEmpresaContato()!=null) {
-				//empresa.setContactEmpresa(new ContatoEmpresa());
-				Long cdEmpresaContato = tbodEmpresa.getCdEmpresaContato();
-				TbodEmpresaContato tbodEmpresaContato = empresaContatoDAO.findOne(cdEmpresaContato);
-				ContatoEmpresa contatoEmpresa = ConvertObjectUtil.translateTbodEmpresaContatoToEmpresaContato(tbodEmpresaContato);
-				empresa.setContactEmpresa(contatoEmpresa);
+			if(!empresa.isContatoEmpresa()) { //201808071127 - esert - COR-472/COR-398
+				if(tbodEmpresa.getCdEmpresaContato()!=null) {
+					//empresa.setContactEmpresa(new ContatoEmpresa());
+					Long cdEmpresaContato = tbodEmpresa.getCdEmpresaContato();
+					TbodEmpresaContato tbodEmpresaContato = empresaContatoDAO.findOne(cdEmpresaContato);
+					ContatoEmpresa contatoEmpresa = ConvertObjectUtil.translateTbodEmpresaContatoToEmpresaContato(tbodEmpresaContato);
+					empresa.setContactEmpresa(contatoEmpresa);
+				}
+			} else {
+				empresa.setContactEmpresa(null); //201808071127 - esert - COR-472/COR-398
 			}
 			
 			List<TbodVenda> listTbodVenda = vendaDAO.findByTbodEmpresaCdEmpresa(tbodEmpresa.getCdEmpresa());

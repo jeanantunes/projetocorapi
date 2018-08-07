@@ -70,7 +70,7 @@ public class BeneficiarioControllerTest {
 	
 	   //201807271700 - esert - COR-478 tdd beneficiario paginacao
 	   @Test
-	   public void testOk200Tampag3Numpag2() throws Exception {  
+	   public void testOk200Tampag3Numpag3NomeCerto() throws Exception {  
 	       Long cdEmpresa = 1659L;
 	       Long tampag = 3L;
 	       Long numpag = 3L;
