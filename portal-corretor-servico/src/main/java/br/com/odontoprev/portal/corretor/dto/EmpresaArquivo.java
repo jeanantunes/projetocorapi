@@ -7,19 +7,32 @@ public class EmpresaArquivo implements Serializable {
 
     private static final long serialVersionUID = 3103017260662982091L; //TODO: Alterar serialVersionUID
 
-    private List<Long> cdEmpresa;
+    private Long cdEmpresaTest;
+    
+    private List<Long> listCdEmpresa;
 
-    public List<Long> getCdEmpresa() {
-        return cdEmpresa;
+    public List<Long> getListCdEmpresa() {
+        return listCdEmpresa;
     }
 
-    public void setCdEmpresa(List<Long> cdEmpresa) {
-        this.cdEmpresa = cdEmpresa;
+    public void setListCdEmpresa(List<Long> cdEmpresa) {
+        this.listCdEmpresa = cdEmpresa;
     }
 
     @Override
-    public String toString() {
-        return "EmpresaArquivo [cdEmpresa=" + cdEmpresa + "]";
-    }
+	public String toString() {
+		return "EmpresaArquivo [" 
+			+ "cdEmpresaTest=" + cdEmpresaTest 
+			+ ", listCdEmpresa=" + (listCdEmpresa!=null?listCdEmpresa.size():"NuLL") 
+			+ "]";
+	}
+
+	public Long getCdEmpresaTest() {
+		return cdEmpresaTest;
+	}
+
+	public void setCdEmpresaTest(Long cdEmpresaTest) {
+		this.cdEmpresaTest = cdEmpresaTest;
+	}
 
 }

@@ -2,12 +2,13 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.text.MaskFormatter;
 
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,18 @@ import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.LogEmailBoasVindasPMEDAO;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
+import br.com.odontoprev.portal.corretor.dto.CnpjDados;
+import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
+import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
+import br.com.odontoprev.portal.corretor.dto.Empresa;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponseItem;
+import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
+import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
+import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
+import br.com.odontoprev.portal.corretor.dto.TokenAceite;
+import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
 import br.com.odontoprev.portal.corretor.model.TbodLogEmailBoasVindasPME;
@@ -36,6 +49,12 @@ import br.com.odontoprev.portal.corretor.service.EmpresaService;
 import br.com.odontoprev.portal.corretor.service.PlanoService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 import br.com.odontoprev.portal.corretor.service.VendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
+import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
+import br.com.odontoprev.portal.corretor.util.DataUtil;
+import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
+import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
+import br.com.odontoprev.portal.corretor.util.XlsVidas;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -676,13 +695,14 @@ public class EmpresaServiceImpl implements EmpresaService {
 		return empresa;
 	}
 
+	@Override //201808081231
 	public EmpresaArquivoResponse gerarArquivoEmpresa(EmpresaArquivo cdEmpresas) {
 
 		EmpresaArquivoResponse empresaArquivoResponse = new EmpresaArquivoResponse();
 
 		try{
 
-			List<Long> listCdEmpresas = cdEmpresas.getCdEmpresa();
+			List<Long> listCdEmpresas = cdEmpresas.getListCdEmpresa();
 
 			if (listCdEmpresas != null){
 
@@ -730,18 +750,15 @@ public class EmpresaServiceImpl implements EmpresaService {
 				}
 			} else {
 
-				int erro = 0;
-				EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(Long.valueOf(erro), "Empresas nao encontradas (null)");
+				EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(Long.valueOf(0L), "Empresas nao encontradas (null)");
 				empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
 
 			}
 
 		}catch (Exception e){
 
-			int erro = 0;
-			empresaArquivoResponse.setEmpresas(new ArrayList<EmpresaArquivoResponseItem>());
-			EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(Long.valueOf(erro), "Erro na geracao de arquivos de empresas: " + e);
-			empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+				empresaArquivoResponse = null;
+				log.error("[Erro na geracao de arquivos]");
 
 		}
 

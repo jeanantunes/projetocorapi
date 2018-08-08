@@ -2,9 +2,7 @@ package br.com.odontoprev.portal.corretor.controller;
 
 
 import java.text.ParseException;
-import java.util.List;
 
-import br.com.odontoprev.portal.corretor.dto.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.odontoprev.portal.corretor.dto.CnpjDados;
+import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
+import br.com.odontoprev.portal.corretor.dto.Empresa;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
+import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
+import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
+import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
 
@@ -38,12 +44,38 @@ public class EmpresaController {
 	}
 
 	@RequestMapping(value = "/empresa/arquivo", method = { RequestMethod.POST })
-	public ResponseEntity<EmpresaArquivoResponse> gerarArquivo(@RequestBody EmpresaArquivo cdEmpresas) {
+	public ResponseEntity<EmpresaArquivoResponse> gerarArquivo(@RequestBody EmpresaArquivo listCdEmpresasArquivo) {
 
-		log.info(cdEmpresas);
-		EmpresaArquivoResponse response = empresaService.gerarArquivoEmpresa(cdEmpresas);
+		log.info("gerarArquivo - ini");
 
-		return ResponseEntity.ok(response);
+		try {
+
+			if(listCdEmpresasArquivo==null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
+			
+			if(listCdEmpresasArquivo.getListCdEmpresa()==null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
+
+			if(listCdEmpresasArquivo.getListCdEmpresa().size() < 1) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
+
+			EmpresaArquivoResponse response = empresaService.gerarArquivoEmpresa(listCdEmpresasArquivo);
+
+			if(response==null) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+			}
+
+			log.info("gerarArquivo - fim");
+			return ResponseEntity.ok(response);
+
+		}catch (Exception e) {
+			log.info("gerarArquivo - erro");
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 	
 	@RequestMapping(value = "/empresa-dcms", method = { RequestMethod.PUT })
