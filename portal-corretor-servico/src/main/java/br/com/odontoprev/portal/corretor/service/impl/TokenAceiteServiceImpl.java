@@ -37,7 +37,7 @@ import java.util.List;
 @Transactional(rollbackFor = {Exception.class}) //201806281838 - esert - COR-348
 public class TokenAceiteServiceImpl implements TokenAceiteService {
 
-    private static final Log log = LogFactory.getLog(ForcaVendaServiceImpl.class);
+    private static final Log log = LogFactory.getLog(TokenAceiteServiceImpl.class);
 
     @Autowired
     TokenAceiteDAO tokenAceiteDAO;
