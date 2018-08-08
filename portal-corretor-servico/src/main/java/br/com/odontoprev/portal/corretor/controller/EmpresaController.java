@@ -2,7 +2,9 @@ package br.com.odontoprev.portal.corretor.controller;
 
 
 import java.text.ParseException;
+import java.util.List;
 
+import br.com.odontoprev.portal.corretor.dto.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.odontoprev.portal.corretor.dto.CnpjDados;
-import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
-import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
-import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
 
@@ -39,6 +35,15 @@ public class EmpresaController {
 		EmpresaResponse response = empresaService.add(empresa);
 		
 		return response;
+	}
+
+	@RequestMapping(value = "/empresa/arquivo", method = { RequestMethod.POST })
+	public ResponseEntity<EmpresaArquivoResponse> gerarArquivo(@RequestBody EmpresaArquivo cdEmpresas) {
+
+		log.info(cdEmpresas);
+		EmpresaArquivoResponse response = empresaService.gerarArquivoEmpresa(cdEmpresas);
+
+		return ResponseEntity.ok(response);
 	}
 	
 	@RequestMapping(value = "/empresa-dcms", method = { RequestMethod.PUT })

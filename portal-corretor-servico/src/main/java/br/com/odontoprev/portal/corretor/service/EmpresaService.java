@@ -1,15 +1,10 @@
 package br.com.odontoprev.portal.corretor.service;
 
 import java.text.ParseException;
+import java.util.List;
 
+import br.com.odontoprev.portal.corretor.dto.*;
 import org.springframework.http.ResponseEntity;
-
-import br.com.odontoprev.portal.corretor.dto.CnpjDados;
-import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
-import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
-import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 
 public interface EmpresaService {
 
@@ -26,4 +21,6 @@ public interface EmpresaService {
 	public EmpresaResponse updateEmpresaEmailAceite(EmpresaEmailAceite empresaEmail); //201805111544 - esert - COR-171 - Serviço - Atualizar email cadastrado empresa
 
 	public Empresa findByCdEmpresa(Long cdEmpresa);
+
+	public EmpresaArquivoResponse gerarArquivoEmpresa(EmpresaArquivo cdEmpresas);
 }
