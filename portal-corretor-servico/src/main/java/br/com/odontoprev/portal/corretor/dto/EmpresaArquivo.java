@@ -9,19 +9,22 @@ public class EmpresaArquivo implements Serializable {
 
     private Long cdEmpresaTest;
     
-    private List<Long> cdEmpresa;
+    private List<Long> listCdEmpresa;
 
-    public List<Long> getCdEmpresa() {
-        return cdEmpresa;
+    public List<Long> getListCdEmpresa() {
+        return listCdEmpresa;
     }
 
-    public void setCdEmpresa(List<Long> cdEmpresa) {
-        this.cdEmpresa = cdEmpresa;
+    public void setListCdEmpresa(List<Long> cdEmpresa) {
+        this.listCdEmpresa = cdEmpresa;
     }
 
     @Override
 	public String toString() {
-		return "EmpresaArquivo [cdEmpresaTest=" + cdEmpresaTest + ", cdEmpresa=" + cdEmpresa + "]";
+		return "EmpresaArquivo [" 
+			+ "cdEmpresaTest=" + cdEmpresaTest 
+			+ ", listCdEmpresa=" + (listCdEmpresa!=null?listCdEmpresa.size():"NuLL") 
+			+ "]";
 	}
 
 	public Long getCdEmpresaTest() {

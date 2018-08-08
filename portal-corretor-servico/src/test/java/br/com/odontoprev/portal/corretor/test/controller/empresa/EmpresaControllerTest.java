@@ -87,7 +87,7 @@ public class EmpresaControllerTest {
 
 		EmpresaArquivo empresaArquivo = new EmpresaArquivo();
 		empresaArquivo.setCdEmpresaTest(1234L);
-		empresaArquivo.setCdEmpresa(new ArrayList<Long>());
+		empresaArquivo.setListCdEmpresa(new ArrayList<Long>());
 		//cdEmpresa.getCdEmpresa().add(2414L);
 		String json = new Gson().toJson(empresaArquivo);
 		
@@ -110,7 +110,7 @@ public class EmpresaControllerTest {
 	public void testEmpresaArquivoNoContent204() throws Exception {
 
 		EmpresaArquivo cdEmpresa = new EmpresaArquivo();
-		cdEmpresa.setCdEmpresa(new ArrayList<Long>());
+		cdEmpresa.setListCdEmpresa(new ArrayList<Long>());
 		String json = new Gson().toJson(cdEmpresa);
 		//Mockando Service que busca no banco de dados
 		given(service.gerarArquivoEmpresa(cdEmpresa)).willReturn(new EmpresaArquivoResponse());

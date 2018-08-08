@@ -40,14 +40,22 @@ public class EmpresaController {
 	@RequestMapping(value = "/empresa/arquivo", method = { RequestMethod.POST })
 	public ResponseEntity<EmpresaArquivoResponse> gerarArquivo(@RequestBody EmpresaArquivo listCdEmpresasArquivo) {
 
+		log.info("gerarArquivo - ini");
+
 		try {
 
-			//if(listCdEmpresasArquivo.getCdEmpresa().size() < 1) {
-			if(listCdEmpresasArquivo.getCdEmpresa()==null) {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+			if(listCdEmpresasArquivo==null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
+			
+			if(listCdEmpresasArquivo.getListCdEmpresa()==null) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 			}
 
-			log.info("gerarArquivo - ini");
+			if(listCdEmpresasArquivo.getListCdEmpresa().size() < 1) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
+
 			EmpresaArquivoResponse response = empresaService.gerarArquivoEmpresa(listCdEmpresasArquivo);
 
 			if(response==null) {

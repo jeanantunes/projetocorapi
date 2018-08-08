@@ -702,7 +702,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		try{
 
-			List<Long> listCdEmpresas = cdEmpresas.getCdEmpresa();
+			List<Long> listCdEmpresas = cdEmpresas.getListCdEmpresa();
 
 			if (listCdEmpresas != null){
 
