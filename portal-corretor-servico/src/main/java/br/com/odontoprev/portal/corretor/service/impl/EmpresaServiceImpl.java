@@ -623,6 +623,15 @@ public class EmpresaServiceImpl implements EmpresaService {
 		Empresa empresa = null;
 		
 		empresa = translateTbodEmpresaToEmpresa(empresaDAO.findOne(cdEmpresa));
+
+		List<TbodVenda> tbodVendaList = vendaDAO.findByTbodEmpresaCdEmpresa(cdEmpresa);
+
+		if (tbodVendaList == null || tbodVendaList.size() == 0 || tbodVendaList.size() > 1){
+			log.error("Não achou venda para Empresa" + "[tbodVendaList == null || tbodVendaList.size() == 0 || tbodVendaList.size() > 1]");
+			return null;
+		}
+
+		empresa.setCdStatusVenda(tbodVendaList.get(0).getTbodStatusVenda().getCdStatusVenda());
 				
 		return empresa;
 	}
@@ -684,6 +693,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 					}
 					if(tbodVenda.getDtVigencia()!=null) {
 						empresa.setDataVigencia(new SimpleDateFormat("dd/MM/yyyy").format(tbodVenda.getDtVigencia()));
+					}
+					if(tbodVenda.getDtAceite()!=null) {
+						empresa.setDataAceite(new SimpleDateFormat("dd/MM/yyyy").format(tbodVenda.getDtAceite()));
 					}
 				}
 			}
