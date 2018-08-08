@@ -254,6 +254,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
                         throw new Exception("Status Venda não encontrado " + "[" + Constantes.STATUS_VENDA_ENVIADO + "]");
                     }
                     tbodVenda.setTbodStatusVenda(tbodStatusVenda);
+                    tbodVenda.setDtAceite(tbodTokenAceite.getDtAceite());
                     tbodVenda = vendaDAO.save(tbodVenda);
 
                     xlsEmpresa.GerarEmpresaXLS(tbodVenda);
