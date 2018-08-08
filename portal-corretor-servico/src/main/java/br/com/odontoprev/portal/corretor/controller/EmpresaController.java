@@ -38,12 +38,29 @@ public class EmpresaController {
 	}
 
 	@RequestMapping(value = "/empresa/arquivo", method = { RequestMethod.POST })
-	public ResponseEntity<EmpresaArquivoResponse> gerarArquivo(@RequestBody EmpresaArquivo cdEmpresas) {
+	public ResponseEntity<EmpresaArquivoResponse> gerarArquivo(@RequestBody EmpresaArquivo listCdEmpresasArquivo) {
 
-		log.info(cdEmpresas);
-		EmpresaArquivoResponse response = empresaService.gerarArquivoEmpresa(cdEmpresas);
+		try {
 
-		return ResponseEntity.ok(response);
+			if(listCdEmpresasArquivo.getCdEmpresa().size() < 1) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+			}
+
+			log.info("gerarArquivo - ini");
+			EmpresaArquivoResponse response = empresaService.gerarArquivoEmpresa(listCdEmpresasArquivo);
+
+			if(response==null) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+			}
+
+			log.info("gerarArquivo - fim");
+			return ResponseEntity.ok(response);
+
+		}catch (Exception e) {
+			log.info("gerarArquivo - erro");
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 	
 	@RequestMapping(value = "/empresa-dcms", method = { RequestMethod.PUT })

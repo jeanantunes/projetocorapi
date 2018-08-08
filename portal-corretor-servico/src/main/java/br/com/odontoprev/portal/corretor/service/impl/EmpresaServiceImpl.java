@@ -3,6 +3,7 @@ package br.com.odontoprev.portal.corretor.service.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 import javax.swing.text.MaskFormatter;
 
@@ -730,18 +731,15 @@ public class EmpresaServiceImpl implements EmpresaService {
 				}
 			} else {
 
-				int erro = 0;
-				EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(Long.valueOf(erro), "Empresas nao encontradas (null)");
+				EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(Long.valueOf(0L), "Empresas nao encontradas (null)");
 				empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
 
 			}
 
 		}catch (Exception e){
 
-			int erro = 0;
-			empresaArquivoResponse.setEmpresas(new ArrayList<EmpresaArquivoResponseItem>());
-			EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(Long.valueOf(erro), "Erro na geracao de arquivos de empresas: " + e);
-			empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+				empresaArquivoResponse = null;
+				log.error("[Erro na geracao de arquivos]");
 
 		}
 
