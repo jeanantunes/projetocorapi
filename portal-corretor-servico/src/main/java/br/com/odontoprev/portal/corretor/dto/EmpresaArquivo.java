@@ -7,6 +7,8 @@ public class EmpresaArquivo implements Serializable {
 
     private static final long serialVersionUID = 3103017260662982091L; //TODO: Alterar serialVersionUID
 
+    private Long cdEmpresaTest;
+    
     private List<Long> cdEmpresa;
 
     public List<Long> getCdEmpresa() {
@@ -18,8 +20,16 @@ public class EmpresaArquivo implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "EmpresaArquivo [cdEmpresa=" + cdEmpresa + "]";
-    }
+	public String toString() {
+		return "EmpresaArquivo [cdEmpresaTest=" + cdEmpresaTest + ", cdEmpresa=" + cdEmpresa + "]";
+	}
+
+	public Long getCdEmpresaTest() {
+		return cdEmpresaTest;
+	}
+
+	public void setCdEmpresaTest(Long cdEmpresaTest) {
+		this.cdEmpresaTest = cdEmpresaTest;
+	}
 
 }

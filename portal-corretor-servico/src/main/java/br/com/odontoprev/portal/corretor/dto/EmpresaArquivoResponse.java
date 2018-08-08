@@ -5,7 +5,7 @@ import java.util.List;
 
 public class EmpresaArquivoResponse implements Serializable {
 
-    private static final long serialVersionUID = 3103017260662982091L; //TODO: Alterar serialVersionUID
+    private static final long serialVersionUID = 1L; //TODO: Alterar serialVersionUID
 
 
     List<EmpresaArquivoResponseItem> empresas;

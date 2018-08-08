@@ -42,7 +42,8 @@ public class EmpresaController {
 
 		try {
 
-			if(listCdEmpresasArquivo.getCdEmpresa().size() < 1) {
+			//if(listCdEmpresasArquivo.getCdEmpresa().size() < 1) {
+			if(listCdEmpresasArquivo.getCdEmpresa()==null) {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 			}
 

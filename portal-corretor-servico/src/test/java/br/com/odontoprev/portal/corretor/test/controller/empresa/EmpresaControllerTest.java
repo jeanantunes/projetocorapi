@@ -5,10 +5,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import br.com.odontoprev.portal.corretor.dao.VendaDAO;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
-import com.google.gson.Gson;
+
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,11 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
+import br.com.odontoprev.portal.corretor.dto.Empresa;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponseItem;
+import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
 
 @RunWith(SpringRunner.class)
@@ -84,18 +85,23 @@ public class EmpresaControllerTest {
 	@Test
 	public void testEmpresaArquivoOk200() throws Exception {
 
-		EmpresaArquivo cdEmpresa = new EmpresaArquivo();
-		cdEmpresa.setCdEmpresa(new ArrayList<Long>());
-		cdEmpresa.getCdEmpresa().add(2414L);
-		String json = new Gson().toJson(cdEmpresa);
+		EmpresaArquivo empresaArquivo = new EmpresaArquivo();
+		empresaArquivo.setCdEmpresaTest(1234L);
+		empresaArquivo.setCdEmpresa(new ArrayList<Long>());
+		//cdEmpresa.getCdEmpresa().add(2414L);
+		String json = new Gson().toJson(empresaArquivo);
+		
+		EmpresaArquivoResponse empresaArquivoResponse = new EmpresaArquivoResponse();
+		empresaArquivoResponse.setEmpresas(new ArrayList<EmpresaArquivoResponseItem>());
+		empresaArquivoResponse.getEmpresas().add(new EmpresaArquivoResponseItem(1234L, "1234"));
 		//Mockando Service que busca no banco de dados
-		given(service.gerarArquivoEmpresa(cdEmpresa)).willReturn(new EmpresaArquivoResponse());
+		given(service.gerarArquivoEmpresa(empresaArquivo)).willReturn(empresaArquivoResponse);
 
 		//Efetua a requisição na rota e espera um status code
 		mvc.perform(post("/empresa/arquivo")
-				.content(new Gson().toJson(cdEmpresa))
+				.content(json)
 				.contentType(APPLICATION_JSON))
-				.andExpect(status().isNoContent())
+				.andExpect(status().isOk())
 		;
 
 	}
@@ -111,7 +117,7 @@ public class EmpresaControllerTest {
 
 		//Efetua a requisição na rota e espera um status code
 		mvc.perform(post("/empresa/arquivo")
-				.content(new Gson().toJson(cdEmpresa))
+				.content(json)
 				.contentType(APPLICATION_JSON))
 				.andExpect(status().isNoContent())
 		;
