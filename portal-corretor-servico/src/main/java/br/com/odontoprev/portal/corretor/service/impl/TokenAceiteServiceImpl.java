@@ -241,7 +241,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
                             0,
                             0
                     );
-                    calMovimentacao.add(Calendar.DATE, -10);
+                    calMovimentacao.add(Calendar.DATE, -11);
                     tbodVenda.setDtMovimentacao(calMovimentacao.getTime());
                     TbodStatusVenda tbodStatusVenda = statusVendaDAO.findOne(Constantes.STATUS_VENDA_ENVIADO);
                     if (tbodStatusVenda == null){
