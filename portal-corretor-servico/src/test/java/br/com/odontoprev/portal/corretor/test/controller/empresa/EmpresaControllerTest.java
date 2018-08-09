@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -106,20 +107,31 @@ public class EmpresaControllerTest {
 	}
 
 	@Test
-	public void testNoContent204EmpresaArquivo() throws Exception {
+	public void testEmpresaArquivo200ComEmpresaNaoEncontrada() throws Exception {
 
+	   	Long empresaPesquisada = 5448448L;
+	   	String mensagemEsperada = "Empresa nao encontrada.";
+	   	
 		EmpresaArquivo cdEmpresa = new EmpresaArquivo();
 		cdEmpresa.setListCdEmpresa(new ArrayList<Long>());
-		cdEmpresa.getListCdEmpresa().add(2414L);
+		cdEmpresa.getListCdEmpresa().add(empresaPesquisada);
 		String json = new Gson().toJson(cdEmpresa);
 		//Mockando Service que busca no banco de dados
-		given(service.gerarArquivoEmpresa(cdEmpresa)).willReturn(new EmpresaArquivoResponse());
+
+		EmpresaArquivoResponse empresaArquivoResponse = new EmpresaArquivoResponse();
+		EmpresaArquivoResponseItem empresaArquivoResponseItem = new EmpresaArquivoResponseItem(empresaPesquisada, "Empresa nao encontrada.");
+		empresaArquivoResponse.setEmpresas(new ArrayList<EmpresaArquivoResponseItem>());
+		empresaArquivoResponse.getEmpresas().add(empresaArquivoResponseItem);
+
+		given(service.gerarArquivoEmpresa(cdEmpresa)).willReturn(empresaArquivoResponse);
+
 
 		//Efetua a requisição na rota e espera um status code
 		mvc.perform(post("/empresa/arquivo")
 				.content(json)
 				.contentType(APPLICATION_JSON))
-				.andExpect(status().isNoContent())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.empresas[0].mensagem").value(mensagemEsperada))
+				.andExpect(status().isOk())
 		;
 
 	}
