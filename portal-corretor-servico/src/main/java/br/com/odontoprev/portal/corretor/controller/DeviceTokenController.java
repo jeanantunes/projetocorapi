@@ -72,22 +72,28 @@ public class DeviceTokenController implements Serializable {
 	@RequestMapping(value = "/devicetoken/forcavenda/{codigoForcaVenda}", method = { RequestMethod.DELETE })	
 	public ResponseEntity<BaseResponse> excluirDeviceToken(@PathVariable Long codigoForcaVenda,@RequestBody DeviceToken request) {
 		LOGGER.info("excluirDeviceToken - ini");
+		
 		if(codigoForcaVenda==null) {
 			LOGGER.info("excluirDeviceToken - badRequest");
 			return ResponseEntity.badRequest().body(new BaseResponse("Código Forca Venda não informado!"));
-		}
+		}	
+		
 		String mensagens = this.validarExcluir(request);		
+		
 		if(mensagens != null) {
 			LOGGER.info("excluirDeviceToken - badRequest");
 			return ResponseEntity.badRequest().body(new BaseResponse(mensagens));
 		}		
+		
 		List<DeviceToken> tokens = service.buscarPorTokenLogin(request.getToken(), codigoForcaVenda);
-		if(tokens!=null && !tokens.isEmpty()){
-			service.excluir(tokens.get(0).getCodigo());
-		} else {
+		
+		if(tokens==null || tokens.isEmpty()){
 			LOGGER.info("excluirDeviceToken - noContent");
 			return ResponseEntity.noContent().build();
-		}		
+		}
+		
+		service.excluir(tokens.get(0).getCodigo());
+
 		LOGGER.info("excluirDeviceToken - fim");
 		return ResponseEntity.ok().build();
 	}
