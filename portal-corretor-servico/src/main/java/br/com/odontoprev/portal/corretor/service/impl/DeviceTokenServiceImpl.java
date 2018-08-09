@@ -16,12 +16,13 @@ import br.com.odontoprev.portal.corretor.service.DeviceTokenService;
 @Service
 public class DeviceTokenServiceImpl implements DeviceTokenService {
 
+	//private static final Log log = LogFactory.getLog(DeviceTokenServiceImpl.class);
 	
 	@Autowired
-	private DeviceTokenDAO dao;
+	private DeviceTokenDAO deviceTokenDAO;
 	
 	@Autowired 
-	private ForcaVendaDAO vendaDAO;
+	private ForcaVendaDAO forcaVendaDAO;
 	
 	@Override
 	public void inserir(DeviceToken device,Long codigoForcaVenda) {
@@ -29,15 +30,15 @@ public class DeviceTokenServiceImpl implements DeviceTokenService {
 		token.setModelo(device.getModelo());
 		token.setSistemaOperacional(device.getSistemaOperacional());
 		token.setToken(device.getToken());
-		TbodForcaVenda forcaVenda = vendaDAO.findOne(codigoForcaVenda);						
+		TbodForcaVenda forcaVenda = forcaVendaDAO.findOne(codigoForcaVenda);						
 		token.setLogin(forcaVenda.getTbodLogin());
-		dao.save(token);
+		deviceTokenDAO.save(token);
 		
 	}
 
 	@Override
 	public List<DeviceToken> buscarPorTokenLogin(String idToken, Long codigoForcaVenda) {				
-		return dao.findByTokenAndLoginTbodForcaVendasCdForcaVenda(idToken, codigoForcaVenda).stream().map((token) -> new DeviceToken(token)).collect(Collectors.toList());		
+		return deviceTokenDAO.findByTokenAndLoginTbodForcaVendasCdForcaVenda(idToken, codigoForcaVenda).stream().map((token) -> new DeviceToken(token)).collect(Collectors.toList());		
 	}
 	
 	@Override
@@ -47,9 +48,15 @@ public class DeviceTokenServiceImpl implements DeviceTokenService {
 		token.setModelo(deviceToken.getModelo());
 		token.setSistemaOperacional(deviceToken.getSistemaOperacional());
 		token.setToken(deviceToken.getToken());
-		TbodForcaVenda forcaVenda = vendaDAO.findOne(codigoForcaVenda);						
+		TbodForcaVenda forcaVenda = forcaVendaDAO.findOne(codigoForcaVenda);						
 		token.setLogin(forcaVenda.getTbodLogin());
-		dao.save(token);
+		deviceTokenDAO.save(token);
+	}
+	
+	//201808091130 - esert - COR-556 nova rota excluir
+	@Override
+	public void excluir(Long codigoDeviceToken) {
+		deviceTokenDAO.delete(codigoDeviceToken);
 	}
 
 }
