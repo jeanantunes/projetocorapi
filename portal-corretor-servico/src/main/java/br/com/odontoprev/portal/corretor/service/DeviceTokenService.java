@@ -8,5 +8,6 @@ public interface DeviceTokenService {
 
 	public void inserir(DeviceToken device, Long codigoForcaVenda);	
 	public List<DeviceToken> buscarPorTokenLogin(String idToken, Long codigoLogin);
-	public void atualizar(DeviceToken deviceToken,Long codigoForcaVenda); 
+	public void atualizar(DeviceToken deviceToken,Long codigoForcaVenda);
+	public void excluir(Long codigo); //201808091130 - esert - COR-556 nova rota excluir 
 }

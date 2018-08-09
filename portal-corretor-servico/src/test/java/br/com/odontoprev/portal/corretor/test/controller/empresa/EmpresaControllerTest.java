@@ -84,7 +84,7 @@ public class EmpresaControllerTest {
 	   }
 
 	@Test
-	public void testEmpresaArquivoOk200() throws Exception {
+	public void testOk200EmpresaArquivo() throws Exception {
 
 		EmpresaArquivo empresaArquivo = new EmpresaArquivo();
 		empresaArquivo.setListCdEmpresa(new ArrayList<Long>());
@@ -111,7 +111,7 @@ public class EmpresaControllerTest {
 
 	   	Long empresaPesquisada = 5448448L;
 	   	String mensagemEsperada = "Empresa nao encontrada.";
-
+	   	
 		EmpresaArquivo cdEmpresa = new EmpresaArquivo();
 		cdEmpresa.setListCdEmpresa(new ArrayList<Long>());
 		cdEmpresa.getListCdEmpresa().add(empresaPesquisada);
