@@ -83,7 +83,7 @@ public class EmpresaControllerTest {
 	   }
 
 	@Test
-	public void testEmpresaArquivoOk200() throws Exception {
+	public void testOk200EmpresaArquivo() throws Exception {
 
 		EmpresaArquivo empresaArquivo = new EmpresaArquivo();
 		empresaArquivo.setCdEmpresaTest(1234L);
@@ -107,7 +107,7 @@ public class EmpresaControllerTest {
 	}
 
 	@Test
-	public void testEmpresaArquivoNoContent204() throws Exception {
+	public void testNoContent204EmpresaArquivo() throws Exception {
 
 		EmpresaArquivo cdEmpresa = new EmpresaArquivo();
 		cdEmpresa.setListCdEmpresa(new ArrayList<Long>());
