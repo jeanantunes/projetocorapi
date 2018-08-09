@@ -16,6 +16,7 @@ import br.com.odontoprev.portal.corretor.service.PlanoService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 import br.com.odontoprev.portal.corretor.service.VendaService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
+import br.com.odontoprev.portal.corretor.util.DataUtil;
 import br.com.odontoprev.portal.corretor.util.GerarTokenUtils;
 import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
 import org.apache.commons.logging.Log;
@@ -59,6 +60,10 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 
     @Autowired
     StatusVendaDAO statusVendaDAO;
+
+    @Autowired
+    DataUtil dataUtil;
+
 
     @Value("${EXPIRACAO_TOKEN_ACEITE_EMAIL}")
     private String EXPIRACAO_TOKEN_ACEITE_EMAIL;
@@ -227,21 +232,10 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 
                     TbodVenda tbodVenda = vendaDAO.findOne(tokenAceite.getCdVenda());
 
-                    Calendar calVigencia = new GregorianCalendar();
-                    calVigencia.setTime(tbodTokenAceite.getDtAceite());
-                    calVigencia.set(
-                            calVigencia.get(Calendar.YEAR),
-                            calVigencia.get(Calendar.MONTH),
-                            calVigencia.get(Calendar.DAY_OF_MONTH),
-                            0,
-                            0,
-                            0
-                    );
-                    calVigencia.add(Calendar.DATE, 12);
-                    tbodVenda.setDtVigencia(calVigencia.getTime());
+                    tbodVenda.setDtVigencia(dataUtil.isEffectiveDate(tbodVenda.getFaturaVencimento(), tbodTokenAceite.getDtAceite()));
 
                     Calendar calMovimentacao = new GregorianCalendar();
-                    calMovimentacao.setTime(calVigencia.getTime());
+                    calMovimentacao.setTime(tbodVenda.getDtVigencia());
                     calMovimentacao.set(
                             calMovimentacao.get(Calendar.YEAR),
                             calMovimentacao.get(Calendar.MONTH),
@@ -250,13 +244,14 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
                             0,
                             0
                     );
-                    calMovimentacao.add(Calendar.DATE, -10);
+                    calMovimentacao.add(Calendar.DATE, -11);
                     tbodVenda.setDtMovimentacao(calMovimentacao.getTime());
                     TbodStatusVenda tbodStatusVenda = statusVendaDAO.findOne(Constantes.STATUS_VENDA_ENVIADO);
                     if (tbodStatusVenda == null){
                         throw new Exception("Status Venda não encontrado " + "[" + Constantes.STATUS_VENDA_ENVIADO + "]");
                     }
                     tbodVenda.setTbodStatusVenda(tbodStatusVenda);
+                    tbodVenda.setDtAceite(tbodTokenAceite.getDtAceite());
                     tbodVenda = vendaDAO.save(tbodVenda);
 
                     xlsEmpresa.GerarEmpresaXLS(tbodVenda);

@@ -201,7 +201,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 	@Override
 	public ResponseEntity<EmpresaDcms> sendMailBoasVindasPME(Long cdEmpresa) {
 		Long longDiaVencimentoFatura = 0L;
-		Date dateDataVenda = null;
+		Date dateDataVigencia = null;
 		
 		List<String> listaEmails = new ArrayList<>(); //201806211921 - esert - correcao bug email varios destinatarios - alterado escopo da variavel de (classe) para (metodo)
 		String emailForcaVenda = ""; //201806211921 - esert - correcao bug email varios destinatarios - alterado escopo da variavel de (classe) para (metodo)
@@ -234,8 +234,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 						//201805101616 - esert - arbitragem : fica com a ultima venda suposta mais recente
 						longDiaVencimentoFatura = tbodVenda.getFaturaVencimento();
 						log.info("longDiaVencimentoFatura:[" + longDiaVencimentoFatura + "]");				
-						dateDataVenda = tbodVenda.getDtVenda();
-						log.info("dateDataVenda:[" + (new SimpleDateFormat("dd/MM/yyyy")).format(dateDataVenda) + "]");
+						dateDataVigencia = tbodVenda.getDtVigencia();
+						log.info("dateDataVenda:[" + (new SimpleDateFormat("dd/MM/yyyy")).format(dateDataVigencia) + "]");
 
 						if(emailForcaVenda.isEmpty()){
 							emailForcaVenda = tbodVenda.getTbodForcaVenda().getEmail();
@@ -253,7 +253,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			}
 
 			log.info("longDiaVencimentoFatura:[" + longDiaVencimentoFatura + "]");				
-			log.info("dateDataVenda:[" + (new SimpleDateFormat("dd/MM/yyyy")).format(dateDataVenda) + "]");				
+			log.info("dateDataVenda:[" + (new SimpleDateFormat("dd/MM/yyyy")).format(dateDataVigencia) + "]");
 
 			String strDiaVencimentoFatura = String.valueOf(100L + longDiaVencimentoFatura).substring(1,3);
 			log.info("strDiaVencimentoFatura:[" + strDiaVencimentoFatura + "]");				
@@ -262,7 +262,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 			//http://git.odontoprev.com.br/esteira-digital/est-portalcorretor-app/blob/sprint6/VendasOdontoPrev/app/src/main/assets/app/pmeFaturaController.js
 			//String strDataVigencia = DataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda); //201806141632 - esert - alterar retorno de String para Date para deixar formatacao para o uso final
 			SimpleDateFormat sdf_ddMMyyyy = new SimpleDateFormat("dd/MM/yyyy"); //201806141640 - esert - formato data para email
-			String strDataVigencia = sdf_ddMMyyyy.format(dataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataVenda)); //201806141640 - esert - formatar data para email //201806201630 - esert - DataUtil dinamico 
+			//String strDataVigencia = sdf_ddMMyyyy.format(dataUtil.isEffectiveDate(longDiaVencimentoFatura, dateDataAceite)); //201806141640 - esert - formatar data para email //201806201630 - esert - DataUtil dinamico
+			String strDataVigencia = sdf_ddMMyyyy.format(dateDataVigencia);
 
 			log.info("strDataVigencia:[" + strDataVigencia + "]");				
 
@@ -622,6 +623,15 @@ public class EmpresaServiceImpl implements EmpresaService {
 		Empresa empresa = null;
 		
 		empresa = translateTbodEmpresaToEmpresa(empresaDAO.findOne(cdEmpresa));
+
+		List<TbodVenda> tbodVendaList = vendaDAO.findByTbodEmpresaCdEmpresa(cdEmpresa);
+
+		if (tbodVendaList == null || tbodVendaList.size() == 0 || tbodVendaList.size() > 1){
+			log.error("Não achou venda para Empresa" + "[tbodVendaList == null || tbodVendaList.size() == 0 || tbodVendaList.size() > 1]");
+			return null;
+		}
+
+		empresa.setCdStatusVenda(tbodVendaList.get(0).getTbodStatusVenda().getCdStatusVenda());
 				
 		return empresa;
 	}
@@ -683,6 +693,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 					}
 					if(tbodVenda.getDtVigencia()!=null) {
 						empresa.setDataVigencia(new SimpleDateFormat("dd/MM/yyyy").format(tbodVenda.getDtVigencia()));
+					}
+					if(tbodVenda.getDtAceite()!=null) {
+						empresa.setDataAceite(new SimpleDateFormat("dd/MM/yyyy").format(tbodVenda.getDtAceite()));
 					}
 				}
 			}
