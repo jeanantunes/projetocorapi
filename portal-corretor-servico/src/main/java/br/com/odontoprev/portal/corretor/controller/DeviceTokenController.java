@@ -84,8 +84,8 @@ public class DeviceTokenController implements Serializable {
 			LOGGER.info("excluirDeviceToken - badRequest");
 			return ResponseEntity.badRequest().body(new BaseResponse(mensagens));
 		}		
-		
 		List<DeviceToken> tokens = service.buscarPorTokenLogin(request.getToken(), codigoForcaVenda);
+		
 		
 		if(tokens==null || tokens.isEmpty()){
 			LOGGER.info("excluirDeviceToken - noContent");
@@ -99,7 +99,7 @@ public class DeviceTokenController implements Serializable {
 	}
 	
 	private String validarExcluir(DeviceToken request) {
-		String ret = null;
+		String ret = "";
 		if(request==null) {
 			ret += " request nao informado.";
 		}
@@ -114,7 +114,7 @@ public class DeviceTokenController implements Serializable {
 			ret += "sistema operacional nao informado.";
 		}
 		*/
-		return ret;
+		return ret.isEmpty()?null:ret;
 	}
 
 }
