@@ -8,6 +8,8 @@ public class TokenAceiteResponse implements Serializable {
 	
 	private long id;
 	private String mensagem;
+	private String cdToken; //201808082010 - esert
+	private Long cdVenda; //201808082010 - esert
 	
 	public TokenAceiteResponse(long id) {		
 		this.id = id;
@@ -24,5 +26,33 @@ public class TokenAceiteResponse implements Serializable {
 	
 	public String getMensagem() {
 		return mensagem;
-	}	
+	}
+
+	public String getCdToken() {
+		return cdToken;
+	}
+
+	public void setCdToken(String token) {
+		this.cdToken = token;
+	}
+
+	public Long getCdVenda() {
+		return cdVenda;
+	}
+
+	public void setCdVenda(Long cdVenda) {
+		this.cdVenda = cdVenda;
+	}
+
+	@Override
+	public String toString() {  //201808082010 - esert
+		return "TokenAceiteResponse [" 
+				+ "id=" + id 
+				+ ", mensagem=" + mensagem 
+				+ ", cdToken=" + cdToken 
+				+ ", cdVenda=" + cdVenda
+				+ "]";
+	}
+	
+	
 }

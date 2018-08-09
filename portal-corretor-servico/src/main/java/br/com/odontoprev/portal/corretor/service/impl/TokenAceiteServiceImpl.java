@@ -119,7 +119,10 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
             return new TokenAceiteResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erro ao cadastrar token de aceite. Detalhe: [" + e.getMessage() + "]"); //201805181937 - esert - evolucao status erro
         }
 
-        return new TokenAceiteResponse(HttpStatus.OK.value(), HttpStatus.OK.toString()); //201805181937 - esert - evolucao status erro
+        TokenAceiteResponse tokenAceiteResponse = new TokenAceiteResponse(HttpStatus.OK.value(), HttpStatus.OK.toString()); //201805181937 - esert - evolucao status erro
+        tokenAceiteResponse.setCdVenda(tbodTokenAceite.getId().getCdVenda()); //201808082019
+        tokenAceiteResponse.setCdToken(tbodTokenAceite.getId().getCdToken()); //201808082019
+        return tokenAceiteResponse;
     }
 
 
