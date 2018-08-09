@@ -86,14 +86,13 @@ public class EmpresaControllerTest {
 	public void testEmpresaArquivoOk200() throws Exception {
 
 		EmpresaArquivo empresaArquivo = new EmpresaArquivo();
-		empresaArquivo.setCdEmpresaTest(1234L);
 		empresaArquivo.setListCdEmpresa(new ArrayList<Long>());
-		//cdEmpresa.getCdEmpresa().add(2414L);
+		empresaArquivo.getListCdEmpresa().add(2414L);
 		String json = new Gson().toJson(empresaArquivo);
 		
 		EmpresaArquivoResponse empresaArquivoResponse = new EmpresaArquivoResponse();
 		empresaArquivoResponse.setEmpresas(new ArrayList<EmpresaArquivoResponseItem>());
-		empresaArquivoResponse.getEmpresas().add(new EmpresaArquivoResponseItem(1234L, "1234"));
+		empresaArquivoResponse.getEmpresas().add(new EmpresaArquivoResponseItem(2414L, "1234"));
 		//Mockando Service que busca no banco de dados
 		given(service.gerarArquivoEmpresa(empresaArquivo)).willReturn(empresaArquivoResponse);
 
@@ -111,6 +110,7 @@ public class EmpresaControllerTest {
 
 		EmpresaArquivo cdEmpresa = new EmpresaArquivo();
 		cdEmpresa.setListCdEmpresa(new ArrayList<Long>());
+		cdEmpresa.getListCdEmpresa().add(2414L);
 		String json = new Gson().toJson(cdEmpresa);
 		//Mockando Service que busca no banco de dados
 		given(service.gerarArquivoEmpresa(cdEmpresa)).willReturn(new EmpresaArquivoResponse());
@@ -120,6 +120,24 @@ public class EmpresaControllerTest {
 				.content(json)
 				.contentType(APPLICATION_JSON))
 				.andExpect(status().isNoContent())
+		;
+
+	}
+
+	@Test
+	public void testEmpresaArquivoBadResquest400() throws Exception {
+
+		EmpresaArquivo cdEmpresa = new EmpresaArquivo();
+		cdEmpresa.setListCdEmpresa(new ArrayList<Long>());
+		String json = new Gson().toJson(cdEmpresa);
+		//Mockando Service que busca no banco de dados
+		given(service.gerarArquivoEmpresa(cdEmpresa)).willReturn(new EmpresaArquivoResponse());
+
+		//Efetua a requisição na rota e espera um status code
+		mvc.perform(post("/empresa/arquivo")
+				.content(json)
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
 		;
 
 	}
