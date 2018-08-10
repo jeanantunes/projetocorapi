@@ -35,10 +35,15 @@ public class ForcaVendaController {
 
 	@RequestMapping(value = "/forcavenda", method = { RequestMethod.PUT })
 	public ResponseEntity<ForcaVendaResponse> updateForcaVenda(@RequestBody ForcaVenda forcaVenda) {
-		log.info("updateForcaVenda - ini");		
+		log.info("updateForcaVenda - ini");
 		log.info(forcaVenda);		
 		try {
 			ForcaVendaResponse forcaVendaResponse = forcaVendaService.updateForcaVenda(forcaVenda);
+			//TODO: tratar retorno erro com APP@Yago //201808101839 
+			if(forcaVendaResponse==null) {
+				log.info("updateForcaVenda - fim");		
+				return ResponseEntity.noContent().build();				
+			}
 			log.info("updateForcaVenda - fim");		
 			return ResponseEntity.ok(forcaVendaResponse);
 		} catch (final Exception e) {

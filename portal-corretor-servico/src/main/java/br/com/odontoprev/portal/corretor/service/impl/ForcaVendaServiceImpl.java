@@ -157,7 +157,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	}
 
-	//201808101200 - esert - COR-360
+	//201808101200 - esert - COR-360(atualizar apenas valores nao nulos nao vazios apos trim)
 	@Override
 	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) {
 		log.info("updateForcaVenda - ini");
@@ -271,7 +271,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		}
 	}
 
-	//201808101200 - esert - COR-360
+	//201808101200 - esert - COR-360(atualizar apenas valores nao nulos nao vazios apos trim)
 	private boolean notNullNotEmpty(String value) {
 		// TODO Auto-generated method stub
 		return value != null && !value.trim().isEmpty();
