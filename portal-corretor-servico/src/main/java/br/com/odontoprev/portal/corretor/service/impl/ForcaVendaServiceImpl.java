@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -57,7 +57,7 @@ import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
 public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 
-	private static final Log log = LogFactory.getLog(ForcaVendaServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(ForcaVendaServiceImpl.class); //201808101200 - esert - COR-360
 
 	@Autowired
 	private CorretoraDAO corretoraDao;
@@ -157,41 +157,60 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	}
 
+	//201808101200 - esert - COR-360
 	@Override
 	public ForcaVendaResponse updateForcaVenda(ForcaVenda forcaVenda) {
+		log.info("updateForcaVenda - ini");
 		try{
 			TbodForcaVenda tbForcaVenda = forcaVendaDao.findOne(forcaVenda.getCdForcaVenda());
 			if (tbForcaVenda != null) {
 
-				if(forcaVenda.getCpf()==null) {
-					forcaVenda.setCpf(tbForcaVenda.getCpf());
+				//if(forcaVenda.getCpf()==null) {
+				//	forcaVenda.setCpf(tbForcaVenda.getCpf());
+				//}
+				
+				if(notNullNotEmpty(forcaVenda.getNome())) {
+					tbForcaVenda.setNome(forcaVenda.getNome());
 				}
-
-				tbForcaVenda.setNome(forcaVenda.getNome());
-				tbForcaVenda.setCpf(forcaVenda.getCpf());
-				tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
-				tbForcaVenda.setCelular(forcaVenda.getCelular());
-				tbForcaVenda.setEmail(forcaVenda.getEmail());
-				tbForcaVenda.setCargo(forcaVenda.getCargo());
-				tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
+				if(notNullNotEmpty(forcaVenda.getCpf())) {
+					tbForcaVenda.setCpf(forcaVenda.getCpf());
+				}
+				if(notNullNotEmpty(forcaVenda.getDataNascimento())) {
+					tbForcaVenda.setDataNascimento(DataUtil.dateParse(forcaVenda.getDataNascimento()));
+				}
+				if(notNullNotEmpty(forcaVenda.getCelular())) {
+					tbForcaVenda.setCelular(forcaVenda.getCelular());
+				}
+				if(notNullNotEmpty(forcaVenda.getEmail())) {
+					tbForcaVenda.setEmail(forcaVenda.getEmail());
+				}
+				if(notNullNotEmpty(forcaVenda.getCargo())) {
+					tbForcaVenda.setCargo(forcaVenda.getCargo());
+				}
+				if(notNullNotEmpty(forcaVenda.getDepartamento())) {
+					tbForcaVenda.setDepartamento(forcaVenda.getDepartamento());
+				}
+				
 				if (forcaVenda.getCorretora() != null && forcaVenda.getCorretora().getCdCorretora() > 0) {
 					TbodCorretora tbCorretora = corretoraDao.findOne(forcaVenda.getCorretora().getCdCorretora());
 					tbForcaVenda.setTbodCorretora(tbCorretora);
 				}
 
 				//TbodStatusForcaVenda
-				if (forcaVenda.getStatusForcaVenda() != null) {
+				//if (forcaVenda.getStatusForcaVenda() != null) {
+				if(notNullNotEmpty(forcaVenda.getStatusForcaVenda())) {
 					TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(Long.valueOf(forcaVenda.getStatusForcaVenda()));
 					tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
 				}
 
-				if (forcaVenda.getStatus() != null) {
+				//if (forcaVenda.getStatus() != null) {
+				if(notNullNotEmpty(forcaVenda.getStatus())) {
 					tbForcaVenda.setAtivo(forcaVenda.getStatus());
 				}
 
-
 				// Grava senha na tabela de login na tela de Aguardando Aprovacao
-				if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
+				//if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
+				if(notNullNotEmpty(forcaVenda.getStatus())) {
 					TbodLogin tbLogin = null;
 					// tbLogin.setCdLogin(tbForcaVenda.getTbodLogin().getCdLogin());
 
@@ -232,6 +251,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 							"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");*/
 				}
 
+				log.info("updateForcaVenda - fim");
 				return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
 						"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");
 				
@@ -240,6 +260,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 						"ForcaVenda atualizada. CPF [" + forcaVenda.getCpf() + "]");*/
 
 			} else {
+				log.info("updateForcaVenda - fim2");
 				return new ForcaVendaResponse(forcaVenda.getCdForcaVenda(),
 						"ForcaVenda não encontrada. cdForcaVenda [" + forcaVenda.getCdForcaVenda() + "]");
 			}
@@ -248,6 +269,12 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			log.error(msgErro);
 			return new ForcaVendaResponse(0, "updateForcaVenda; Erro:[" + msgErro + "]");
 		}
+	}
+
+	//201808101200 - esert - COR-360
+	private boolean notNullNotEmpty(String value) {
+		// TODO Auto-generated method stub
+		return value != null && !value.trim().isEmpty();
 	}
 
 	@Override
@@ -300,7 +327,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			// integracaoForcaDeVendaDcss(forcaVenda); //Chamar no PUT
 
 		} catch (final Exception e) {
-			log.error(e);
+			//log.error(e);
 			log.error("Erro ao cadastrar forcaVenda :: Detalhe: [" + e.getMessage() + "]");
 			return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
 		}

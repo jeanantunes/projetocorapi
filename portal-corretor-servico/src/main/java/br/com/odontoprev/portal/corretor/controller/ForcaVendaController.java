@@ -35,15 +35,16 @@ public class ForcaVendaController {
 
 	@RequestMapping(value = "/forcavenda", method = { RequestMethod.PUT })
 	public ResponseEntity<ForcaVendaResponse> updateForcaVenda(@RequestBody ForcaVenda forcaVenda) {
+		log.info("updateForcaVenda - ini");		
 		log.info(forcaVenda);		
 		try {
 			ForcaVendaResponse forcaVendaResponse = forcaVendaService.updateForcaVenda(forcaVenda);
+			log.info("updateForcaVenda - fim");		
 			return ResponseEntity.ok(forcaVendaResponse);
 		} catch (final Exception e) {
 			log.error("ERROR: ",e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}		
-		
+		}				
 	}
 	
 	@RequestMapping(value = "/forcavenda/login", method = { RequestMethod.PUT })
