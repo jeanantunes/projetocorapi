@@ -1,9 +1,12 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 public class DashboardPropostaPME {
+
 	private Long cdEmpresa;
 	private String nome;
+	private String nomeFantasia;  // [COR-488] yalm-201807271234
 	private String statusVenda;
+	private Long cdStatusVenda; // yalm - 201808012050 - COR-508
 	private String dataVenda;
 	private String cnpj;
 	private String corretora;
@@ -30,12 +33,28 @@ public class DashboardPropostaPME {
 		this.nome = nome;
 	}
 
+	public String getNomeFantasia() {
+		return nomeFantasia;
+	}
+
+	public void setNomeFantasia(String nomeFantasia) {
+		this.nomeFantasia = nomeFantasia;
+	}
+
 	public String getStatusVenda() {
 		return statusVenda;
 	}
 
 	public void setStatusVenda(String statusVenda) {
 		this.statusVenda = statusVenda;
+	}
+
+	public Long getCdStatusVenda() {
+		return cdStatusVenda;
+	}
+
+	public void setCdStatusVenda(Long cdStatusVenda) {
+		this.cdStatusVenda = cdStatusVenda;
 	}
 
 	public String getDataVenda() {
@@ -101,4 +120,15 @@ public class DashboardPropostaPME {
 	public void setCriticas(String criticas) {
 		this.criticas = criticas;
 	}
+
+	// yalm - 201808012050 - COR-508
+	@Override
+	public String toString() {
+		return "DashboardPropostaPME [cdEmpresa=" + cdEmpresa + ", nome=" + nome + ", nomeFantasia=" + nomeFantasia
+				+ ", statusVenda=" + statusVenda + ", cdStatusVenda=" + cdStatusVenda + ", dataVenda=" + dataVenda
+				+ ", cnpj=" + cnpj + ", corretora=" + corretora + ", cpf=" + cpf + ", empDcms=" + empDcms + ", forca="
+				+ forca + ", criticas=" + criticas + ", valor=" + valor + "]";
+	}
+	
+	
 }

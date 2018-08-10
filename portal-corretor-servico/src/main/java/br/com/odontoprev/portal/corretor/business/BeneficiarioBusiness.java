@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.business;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.ManagedBean;
 import javax.transaction.RollbackException;
@@ -9,6 +10,7 @@ import javax.transaction.RollbackException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.BeneficiarioDAO;
 import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
@@ -18,7 +20,9 @@ import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaVidaDAO;
 import br.com.odontoprev.portal.corretor.dao.VidaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.BeneficiarioPaginacao;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
+import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
@@ -26,8 +30,8 @@ import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.model.TbodVida;
+import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
-import org.springframework.transaction.annotation.Transactional;
 
 @ManagedBean
 public class BeneficiarioBusiness {
@@ -190,6 +194,11 @@ public class BeneficiarioBusiness {
 			log.error("buscarVidasPorEmpresa :: Erro ao buscar vidas por empresa. Detalhe: [" + e.getMessage() + "]");
 			return new ArrayList<TbodVida>();
 		}
+	}
+
+	//201807241918 - esert - COR-398
+	public Beneficiario get(Long cdVida) {
+		return ConvertObjectUtil.translateTbodVidaToBeneficiario(vidaDao.findOne(cdVida));
 	}
 
 }

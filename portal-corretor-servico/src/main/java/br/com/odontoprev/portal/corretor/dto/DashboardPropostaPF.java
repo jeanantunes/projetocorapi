@@ -9,6 +9,7 @@ public class DashboardPropostaPF {
 	private String propostaDcms;
 	private String nome;
 	private String statusVenda;
+	private Long cdStatusVenda; // yalm - 201808012050 - COR-508
 	private String atendimento;
 	private String empresa;
 	private String codOdonto;
@@ -134,6 +135,14 @@ public class DashboardPropostaPF {
 		this.statusVenda = statusVenda;
 	}
 
+	public Long getCdStatusVenda() {
+		return cdStatusVenda;
+	}
+
+	public void setCdStatusVenda(Long cdStatusVenda) {
+		this.cdStatusVenda = cdStatusVenda;
+	}
+
 	public String getDsErroRegistro() {
 		return dsErroRegistro;
 	}
@@ -153,10 +162,10 @@ public class DashboardPropostaPF {
 	@Override
 	public String toString() {
 		return "DashboardPropostaPF [cdVenda=" + cdVenda + ", cpf=" + cpf + ", propostaDcms=" + propostaDcms + ", nome="
-				+ nome + ", statusVenda=" + statusVenda + ", atendimento=" + atendimento + ", empresa=" + empresa
-				+ ", codOdonto=" + codOdonto + ", nrImportacao=" + nrImportacao + ", forca=" + forca + ", corretora="
-				+ corretora + ", dsErroRegistro=" + dsErroRegistro + ", criticas=" + criticas + ", cnpj=" + cnpj
-				+ ", cdEmpresa=" + cdEmpresa + ", valor=" + valor + "]";
+				+ nome + ", statusVenda=" + statusVenda + ", cdStatusVenda=" + cdStatusVenda + ", atendimento="
+				+ atendimento + ", empresa=" + empresa + ", codOdonto=" + codOdonto + ", nrImportacao=" + nrImportacao
+				+ ", forca=" + forca + ", corretora=" + corretora + ", dsErroRegistro=" + dsErroRegistro + ", criticas="
+				+ criticas + ", cnpj=" + cnpj + ", cdEmpresa=" + cdEmpresa + ", valor=" + valor + "]";
 	}
 
 }

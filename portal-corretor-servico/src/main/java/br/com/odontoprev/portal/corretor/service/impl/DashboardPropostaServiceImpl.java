@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import static br.com.odontoprev.portal.corretor.enums.StatusVendaEnum.CRIT_ENVIO;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,8 +37,9 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 	@Autowired
 	private ForcaVendaDAO forcaVendaDao;
 
+	//201808021440 - esert - COR-496 Corretora / COR-497 ForcaVenda
 	@Override
-	public DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status, String cnpj) {
+	public DashboardPropostaPMEResponse buscaPropostaPorStatusPME(long status, String cnpjCpf) {
 
 		log.info("[buscaPropostaPorStatusPME]");
 
@@ -51,39 +53,41 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			// findAll
 			if (status == 0) {
 
-				if (cnpj.length() > 11) {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L, cnpj, null);
+				if (cnpjCpf.length() > 11) {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCOR(0L, cnpjCpf);
 
 				} else {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(0L, null, cnpj);
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCpfFV(0L, cnpjCpf);
 				}
 
 			} else {
 
-				if (cnpj.length() > 11) {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status, cnpj, null);
+				if (cnpjCpf.length() > 11) {
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCOR(status, cnpjCpf);
 
 				} else {
-					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCnpjCpf(status, null, cnpj);
+					objects = dashboardPropostaDAO.findAllDashboardPropostasPMEByStatusCpfFV(status, cnpjCpf);
 				}
 			}
 
 			for (Object object : objects) {
 				Object[] obj = (Object[]) object;
 
-				Timestamp ts = (Timestamp) obj[3];
+				Timestamp ts = (Timestamp) obj[4];  // venda.DT_VENDA //4
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(ts.getTime());
 				Date d = cal.getTime();
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 				DashboardPropostaPME dashboardPropostaPME = new DashboardPropostaPME();
-				dashboardPropostaPME.setCdEmpresa(obj[0] != null ? new Long(String.valueOf(obj[0])) : null);
-				dashboardPropostaPME.setCnpj(obj[1] != null ? String.valueOf(obj[1]) : "");
-				dashboardPropostaPME.setNome(obj[2] != null ? String.valueOf(obj[2]) : "");
+				dashboardPropostaPME.setCdEmpresa(obj[0] != null ? ((BigDecimal)obj[0]).longValue() : null); // emp.CD_EMPRESA //0
+				dashboardPropostaPME.setCnpj(obj[1] != null ? String.valueOf(obj[1]) : ""); // emp.CNPJ //1
+				dashboardPropostaPME.setNome(obj[2] != null ? String.valueOf(obj[2]) : ""); // emp.RAZAO_SOCIAL //2
+				dashboardPropostaPME.setNomeFantasia(obj[3] != null ? String.valueOf(obj[3]) : ""); // emp.NOME_FANTASIA //3 // COR-488 yalm 201807271221
 				dashboardPropostaPME.setDataVenda(sdf.format(d));
-				dashboardPropostaPME.setStatusVenda(obj[4] != null ? String.valueOf(obj[4]) : "");
-				dashboardPropostaPME.setValor(obj[5] != null ? Double.parseDouble(obj[5].toString()) : 0);
+				dashboardPropostaPME.setStatusVenda(obj[5] != null ? String.valueOf(obj[5]) : ""); // status.DESCRICAO //5
+				dashboardPropostaPME.setCdStatusVenda(obj[6] != null ? ((BigDecimal)obj[6]).longValue() : null); // status.CD_STATUS_VENDA //6 // yalm - 201808012050 - COR-508
+				dashboardPropostaPME.setValor(obj[7] != null ? Double.parseDouble(obj[7].toString()) : 0); // SUM(plano.valor_anual + plano.valor_mensal) //7
 				propostasPME.add(dashboardPropostaPME);
 			}
 			
@@ -122,8 +126,9 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 		
 	}
 
+	//201808021440 - esert - COR-496 Corretora / COR-497 ForcaVenda
 	@Override
-	public DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status, String cpf) {
+	public DashboardPropostaPFResponse buscaPropostaPorStatusPF(long status, String cnpjCpf) {
 
 		log.info("[buscaPropostaPorStatusPF]");
 
@@ -137,18 +142,18 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 			// findAll
 			if (status == 0) {
 
-				if (cpf.length() > 11) {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, null, cpf);
+				if (cnpjCpf.length() > 11) {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCnpjCOR(0L, cnpjCpf);
 				} else {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(0L, cpf, null);
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfFV(0L, cnpjCpf);
 				}
 
 			} else {
 
-				if (cpf.length() > 11) {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, null, cpf);
+				if (cnpjCpf.length() > 11) {
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCnpjCOR(status, cnpjCpf);
 				} else {
-					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfCnpj(status, cpf, null);
+					objects = dashboardPropostaDAO.findDashboardPropostaPFByStatusCpfFV(status, cnpjCpf);
 				}
 			}
 
@@ -161,7 +166,8 @@ public class DashboardPropostaServiceImpl implements DashboardPropostaService {
 				dashboardPropostaPF.setPropostaDcms(obj[2] != null ? String.valueOf(obj[2]) : "");
 				dashboardPropostaPF.setNome(obj[3] != null ? String.valueOf(obj[3]) : "");
 				dashboardPropostaPF.setStatusVenda(obj[4] != null ? String.valueOf(obj[4]) : "");
-				dashboardPropostaPF.setValor(obj[5] != null ? Double.parseDouble(obj[5].toString()) : 0);
+				dashboardPropostaPF.setCdStatusVenda(obj[5] != null ? ((BigDecimal)obj[5]).longValue() : null); // yalm - 201808012050 - COR-508
+				dashboardPropostaPF.setValor(obj[6] != null ? Double.parseDouble(obj[6].toString()) : 0);
 				propostasPF.add(dashboardPropostaPF);
 			}
 

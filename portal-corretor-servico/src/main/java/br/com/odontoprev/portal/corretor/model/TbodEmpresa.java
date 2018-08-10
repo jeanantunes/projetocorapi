@@ -69,6 +69,9 @@ public class TbodEmpresa implements Serializable  {
 	
 	@Column(name = "CD_EMPRESA_CONTATO")
 	private Long cdEmpresaContato;
+	
+	@Column(name = "CPF_REPRESENTANTE") //201807251530 - esert - COR-513
+	private String cpfRepresentante; //201807251530 - esert - COR-513
 
 	// bi-directional many-to-one association to TbodEndereco
 	@ManyToOne
@@ -229,8 +232,14 @@ public class TbodEmpresa implements Serializable  {
 		this.cdEmpresaContato = cdEmpresaContato;
 	}
 
-	
-	
+	public String getCpfRepresentante() {
+		return cpfRepresentante;
+	}
+
+	public void setCpfRepresentante(String cpfRepresentante) {
+		this.cpfRepresentante = cpfRepresentante;
+	}
+
 	/*public TbodEmpresaContato getTbodEmpresaContato() {
 		return this.tbodEmpresaContato;
 	}
@@ -238,5 +247,4 @@ public class TbodEmpresa implements Serializable  {
 	public void setTbodEmpresaContato(TbodEmpresaContato tbodEmpresaContato) {
 		this.tbodEmpresaContato = tbodEmpresaContato;
 	}*/
-	
 }

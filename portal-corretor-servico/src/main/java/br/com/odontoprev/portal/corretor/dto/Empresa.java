@@ -27,6 +27,18 @@ public class Empresa implements Serializable  {
 	private ContatoEmpresa contactEmpresa;
 	private String dataVigencia; //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
 	private String dataMovimentacao; //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+	private Long cdEmpresa; //201807241630 - esert - COR-398
+	private String empDcms; //201807241630 - esert - COR-398
+	private String cpfRepresentante; //201807251530 - esert - COR-513
+
+
+	public Long getCdEmpresa() {
+		return cdEmpresa;
+	}
+
+	public void setCdEmpresa(Long cdEmpresa) {
+		this.cdEmpresa = cdEmpresa;
+	}
 
 	public String getCnpj() {
 		return cnpj;
@@ -188,27 +200,50 @@ public class Empresa implements Serializable  {
 		this.dataMovimentacao = dataMovimentacao;
 	}
 
-	@Override
-	public String toString() {
-		return "Empresa [cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", incEstadual=" + incEstadual
-				+ ", ramoAtividade=" + ramoAtividade + ", nomeFantasia=" + nomeFantasia + ", representanteLegal="
-				+ representanteLegal + ", contatoEmpresa=" + contatoEmpresa + ", telefone=" + telefone + ", celular="
-				+ celular + ", email=" + email + ", vencimentoFatura=" + vencimentoFatura + ", cnae=" + cnae
-				+ ", dataVencimentoFatura=" + dataVencimentoFatura + ", enderecoEmpresa=" + enderecoEmpresa
-				+ ", planos=" + planos + ", cnpjCorretora=" + cnpjCorretora + ", nomeCorretora=" + nomeCorretora
-				+ ", contactEmpresa=" + contactEmpresa + ", dataVigencia=" + dataVigencia + ", dataMovimentacao="
-				+ dataMovimentacao + "]";
+	public String getEmpDcms() {
+		return empDcms;
 	}
 
-	/*@Override
+	public void setEmpDcms(String empDcms) {
+		this.empDcms = empDcms;
+	}
+
+	public String getCpfRepresentante() {
+		return cpfRepresentante;
+	}
+
+	public void setCpfRepresentante(String cpfRepresentante) {
+		this.cpfRepresentante = cpfRepresentante;
+	}
+
+	@Override
 	public String toString() {
-		return "Empresa [cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", incEstadual=" + incEstadual
-				+ ", ramoAtividade=" + ramoAtividade + ", nomeFantasia=" + nomeFantasia + ", representanteLegal="
-				+ representanteLegal + ", contatoEmpresa=" + contatoEmpresa + ", telefone=" + telefone + ", celular="
-				+ celular + ", email=" + email + ", vencimentoFatura=" + vencimentoFatura + ", cnae=" + cnae
-				+ ", dataVencimentoFatura=" + dataVencimentoFatura + ", enderecoEmpresa=" + enderecoEmpresa
-				+ ", planos=" + planos + ", cnpjCorretora=" + cnpjCorretora + ", nomeCorretora=" + nomeCorretora + "]";
-	}*/
+		return "Empresa [" 
+				+ "cnpj=" + cnpj 
+				+ ", cdEmpresa=" + cdEmpresa //201807241630 - esert - COR-398
+				+ ", razaoSocial=" + razaoSocial 
+				+ ", incEstadual=" + incEstadual
+				+ ", ramoAtividade=" + ramoAtividade 
+				+ ", nomeFantasia=" + nomeFantasia 
+				+ ", representanteLegal=" + representanteLegal 
+				+ ", contatoEmpresa=" + contatoEmpresa 
+				+ ", telefone=" + telefone 
+				+ ", celular=" + celular 
+				+ ", email=" + email 
+				+ ", vencimentoFatura=" + vencimentoFatura 
+				+ ", cnae=" + cnae
+				+ ", dataVencimentoFatura=" + dataVencimentoFatura 
+				+ ", enderecoEmpresa=" + enderecoEmpresa
+				+ ", planos=" + planos 
+				+ ", cnpjCorretora=" + cnpjCorretora 
+				+ ", nomeCorretora=" + nomeCorretora
+				+ ", contactEmpresa=" + contactEmpresa 
+				+ ", dataVigencia=" + dataVigencia 
+				+ ", dataMovimentacao=" + dataMovimentacao 
+				+ ", empDcms=" + empDcms //201807241630 - esert - COR-398
+				+ ", cpfRepresentante=" + cpfRepresentante //201807251530 - esert - COR-513
+				+ "]";
+	}
 
 	
 }

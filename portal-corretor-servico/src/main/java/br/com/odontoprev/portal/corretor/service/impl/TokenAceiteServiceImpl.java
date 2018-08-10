@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -107,6 +108,8 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 		return new TokenAceiteResponse(HttpStatus.OK.value(), HttpStatus.OK.toString()); //201805181937 - esert - evolucao status erro
 	}
 
+
+	//TODO: Debito tecnico trocar response por ResponseEntity 2701808031615
 	@Override
 	public TokenAceite buscarTokenAceitePorChave(String chave) {
 
@@ -117,11 +120,36 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 		try {
 			
 			TbodTokenAceite tbTokenAceite = tokenAceiteDAO.findByIdCdToken(chave);
-			
+
 			if(tbTokenAceite != null) {
+
+				SimpleDateFormat sdfDDMMYYYY = new SimpleDateFormat("dd/MM/yyyy");
+
+
+				if(tbTokenAceite.getDtAceite() != null){
+
+					tokenAceite.setId(HttpStatus.ACCEPTED.value());
+					tokenAceite.setMensagem("Aceite ja realizado em " + sdfDDMMYYYY.format(tbTokenAceite.getDtAceite()) + ".");
+					tokenAceite.setDataAceite(sdfDDMMYYYY.format(tbTokenAceite.getDtAceite()));
+					return tokenAceite;//new TokenAceite(HttpStatus.ACCEPTED.value(), "Aceite ja realizado em " + sdfDDMMYYYY.format(tbTokenAceite.getDtAceite()) + ".");
+
+				}
+
+				Date dateHoje = new Date();
+				if(tbTokenAceite.getDtExpiracao().getTime() < dateHoje.getTime()){
+
+					tokenAceite.setId(HttpStatus.ACCEPTED.value());
+					tokenAceite.setMensagem("Token expirado em '" + sdfDDMMYYYY.format(tbTokenAceite.getDtExpiracao()) + "'.");
+					tokenAceite.setDataExpiracao(sdfDDMMYYYY.format(tbTokenAceite.getDtExpiracao()));
+					return tokenAceite;//new TokenAceite(HttpStatus.ACCEPTED.value(), "Token expirado em '" + sdfDDMMYYYY.format(tbTokenAceite.getDtExpiracao()) + "'.");
+
+				}
+
 				tokenAceite.setToken(tbTokenAceite.getId().getCdToken());
 				tokenAceite.setCdVenda(tbTokenAceite.getId().getCdVenda());
 				tokenAceite.setEmail(tbTokenAceite.getEmailEnvio());
+				tokenAceite.setMensagem("Data de expiracao '" + sdfDDMMYYYY.format(tbTokenAceite.getDtExpiracao()) + "'.");
+				tokenAceite.setId(HttpStatus.OK.value());
 			}
 			
 		} catch (Exception e) {
@@ -140,7 +168,7 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 	}
 
 	@Override
-	public TokenAceiteResponse updateTokenAceite(TokenAceite tokenAceite) {
+	public TokenAceiteResponse updateTokenAceite(TokenAceite tokenAceite) { // COR-5
 		
 		log.info("updateTokenAceite");
 		
@@ -150,16 +178,42 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 			tbodTokenAceite = tokenAceiteDAO.findTokenPorVendaToken(tokenAceite.getCdVenda(), tokenAceite.getToken(), tokenAceite.getEmail());
 			
 			if (tbodTokenAceite == null) {
-				return new TokenAceiteResponse(404, HttpStatus.NOT_FOUND.toString());
-			} 			
-			
-			//TODO: validaçoes
-			
-			tbodTokenAceite.setIp(tokenAceite.getIp());
-			tbodTokenAceite.setDtAceite(new Date());
-			
-			tbodTokenAceite = tokenAceiteDAO.save(tbodTokenAceite);
-			
+				return new TokenAceiteResponse(404, HttpStatus.NOT_FOUND.toString()); //TODO: Trocar para HttpStatus.no_cotent 201808031156
+			}
+
+			if(tbodTokenAceite.getDtAceite() != null){
+
+				SimpleDateFormat sdfDDMMYYYY = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				return new TokenAceiteResponse(HttpStatus.FORBIDDEN.value(), "Aceite já realizado em [" + sdfDDMMYYYY.format(tbodTokenAceite.getDtAceite()) + "]."); //TODO: Trocar para HttpStatus.no_cotent 201808031156
+
+			}
+
+			Date dateHoje = new Date();
+
+			if(tbodTokenAceite.getDtExpiracao().getTime() < dateHoje.getTime()){
+
+				SimpleDateFormat sdfDDMMYYYY = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				return new TokenAceiteResponse(HttpStatus.FORBIDDEN.value(), "Token expirado em [" + sdfDDMMYYYY.format(tbodTokenAceite.getDtExpiracao()) + "]."); //TODO: Trocar para HttpStatus.no_cotent 201808031156
+
+			}
+
+			List<TbodTokenAceite> listTbodTokenAceite = tokenAceiteDAO.findTokenPorVenda(tokenAceite.getCdVenda());
+
+			if (listTbodTokenAceite != null){
+
+				for (TbodTokenAceite itemTbodTokenAceite: listTbodTokenAceite) {
+
+					itemTbodTokenAceite.setIp(tokenAceite.getIp());
+					itemTbodTokenAceite.setDtAceite(new Date());
+
+					tbodTokenAceite = tokenAceiteDAO.save(itemTbodTokenAceite);
+
+				}
+
+			} else {
+				return new TokenAceiteResponse(404, HttpStatus.NOT_FOUND.toString()); //TODO: Trocar para HttpStatus.no_cotent 201808031156
+			}
+
 			return new TokenAceiteResponse(200, HttpStatus.OK.toString());
 			
 		} catch (Exception e) {

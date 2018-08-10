@@ -94,6 +94,7 @@ public class EmpresaBusiness {
 			tbEmpresa.setRazaoSocial(empresa.getRazaoSocial());
 			tbEmpresa.setNomeFantasia(empresa.getNomeFantasia());
 			tbEmpresa.setRepresentanteLegal(empresa.getRepresentanteLegal());
+			tbEmpresa.setCpfRepresentante(empresa.getCpfRepresentante()); //201807251530 - esert - COR-513
 			tbEmpresa.setContatoEmpresa(empresa.isContatoEmpresa() == true ? SIM : NAO);
 			tbEmpresa.setTelefone(empresa.getTelefone());
 			tbEmpresa.setCelular(empresa.getCelular());
@@ -181,6 +182,7 @@ public class EmpresaBusiness {
 			tbodEmpresa.setRazaoSocial(empresa.getRazaoSocial());
 			tbodEmpresa.setNomeFantasia(empresa.getNomeFantasia());
 			tbodEmpresa.setRepresentanteLegal(empresa.getRepresentanteLegal());
+			tbodEmpresa.setCpfRepresentante(empresa.getCpfRepresentante()); //201807251530 - esert - COR-513
 			tbodEmpresa.setContatoEmpresa(empresa.isContatoEmpresa() == true ? SIM : NAO);
 			tbodEmpresa.setTelefone(empresa.getTelefone());
 			tbodEmpresa.setCelular(empresa.getCelular());

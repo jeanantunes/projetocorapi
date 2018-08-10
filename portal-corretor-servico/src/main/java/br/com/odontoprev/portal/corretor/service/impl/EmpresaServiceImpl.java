@@ -22,12 +22,14 @@ import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
 import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
 import br.com.odontoprev.portal.corretor.business.SendMailAceite;
 import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
+import br.com.odontoprev.portal.corretor.dao.EmpresaContatoDAO;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.LogEmailBoasVindasPMEDAO;
 import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dto.CnpjDados;
 import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
+import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
@@ -35,6 +37,7 @@ import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
+import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
 import br.com.odontoprev.portal.corretor.model.TbodLogEmailBoasVindasPME;
 import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
@@ -65,6 +68,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Autowired
 	LogEmailBoasVindasPMEDAO logEmailBoasVindasPMEDAO; //201805221245 - esert - COR-225 - Serviço - LOG Envio e-mail de Boas Vindas PME
+
+	@Autowired
+	EmpresaContatoDAO empresaContatoDAO; //201807241652 - esert - COR-398
 
 	@Autowired
 	EmpresaBusiness empresaBusiness;
@@ -602,4 +608,84 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		return new EmpresaResponse(HttpStatus.OK.value(), empresaAtualizadaAceite);  //201805181310 - esert - COR-171
 	}
+	
+	//201807241625 - esert - COR-398
+	@Override
+	public Empresa findByCdEmpresa(Long cdEmpresa) {
+		Empresa empresa = null;
+		
+		empresa = translateTbodEmpresaToEmpresa(empresaDAO.findOne(cdEmpresa));
+				
+		return empresa;
+	}
+
+	//201807241625 - esert - COR-398
+	private Empresa translateTbodEmpresaToEmpresa(TbodEmpresa tbodEmpresa) {
+		log.info("translateTbodEmpresaToEmpresa - ini");
+		Empresa empresa = null;
+
+		if(tbodEmpresa!=null) {
+			
+			if(empresa==null) {
+				empresa = new Empresa();
+			}
+			
+			empresa.setCdEmpresa(tbodEmpresa.getCdEmpresa());
+			empresa.setCnpj(tbodEmpresa.getCnpj());				
+			empresa.setRazaoSocial(tbodEmpresa.getRazaoSocial());
+			empresa.setNomeFantasia(tbodEmpresa.getNomeFantasia());
+			empresa.setRamoAtividade(tbodEmpresa.getRamoAtividade());
+			empresa.setRepresentanteLegal(tbodEmpresa.getRepresentanteLegal());
+			empresa.setCpfRepresentante(tbodEmpresa.getCpfRepresentante()); //201807251530 - esert - COR-513
+			empresa.setTelefone(tbodEmpresa.getTelefone());
+			empresa.setCelular(tbodEmpresa.getCelular());
+			if(tbodEmpresa.getContatoEmpresa()!=null) { //201808071127 - esert - COR-472/COR-398
+				empresa.setContatoEmpresa(tbodEmpresa.getContatoEmpresa().equals(Constantes.SIM)); //201808071127 - esert - COR-472/COR-398
+			}
+			empresa.setEmail(tbodEmpresa.getEmail());			
+			empresa.setEmpDcms(tbodEmpresa.getEmpDcms());
+			
+			if(tbodEmpresa.getTbodEndereco()!=null) {
+				//empresa.setEnderecoEmpresa(new Endereco()); //mock
+				empresa.setEnderecoEmpresa(ConvertObjectUtil.translateTbodEnderecoToEndereco(tbodEmpresa.getTbodEndereco())); //201807241928 - esert - COR-398
+			}
+			
+			if(!empresa.isContatoEmpresa()) { //201808071127 - esert - COR-472/COR-398
+				if(tbodEmpresa.getCdEmpresaContato()!=null) {
+					//empresa.setContactEmpresa(new ContatoEmpresa());
+					Long cdEmpresaContato = tbodEmpresa.getCdEmpresaContato();
+					TbodEmpresaContato tbodEmpresaContato = empresaContatoDAO.findOne(cdEmpresaContato);
+					ContatoEmpresa contatoEmpresa = ConvertObjectUtil.translateTbodEmpresaContatoToEmpresaContato(tbodEmpresaContato);
+					empresa.setContactEmpresa(contatoEmpresa);
+				}
+			} else {
+				empresa.setContactEmpresa(null); //201808071127 - esert - COR-472/COR-398
+			}
+			
+			List<TbodVenda> listTbodVenda = vendaDAO.findByTbodEmpresaCdEmpresa(tbodEmpresa.getCdEmpresa());
+			if(listTbodVenda!=null) {
+				for (TbodVenda tbodVenda : listTbodVenda) {
+					if(tbodVenda.getFaturaVencimento()!=null) {
+						empresa.setVencimentoFatura((long)tbodVenda.getFaturaVencimento());
+						if(tbodVenda.getDtVenda()!=null) {
+							empresa.setDataVencimentoFatura(new SimpleDateFormat("dd/MM/yyyy").format(dataUtil.isEffectiveDate(tbodVenda.getFaturaVencimento(), tbodVenda.getDtVenda()))); //201807242005 - esert
+						}
+					}
+					if(tbodVenda.getDtMovimentacao()!=null) {
+						empresa.setDataMovimentacao(new SimpleDateFormat("dd/MM/yyyy").format(tbodVenda.getDtMovimentacao()));
+					}
+					if(tbodVenda.getDtVigencia()!=null) {
+						empresa.setDataVigencia(new SimpleDateFormat("dd/MM/yyyy").format(tbodVenda.getDtVigencia()));
+					}
+				}
+			}
+			
+			empresa.setCnae(tbodEmpresa.getCnae());
+			empresa.setIncEstadual(tbodEmpresa.getIncEstadual());
+						
+		}
+		log.info("translateTbodEmpresaToEmpresa - fim");
+		return empresa;
+	}
+
 }

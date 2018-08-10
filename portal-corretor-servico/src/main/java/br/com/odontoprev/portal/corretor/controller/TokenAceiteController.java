@@ -29,8 +29,8 @@ public class TokenAceiteController {
 	@RequestMapping(value = "/token", method = { RequestMethod.POST })
 	public TokenAceiteResponse addTokenAceite(@RequestBody TokenAceite tokenAceite) {
 		//TODO: outras validaçoes
-		log.info(tokenAceite);				
-		return tokenAceiteService.addTokenAceite(tokenAceite);		
+		log.info(tokenAceite);
+		return tokenAceiteService.addTokenAceite(tokenAceite);
 	}
 	
 	@RequestMapping(value = "/token", method = { RequestMethod.PUT })

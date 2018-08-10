@@ -6,6 +6,7 @@ import java.text.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
 import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
+
 
 @RestController
 public class EmpresaController {
@@ -85,4 +87,24 @@ public class EmpresaController {
 		return response;
 	}
 
+	//201807241859 - esert - COR-398 - COR-479 - COR-472
+	@RequestMapping(value = "/empresa/{cdEmpresa}", method = { RequestMethod.GET })
+	public ResponseEntity<Empresa> findEmpresa(@PathVariable Long cdEmpresa) throws ParseException { //201807241620 - esert - COR-398
+		try {
+			log.info("findEmpresa - ini");	
+			Empresa empresa = empresaService.findByCdEmpresa(cdEmpresa);
+			
+			if(empresa==null) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();			
+			}
+			
+			log.info("findEmpresa - fim");	
+			return ResponseEntity.ok(empresa);
+			
+		}catch (Exception e) {
+			log.info("findEmpresa - erro");	
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();			
+		}
+	}
 }

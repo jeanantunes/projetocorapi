@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +63,6 @@ public class TbodVenda implements Serializable {
 	
 	@Column(name = "PLATAFORMA")
 	private String plataforma; //201807201122 - esert - COR-431
-
 	
 	// bi-directional many-to-one association to TbodEmpresa
 	@ManyToOne
@@ -101,6 +101,20 @@ public class TbodVenda implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="CD_RESPONSAVEL_CONTRATUAL")
 	private TbodResponsavelContratual tbodResponsavelContratual;
+	
+	// bi-directional many-to-one association to TbodEmpresa
+	@ManyToOne
+	@JoinColumn(name = "CD_CORRETORA")
+	private TbodCorretora tbodCorretora; //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
+
+	@Column(name = "QT_VIDAS") //20180802 - yalm - [COR-532]
+	private Long qtVidas;
+
+	@Column(name = "VALOR_PLANO") //20180802 - yalm - [COR-532]
+	private BigDecimal valorPlano;
+
+	@Column(name = "VALOR_TOTAL") //20180802 - yalm - [COR-532]
+	private BigDecimal valorTotal;
 
 	public TbodVenda() {
 	}
@@ -309,6 +323,38 @@ public class TbodVenda implements Serializable {
 		this.plataforma = plataforma;
 	}
 
+	public TbodCorretora getTbodCorretora() {
+		return tbodCorretora;
+	}
+
+	public void setTbodCorretora(TbodCorretora tbodCorretora) {
+		this.tbodCorretora = tbodCorretora;
+	}
+
+	public Long getQtVidas() {
+		return qtVidas;
+	}
+
+	public void setQtVidas(Long qtVidas) {
+		this.qtVidas = qtVidas;
+	}
+
+	public BigDecimal getValorPlano() {
+		return valorPlano;
+	}
+
+	public void setValorPlano(BigDecimal valorPlano) {
+		this.valorPlano = valorPlano;
+	}
+
+	public BigDecimal getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
 	//201806141628 - esert
 	@Override
 	public String toString() {
@@ -335,6 +381,7 @@ public class TbodVenda implements Serializable {
 				+ ", tbodTokenAceites=" + tbodTokenAceites 
 				+ ", tbodResponsavelContratual=" + tbodResponsavelContratual
 				+ ", plataforma=" + plataforma //201807201122 - esert - COR-431
+				+ ", tbodCorretora=" + tbodCorretora //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
 				+ "]";
 	}
 	

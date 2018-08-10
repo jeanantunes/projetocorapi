@@ -119,7 +119,8 @@ public class CsvUtil {
 						"email",
 						"plano",
 						"total_vidas",
-						"dia_fatura"
+						"dia_fatura",
+						"valor_venda"
 				};
 				
 				csvWriter.writeHeader(header);

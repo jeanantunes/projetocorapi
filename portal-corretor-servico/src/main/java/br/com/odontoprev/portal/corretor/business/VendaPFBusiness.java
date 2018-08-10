@@ -1,5 +1,7 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import br.com.odontoprev.portal.corretor.util.Constantes;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.transaction.RollbackException;
 
+import oracle.jdbc.driver.Const;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +54,7 @@ import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
+
 
 @ManagedBean
 @Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
@@ -140,6 +144,7 @@ public class VendaPFBusiness {
 			TbodPlano tbodPlano = null;
 			if(venda.getCdPlano() != null) {
 				tbodPlano = planoDao.findByCdPlano(venda.getCdPlano());
+				tbVenda.setValorPlano(tbodPlano.getValorMensal()); //20180802 - yalm - [COR-532]
 				tbVenda.setTbodPlano(tbodPlano);
 			}
 
@@ -150,6 +155,8 @@ public class VendaPFBusiness {
 				}				
 				tbVenda.setTbodForcaVenda(tbodForcaVenda);
 				venda.setCdDCSSUsuario(tbodForcaVenda.getCodigoDcssUsuario());
+
+				tbVenda.setTbodCorretora(tbodForcaVenda.getTbodCorretora()); //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
 			}
 			
 			if(venda.getDataVenda() != null) {
@@ -181,13 +188,45 @@ public class VendaPFBusiness {
 			}
 
 			tbVenda.setPlataforma(venda.getPlataforma()); //201807201122 - esert - COR-431
-			
-			if(venda.getTitulares() != null 
+
+			long qtVidas = 0;
+
+			//20180802 - yalm - [COR-532]
+			if(
+				venda.getTitulares() != null
+				&&
+				!venda.getTitulares().isEmpty()
+			) {
+
+				for (Beneficiario titular : venda.getTitulares()) {
+
+					qtVidas++;
+
+					if (titular.getDependentes() != null){
+
+						qtVidas += titular.getDependentes().size();
+
+					}
+				}
+
+			}
+
+			//20180802 - yalm - [COR-532]
+			tbVenda.setQtVidas(qtVidas);
+
+			//20180802 - yalm - [COR-532]
+			if (tbVenda.getValorPlano() != null){
+
+				tbVenda.setValorTotal( BigDecimal.valueOf( (double)qtVidas * tbVenda.getValorPlano().doubleValue() ) );
+
+			}
+
+			if(venda.getTitulares() != null
 				&& !venda.getTitulares().isEmpty()
 				&& venda.getTitulares().get(0) != null
 				&& venda.getTitulares().get(0).getDadosBancarios() != null
 			) {
-					
+
 				DadosBancariosVenda dadosBancariosVenda = venda.getTitulares().get(0).getDadosBancarios();
 				
 				//Dados Bancarios
@@ -200,10 +239,13 @@ public class VendaPFBusiness {
 				}
 				
 				if(dadosBancariosVenda.getAgencia() != null) {
-					dadosBancariosVenda.setAgencia(dadosBancariosVenda.getAgencia().replace("-", ""));
+					//dadosBancariosVenda.setAgencia(dadosBancariosVenda.getAgencia().replace("-", ""));
+
 					if(!dadosBancariosVenda.getAgencia().isEmpty()) {
-						String ag = dadosBancariosVenda.getAgencia().substring(0,dadosBancariosVenda.getAgencia().length()-1);
-						String agDV = dadosBancariosVenda.getAgencia().substring(dadosBancariosVenda.getAgencia().length()-1);
+
+						String agDV = calcularDigitoAgencia(dadosBancariosVenda.getAgencia(), dadosBancariosVenda.getCodigoBanco());
+						String ag = dadosBancariosVenda.getAgencia();
+
 						tbVenda.setAgencia(ag);
 						tbVenda.setAgenciaDv(agDV);
 					}
@@ -445,10 +487,12 @@ public class VendaPFBusiness {
 			if(dadosBancariosVenda.getAgencia() != null) {
 				dadosBancariosVenda.setAgencia(dadosBancariosVenda.getAgencia().replace("-", ""));
 				if(!dadosBancariosVenda.getAgencia().isEmpty()) {
-					String ag = dadosBancariosVenda.getAgencia().substring(0,dadosBancariosVenda.getAgencia().length()-1);
-					String agDV = dadosBancariosVenda.getAgencia().substring(dadosBancariosVenda.getAgencia().length()-1);
+
+					String agDV = calcularDigitoAgencia(dadosBancariosVenda.getAgencia(),dadosBancariosVenda.getCodigoBanco());
+					String ag = dadosBancariosVenda.getAgencia();
 					dadosBancariosPropostaDCMS.setAgencia(ag); 
-					dadosBancariosPropostaDCMS.setAgenciaDV(agDV); 
+					dadosBancariosPropostaDCMS.setAgenciaDV(agDV);
+
 				}
 			}
 			
@@ -720,13 +764,59 @@ public class VendaPFBusiness {
 			log.error(msgErro);
 			//e.printStackTrace();
 			propostaDCMSResponse.setMensagemErro(msgErro);
-			//return propostaDCMSResponse;
+			
 			throw new RollbackException(msgErro); //201806291524 - esert - se o DCMS falhar deve fazer rollback - COR-352 rollback pf
+			
+			//201808021330 - fake
+			//propostaDCMSResponse.setMensagemErro(propostaDCMSResponse.getMensagemErro().concat(";fake-999999"));
+			//propostaDCMSResponse.setNumeroProposta("999999");
+			//return propostaDCMSResponse;
 		}
+		propostaDCMSResponse = response.getBody();
 					
 		log.info("chamarWSLegadoPropostaPOST; fim;");
-		return response.getBody();
+		return propostaDCMSResponse;
 			
+	}
+
+	private String calcularDigitoAgencia(String agencia, String banco){
+
+		String digito;
+
+		switch (banco){
+
+			case Constantes.BRADESCO:
+
+				int multiplicador = 2;
+				int total = 0;
+
+				for (int i = 4; i > 0; i--) {
+
+					String digitoSelecionado = String.valueOf(agencia.charAt(i - 1));
+					total += multiplicador * Integer.parseInt(digitoSelecionado);
+					multiplicador++;
+
+				}
+
+				int resto = total % 11;
+				int resultado = 11 - resto;
+
+				if (resultado >= 10) {
+
+					digito = "P";// += "P";
+
+				} else {
+
+					digito = String.valueOf(resultado);
+
+				}
+				break;
+
+				default:
+					return "";
+
+		}
+		return digito;
 	}
 
 }
