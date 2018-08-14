@@ -199,8 +199,15 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				//TbodStatusForcaVenda
 				//if (forcaVenda.getStatusForcaVenda() != null) {
 				if(notNullNotEmpty(forcaVenda.getStatusForcaVenda())) {
-					TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(Long.valueOf(forcaVenda.getStatusForcaVenda()));
-					tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
+					Long cdStatusForcaVenda = -1L;
+					try {
+						cdStatusForcaVenda = Long.parseLong(forcaVenda.getStatusForcaVenda());
+						TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(cdStatusForcaVenda);
+						tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
+					}catch (Exception e) {
+						//TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(Long.valueOf(forcaVenda.getStatusForcaVenda()));
+						//tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
+					}
 				}
 
 				//if (forcaVenda.getStatus() != null) {
