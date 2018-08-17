@@ -101,22 +101,9 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
 
-		final Map<String, Object> forcaMap = new HashMap<>();
-
 		final RestTemplate restTemplate = new RestTemplate();
 
-		forcaMap.put("nome", forca.getNome() == null ? "n/a" : forca.getNome());
-		forcaMap.put("email", forca.getEmail() == null ? "n/a" : forca.getEmail());
-		forcaMap.put("telefone", forca.getCelular() == null ? "n/a" : forca.getCelular());
-		forcaMap.put("nomeEmpresa", forca.getNomeEmpresa() == null ? "n/a" : forca.getNomeEmpresa());
-		forcaMap.put("login", forca.getCpf() == null ? "n/a" : forca.getCpf());
-		forcaMap.put("rg", forca.getRg() == null ? "n/a" : forca.getRg());
-		forcaMap.put("cpf", forca.getCpf() == null ? "n/a" : forca.getCpf());
-		forcaMap.put("cargo", forca.getCargo() == null ? "n/a" : forca.getCargo());
-		forcaMap.put("responsavel", forca.getResponsavel() == null ? "n/a" : forca.getResponsavel());
-		forcaMap.put("nomeGerente", forca.getNomeGerente() == null ? "n/a" : forca.getNomeGerente());
-		forcaMap.put("senha", forca.getSenha() == null ? "" : forca.getSenha());
-		forcaMap.put("canalVenda", dcss_codigo_canal_vendas);
+		final Map<String, Object> forcaMap = atribuiForcaVendaDTOparaForcaVendaMap(forca);
 
 		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
 
@@ -131,30 +118,75 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 	}
 
+	//201808161140 - esert - COR-591 - atribui (JSON)(DTO)ForcaVenda para (Map)ForcaVenda
+	private Map<String, Object> atribuiForcaVendaDTOparaForcaVendaMap(ForcaVenda forca) {
+		log.info("atribuiForcaVendaDTOparaForcaVendaMap - ini");
+		if(forca==null) {
+			return null;
+		}
+		log.info("ForcaVenda forca:[{}]",forca);
+		
+		final Map<String, Object> forcaMap = new HashMap<>();
+		forcaMap.put("nome", forca.getNome() == null ? "n/a" : forca.getNome());
+		forcaMap.put("email", forca.getEmail() == null ? "n/a" : forca.getEmail());
+		forcaMap.put("telefone", forca.getCelular() == null ? "n/a" : forca.getCelular());
+		forcaMap.put("nomeEmpresa", forca.getNomeEmpresa() == null ? "n/a" : forca.getNomeEmpresa());
+		forcaMap.put("login", forca.getCpf() == null ? "n/a" : forca.getCpf());
+		forcaMap.put("rg", forca.getRg() == null ? "n/a" : forca.getRg());
+		forcaMap.put("cpf", forca.getCpf() == null ? "n/a" : forca.getCpf());
+		forcaMap.put("cargo", forca.getCargo() == null ? "n/a" : forca.getCargo());
+		forcaMap.put("responsavel", forca.getResponsavel() == null ? "n/a" : forca.getResponsavel());
+		forcaMap.put("nomeGerente", forca.getNomeGerente() == null ? "n/a" : forca.getNomeGerente());
+		forcaMap.put("senha", forca.getSenha() == null ? "" : forca.getSenha());
+		forcaMap.put("canalVenda", dcss_codigo_canal_vendas);
+		if(forca.getStatus()!=null) { //201808162109 - esert - COR-591
+			forcaMap.put("statusUsuario", forca.getStatus().equals(Constantes.INATIVO) ? "I" : "A"); //201808161510 - esert - COR-591
+		}
+
+		forcaMap.forEach((k,v)->{
+			log.info("forcaMap([{}]:[{}])", k, v);
+		});
+		
+		log.info("atribuiForcaVendaDTOparaForcaVendaMap - fim");
+		return forcaMap;
+	}
+
 	private void putIntegracaoForcaDeVendaDcss(ForcaVenda forca, String status) throws ApiTokenException {
+		log.info("putIntegracaoForcaDeVendaDcss - ini");
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
 
-		final Map<String, Object> forcaMap = new HashMap<>();
-
-		final RestTemplate restTemplate = new RestTemplate();
-		forcaMap.put("nome", forca.getNome());
-		forcaMap.put("email", forca.getEmail());
-		forcaMap.put("telefone", forca.getCelular());
-		forcaMap.put("nomeEmpresa", forca.getNomeEmpresa());
-		forcaMap.put("login", forca.getCpf());
-		forcaMap.put("rg", forca.getRg());
-		forcaMap.put("cpf", forca.getCpf());
-		forcaMap.put("cargo", forca.getCargo());
-		forcaMap.put("responsavel", forca.getResponsavel());
-		forcaMap.put("nomeGerente", forca.getNomeGerente());
-		forcaMap.put("senha", forca.getSenha());
-		forcaMap.put("canalVenda", forca.getCdForcaVenda());
-		forcaMap.put("statusUsuario", status == "INATIVO" ? "I" : "A");
+//		final Map<String, Object> forcaMap = new HashMap<>();
+//		forcaMap.put("nome", forca.getNome());
+//		forcaMap.put("email", forca.getEmail());
+//		forcaMap.put("telefone", forca.getCelular());
+//		forcaMap.put("nomeEmpresa", forca.getNomeEmpresa());
+//		forcaMap.put("login", forca.getCpf());
+//		forcaMap.put("rg", forca.getRg());
+//		forcaMap.put("cpf", forca.getCpf());
+//		forcaMap.put("cargo", forca.getCargo());
+//		forcaMap.put("responsavel", forca.getResponsavel());
+//		forcaMap.put("nomeGerente", forca.getNomeGerente());
+//		forcaMap.put("senha", forca.getSenha());
+//		forcaMap.put("canalVenda", forca.getCdForcaVenda());
+//		forcaMap.put("statusUsuario", status == "INATIVO" ? "I" : "A");
+		forca.setStatus(status);
+		
+		final Map<String, Object> forcaMap = atribuiForcaVendaDTOparaForcaVendaMap(forca); //201808161240 - esert/rmaques - COR-591
+		
 		HttpEntity<?> request = new HttpEntity<Map<String, Object>>(forcaMap, headers);
-		restTemplate.exchange((dcssUrl + "/usuario/1.0/"), HttpMethod.PUT, request, ForcaVenda.class);
+		
+		final RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<ForcaVenda> resForcaVenda = restTemplate.exchange((dcssUrl + "/usuario/1.0/"), HttpMethod.PUT, request, ForcaVenda.class);
+		
+		//201808161240 - esert - COR-591 - registrar retorno do dcss ja que este metodo nao retorna nada (void)
+		log.info("resForcaVenda.getStatusCode():[{}]",resForcaVenda.getStatusCode().toString());
+		if(resForcaVenda.hasBody()) {
+			log.info("resForcaVenda.getBody():[{}]",((ForcaVenda)resForcaVenda.getBody()).toString());			
+		}
 
+		log.info("putIntegracaoForcaDeVendaDcss - fim");
 	}
 
 	//201808101200 - esert - COR-360(atualizar apenas valores nao nulos nao vazios apos trim)
@@ -199,8 +231,8 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				//TbodStatusForcaVenda
 				//if (forcaVenda.getStatusForcaVenda() != null) {
 				if(notNullNotEmpty(forcaVenda.getStatusForcaVenda())) {
-					Long cdStatusForcaVenda = -1L;
-					try {
+					Long cdStatusForcaVenda = -1L;					
+					try { //201808141900 - COR-363 //201808141900 - COR-591
 						cdStatusForcaVenda = Long.parseLong(forcaVenda.getStatusForcaVenda());
 						TbodStatusForcaVenda tbStatusForcaVenda = statusForcaVendaDao.findOne(cdStatusForcaVenda);
 						tbForcaVenda.setTbodStatusForcaVenda(tbStatusForcaVenda);
@@ -217,7 +249,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 				// Grava senha na tabela de login na tela de Aguardando Aprovacao
 				//if (forcaVenda.getSenha() != null && forcaVenda.getSenha() != "") {
-				if(notNullNotEmpty(forcaVenda.getStatus())) {
+				if(notNullNotEmpty(forcaVenda.getSenha())) {
 					TbodLogin tbLogin = null;
 					// tbLogin.setCdLogin(tbForcaVenda.getTbodLogin().getCdLogin());
 
@@ -252,6 +284,9 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 				tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 
+				//201808161100 - esert - COR-591 - agregar dados faltantes no JSON conforme tratado Roberto@ODPV e Fernando@ODPV na daily de hoje. 
+				completaForcaVendaDTOComTbodForcaVenda(forcaVenda, tbForcaVenda);
+				
 				if (tbForcaVenda.getCodigoDcssUsuario() != null) {
 					this.putIntegracaoForcaDeVendaDcss(forcaVenda,null);
 					/*return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
@@ -278,16 +313,97 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		}
 	}
 
+	//201808161100 - esert - COR-591 - agregar dados faltantes no JSON conforme tratado Roberto@ODPV e Fernando@ODPV na daily de hoje.
+	private void completaForcaVendaDTOComTbodForcaVenda(ForcaVenda forcaVenda, TbodForcaVenda tbForcaVenda) {
+		if(forcaVenda==null) {
+			log.error("ForcaVenda forcaVenda == null. Saindo sem ação");
+			return;
+		}
+		if(tbForcaVenda==null) {
+			log.error("TbodForcaVenda tbForcaVenda == null. Saindo sem ação");
+			return;
+		}
+		
+		log.info("ANTES forcaVenda:[{}]", forcaVenda);
+		
+		//forcaMap.put("nome", forca.getNome());
+		if(!notNullNotEmpty(forcaVenda.getNome())) {
+			forcaVenda.setNome(tbForcaVenda.getNome());
+		}
+		
+		//forcaMap.put("email", forca.getEmail());
+		if(!notNullNotEmpty(forcaVenda.getEmail())) {
+			forcaVenda.setEmail(tbForcaVenda.getEmail());
+		}
+		
+		//forcaMap.put("telefone", forca.getCelular());
+		if(!notNullNotEmpty(forcaVenda.getCelular())) {
+			forcaVenda.setCelular(tbForcaVenda.getCelular());
+		}
+		
+		//forcaMap.put("nomeEmpresa", forca.getNomeEmpresa());
+		/* 201808161130 - esert - COR-591 - conforme tratado com Roberto@ODPV
+		 * forcaVenda.setNomeEmpresa nao eh passado no POST de criacao do forca por isso nao sera passado aqui no PUT 
+		if(!notNullNotEmpty(forcaVenda.getNomeEmpresa())) {
+			forcaVenda.setNomeEmpresa(tbForcaVenda.getTbodCorretora().getNome());
+		}
+		*/
+		
+		//forcaMap.put("login", forca.getCpf());
+		if(!notNullNotEmpty(forcaVenda.getCpf())) {
+			forcaVenda.setCpf(tbForcaVenda.getCpf());
+		}
+		
+		//forcaMap.put("rg", forca.getRg());
+		/*pula RG pq nao existe na base*/
+		
+		//forcaMap.put("cpf", forca.getCpf());
+		if(!notNullNotEmpty(forcaVenda.getCpf())) {
+			forcaVenda.setCpf(tbForcaVenda.getCpf());
+		}
+		
+		//forcaMap.put("cargo", forca.getCargo());
+		if(!notNullNotEmpty(forcaVenda.getCargo())) {
+			forcaVenda.setCargo(tbForcaVenda.getCargo());
+		}
+		
+		//forcaMap.put("responsavel", forca.getResponsavel());
+		/*pula Responsavel pq nao existe na base*/
+		
+		//forcaMap.put("nomeGerente", forca.getNomeGerente());
+		/*pula NomeGerente pq nao existe na base*/
+
+		//forcaMap.put("senha", forca.getSenha());
+		if(!notNullNotEmpty(forcaVenda.getSenha())) {
+			forcaVenda.setSenha(tbForcaVenda.getTbodLogin().getSenha());
+		}
+
+		//forcaMap.put("canalVenda", forca.getCdForcaVenda());
+		/*pula canalVenda pq sera atribuida constante (dcss_codigo_canal_vendas)*/
+		
+		//forcaMap.put("statusUsuario", status == "INATIVO" ? "I" : "A");
+		if(!notNullNotEmpty(forcaVenda.getStatus())) {
+			forcaVenda.setAtivo(Constantes.SIM.equals(tbForcaVenda.getAtivo()));
+		}
+		
+		log.info("DEPOS forcaVenda:[{}]", forcaVenda);
+	}
+
+	//201808161157 - esert - COR-591(atualizar apenas valores nao nulos numerico nao zerados)
+/*	private boolean notNullNotEmpty(Long cdForcaVenda) {
+		return cdForcaVenda != null && cdForcaVenda > 0;
+	}
+*/
 	//201808101200 - esert - COR-360(atualizar apenas valores nao nulos nao vazios apos trim)
 	private boolean notNullNotEmpty(String value) {
-		// TODO Auto-generated method stub
 		return value != null && !value.trim().isEmpty();
 	}
 
 	@Override
 	public ForcaVendaResponse addForcaVenda(ForcaVenda forcaVenda) {
 
-		log.info("[addForcaVenda]");
+		log.info("addForcaVenda - ini");
+		log.info("forcaVenda:[{}]", forcaVenda);
 
 		TbodForcaVenda tbForcaVenda = new TbodForcaVenda();
 		TbodStatusForcaVenda tbStatusForcaVenda = new TbodStatusForcaVenda();
@@ -334,11 +450,13 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			// integracaoForcaDeVendaDcss(forcaVenda); //Chamar no PUT
 
 		} catch (final Exception e) {
+			log.info("addForcaVenda - erro");
 			//log.error(e);
 			log.error("Erro ao cadastrar forcaVenda :: Detalhe: [" + e.getMessage() + "]");
 			return new ForcaVendaResponse(0, "Erro ao cadastrar forcaVenda. Detalhe: [" + e.getMessage() + "]");
 		}
 
+		log.info("addForcaVenda - fim");
 		return new ForcaVendaResponse(tbForcaVenda.getCdForcaVenda(),
 				"ForcaVenda cadastrada. CPF [" + forcaVenda.getCpf() + "]");
 	}
@@ -360,7 +478,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			forcaVenda.setCelular(tbForcaVenda.getCelular());
 			forcaVenda.setEmail(tbForcaVenda.getEmail());
 			forcaVenda.setCpf(tbForcaVenda.getCpf());
-			forcaVenda.setAtivo("S".equals(tbForcaVenda.getAtivo()) ? true : false);
+			forcaVenda.setAtivo(Constantes.ATIVO.equals(tbForcaVenda.getAtivo()));
 
 			String dataStr = "00/00/0000";
 			final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -730,7 +848,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 			tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 
-			envioMensagemAtivo(tbForcaVenda);
+			//envioMensagemAtivo(tbForcaVenda);
 
 			//TODO //201803041824 tratar erro no dcss e fazer rollback da alteracao de status
 			ForcaVenda forcaVendaParaDCSS = this.adaptEntityToDto(tbForcaVenda, forcaVenda); //201803041824 inc esert para fernando
