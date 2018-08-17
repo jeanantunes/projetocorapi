@@ -139,9 +139,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 		forcaMap.put("nomeGerente", forca.getNomeGerente() == null ? "n/a" : forca.getNomeGerente());
 		forcaMap.put("senha", forca.getSenha() == null ? "" : forca.getSenha());
 		forcaMap.put("canalVenda", dcss_codigo_canal_vendas);
-		if(forca.getStatus()!=null) { //201808162109 - esert - COR-591
-			forcaMap.put("statusUsuario", forca.getStatus().equals(Constantes.INATIVO) ? "I" : "A"); //201808161510 - esert - COR-591
-		}
+		forcaMap.put("statusUsuario", forca.getStatus()); //201808161510 - esert - COR-591
 
 		forcaMap.forEach((k,v)->{
 			log.info("forcaMap([{}]:[{}])", k, v);
@@ -171,7 +169,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 //		forcaMap.put("senha", forca.getSenha());
 //		forcaMap.put("canalVenda", forca.getCdForcaVenda());
 //		forcaMap.put("statusUsuario", status == "INATIVO" ? "I" : "A");
-		forca.setStatus(status);
+		forca.setStatus((status!=null && status.equals("INATIVO")) ? "I" : "A"); //201808171157
 		
 		final Map<String, Object> forcaMap = atribuiForcaVendaDTOparaForcaVendaMap(forca); //201808161240 - esert/rmaques - COR-591
 		
