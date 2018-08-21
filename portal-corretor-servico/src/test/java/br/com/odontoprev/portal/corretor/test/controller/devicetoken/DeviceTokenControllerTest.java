@@ -144,13 +144,12 @@ public class DeviceTokenControllerTest {
 	   }
 
 	   //201808091539 - esert - COR-557 - nova rota DELETE/devicetoken/forcavenda/{id}
+	   //201808211630 - esert - COR-650 - alterado DELETE/devicetoken/forcavenda/{id}(+body) por DELETE/devicetoken/{codToken}/forcavenda/{codForcaVenda} 
 	   @Test
 	   public void testOk200ExcluirDeviceToken() throws Exception {
 	       //Montando Request
 	       Long codigoForcaVendaRequest = 1L;
-		   DeviceToken deviceTokenRequest = new DeviceToken();
-		   deviceTokenRequest.setCodigo(1L);	       
-	       deviceTokenRequest.setToken("TOKEN");	       
+	       String codigoTokenRequest = "TOKEN";
 
 	       //Montando Given
 	       Long codigoForcaVendaGiven = 1L;
@@ -164,7 +163,7 @@ public class DeviceTokenControllerTest {
 	       given(service.buscarPorTokenLogin(deviceTokenGiven.getToken(), codigoForcaVendaGiven)).willReturn(listDeviceTokenGiven);	       
 	       
 	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(delete("/devicetoken/forcavenda/"+codigoForcaVendaRequest).content(new Gson().toJson(deviceTokenRequest))	               
+	       mvc.perform(delete("/devicetoken/" + codigoTokenRequest + "/forcavenda/"+codigoForcaVendaRequest)	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isOk());
 	       
@@ -174,12 +173,11 @@ public class DeviceTokenControllerTest {
 	   }
 
 	   //201808091539 - esert - COR-557 - nova rota DELETE/devicetoken/forcavenda/{id}
+	   //201808211630 - esert - COR-650 - alterado DELETE/devicetoken/forcavenda/{id}(+body) por DELETE/devicetoken/{codToken}/forcavenda/{codForcaVenda} 
 	   @Test
 	   public void testBadRequest400ExcluirDeviceTokenSemToken() throws Exception {
 	       //Montando Request
-		   DeviceToken deviceTokenRequest = new DeviceToken();
-		   //deviceToken.setCodigo(1L);	       
-	       //deviceToken.setToken("TOKEN");//propositalmente sem token	       
+		   String codigoTokenRequest = " ";
 	       Long codigoForcaVendaRequest = 1L;
 
 	       //Montando Request Given
@@ -193,7 +191,7 @@ public class DeviceTokenControllerTest {
 	       given(service.buscarPorTokenLogin(deviceTokenGiven.getToken(), codigoForcaVendaGiven)).willReturn(listDeviceTokenGiven);	       
 	       
 	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(delete("/devicetoken/forcavenda/"+codigoForcaVendaRequest).content(new Gson().toJson(deviceTokenRequest))	               
+	       mvc.perform(delete("/devicetoken/" + codigoTokenRequest + "/forcavenda/"+codigoForcaVendaRequest)	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isBadRequest());
 	       
@@ -204,6 +202,7 @@ public class DeviceTokenControllerTest {
 	   }
 
 	   //201808091700 - esert - COR-557 - nova rota DELETE/devicetoken/forcavenda/{id}
+	   //201808211630 - esert - COR-650 - alterado DELETE/devicetoken/forcavenda/{id}(+body) por DELETE/devicetoken/{codToken}/forcavenda/{codForcaVenda} 
 	   @Test
 	   public void testNoContent204ExcluirDeviceTokenTokenDiferente() throws Exception {
 
@@ -218,18 +217,16 @@ public class DeviceTokenControllerTest {
 	       given(service.buscarPorTokenLogin(deviceTokenGiven.getToken(), codigoForcaVendaGiven)).willReturn(listDeviceTokenGiven);	       
 
 	       //Montando Request
-		   DeviceToken deviceTokenRequest = new DeviceToken();
-		   deviceTokenRequest.setCodigo(1L);	       
-	       deviceTokenRequest.setToken("TOKEN");//propositalmente sem token	       
+		   String codigoTokenRequest="naoExiste";//propositalmente sem token	       
 	       Long codigoForcaVendaRequest = 1L;
 
 	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(delete("/devicetoken/forcavenda/"+codigoForcaVendaRequest).content(new Gson().toJson(deviceTokenRequest))	               
+	       mvc.perform(delete("/devicetoken/" + codigoTokenRequest + "/forcavenda/"+codigoForcaVendaRequest)	               
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isNoContent());
 	       
 	       //Verifica se os metódos da lógica interna foram chamados
-	       BDDMockito.verify(service).buscarPorTokenLogin(deviceTokenRequest.getToken(), codigoForcaVendaRequest);
+	       BDDMockito.verify(service).buscarPorTokenLogin(codigoTokenRequest, codigoForcaVendaRequest);
 	       //BDDMockito.verify(service).excluir(deviceTokenRequest.getCodigo());	               
 	   }
 	   
