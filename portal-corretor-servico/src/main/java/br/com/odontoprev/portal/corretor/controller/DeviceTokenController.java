@@ -69,23 +69,22 @@ public class DeviceTokenController implements Serializable {
 	}
 
 	//201808091130 - esert - COR-556 nova rota excluir
-	@RequestMapping(value = "/devicetoken/forcavenda/{codigoForcaVenda}", method = { RequestMethod.DELETE })	
-	public ResponseEntity<BaseResponse> excluirDeviceToken(@PathVariable Long codigoForcaVenda,@RequestBody DeviceToken request) {
+	//201808211534 - esert - COR-650 alterado de RequestBody para PathVariable porque API Gateway WSO2 nao suporta body no DELETE
+	@RequestMapping(value = "/devicetoken/{codigoToken}/forcavenda/{codigoForcaVenda}", method = { RequestMethod.DELETE })	
+	public ResponseEntity<BaseResponse> excluirDeviceToken(@PathVariable String codigoToken, @PathVariable Long codigoForcaVenda) {
 		LOGGER.info("excluirDeviceToken - ini");
+		
+		if(codigoToken==null || codigoToken.trim().isEmpty()) {
+			LOGGER.info("excluirDeviceToken - badRequest");
+			return ResponseEntity.badRequest().body(new BaseResponse("Código Token não informado!"));
+		}	
 		
 		if(codigoForcaVenda==null) {
 			LOGGER.info("excluirDeviceToken - badRequest");
 			return ResponseEntity.badRequest().body(new BaseResponse("Código Forca Venda não informado!"));
 		}	
-		
-		String mensagens = this.validarExcluir(request);		
-		
-		if(mensagens != null) {
-			LOGGER.info("excluirDeviceToken - badRequest");
-			return ResponseEntity.badRequest().body(new BaseResponse(mensagens));
-		}		
-		List<DeviceToken> tokens = service.buscarPorTokenLogin(request.getToken(), codigoForcaVenda);
-		
+				
+		List<DeviceToken> tokens = service.buscarPorTokenLogin(codigoToken, codigoForcaVenda);		
 		
 		if(tokens==null || tokens.isEmpty()){
 			LOGGER.info("excluirDeviceToken - noContent");
@@ -97,24 +96,4 @@ public class DeviceTokenController implements Serializable {
 		LOGGER.info("excluirDeviceToken - fim");
 		return ResponseEntity.ok().build();
 	}
-	
-	private String validarExcluir(DeviceToken request) {
-		String ret = "";
-		if(request==null) {
-			ret += " request nao informado.";
-		}
-		if(request.getToken()==null) {
-			ret += " token nao informado.";
-		}
-		/*
-		if(request.getModelo()==null) {
-			ret += " modelo nao informado.";		
-		}
-		if(request.getSistemaOperacional()==null) {
-			ret += "sistema operacional nao informado.";
-		}
-		*/
-		return ret.isEmpty()?null:ret;
-	}
-
 }
