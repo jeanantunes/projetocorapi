@@ -1,6 +1,9 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.annotation.ManagedBean;
 
@@ -19,6 +22,7 @@ import br.com.odontoprev.portal.corretor.serviceEmail.ApiException;
 import br.com.odontoprev.portal.corretor.serviceEmail.api.DefaultApi;
 import br.com.odontoprev.portal.corretor.serviceEmail.model.RequestEmail;
 import br.com.odontoprev.portal.corretor.util.FileReaderUtil;
+import br.com.odontoprev.portal.corretor.util.Html2Pdf;
 import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 
 
@@ -60,7 +64,8 @@ public class SendMailAceite {
 			body.setType(type);
 			body.setSubject(subject);
 
-			apiInstance.sendEmail(body);
+			apiInstance.sendEmail(body); //TODO 201808221825 - esert - DESCOMENTAR
+			
 		} catch (ApiException e) {
 			log.error("SendMailAceite.sendMail(); getMessage:[" + e.getMessage() + "]"); 
 			log.error("SendMailAceite.sendMail(); getResponseBody:[" + e.getResponseBody() + "]");

@@ -3,8 +3,13 @@ package br.com.odontoprev.portal.corretor.util;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -86,7 +91,7 @@ public class FileReaderUtil {
 		return html;
 	}
 
-	private String readHTML(String html, String emkt) {
+	public String readHTML(String html, String emkt) {
 		
 		try {
 			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("templates" + File.separatorChar + emkt);
@@ -109,6 +114,30 @@ public class FileReaderUtil {
 			return "";
 		}
 		return html;
+	}
+
+	//201808221958 - esert - COR-616
+	public String readFile(String path, Charset encoding) throws IOException{
+	  byte[] encoded = Files.readAllBytes(Paths.get(path));
+	  return new String(encoded, encoding);
+	}
+
+	//201808222239 - esert - COR-616
+	public static byte[] readContentIntoByteArray(File file) {
+		FileInputStream fileInputStream = null;
+		byte[] bFile = new byte[(int) file.length()];
+		try {
+			// convert file into array of bytes
+			fileInputStream = new FileInputStream(file);
+			fileInputStream.read(bFile);
+			fileInputStream.close();
+			for (int i = 0; i < bFile.length; i++) {
+				System.out.print((char) bFile[i]);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bFile;
 	}
 
 }
