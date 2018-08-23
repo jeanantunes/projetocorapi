@@ -39,6 +39,7 @@ public class FileReaderUtil {
 			case "BoasVindasPME":
 				emkt = "emkt_boas_vindas_pme.html"; //201805091620 - esert - inc
 				break; //201806012119 - esert - inc
+
 		}
 
 		log.info("readHtmlFile(tipoEmail:[" + tipoEmail + "]) -> emkt:[" + emkt + "]"); //201805091625 - esert - inc

@@ -154,10 +154,10 @@ public class VendaController {
 		try {
 			html2pdf = new Html2Pdf(html);
 		
-			String htmlPathFileName = "c:\\vector\\workspaceEdu\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\emktSemCSSSimples1.html"; 
+			String htmlPathFileName = "C:\\Users\\almei\\dev\\APPS\\portal-corretor-api\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\emktSemCSSSimples1.html";
 			log.info("htmlPathFileName:[" + htmlPathFileName + "]");
 	
-			String cssPathFileName = "c:\\vector\\workspaceEdu\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\email.css"; 
+			String cssPathFileName = "C:\\Users\\almei\\dev\\APPS\\portal-corretor-api\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\email.css";
 			log.info("cssPathFileName:[" + cssPathFileName + "]");
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");  

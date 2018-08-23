@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import com.itextpdf.text.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -23,10 +24,6 @@ import org.apache.commons.logging.LogFactory;
  */
 
 //import com.ederbaum.io.IOUtil;
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.codec.Base64;
 import com.itextpdf.tool.xml.XMLWorker;
@@ -193,7 +190,8 @@ public class Html2Pdf {
 		// html = getHtmlByteArrayStream(); //this is only for my picture not neccessary
 		// step 1
 		log.info("step 1 ...");
-		Document document = new Document();
+		Document document = new Document(PageSize.A4);
+
 		// step 2
 		log.info("step 2 ...");
 		PdfWriter writer = null;
@@ -219,7 +217,7 @@ public class Html2Pdf {
 		// step 4
 		log.info("step 4 ...");
 		try {
-			XMLWorkerHelper.getInstance().parseXHtml(writer, document, html, css);
+			XMLWorkerHelper.getInstance().parseXHtml(writer, document, html);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
