@@ -17,6 +17,8 @@ import com.itextpdf.text.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -183,11 +185,26 @@ public class Html2Pdf {
 		}
 	}
 
-	public void html2pdf2(String htmlSource, String cssSource, String destPdf) {
+	public boolean html2pdf2(String htmlSource, String cssSource, String pdfTarget) {
 		log.info("html2pdf2 - ini");
-		ByteArrayInputStream html = new ByteArrayInputStream(FileReaderUtil.readContentIntoByteArray(new File(htmlSource)));
-		ByteArrayInputStream css = new ByteArrayInputStream(FileReaderUtil.readContentIntoByteArray(new File(cssSource)));
+		
+		ByteArrayInputStream html = null;
 		// html = getHtmlByteArrayStream(); //this is only for my picture not neccessary
+		if(htmlSource!=null && !htmlSource.trim().isEmpty()) {
+			log.info(String.format("htmlSource from [%s]", htmlSource));
+			//html = new ByteArrayInputStream(FileReaderUtil.readContentIntoByteArray(new File(htmlSource)));
+			html = new ByteArrayInputStream(htmlSource.getBytes());
+		} else {
+			log.error(String.format("htmlSource inválido [%s]", htmlSource));
+			return false;
+		}
+		
+		ByteArrayInputStream css = null;
+		if(cssSource!=null && !cssSource.trim().isEmpty()) {
+			log.info(String.format("cssSource from [%s]", cssSource));
+			css = new ByteArrayInputStream(FileReaderUtil.readContentIntoByteArray(new File(cssSource)));
+		}
+		
 		// step 1
 		log.info("step 1 ...");
 		Document document = new Document(PageSize.A4);
@@ -196,20 +213,34 @@ public class Html2Pdf {
 		log.info("step 2 ...");
 		PdfWriter writer = null;
 		try {
-			writer = PdfWriter.getInstance(document, new FileOutputStream(destPdf));
+			if(pdfTarget!=null && !pdfTarget.trim().isEmpty()) {
+				log.info(String.format("pdfTarget to [%s]", pdfTarget));
+				writer = PdfWriter.getInstance(document, new FileOutputStream(pdfTarget));
+			} else {
+				log.error(String.format("pdfTarget inválido [%s]", pdfTarget));
+				return false;
+			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.error(e);
+			return false;
 		} catch (DocumentException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.error(e);
+			return false;
 		}
+		
 		try {
 			writer.setInitialLeading(12);
 		} catch (DocumentException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
+			log.error(e1);
+			return false;
 		}
+		
 		// step 3
 		log.info("step 3 ...");
 		document.open();
@@ -217,14 +248,24 @@ public class Html2Pdf {
 		// step 4
 		log.info("step 4 ...");
 		try {
-			XMLWorkerHelper.getInstance().parseXHtml(writer, document, html);
+			if(css==null) {
+				log.info("XMLWorkerHelper.getInstance().parseXHtml(writer, document, html) ...");
+				XMLWorkerHelper.getInstance().parseXHtml(writer, document, html);
+			} else {
+				log.info("XMLWorkerHelper.getInstance().parseXHtml(writer, document, html, css) ...");
+				XMLWorkerHelper.getInstance().parseXHtml(writer, document, html, css);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			log.error(e);
+			return false;
 		}
 
 		// step 5
 		log.info("step 5 ...");
 		document.close();
+		
+		return true;
 	}
 }
