@@ -163,8 +163,8 @@ public class DeviceTokenControllerTest {
 	       given(service.buscarPorTokenLogin(deviceTokenGiven.getToken(), codigoForcaVendaGiven)).willReturn(listDeviceTokenGiven);	       
 	       
 	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(delete("/devicetoken/" + codigoTokenRequest + "/forcavenda/"+codigoForcaVendaRequest)	               
-	               .contentType(APPLICATION_JSON))
+		   mvc.perform(delete("/devicetoken/forcavenda/"+codigoForcaVendaRequest + "?token=" + codigoTokenRequest)
+				   .contentType(APPLICATION_JSON))
 	               .andExpect(status().isOk());
 	       
 	       //Verifica se os metódos da lógica interna foram chamados
@@ -191,7 +191,7 @@ public class DeviceTokenControllerTest {
 	       given(service.buscarPorTokenLogin(deviceTokenGiven.getToken(), codigoForcaVendaGiven)).willReturn(listDeviceTokenGiven);	       
 	       
 	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(delete("/devicetoken/" + codigoTokenRequest + "/forcavenda/"+codigoForcaVendaRequest)	               
+	       mvc.perform(delete("/devicetoken/forcavenda/"+codigoForcaVendaRequest + "?token=" + codigoTokenRequest)
 	               .contentType(APPLICATION_JSON))
 	               .andExpect(status().isBadRequest());
 	       
@@ -221,8 +221,8 @@ public class DeviceTokenControllerTest {
 	       Long codigoForcaVendaRequest = 1L;
 
 	       //Efetua a requisição na rota e espera um status code
-	       mvc.perform(delete("/devicetoken/" + codigoTokenRequest + "/forcavenda/"+codigoForcaVendaRequest)	               
-	               .contentType(APPLICATION_JSON))
+		   mvc.perform(delete("/devicetoken/forcavenda/"+codigoForcaVendaRequest + "?token=" + codigoTokenRequest)
+				   .contentType(APPLICATION_JSON))
 	               .andExpect(status().isNoContent());
 	       
 	       //Verifica se os metódos da lógica interna foram chamados
