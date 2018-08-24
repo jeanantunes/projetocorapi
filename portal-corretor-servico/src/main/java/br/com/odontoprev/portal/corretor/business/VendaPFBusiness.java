@@ -1,6 +1,5 @@
 package br.com.odontoprev.portal.corretor.business;
 
-import br.com.odontoprev.portal.corretor.util.Constantes;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +10,6 @@ import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.transaction.RollbackException;
 
-import oracle.jdbc.driver.Const;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +52,7 @@ import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 
 
 @ManagedBean
@@ -301,49 +300,18 @@ public class VendaPFBusiness {
 			log.error("salvarVendaComTitularesComDependentes - fim");
 
 		} 
-//		catch (Exception e) {
-//			log.error("salvarVendaComTitularesComDependentes :: Erro ao cadastrar venda CdVenda:[" + venda.getCdVenda() + "], Detalhe: [" + e.getMessage() + "]");
-//			
-//			String msg = "Erro ao cadastrar venda ";
-//			if(venda.getCdVenda() != null) {
-//				msg += ", CdVenda:["+ venda.getCdVenda() +"]";
-//			} else {
-//				msg += ", CdVenda:[null]";
-//			}
-//			if(venda.getCdEmpresa() != null) {
-//				msg += ", CdEmpresa:["+ venda.getCdEmpresa() +"]";
-//			} else {
-//				msg += ", CdEmpresa:[null]";
-//			}
-//			if(venda.getCdForcaVenda() != null) {
-//				msg += ", CdForcaVenda:["+ venda.getCdForcaVenda() +"]";
-//			} else {
-//				msg += ", CdForcaVenda:[null]";
-//			}
-//			
-////			if(venda.getPlanos() != null && !venda.getPlanos().isEmpty()) {
-////				msg += ", Planos[0].CdPlano:["+ venda.getPlanos().get(0) +"].";
-////			} else {
-////				msg += ", CdPlano:[null].";
-////			}
-//			
-//			if(venda.getCdPlano() != null) {
-//				msg += ", CdPlano:["+ venda.getCdPlano() +"].";
-//			} else {
-//				msg += ", CdPlano:[null].";
-//			}
-//
-//			log.error(msg);
-//			//return new VendaResponse(0, msg);
-//			
-//		}
 
 		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada." 
 		+ " CdVenda:[" + tbVenda.getCdVenda() + "];" 
 		+ " NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "];" 
 		+ " DtVenda:[" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) + "];"
 		+ " MensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "];"
-		);
+		//201808241648 - esert - COR-619 - passar cdEmpresa para App/Web
+		,tbVenda.getCdVenda() //cdVenda 
+		,propostaDCMSResponse.getNumeroProposta() //numeroProposta
+		,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) //dtVenda
+		,propostaDCMSResponse.getMensagemErro() //mensagemErro
+		,tbVenda.getTbodEmpresa().getCdEmpresa()); //cdEmpresa
 	}
 
 	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
