@@ -311,7 +311,8 @@ public class VendaPFBusiness {
 		,propostaDCMSResponse.getNumeroProposta() //numeroProposta
 		,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) //dtVenda
 		,propostaDCMSResponse.getMensagemErro() //mensagemErro
-		,tbVenda.getTbodEmpresa().getCdEmpresa()); //cdEmpresa
+		,tbVenda.getTbodEmpresa().getCdEmpresa() //cdEmpresa
+		);
 	}
 
 	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
