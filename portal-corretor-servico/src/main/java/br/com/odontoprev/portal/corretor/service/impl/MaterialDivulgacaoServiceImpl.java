@@ -240,10 +240,12 @@ public class MaterialDivulgacaoServiceImpl implements MaterialDivulgacaoService 
 	
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				log.error(e); //201808232207 - esert
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				log.error(e); //201808232207 - esert
 			}
 		} else {
 			try {
