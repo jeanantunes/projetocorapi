@@ -28,18 +28,22 @@ public class ArquivoContratacaoController {
 	private ArquivoContratacaoService arquivoContratacaoService;
 
 	@RequestMapping(value = "/arquivocontratacao/empresa/{cdEmpresa}/json", method = { RequestMethod.GET })
-	public ResponseEntity<ArquivoContratacao> obterArquivoContratacao(@PathVariable Long cdEmpresa) throws ParseException {
-		log.info("obterArquivoContratacao - ini");	
+	public ResponseEntity<ArquivoContratacao> getArquivoContratacao(@PathVariable Long cdEmpresa) throws ParseException {
+		log.info("getArquivoContratacao - ini");	
 		ArquivoContratacao responseObject = new ArquivoContratacao();		
 		
 		try {
 			responseObject = arquivoContratacaoService.getByCdEmpresa(cdEmpresa, true);
+			if(responseObject==null) {
+				log.info("getArquivoContratacao - fim");	
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //201808241728 - esert
+			}
 		} catch (Exception e) {
-			log.error("ERRO em obterArquivoContratacao()", e);
+			log.error("ERRO em getArquivoContratacao()", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		
-		log.info("obterArquivoContratacao - fim");	
+		log.info("getArquivoContratacao - fim");	
 		return ResponseEntity.ok(responseObject);
 	}
 
@@ -61,19 +65,29 @@ public class ArquivoContratacaoController {
 	}
 
 	@RequestMapping(value = "/arquivocontratacao/empresa/{cdEmpresa}/arquivo", method = RequestMethod.GET)
-	public ResponseEntity<byte[]> getArquivo(@PathVariable("cdEmpresa") Long cdEmpresa) {
-		ArquivoContratacao arquivoContratacao = arquivoContratacaoService.getByCdEmpresa(cdEmpresa, true);
-	    byte[] arquivoPDF = Base64.decodeBase64(arquivoContratacao.getArquivoBase64());
-	    String[] tipoConteudo = arquivoContratacao.getTipoConteudo().split("/");
-	    String type = tipoConteudo[0];
-	    String subType = tipoConteudo[1];
-	    return ResponseEntity
-	    		.ok()
-	    		.contentType(new MediaType(type, subType))
-	    		.header(
-	    				"Content-Disposition", 
-	    				String.format("attachment; filename=%s", arquivoContratacao.getNomeArquivo())
-	    				)
-	    		.body(arquivoPDF);
+	public ResponseEntity<byte[]> getArquivoByteArray(@PathVariable("cdEmpresa") Long cdEmpresa) {
+		log.info("getArquivoByteArray - ini");
+		try {
+			ArquivoContratacao arquivoContratacao = arquivoContratacaoService.getByCdEmpresa(cdEmpresa, true);
+			if(arquivoContratacao==null) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //201808241726 - esert
+			}
+		    byte[] arquivoPDF = Base64.decodeBase64(arquivoContratacao.getArquivoBase64());
+		    String[] tipoConteudo = arquivoContratacao.getTipoConteudo().split("/");
+		    String type = tipoConteudo[0];
+		    String subType = tipoConteudo[1];
+			log.info("getArquivoByteArray - fim");	
+		    return ResponseEntity
+		    		.ok()
+		    		.contentType(new MediaType(type, subType))
+		    		.header(
+		    				"Content-Disposition", 
+		    				String.format("attachment; filename=%s", arquivoContratacao.getNomeArquivo())
+		    				)
+		    		.body(arquivoPDF);
+		} catch (Exception e) {
+			log.info("getArquivoByteArray - erro");	
+		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //201808241726 - esert
+		}
 	}
 }
