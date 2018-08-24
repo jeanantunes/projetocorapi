@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import br.com.odontoprev.portal.corretor.dto.DeviceToken;
 import br.com.odontoprev.portal.corretor.service.DeviceTokenService;
@@ -70,11 +67,11 @@ public class DeviceTokenController implements Serializable {
 
 	//201808091130 - esert - COR-556 nova rota excluir
 	//201808211534 - esert - COR-650 alterado de RequestBody para PathVariable porque API Gateway WSO2 nao suporta body no DELETE
-	@RequestMapping(value = "/devicetoken/{codigoToken}/forcavenda/{codigoForcaVenda}", method = { RequestMethod.DELETE })	
-	public ResponseEntity<BaseResponse> excluirDeviceToken(@PathVariable String codigoToken, @PathVariable Long codigoForcaVenda) {
+	@RequestMapping(value = "/devicetoken/forcavenda/{codigoForcaVenda}", method = { RequestMethod.DELETE })	
+	public ResponseEntity<BaseResponse> excluirDeviceToken(@RequestParam ("token") String token, @PathVariable Long codigoForcaVenda) {
 		LOGGER.info("excluirDeviceToken - ini");
 		
-		if(codigoToken==null || codigoToken.trim().isEmpty()) {
+		if(token==null || token.trim().isEmpty()) {
 			LOGGER.info("excluirDeviceToken - badRequest");
 			return ResponseEntity.badRequest().body(new BaseResponse("Código Token não informado!"));
 		}	
@@ -84,7 +81,7 @@ public class DeviceTokenController implements Serializable {
 			return ResponseEntity.badRequest().body(new BaseResponse("Código Forca Venda não informado!"));
 		}	
 				
-		List<DeviceToken> tokens = service.buscarPorTokenLogin(codigoToken, codigoForcaVenda);		
+		List<DeviceToken> tokens = service.buscarPorTokenLogin(token, codigoForcaVenda);		
 		
 		if(tokens==null || tokens.isEmpty()){
 			LOGGER.info("excluirDeviceToken - noContent");
