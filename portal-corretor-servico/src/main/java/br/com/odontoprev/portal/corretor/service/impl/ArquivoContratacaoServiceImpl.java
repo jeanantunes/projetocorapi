@@ -50,16 +50,18 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 	private BeneficiarioService beneficiarioService;
 
 	@Override
-	public ArquivoContratacao get(Long codigoEmpresa, boolean isArquivo) {		
-		log.info("get - ini");		
-		
-		TbodArquivoContratacao entity = arquivoContratacaoDAO.findOne(codigoEmpresa);
-						
+	public ArquivoContratacao getByCdEmpresa(Long cdEmpresa, boolean isArquivo) {		
+		log.info("getByCdEmpresa - ini");		
 		ArquivoContratacao dto = null;
-
-		dto = adaptEntityToDto(entity, isArquivo);
-		
-		log.info("get - fim");
+		try {
+			TbodArquivoContratacao entity = arquivoContratacaoDAO.findOne(cdEmpresa);
+							
+			dto = adaptEntityToDto(entity, isArquivo);
+		} catch (Exception e) {
+			log.error("getByCdEmpresa - erro", e);
+			return null;
+		}
+		log.info("getByCdEmpresa - fim");
 		return dto;
 	}
 	
@@ -174,8 +176,8 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 	}
 
 	@Override
-	public ArquivoContratacao gerarSalvarPdfPmePelaVenda(Long cdVenda) {
-		log.info(String.format("gerarSalvarPdfPmePelaVenda(%d) - ini", cdVenda));
+	public ArquivoContratacao createPdfPmePorVenda(Long cdVenda) {
+		log.info(String.format("createPdfPmePorVenda(%d) - ini", cdVenda));
 		ArquivoContratacao arquivoContratacao = null;
 		try {
 			//obter empresa da venda
@@ -243,12 +245,12 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 			}
 			
 		} catch (Exception e) {
-			log.info(String.format("gerarSalvarPdfPmePelaVenda() - erro"));
+			log.info(String.format("createPdfPmePorVenda() - erro"));
 			log.error(e);
 			return arquivoContratacao;
 		}
 		
-		log.info(String.format("gerarSalvarPdfPmePelaVenda(%d) - fim", cdVenda));
+		log.info(String.format("createPdfPmePorVenda(%d) - fim", cdVenda));
 		return arquivoContratacao;
 	}
 

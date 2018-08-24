@@ -121,7 +121,7 @@ public class VendaPMEBusiness {
 			
 			if(vendaResponse.getId() != 0){
 				//Chama servico gerar e salvar pdf pme
-				ArquivoContratacao arquivoContratacao = arquivoContratacaoService.gerarSalvarPdfPmePelaVenda(vendaResponse.getId());
+				ArquivoContratacao arquivoContratacao = arquivoContratacaoService.createPdfPmePorVenda(vendaResponse.getId());
 				if(
 					arquivoContratacao!=null 
 					&& 
