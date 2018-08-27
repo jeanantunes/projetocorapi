@@ -1,24 +1,12 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import br.com.odontoprev.portal.corretor.business.SendMailAceite;
-import br.com.odontoprev.portal.corretor.dao.StatusVendaDAO;
-import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
-import br.com.odontoprev.portal.corretor.dao.VendaDAO;
-import br.com.odontoprev.portal.corretor.dto.EmailAceite;
-import br.com.odontoprev.portal.corretor.dto.Plano;
-import br.com.odontoprev.portal.corretor.dto.TokenAceite;
-import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
-import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
-import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
-import br.com.odontoprev.portal.corretor.model.TbodTokenAceitePK;
-import br.com.odontoprev.portal.corretor.model.TbodVenda;
-import br.com.odontoprev.portal.corretor.service.PlanoService;
-import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
-import br.com.odontoprev.portal.corretor.service.VendaService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
-import br.com.odontoprev.portal.corretor.util.DataUtil;
-import br.com.odontoprev.portal.corretor.util.GerarTokenUtils;
-import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +15,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import br.com.odontoprev.portal.corretor.business.SendMailAceite;
+import br.com.odontoprev.portal.corretor.dao.StatusVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
+import br.com.odontoprev.portal.corretor.dao.VendaDAO;
+import br.com.odontoprev.portal.corretor.dto.ArquivoContratacao;
+import br.com.odontoprev.portal.corretor.dto.EmailAceite;
+import br.com.odontoprev.portal.corretor.dto.Plano;
+import br.com.odontoprev.portal.corretor.dto.TokenAceite;
+import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
+import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
+import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
+import br.com.odontoprev.portal.corretor.model.TbodTokenAceitePK;
+import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.service.ArquivoContratacaoService;
+import br.com.odontoprev.portal.corretor.service.PlanoService;
+import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
+import br.com.odontoprev.portal.corretor.service.VendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
+import br.com.odontoprev.portal.corretor.util.DataUtil;
+import br.com.odontoprev.portal.corretor.util.GerarTokenUtils;
+import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
 
 @Service
 @Transactional(rollbackFor = {Exception.class}) //201806281838 - esert - COR-348
@@ -64,6 +67,8 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
     @Autowired
     DataUtil dataUtil;
 
+    @Autowired
+    ArquivoContratacaoService arquivoContratacaoService; //201808232000 - esert - COR-617 servico gerar pdf detalhe contratacao pme
 
     @Value("${EXPIRACAO_TOKEN_ACEITE_EMAIL}")
     private String EXPIRACAO_TOKEN_ACEITE_EMAIL;
@@ -115,7 +120,26 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
             List<Plano> planos = planoService.findPlanosByEmpresa(venda.getTbodEmpresa().getCdEmpresa());
 
             emailAceite.setPlanos(planos);
-
+            
+            //201808232000 - esert - COR-617 servico gerar pdf detalhe contratacao pme
+            ArquivoContratacao arquivoContratacao = arquivoContratacaoService.getByCdEmpresa(venda.getTbodEmpresa().getCdEmpresa(),true);
+            //nem preciso falar que ...
+            if(arquivoContratacao!=null) {
+            	if(
+            		arquivoContratacao.getArquivoBase64()!=null 
+            		&& 
+            		!arquivoContratacao.getArquivoBase64().trim().isEmpty()
+            	) {
+            		//... o arquivo pdf deve ter sido gerado antes =]
+            		//emailAceite.setArquivoBase64(arquivoContratacao.getArquivoBase64());
+            		emailAceite.setArquivoContratacao(arquivoContratacao); //201808240105 - esert
+            	} else {
+            		log.info("addTokenAceite - arquivoContratacao.getArquivoBase64()== null || isEmpty() !");
+            	}
+            } else {
+        		log.info("addTokenAceite - arquivoContratacao==null");            	
+            }
+            
             sendMailAceite.sendMail(emailAceite);
 
         } catch (Exception e) {

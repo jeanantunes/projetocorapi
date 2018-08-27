@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <title>ODONTOPREV Teste 2</title>
+	<body>
+		<p class="detalhe5">
+			Paragrafo Inicio 1
+		</p>
+		<table>
+			<tr>
+				<td align="right" valign="middle" class="corbg">
+					Linha 1 Coluna 1
+				</td>
+				<td align="right" valign="middle" class="corbg">
+					Linha 1 Coluna 2
+				</td>
+			</tr>
+			<tr>
+				<td align="right" valign="middle" class="corbg">
+					Linha 2 Coluna 1
+				</td>
+				<td align="right" valign="middle" class="corbg">
+					Linha 2 Coluna 2
+				</td>
+			</tr>
+		</table>
+		<p class="texto3">
+			Paragrafo Final 2
+		</p>
+	</body>
+</html>

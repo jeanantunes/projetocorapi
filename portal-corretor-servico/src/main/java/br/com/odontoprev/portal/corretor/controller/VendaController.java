@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+//import com.itextpdf.text.DocumentException;
+
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
@@ -47,5 +49,4 @@ public class VendaController {
 		
 		return vendaPFService.addVendaPME(vendaPME);
 	}
-	
 }

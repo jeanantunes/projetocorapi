@@ -9,17 +9,21 @@ import javax.annotation.ManagedBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.odontoprev.portal.corretor.dto.ArquivoContratacao;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.dto.TokenAceite;
+import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
+import br.com.odontoprev.portal.corretor.service.ArquivoContratacaoService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 
@@ -39,6 +43,9 @@ public class VendaPMEBusiness {
 	
 	@Autowired
 	TokenAceiteService tokenAceiteService;
+	
+	@Autowired
+	ArquivoContratacaoService arquivoContratacaoService; //201808232052 - esert - COR-617 servico gerar pdf contratacao pme
 	
 	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(VendaPME vendaPME) {
@@ -113,10 +120,29 @@ public class VendaPMEBusiness {
 			
 			
 			if(vendaResponse.getId() != 0){
+				//Chama servico gerar e salvar pdf pme
+				ArquivoContratacao arquivoContratacao = arquivoContratacaoService.createPdfPmePorVenda(vendaResponse.getId());
+				if(
+					arquivoContratacao!=null 
+					&& 
+					arquivoContratacao.getArquivoBase64()!=null 
+					&& 
+					!arquivoContratacao.getArquivoBase64().trim().isEmpty()
+				) {
+					log.info(String.format("PDF Detalhe Contratação PME gerado com sucesso e tamanho:[%d]", arquivoContratacao.getTamanhoArquivo()));
+				} else {
+					log.info("Falha ao gerar PDF Detalhe Contratação PME.");					
+				}
+				
 				//Chamada servico token
 				TokenAceite tokenAceite = new TokenAceite();
 				tokenAceite.setCdVenda(vendaResponse.getId());
-				tokenAceiteService.addTokenAceite(tokenAceite);
+				TokenAceiteResponse tokenAceiteResponse = tokenAceiteService.addTokenAceite(tokenAceite);
+				if(tokenAceiteResponse.getId()==HttpStatus.OK.value()) {
+					log.info(String.format("TokenAceite gerado com sucesso para CdVenda:[%s] CdToken:[%s]", tokenAceiteResponse.getCdVenda(), tokenAceiteResponse.getCdToken()));
+				} else {
+					log.info(String.format("Falha ao gerar TokenAceite com Mensagem:[%s]", tokenAceiteResponse.getMensagem()));					
+				}
 			}
 			
 		} catch (Exception e) {

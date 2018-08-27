@@ -626,8 +626,13 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		List<TbodVenda> tbodVendaList = vendaDAO.findByTbodEmpresaCdEmpresa(cdEmpresa);
 
-		if (tbodVendaList == null || tbodVendaList.size() == 0 || tbodVendaList.size() > 1){
-			log.error("Não achou venda para Empresa" + "[tbodVendaList == null || tbodVendaList.size() == 0 || tbodVendaList.size() > 1]");
+//		if (tbodVendaList == null || tbodVendaList.size() == 0 || tbodVendaList.size() > 1){
+//			log.error("Não achou venda para Empresa" + "[tbodVendaList == null || tbodVendaList.size() == 0 || tbodVendaList.size() > 1]");
+//			return null;
+//		}
+		//TODO 2018082352 discutir esta regra de exigir uma so venda no pme que nao faz sentido 
+		if (tbodVendaList == null || tbodVendaList.size() == 0){
+			log.error("Não achou venda para Empresa" + "[tbodVendaList == null || tbodVendaList.size() == 0]");
 			return null;
 		}
 

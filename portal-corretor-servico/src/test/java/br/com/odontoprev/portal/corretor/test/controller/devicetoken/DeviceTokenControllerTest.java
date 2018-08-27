@@ -229,5 +229,4 @@ public class DeviceTokenControllerTest {
 		BDDMockito.verify(service).buscarPorTokenLogin(codigoTokenRequest, codigoForcaVendaRequest);
 		//BDDMockito.verify(service).excluir(deviceTokenRequest.getCodigo());
 	}
-
 }
