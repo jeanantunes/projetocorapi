@@ -12,6 +12,8 @@ public interface ArquivoContratacaoService {
 	ArquivoContratacao saveArquivo(ArquivoContratacao arquivoContratacao);
 
 	ArquivoContratacao createPdfPmePorVenda(Long cdVenda);
+
+	ArquivoContratacao createPdfPmePorEmpresa(Long cdEmpresa);
 }
 
 

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,8 @@ public class ArquivoContratacaoControllerTest {
 	       Long cdEmpresaGiven = 2510L;
 		   ArquivoContratacao dtoGiven = new ArquivoContratacao();
 		   dtoGiven.setCodigoEmpresa(cdEmpresaGiven);	       
-		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd").parse("2018-08-24"));;	       
+		   //dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-08-24T23:59:59-0300"));;	       
+		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()).replace(" ", "T").concat("-0300")); //201808271608	       
 	       dtoGiven.setNomeArquivo("out.Salão_Unissex_Black_White.20180824011157.pdf");	       
 	       dtoGiven.setTamanhoArquivo(1751L);	       
 	       dtoGiven.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE.toString());	       
@@ -83,7 +85,8 @@ public class ArquivoContratacaoControllerTest {
 	       Long cdEmpresaGiven = 2510L;
 		   ArquivoContratacao dtoGiven = new ArquivoContratacao();
 		   dtoGiven.setCodigoEmpresa(cdEmpresaGiven);	       
-		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd").parse("2018-08-24"));;	       
+		   //dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-08-24T23:59:59-0300"));;	       
+		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()).replace(" ", "T").concat("-0300")); //201808271608	       
 	       dtoGiven.setNomeArquivo("out.Salão_Unissex_Black_White.20180824011157.pdf");	       
 	       dtoGiven.setTamanhoArquivo(1751L);	       
 	       dtoGiven.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE.toString());	       
@@ -108,7 +111,8 @@ public class ArquivoContratacaoControllerTest {
 	       Long cdEmpresaGiven = 2510L;
 		   ArquivoContratacao dtoGiven = new ArquivoContratacao();
 		   dtoGiven.setCodigoEmpresa(cdEmpresaGiven);	       
-		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd").parse("2018-08-24"));;	       
+		   //dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-08-24T23:59:59-0300"));;	       
+		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()).replace(" ", "T").concat("-0300")); //201808271608	       
 	       dtoGiven.setNomeArquivo("out.Salão_Unissex_Black_White.20180824011157.pdf");	       
 	       dtoGiven.setTamanhoArquivo(1751L);	       
 	       dtoGiven.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE.toString());	       
@@ -136,7 +140,8 @@ public class ArquivoContratacaoControllerTest {
 		   Long cdEmpresaGiven = 2510L;
 		   ArquivoContratacao dtoGiven = new ArquivoContratacao();
 		   dtoGiven.setCodigoEmpresa(cdEmpresaGiven);	       
-		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd").parse("2018-08-24"));;	       
+		   //dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-08-24T23:59:59-0300"));;	       
+		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()).replace(" ", "T").concat("-0300")); //201808271608	       
 		   dtoGiven.setNomeArquivo("out.Salão_Unissex_Black_White.20180824011157.pdf");	       
 		   dtoGiven.setTamanhoArquivo(1751L);	       
 		   dtoGiven.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE.toString());	       

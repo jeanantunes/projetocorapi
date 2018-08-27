@@ -90,4 +90,10 @@ public class ArquivoContratacaoController {
 		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //201808241726 - esert
 		}
 	}
+	
+	@RequestMapping(value = "/arquivocontratacao/empresa/{cdEmpresa}/test", method = { RequestMethod.GET })
+	public ResponseEntity<ArquivoContratacao> createArquivoContratacaoByEmpresa(@PathVariable Long cdEmpresa) throws ParseException {
+		return ResponseEntity.ok(arquivoContratacaoService.createPdfPmePorEmpresa(cdEmpresa));
+	}
+
 }

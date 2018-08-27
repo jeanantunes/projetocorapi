@@ -17,7 +17,7 @@ public class ArquivoContratacao implements Serializable {
 
 	//@Temporal(TemporalType.DATE)
 	//@Column(name = "DATA_CRIACAO") //"DATA_CRIACAO" DATE NOT NULL ENABLE, 
-	private Date dataCriacao;
+	private String dataCriacao;
 
 	//@Column(name = "NOME_ARQUIVO") //"NOME_ARQUIVO" NVARCHAR2(255) NOT NULL ENABLE,
 	private String nomeArquivo;
@@ -44,11 +44,11 @@ public class ArquivoContratacao implements Serializable {
 		this.codigoEmpresa = codigoEmpresa;
 	}
 
-	public Date getDataCriacao() {
+	public String getDataCriacao() {
 		return dataCriacao;
 	}
 
-	public void setDataCriacao(Date dataCriacao) {
+	public void setDataCriacao(String dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
 
