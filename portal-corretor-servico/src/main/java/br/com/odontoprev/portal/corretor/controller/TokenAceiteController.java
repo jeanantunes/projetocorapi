@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
-import br.com.odontoprev.portal.corretor.service.VendaService;
 
 @RestController
 public class TokenAceiteController {
@@ -22,10 +21,7 @@ public class TokenAceiteController {
 	
 	@Autowired
 	TokenAceiteService tokenAceiteService;
-	
-	@Autowired
-	VendaService vendaService;
-	
+
 	@RequestMapping(value = "/token", method = { RequestMethod.POST })
 	public TokenAceiteResponse addTokenAceite(@RequestBody TokenAceite tokenAceite) {
 		//TODO: outras validaçoes
