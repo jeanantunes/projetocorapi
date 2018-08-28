@@ -37,6 +37,8 @@ import br.com.odontoprev.portal.corretor.util.FileReaderUtil;
 import br.com.odontoprev.portal.corretor.util.Html2Pdf;
 import br.com.odontoprev.portal.corretor.util.StringsUtil;
 
+import javax.annotation.Resource;
+
 //201808231715 - esert - COR-617 - novo servico para nova tabela TBOD_ARQUIVO_CONTRATACAO
 @Service
 @Transactional(rollbackFor={Exception.class})
@@ -341,8 +343,9 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 		try {
 
 			//obter template html/css e destino pdf
-			String rootPath = "c:\\vector\\workspaceEdu\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\";
-	
+			//String rootPath = "C:\\Users\\almei\\dev\\APPS\\portal-corretor-api\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\";
+			String rootPath = this.getClass().getClassLoader().getResourceAsStream("templates\\").toString();
+
 			String htmlCabecalhoPathFileName = rootPath.concat("pdfPMECabecalho.html");
 			log.info("htmlCabecalhoPathFileName:[" + htmlCabecalhoPathFileName + "]");
 			
@@ -366,37 +369,49 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 			
 			String htmlRodapePathFileName = rootPath.concat("pdfPMERodape.html");
 			log.info("htmlRodapePathFileName:[" + htmlRodapePathFileName + "]");
-			
+
+			String htmlCorpoFechaVidaPathFileName = rootPath.concat("pdfPMEFechaVida.html");
+			log.info("htmlCorpoFechaVidaPathFileName:[" + htmlCorpoFechaVidaPathFileName + "]");
+
+			String htmlCorpoFechaVidaDependentePathFileName = rootPath.concat("pdfPMEFechaDependenteVida.html");
+			log.info("pdfPMEFechaDependenteVida:[" + htmlCorpoFechaVidaPathFileName + "]");
+
 			String cssPathFileName = null;
 			log.info("cssPathFileName:[" + cssPathFileName + "]");
 				
 			
-			//String htmlCabecalhoTemplate = (new FileReaderUtil()).readHTML("", htmlCabecalhoPathFileName);
-			String htmlCabecalhoTemplate = (new FileReaderUtil()).readFile(htmlCabecalhoPathFileName, Charset.defaultCharset());
+			String htmlCabecalhoTemplate = (new FileReaderUtil()).readHTML("", htmlCabecalhoPathFileName);
+			//String htmlCabecalhoTemplate = (new FileReaderUtil()).readFile(htmlCabecalhoPathFileName, Charset.defaultCharset());
 				
-			//String htmlEmpresaTempalate = (new FileReaderUtil()).readHTML("", htmlEmpresaPathFileName);
-			String htmlEmpresaTemplate = (new FileReaderUtil()).readFile(htmlEmpresaPathFileName, Charset.defaultCharset());
+			String htmlEmpresaTemplate = (new FileReaderUtil()).readHTML("", htmlEmpresaPathFileName);
+			//String htmlEmpresaTemplate = (new FileReaderUtil()).readFile(htmlEmpresaPathFileName, Charset.defaultCharset());
 			String htmlEmpresaValues = null;
 
 			//String htmlCorpoAbreBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoAbreBeneficiarioPathFileName);
 			String htmlCorpoAbreBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoAbreBeneficiarioPathFileName, Charset.defaultCharset());
-				
+
+			String htmlCorpoFechaVidaTemplate = (new FileReaderUtil()).readHTML("",htmlCorpoFechaVidaPathFileName);
+			//String htmlCorpoFechaVidaTemplate = (new FileReaderUtil()).readFile(htmlCorpoFechaVidaPathFileName, Charset.defaultCharset());
+
+			String htmlCorpoFechaVidaDependenteTemplate = (new FileReaderUtil()).readHTML("",htmlCorpoFechaVidaDependentePathFileName);
+			//String htmlCorpoFechaVidaDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoFechaVidaDependentePathFileName, Charset.defaultCharset());
+
 			//String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoTituloBeneficiarioPathFileName);
 			String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoTituloBeneficiarioPathFileName, Charset.defaultCharset());
 				
-			//String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaBeneficiarioPathFileName);
-			String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaBeneficiarioPathFileName, Charset.defaultCharset());
+			String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaBeneficiarioPathFileName);
+			//String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaBeneficiarioPathFileName, Charset.defaultCharset());
 			String htmlCorpoVidaBeneficiarioValues = null;
 			
 			//String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoTituloBeneficiarioPathFileName);
 			String htmlCorpoTituloDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoTituloDependentePathFileName, Charset.defaultCharset());
 				
-			//String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaBeneficiarioPathFileName);
-			String htmlCorpoVidaDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaDependentePathFileName, Charset.defaultCharset());
+			String htmlCorpoVidaDependenteTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaDependentePathFileName);
+			//String htmlCorpoVidaDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaDependentePathFileName, Charset.defaultCharset());
 			String htmlCorpoVidaDependenteValues = null;
 				
-			//String htmlRodapeTemplate = (new FileReaderUtil()).readHTML("", htmlVidasPathFileName);
-			String htmlRodapeTemplate = (new FileReaderUtil()).readFile(htmlRodapePathFileName, Charset.defaultCharset());
+			String htmlRodapeTemplate = (new FileReaderUtil()).readHTML("", htmlRodapePathFileName);
+			//String htmlRodapeTemplate = (new FileReaderUtil()).readFile(htmlRodapePathFileName, Charset.defaultCharset());
 			String htmlRodapeValues = null;
 			
 			Empresa empresa = empresaService.findByCdEmpresa(cdEmpresa);
@@ -510,8 +525,12 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 					if(titularPaginacao.getDependentes()!=null && titularPaginacao.getDependentes().size()>0) {
 						
 						sbHtmlRet.append(htmlCorpoTituloDependenteTemplate);
-						
+
+						int contadorDeDependentes = 0;
+
 						for(Beneficiario beneficiario : titularPaginacao.getDependentes()){
+
+							contadorDeDependentes++;
 
 							String sexoBeneficiario = SexoPorExtenso(Objects.toString(beneficiario.getSexo(), ""));
 
@@ -523,13 +542,21 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 							.replace("__NomeMae__", Objects.toString(beneficiario.getNomeMae(), ""))
 							.replace("__Plano__", descPlanoTitular)
 							;
-							
+
 							sbHtmlRet.append(htmlCorpoVidaDependenteValues);
+
+							if(!(contadorDeDependentes == titularPaginacao.getDependentes().size())){
+								sbHtmlRet.append(htmlCorpoFechaVidaDependenteTemplate);
+							}
 							
 						} //for(Beneficiario beneficiario : titularPaginacao.getDependentes())
 					} //if(titularPaginacao.getDependentes()!=null)
+
+					sbHtmlRet.append(htmlCorpoFechaVidaTemplate);
 					
-				} //for(BeneficiarioPaginacao titularPaginacao : beneficiarios.getTitulares())
+				}
+
+				//for(BeneficiarioPaginacao titularPaginacao : beneficiarios.getTitulares())
 			}
 			
 
