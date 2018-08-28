@@ -90,10 +90,22 @@ public class ArquivoContratacaoController {
 		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //201808241726 - esert
 		}
 	}
-	
+
+	//2018082711100 - esert - COR-617 - rota para facilitar testes sem uso funcional
 	@RequestMapping(value = "/arquivocontratacao/empresa/{cdEmpresa}/test", method = { RequestMethod.GET })
 	public ResponseEntity<ArquivoContratacao> createArquivoContratacaoByEmpresa(@PathVariable Long cdEmpresa) throws ParseException {
-		return ResponseEntity.ok(arquivoContratacaoService.createPdfPmePorEmpresa(cdEmpresa));
+		try {
+			ArquivoContratacao dto = arquivoContratacaoService.createPdfPmePorEmpresa(cdEmpresa);
+			if(dto==null) {
+				return ResponseEntity.noContent().build(); //201808271933 - esert
+			}
+			return ResponseEntity.ok(dto);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //201808271933 - esert
+		}
 	}
 
 }

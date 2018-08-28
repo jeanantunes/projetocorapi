@@ -22,14 +22,17 @@ import br.com.odontoprev.portal.corretor.dao.ArquivoContratacaoDAO;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dto.ArquivoContratacao;
+import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.BeneficiarioPaginacao;
+import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.model.TbodArquivoContratacao;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
-import br.com.odontoprev.portal.corretor.model.TbodVendaVida;
 import br.com.odontoprev.portal.corretor.service.ArquivoContratacaoService;
 import br.com.odontoprev.portal.corretor.service.BeneficiarioService;
 import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.FileReaderUtil;
 import br.com.odontoprev.portal.corretor.util.Html2Pdf;
 import br.com.odontoprev.portal.corretor.util.StringsUtil;
@@ -265,6 +268,8 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 					.concat(".")
 					.concat(StringsUtil.stripAccents(tbodEmpresa.getNomeFantasia().replaceAll(" ", "_")))
 					.concat(".")
+					.concat(tbodEmpresa.getCdEmpresa().toString())
+					.concat(".")
 					.concat(dataCriacaoString)
 					.concat(".")
 					.concat("pdf")
@@ -331,55 +336,84 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 	) {
 		log.info("montarHtmlContratacaoPME - ini");
 		
-		//obter template html/css e destino pdf
-		String rootPath = "c:\\vector\\workspaceEdu\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\";
-
-		String htmlCabecalhoPathFileName = rootPath.concat("pdfPMECabecalho.html");
-		log.info("htmlCabecalhoPathFileName:[" + htmlCabecalhoPathFileName + "]");
-		
-		String htmlEmpresaPathFileName = rootPath.concat("pdfPMECorpoEmpresa.html");
-		log.info("htmlEmpresaPathFileName:[" + htmlEmpresaPathFileName + "]");
-		
-		String htmlVidaPathFileName = rootPath.concat("pdfPMECorpoVida.html");
-		log.info("htmlVidaPathFileName:[" + htmlVidaPathFileName+ "]");
-		
-		String htmlRodapePathFileName = rootPath.concat("pdfPMERodape.html");
-		log.info("htmlRodapePathFileName:[" + htmlRodapePathFileName+ "]");
-		
-		String cssPathFileName = null;
-		log.info("cssPathFileName:[" + cssPathFileName + "]");
-
-		
 		StringBuilder sbHtmlRet = new StringBuilder("");
-		String htmlCabecalhoValues = null;
-		String htmlCabecalhoTemplate = null;
-		String htmlEmpresaValues = null;
-		String htmlEmpresaTemplate = null;
-		String htmlVidaValues = null;
-		String htmlVidaTemplate = null;
-		String htmlRodapeValues = null;
-		String htmlRodapeTemplate = null;
+
 		try {
-			//htmlEmpresaTempalate = (new FileReaderUtil()).readHTML("", htmlEmpresaPathFileName);
-			htmlCabecalhoTemplate = (new FileReaderUtil()).readFile(htmlCabecalhoPathFileName, Charset.defaultCharset());
-			//htmlEmpresaTempalate = (new FileReaderUtil()).readHTML("", htmlEmpresaPathFileName);
-			htmlEmpresaTemplate = (new FileReaderUtil()).readFile(htmlEmpresaPathFileName, Charset.defaultCharset());
-			//htmlVidaTemplate = (new FileReaderUtil()).readHTML("", htmlVidasPathFileName);
-			htmlVidaTemplate = (new FileReaderUtil()).readFile(htmlVidaPathFileName, Charset.defaultCharset());
-			//htmlRodapeTemplate = (new FileReaderUtil()).readHTML("", htmlVidasPathFileName);
-			htmlRodapeTemplate = (new FileReaderUtil()).readFile(htmlRodapePathFileName, Charset.defaultCharset());
+
+			//obter template html/css e destino pdf
+			String rootPath = "c:\\vector\\workspaceEdu\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\";
+	
+			String htmlCabecalhoPathFileName = rootPath.concat("pdfPMECabecalho.html");
+			log.info("htmlCabecalhoPathFileName:[" + htmlCabecalhoPathFileName + "]");
+			
+			String htmlEmpresaPathFileName = rootPath.concat("pdfPMECorpoEmpresa.html");
+			log.info("htmlEmpresaPathFileName:[" + htmlEmpresaPathFileName + "]");
+			
+			String htmlCorpoAbreBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoAbreBeneficiarios.html");
+			log.info("htmlCorpoAbreBeneficiarioPathFileName:[" + htmlCorpoAbreBeneficiarioPathFileName + "]");
+			
+			String htmlCorpoTituloBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoTituloBeneficiario.html");
+			log.info("htmlCorpoTituloBeneficiarioPathFileName:[" + htmlCorpoTituloBeneficiarioPathFileName + "]");
+			
+			String htmlCorpoVidaBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoVidaBeneficiario.html");
+			log.info("htmlCorpoVidaBeneficiarioPathFileName:[" + htmlCorpoVidaBeneficiarioPathFileName + "]");
+			
+			String htmlCorpoTituloDependentePathFileName = rootPath.concat("pdfPMECorpoTituloDependente.html");
+			log.info("htmlCorpoTituloDependentePathFileName:[" + htmlCorpoTituloDependentePathFileName + "]");
+			
+			String htmlCorpoVidaDependentePathFileName = rootPath.concat("pdfPMECorpoVidaDependente.html");
+			log.info("htmlCorpoVidaDependentePathFileName:[" + htmlCorpoVidaDependentePathFileName + "]");
+			
+			String htmlRodapePathFileName = rootPath.concat("pdfPMERodape.html");
+			log.info("htmlRodapePathFileName:[" + htmlRodapePathFileName + "]");
+			
+			String cssPathFileName = null;
+			log.info("cssPathFileName:[" + cssPathFileName + "]");
+				
+			
+			//String htmlCabecalhoTemplate = (new FileReaderUtil()).readHTML("", htmlCabecalhoPathFileName);
+			String htmlCabecalhoTemplate = (new FileReaderUtil()).readFile(htmlCabecalhoPathFileName, Charset.defaultCharset());
+				
+			//String htmlEmpresaTempalate = (new FileReaderUtil()).readHTML("", htmlEmpresaPathFileName);
+			String htmlEmpresaTemplate = (new FileReaderUtil()).readFile(htmlEmpresaPathFileName, Charset.defaultCharset());
+			String htmlEmpresaValues = null;
+
+			//String htmlCorpoAbreBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoAbreBeneficiarioPathFileName);
+			String htmlCorpoAbreBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoAbreBeneficiarioPathFileName, Charset.defaultCharset());
+				
+			//String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoTituloBeneficiarioPathFileName);
+			String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoTituloBeneficiarioPathFileName, Charset.defaultCharset());
+				
+			//String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaBeneficiarioPathFileName);
+			String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaBeneficiarioPathFileName, Charset.defaultCharset());
+			String htmlCorpoVidaBeneficiarioValues = null;
+			
+			//String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoTituloBeneficiarioPathFileName);
+			String htmlCorpoTituloDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoTituloDependentePathFileName, Charset.defaultCharset());
+				
+			//String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaBeneficiarioPathFileName);
+			String htmlCorpoVidaDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaDependentePathFileName, Charset.defaultCharset());
+			String htmlCorpoVidaDependenteValues = null;
+				
+			//String htmlRodapeTemplate = (new FileReaderUtil()).readHTML("", htmlVidasPathFileName);
+			String htmlRodapeTemplate = (new FileReaderUtil()).readFile(htmlRodapePathFileName, Charset.defaultCharset());
+			String htmlRodapeValues = null;
 			
 			Empresa empresa = empresaService.findByCdEmpresa(cdEmpresa);
 
 			if(empresa!=null) {
 				
-				htmlCabecalhoValues = htmlCabecalhoTemplate
+				String htmlCabecalhoValues = htmlCabecalhoTemplate
+				.replace("__CdEmpresa__", Objects.toString(empresa.getCdEmpresa(),""))
 				.replace("__RazaoSocial__", Objects.toString(empresa.getRazaoSocial(),""))
 				.replace("__NomeFantasia__", Objects.toString(empresa.getNomeFantasia(),""))
 				;
+				
+				sbHtmlRet.append(htmlCabecalhoValues);
 
 				List<TbodVenda> listVenda = vendaDAO.findByTbodEmpresaCdEmpresa(empresa.getCdEmpresa());
 				if(listVenda!=null && listVenda.size()>0) {
+					
 					htmlEmpresaValues = htmlEmpresaTemplate
 					.replace("__NomeCorretor__", Objects.toString(listVenda.get(0).getTbodForcaVenda().getNome(), ""))
 					.replace("__NomeCorretora__", Objects.toString(listVenda.get(0).getTbodCorretora().getNome(), ""))
@@ -400,6 +434,7 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 				}
 				
 				if(empresa.getEnderecoEmpresa()!=null) {
+					
 					htmlEmpresaValues = htmlEmpresaValues
 					.replace("__CEP__", Objects.toString(empresa.getEnderecoEmpresa().getCep(), ""))
 					
@@ -431,42 +466,74 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 					dataVigencia = sdf.format(listVenda.get(0).getDtVigencia()); 
 				}
 				
+				String prevista = "";
+				if(listVenda.get(0).getDtAceite()==null) { //se ainda nao tem data de aceite
+					prevista = " " + "PREVISTA"; //entao as datas de movimentacao e vigencia sao PREVISTAS
+					//deixar despacito pra não relar
+				}				
+				
 				htmlEmpresaValues = htmlEmpresaValues
-					.replace("__DiaVencimentoFatura__", Objects.toString(diaVencimentoFatura, ""))
-					.replace("__DataCorteMovimentacao__", Objects.toString(dataCorteMovimentacao, ""))
-					.replace("__DataVigencia__", Objects.toString(dataVigencia, ""))
-					;
-
+				.replace("__DiaVencimentoFatura__", Objects.toString(diaVencimentoFatura, ""))
+				.replace("__DataCorteMovimentacao__", Objects.toString(dataCorteMovimentacao, ""))
+				.replace("__DataVigencia__", Objects.toString(dataVigencia, ""))
+				.replace("__Prevista__", prevista)
+				;
+				
+				sbHtmlRet.append(htmlEmpresaValues);
 			}
 			
-//			Beneficiarios beneficiarios = beneficiarioService.getPage(cdEmpresa, 999L, 1L);
-//			
-//			for(BeneficiarioPaginacao titularPaginacao : beneficiarios.getTitulares()){
-//				
-//				String htmlVidaTit = htmlVidaTemplate
-//				.replaceAll("_Nome_", titularPaginacao.getNome())
-//				;
-//				
-//				sbHtmlRet.append(htmlVidaTit);
-//				
-//				if(titularPaginacao.getDependentes()!=null) {
-//					for(Beneficiario beneficiario : titularPaginacao.getDependentes()){
-//						
-//						String htmlVidaBen = htmlVidaTemplate
-//						.replaceAll("_Nome_", beneficiario.getNome())
-//						;
-//						
-//						sbHtmlRet.append(htmlVidaBen);
-//						
-//					} //for(Beneficiario beneficiario : titularPaginacao.getDependentes())
-//				} //if(titularPaginacao.getDependentes()!=null)
-//				
-//			} //for(BeneficiarioPaginacao titularPaginacao : beneficiarios.getTitulares())
-
-			htmlRodapeValues = htmlRodapeTemplate;
+			Beneficiarios beneficiarios = beneficiarioService.getPage(cdEmpresa, 999L, 1L);
 			
-			sbHtmlRet.append(htmlCabecalhoValues);
-			sbHtmlRet.append(htmlEmpresaValues);
+			if(beneficiarios.getTitulares()!=null && beneficiarios.getTitulares().size()>0) {
+				
+				sbHtmlRet.append(htmlCorpoAbreBeneficiarioTemplate);
+				
+				for(BeneficiarioPaginacao titularPaginacao : beneficiarios.getTitulares()){
+	
+					sbHtmlRet.append(htmlCorpoTituloBeneficiarioTemplate);
+
+					String descPlanoTitular = Objects.toString(titularPaginacao.getDescPlano(), "");
+					String sexoTitular = SexoPorExtenso(Objects.toString(titularPaginacao.getSexo(), ""));
+
+					htmlCorpoVidaBeneficiarioValues = ""; //limpa cada ciclo de titular
+					htmlCorpoVidaBeneficiarioValues = htmlCorpoVidaBeneficiarioTemplate
+					.replace("__Nome__", Objects.toString(titularPaginacao.getNome(), ""))
+					.replace("__CPF__", Objects.toString(titularPaginacao.getCpf(), ""))
+					.replace("__Sexo__", sexoTitular)
+					.replace("__DataNascimento__", Objects.toString(titularPaginacao.getDataNascimento(), ""))
+					.replace("__NomeMae__", Objects.toString(titularPaginacao.getNomeMae(), ""))
+					.replace("__Plano__", descPlanoTitular)
+					;
+					
+					sbHtmlRet.append(htmlCorpoVidaBeneficiarioValues);
+					
+					if(titularPaginacao.getDependentes()!=null && titularPaginacao.getDependentes().size()>0) {
+						
+						sbHtmlRet.append(htmlCorpoTituloDependenteTemplate);
+						
+						for(Beneficiario beneficiario : titularPaginacao.getDependentes()){
+
+							String sexoBeneficiario = SexoPorExtenso(Objects.toString(beneficiario.getSexo(), ""));
+
+							htmlCorpoVidaDependenteValues = htmlCorpoVidaDependenteTemplate
+							.replace("__Nome__", Objects.toString(beneficiario.getNome(), ""))
+							.replace("__CPF__", Objects.toString(beneficiario.getCpf(), ""))
+							.replace("__Sexo__", sexoBeneficiario)
+							.replace("__DataNascimento__", Objects.toString(beneficiario.getDataNascimento(), ""))
+							.replace("__NomeMae__", Objects.toString(beneficiario.getNomeMae(), ""))
+							.replace("__Plano__", descPlanoTitular)
+							;
+							
+							sbHtmlRet.append(htmlCorpoVidaDependenteValues);
+							
+						} //for(Beneficiario beneficiario : titularPaginacao.getDependentes())
+					} //if(titularPaginacao.getDependentes()!=null)
+					
+				} //for(BeneficiarioPaginacao titularPaginacao : beneficiarios.getTitulares())
+			}
+			
+
+			htmlRodapeValues = htmlRodapeTemplate;			
 			sbHtmlRet.append(htmlRodapeValues);
 
 		} catch (Exception e) {
@@ -479,5 +546,16 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 		return sbHtmlRet.toString();
 	}
 
+	//201808272009 - esert
+	private String SexoPorExtenso(String siglaSexo) {
+		switch (siglaSexo.toUpperCase()) {
+			case Constantes.FEMININO:
+				return "Feminino";
+			case Constantes.MASCULINO:
+				return "Masculino";
+			default:
+				return "n/a";
+		}
+	}
 }
 
