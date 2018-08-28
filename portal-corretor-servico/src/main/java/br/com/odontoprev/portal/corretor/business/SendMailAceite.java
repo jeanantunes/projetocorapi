@@ -110,7 +110,7 @@ public class SendMailAceite {
 						.replace("@CORRETORA", email.getNomeCorretora())
 						.replace("@EMPRESA", email.getNomeEmpresa())
 						.replace("@PLANO", planosSb.toString())
-						.replace("@PREÇOPLANO", precosSb.toString());
+						.replace("@PREÇOPLANO", precosSb.toString().replace(".",","));
 				
 	//			htmlStr = htmlStr.replace("@NOMEDOCORRETOR", "Joao Silva")
 	//					.replace("@CORRETORA", "Corretora e Cia")
