@@ -279,7 +279,13 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
                     tbodVenda = vendaDAO.save(tbodVenda);
 
                     xlsEmpresa.GerarEmpresaXLS(tbodVenda);
-
+                    
+                    //201808281701 - esert - COR-656 atualizar pdf pme no click aceite.
+                    ArquivoContratacao arquivoContratacao = arquivoContratacaoService.createPdfPmePorEmpresa(tbodVenda.getTbodEmpresa().getCdEmpresa()); //201808281701 - esert - COR-656 atualizar pdf pme no click aceite.
+                    if(arquivoContratacao==null) {
+                    	throw new Exception("Erro atualização pdf pme detalhes contratação para CdEmpresa:[" + tbodVenda.getTbodEmpresa().getCdEmpresa() + "]");
+                    }
+                    
                 }
 
             } else {
