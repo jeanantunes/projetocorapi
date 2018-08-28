@@ -344,7 +344,8 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 
 			//obter template html/css e destino pdf
 			//String rootPath = "C:\\Users\\almei\\dev\\APPS\\portal-corretor-api\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\";
-			String rootPath = this.getClass().getClassLoader().getResourceAsStream("templates\\").toString();
+			//String rootPath = this.getClass().getClassLoader().getResourceAsStream("templates\\").toString();
+			String rootPath = ""; //nao precisa montar path quando usar readHTML("", fileName) pq ele ja faz isso internamente //201808282026 - esert 
 
 			String htmlCabecalhoPathFileName = rootPath.concat("pdfPMECabecalho.html");
 			log.info("htmlCabecalhoPathFileName:[" + htmlCabecalhoPathFileName + "]");
