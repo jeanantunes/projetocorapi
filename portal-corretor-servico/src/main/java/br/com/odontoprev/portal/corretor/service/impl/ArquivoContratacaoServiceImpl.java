@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,8 +35,6 @@ import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.FileReaderUtil;
 import br.com.odontoprev.portal.corretor.util.Html2Pdf;
 import br.com.odontoprev.portal.corretor.util.StringsUtil;
-
-import javax.annotation.Resource;
 
 //201808231715 - esert - COR-617 - novo servico para nova tabela TBOD_ARQUIVO_CONTRATACAO
 @Service
@@ -266,15 +263,13 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 			Date agoraDate = new Date();
 			String dataCriacaoString = (new SimpleDateFormat("yyyyMMddHHmmss")).format(agoraDate);
 			
-			String pdfFileName = "contratacao"
-					.concat(".")
-					.concat(StringsUtil.stripAccents(tbodEmpresa.getNomeFantasia().replaceAll(" ", "_")))
-					.concat(".")
-					.concat(tbodEmpresa.getCdEmpresa().toString())
-					.concat(".")
-					.concat(dataCriacaoString)
-					.concat(".")
-					.concat("pdf")
+			String pdfFileName = 
+					//"contratacao"
+					"Sua Contratação OdontoPrev_" //201808291126 - esert - ajustado nome arquivo conforme COR-587/COR-589
+					.concat(".").concat(StringsUtil.stripAccents(tbodEmpresa.getNomeFantasia().replaceAll(" ", "_")))
+					.concat(".").concat(tbodEmpresa.getCdEmpresa().toString()) //TODO: retirar antes entrega - apenas para facilitar testes e evidencia //201808291128 - esert
+					.concat(".").concat(dataCriacaoString)
+					.concat(".").concat("pdf")
 					;
 			log.info("pdfFileName:[" + pdfFileName + "]");
 			
@@ -344,73 +339,64 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 
 			//obter template html/css e destino pdf
 			//String rootPath = "C:\\Users\\almei\\dev\\APPS\\portal-corretor-api\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\";
-			//String rootPath = this.getClass().getClassLoader().getResourceAsStream("templates\\").toString();
-			String rootPath = ""; //nao precisa montar path quando usar readHTML("", fileName) pq ele ja faz isso internamente //201808282026 - esert 
+			//String rootPath = "C:\\Users\\vector\\workspaceEdu\\est-portalcorretor-api\\portal-corretor-servico\\src\\main\\resources\\templates\\";
+			String rootPath = ""; //nao precisa montar path rootPath para usar readHTML("", fileName) pq ja o faz internamente //201808282026 - esert 
+			log.info("rootPath:[" + rootPath + "]");
 
-			String htmlCabecalhoPathFileName = rootPath.concat("pdfPMECabecalho.html");
-			log.info("htmlCabecalhoPathFileName:[" + htmlCabecalhoPathFileName + "]");
-			
-			String htmlEmpresaPathFileName = rootPath.concat("pdfPMECorpoEmpresa.html");
-			log.info("htmlEmpresaPathFileName:[" + htmlEmpresaPathFileName + "]");
-			
-			String htmlCorpoAbreBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoAbreBeneficiarios.html");
-			log.info("htmlCorpoAbreBeneficiarioPathFileName:[" + htmlCorpoAbreBeneficiarioPathFileName + "]");
-			
-			String htmlCorpoTituloBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoTituloBeneficiario.html");
-			log.info("htmlCorpoTituloBeneficiarioPathFileName:[" + htmlCorpoTituloBeneficiarioPathFileName + "]");
-			
-			String htmlCorpoVidaBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoVidaBeneficiario.html");
-			log.info("htmlCorpoVidaBeneficiarioPathFileName:[" + htmlCorpoVidaBeneficiarioPathFileName + "]");
-			
-			String htmlCorpoTituloDependentePathFileName = rootPath.concat("pdfPMECorpoTituloDependente.html");
-			log.info("htmlCorpoTituloDependentePathFileName:[" + htmlCorpoTituloDependentePathFileName + "]");
-			
-			String htmlCorpoVidaDependentePathFileName = rootPath.concat("pdfPMECorpoVidaDependente.html");
-			log.info("htmlCorpoVidaDependentePathFileName:[" + htmlCorpoVidaDependentePathFileName + "]");
-			
-			String htmlRodapePathFileName = rootPath.concat("pdfPMERodape.html");
-			log.info("htmlRodapePathFileName:[" + htmlRodapePathFileName + "]");
-
-			String htmlCorpoFechaVidaPathFileName = rootPath.concat("pdfPMEFechaVida.html");
-			log.info("htmlCorpoFechaVidaPathFileName:[" + htmlCorpoFechaVidaPathFileName + "]");
-
-			String htmlCorpoFechaVidaDependentePathFileName = rootPath.concat("pdfPMEFechaDependenteVida.html");
-			log.info("pdfPMEFechaDependenteVida:[" + htmlCorpoFechaVidaPathFileName + "]");
-
+			//201808291120 - esert - 2KILL - css externo sem uso
 			String cssPathFileName = null;
 			log.info("cssPathFileName:[" + cssPathFileName + "]");
 				
-			
+			String htmlCabecalhoPathFileName = rootPath.concat("pdfPMECabecalho.html");
+			log.info("htmlCabecalhoPathFileName:[" + htmlCabecalhoPathFileName + "]");
 			String htmlCabecalhoTemplate = (new FileReaderUtil()).readHTML("", htmlCabecalhoPathFileName);
 			//String htmlCabecalhoTemplate = (new FileReaderUtil()).readFile(htmlCabecalhoPathFileName, Charset.defaultCharset());
 				
+			String htmlEmpresaPathFileName = rootPath.concat("pdfPMECorpoEmpresa.html");
+			log.info("htmlEmpresaPathFileName:[" + htmlEmpresaPathFileName + "]");
 			String htmlEmpresaTemplate = (new FileReaderUtil()).readHTML("", htmlEmpresaPathFileName);
 			//String htmlEmpresaTemplate = (new FileReaderUtil()).readFile(htmlEmpresaPathFileName, Charset.defaultCharset());
 			String htmlEmpresaValues = null;
 
-			//String htmlCorpoAbreBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoAbreBeneficiarioPathFileName);
-			String htmlCorpoAbreBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoAbreBeneficiarioPathFileName, Charset.defaultCharset());
+			String htmlCorpoAbreBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoAbreBeneficiarios.html");
+			log.info("htmlCorpoAbreBeneficiarioPathFileName:[" + htmlCorpoAbreBeneficiarioPathFileName + "]");
+			String htmlCorpoAbreBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoAbreBeneficiarioPathFileName);
+			//String htmlCorpoAbreBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoAbreBeneficiarioPathFileName, Charset.defaultCharset());
 
-			String htmlCorpoFechaVidaTemplate = (new FileReaderUtil()).readHTML("",htmlCorpoFechaVidaPathFileName);
-			//String htmlCorpoFechaVidaTemplate = (new FileReaderUtil()).readFile(htmlCorpoFechaVidaPathFileName, Charset.defaultCharset());
-
-			String htmlCorpoFechaVidaDependenteTemplate = (new FileReaderUtil()).readHTML("",htmlCorpoFechaVidaDependentePathFileName);
-			//String htmlCorpoFechaVidaDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoFechaVidaDependentePathFileName, Charset.defaultCharset());
-
-			//String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoTituloBeneficiarioPathFileName);
-			String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoTituloBeneficiarioPathFileName, Charset.defaultCharset());
-				
-			String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaBeneficiarioPathFileName);
-			//String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaBeneficiarioPathFileName, Charset.defaultCharset());
-			String htmlCorpoVidaBeneficiarioValues = null;
+				String htmlCorpoTituloBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoTituloBeneficiario.html");
+				log.info("htmlCorpoTituloBeneficiarioPathFileName:[" + htmlCorpoTituloBeneficiarioPathFileName + "]");
+				String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoTituloBeneficiarioPathFileName);
+				//String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoTituloBeneficiarioPathFileName, Charset.defaultCharset());
 			
-			//String htmlCorpoTituloBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoTituloBeneficiarioPathFileName);
-			String htmlCorpoTituloDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoTituloDependentePathFileName, Charset.defaultCharset());
+				String htmlCorpoVidaBeneficiarioPathFileName = rootPath.concat("pdfPMECorpoVidaBeneficiario.html");
+				log.info("htmlCorpoVidaBeneficiarioPathFileName:[" + htmlCorpoVidaBeneficiarioPathFileName + "]");
+				String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaBeneficiarioPathFileName);
+				//String htmlCorpoVidaBeneficiarioTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaBeneficiarioPathFileName, Charset.defaultCharset());
+				String htmlCorpoVidaBeneficiarioValues = null;
 				
-			String htmlCorpoVidaDependenteTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaDependentePathFileName);
-			//String htmlCorpoVidaDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaDependentePathFileName, Charset.defaultCharset());
-			String htmlCorpoVidaDependenteValues = null;
+					String htmlCorpoTituloDependentePathFileName = rootPath.concat("pdfPMECorpoTituloDependente.html");
+					log.info("htmlCorpoTituloDependentePathFileName:[" + htmlCorpoTituloDependentePathFileName + "]");
+					String htmlCorpoTituloDependenteTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoTituloDependentePathFileName);
+					//String htmlCorpoTituloDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoTituloDependentePathFileName, Charset.defaultCharset());
+					
+					String htmlCorpoVidaDependentePathFileName = rootPath.concat("pdfPMECorpoVidaDependente.html");
+					log.info("htmlCorpoVidaDependentePathFileName:[" + htmlCorpoVidaDependentePathFileName + "]");
+					String htmlCorpoVidaDependenteTemplate = (new FileReaderUtil()).readHTML("", htmlCorpoVidaDependentePathFileName);
+					//String htmlCorpoVidaDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoVidaDependentePathFileName, Charset.defaultCharset());
+					String htmlCorpoVidaDependenteValues = null;
+	
+						String htmlCorpoFechaDependenteVidaPathFileName = rootPath.concat("pdfPMEFechaDependenteVida.html");
+						log.info("pdfPMEFechaDependenteVida:[" + htmlCorpoFechaDependenteVidaPathFileName + "]");
+						String htmlCorpoFechaVidaDependenteTemplate = (new FileReaderUtil()).readHTML("",htmlCorpoFechaDependenteVidaPathFileName);
+						//String htmlCorpoFechaVidaDependenteTemplate = (new FileReaderUtil()).readFile(htmlCorpoFechaVidaDependentePathFileName, Charset.defaultCharset());
+
+				String htmlCorpoFechaVidaPathFileName = rootPath.concat("pdfPMEFechaVida.html");
+				log.info("htmlCorpoFechaVidaPathFileName:[" + htmlCorpoFechaVidaPathFileName + "]");
+				String htmlCorpoFechaVidaTemplate = (new FileReaderUtil()).readHTML("",htmlCorpoFechaVidaPathFileName);
+				//String htmlCorpoFechaVidaTemplate = (new FileReaderUtil()).readFile(htmlCorpoFechaVidaPathFileName, Charset.defaultCharset());
 				
+			String htmlRodapePathFileName = rootPath.concat("pdfPMERodape.html");
+			log.info("htmlRodapePathFileName:[" + htmlRodapePathFileName + "]");
 			String htmlRodapeTemplate = (new FileReaderUtil()).readHTML("", htmlRodapePathFileName);
 			//String htmlRodapeTemplate = (new FileReaderUtil()).readFile(htmlRodapePathFileName, Charset.defaultCharset());
 			String htmlRodapeValues = null;
