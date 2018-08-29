@@ -265,8 +265,8 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 			
 			String pdfFileName = 
 					//"contratacao"
-					"Sua Contratação OdontoPrev_" //201808291126 - esert - ajustado nome arquivo conforme COR-587/COR-589
-					.concat(".").concat(StringsUtil.stripAccents(tbodEmpresa.getNomeFantasia().replaceAll(" ", "_")))
+					"Sua Contratacao OdontoPrev" //201808291126 - esert - ajustado nome arquivo conforme COR-587/COR-589 //201808291306 nome arq s/acento, p/favor =]
+					.concat("_").concat(StringsUtil.stripAccents(tbodEmpresa.getNomeFantasia().replaceAll(" ", "_")))
 					.concat(".").concat(tbodEmpresa.getCdEmpresa().toString()) //TODO: retirar antes entrega - apenas para facilitar testes e evidencia //201808291128 - esert
 					.concat(".").concat(dataCriacaoString)
 					.concat(".").concat("pdf")
