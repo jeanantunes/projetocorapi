@@ -27,7 +27,7 @@ public class SendMailBoasVindasPME {
 	public void sendMail(
 			//String email,
 			List<String> listEmail,
-			String nomeEmpresa, 
+			String nomeFantasia, //201808291955 - esert - COR-688 - ajuste nome parm de nomeEmpresa para nomeFantasia deixando claro o campo usado 
 			String login, 
 			String senha, 
 			String linkPortal, 
@@ -37,7 +37,7 @@ public class SendMailBoasVindasPME {
 		
 		//201805091825 - esert
 		log.info("sendMail(email:["+ listEmail +"])");
-		log.info("sendMail(nomeEmpresa:["+ nomeEmpresa +"])");
+		log.info("sendMail(nomeFantasia:["+ nomeFantasia +"])");
 		log.info("sendMail(login:["+ login +"])");
 		log.info("sendMail(linkPortal:["+ linkPortal +"])");
 		log.info("sendMail(dataVigencia:["+ dataVigencia +"])");
@@ -52,6 +52,8 @@ public class SendMailBoasVindasPME {
 			String type = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_TYPE_BOASVINDASPME);			
 			String subject = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT_BOASVINDASPME);
 			
+			subject = subject.concat(" - ").concat(nomeFantasia); //201808291955 - esert - COR-688 - concatenado nomeFantasia ao inves de razaoSocial para ter mesmo nome do corpo do email
+			
 			ApiManagerToken apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 			ApiToken apiToken = apiManager.generateToken();
 						
@@ -63,7 +65,7 @@ public class SendMailBoasVindasPME {
 			RequestEmail body = new RequestEmail(); 
 			
 			String msg = this.montarBodyMsg(
-					nomeEmpresa, 
+					nomeFantasia, 
 					login, 
 					senha, 
 					linkPortal, 
@@ -95,7 +97,7 @@ public class SendMailBoasVindasPME {
 
 	//201805091610 - esert - COR-160
 	private String montarBodyMsg(
-			String nomeEmpresa, 
+			String nomeFantasia, //201808291955 - esert - COR-688 - ajuste nome parm de nomeEmpresa para nomeFantasia deixando claro o campo usado 
 			String login, 
 			String senha, 
 			String linkPortal, 
@@ -130,7 +132,7 @@ public class SendMailBoasVindasPME {
 						.replace("@LD", imgEmailBase + imgEmailLb)
 						.replace("@YT", imgEmailBase + imgEmailYt)
 						.replace("@ANS", imgEmailBase + imgEmailAsn)
-						.replace("@NOMEEMPRESA", nomeEmpresa)
+						.replace("@NOMEEMPRESA", nomeFantasia)
 						.replace("@LOGIN", login)
 						.replace("@SENHA", senha)
 						.replace("@LINKPORTAL", linkPortal)
@@ -140,7 +142,7 @@ public class SendMailBoasVindasPME {
 				}
 			
 		} catch (Exception e) {
-			log.error("Erro ao ler arquivo email status! Detalhe: [" + e.getMessage() + "]");
+			log.error("Erro ao ler arquivo email status! Detalhe: [" + e.getMessage() + "]", e);
 			return "";
 		}
 		
