@@ -52,7 +52,7 @@ public class SendMailBoasVindasPME {
 			String type = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_TYPE_BOASVINDASPME);			
 			String subject = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT_BOASVINDASPME);
 			
-			subject = subject.concat(" - ").concat(nomeFantasia); //201808291955 - esert - COR-688 - concatenado nomeFantasia ao inves de razaoSocial para ter mesmo nome do corpo do email
+			subject = subject.concat(" - ").concat(nomeFantasia); //201808291955 - esert - COR-588 - concatenado nomeFantasia ao inves de razaoSocial para ter mesmo nome do corpo do email
 			
 			ApiManagerToken apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 			ApiToken apiToken = apiManager.generateToken();
