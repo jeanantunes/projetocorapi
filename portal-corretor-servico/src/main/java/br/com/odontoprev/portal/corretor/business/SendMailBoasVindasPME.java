@@ -27,7 +27,7 @@ public class SendMailBoasVindasPME {
 	public void sendMail(
 			//String email,
 			List<String> listEmail,
-			String nomeFantasia, //201808291955 - esert - COR-688 - ajuste nome parm de nomeEmpresa para nomeFantasia deixando claro o campo usado 
+			String nomeFantasia, //201808291955 - esert - COR-588 - ajuste nome parm de nomeEmpresa para nomeFantasia deixando claro o campo usado 
 			String login, 
 			String senha, 
 			String linkPortal, 
@@ -97,7 +97,7 @@ public class SendMailBoasVindasPME {
 
 	//201805091610 - esert - COR-160
 	private String montarBodyMsg(
-			String nomeFantasia, //201808291955 - esert - COR-688 - ajuste nome parm de nomeEmpresa para nomeFantasia deixando claro o campo usado 
+			String nomeFantasia, //201808291955 - esert - COR-588 - ajuste nome parm de nomeEmpresa para nomeFantasia deixando claro o campo usado 
 			String login, 
 			String senha, 
 			String linkPortal, 
