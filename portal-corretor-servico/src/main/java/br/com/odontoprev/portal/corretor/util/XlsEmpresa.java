@@ -7,7 +7,6 @@ import java.util.Date;
 import javax.annotation.ManagedBean;
 import javax.transaction.RollbackException;
 
-import br.com.odontoprev.portal.corretor.model.TbodVenda;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -16,10 +15,10 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
+import br.com.odontoprev.portal.corretor.model.TbodVenda;
 
 @ManagedBean //201806281739 - esert - COR-348 rollback vendapme
 @Transactional(rollbackFor={Exception.class}) //201806281719 - esert - rollback vendapme COR-348
