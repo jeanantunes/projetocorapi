@@ -1,10 +1,10 @@
 package br.com.odontoprev.portal.corretor.controller;
 
 import java.text.ParseException;
+import java.util.Base64;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -72,7 +72,7 @@ public class ArquivoContratacaoController {
 			if(arquivoContratacao==null) {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //201808241726 - esert
 			}
-		    byte[] arquivoPDF = Base64.decodeBase64(arquivoContratacao.getArquivoBase64());
+		    byte[] arquivoPDF = Base64.getDecoder().decode(arquivoContratacao.getArquivoBase64()); //201808311641 - bugfix
 		    String[] tipoConteudo = arquivoContratacao.getTipoConteudo().split("/");
 		    String type = tipoConteudo[0];
 		    String subType = tipoConteudo[1];

@@ -14,6 +14,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +59,9 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 
 	@Autowired
 	private BeneficiarioService beneficiarioService;
+		
+	@Value("${server.path.pdfpme}") //201808311529 - esert - COR-617 gerar pdf pme
+	private String pdfPMEPathName; //201808311529 - esert - COR-617 gerar pdf pme
 
 	@Override
 	public ArquivoContratacao getByCdEmpresa(Long cdEmpresa, boolean isArquivo) {		
@@ -257,24 +262,26 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 				return arquivoContratacao;
 			}
 			
-			String pdfPathName = "c:\\arquivos_gerados\\pme_pdf\\";
-			log.info("pdfPathName:[" + pdfPathName + "]");
+			//String pdfPMEPathName = "c:\\arquivos_gerados\\pme_pdf\\";
+			log.info("pdfPMEPathName:[" + pdfPMEPathName + "]");
 			
 			Date agoraDate = new Date();
-			String dataCriacaoString = (new SimpleDateFormat("yyyyMMddHHmmss")).format(agoraDate);
+			//String dataCriacaoString = (new SimpleDateFormat("yyyyMMddHHmmss")).format(agoraDate);
+			String dataCriacaoString = (new SimpleDateFormat("yyyy_MM_dd")).format(agoraDate);
 			
-			String pdfFileName = 
-					//"contratacao"
+			String pdfPMEFileName = 
 					"Sua Contratacao OdontoPrev" //201808291126 - esert - ajustado nome arquivo conforme COR-587/COR-589 //201808291306 nome arq s/acento, p/favor =]
-					.concat("_").concat(StringsUtil.stripAccents(tbodEmpresa.getNomeFantasia().replaceAll(" ", "_")))
-					.concat(".").concat(tbodEmpresa.getCdEmpresa().toString()) //TODO: retirar antes entrega - apenas para facilitar testes e evidencia //201808291128 - esert
-					.concat(".").concat(dataCriacaoString)
+					//.concat("_").concat(StringsUtil.stripAccents(tbodEmpresa.getNomeFantasia().replaceAll(" ", "_")))
+					//.concat("_").concat(StringsUtil.stripAccents(tbodEmpresa.getRazaoSocial().replaceAll(" ", "_"))) //201808311629 - esert - COR-617 - ajustado conf historia
+					.concat("_").concat(StringsUtil.stripAccents(tbodEmpresa.getRazaoSocial())) //201808311629 - esert - COR-617 - ajustado conf historia
+					//.concat(".").concat(tbodEmpresa.getCdEmpresa().toString()) //TODO: retirar antes entrega - apenas para facilitar testes e evidencia //201808291128 - esert
+					.concat("_").concat(dataCriacaoString)
 					.concat(".").concat("pdf")
 					;
-			log.info("pdfFileName:[" + pdfFileName + "]");
+			log.info("pdfPMEFileName:[" + pdfPMEFileName + "]");
 			
-			String pdfPathFileName = pdfPathName + pdfFileName; 
-			log.info("pdfPathFileName:[" + pdfPathFileName + "]");
+			String pdfPMEPathFileName = pdfPMEPathName + pdfPMEFileName; 
+			log.info("pdfPMEPathFileName:[" + pdfPMEPathFileName + "]");
 
 			//gerar html
 			String html = montarHtmlContratacaoPME(
@@ -282,14 +289,14 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 					);
 			
 			if(html==null) {
-				log.error(String.format("Falha ao gerar pdf com html==null para pdfPathFileName:[%s]", pdfPathFileName));
+				log.error(String.format("Falha ao gerar pdf com html==null para pdfPMEPathFileName:[%s]", pdfPMEPathFileName));
 				return arquivoContratacao;
 			}
 			
 			//gerar pdf com html
 			Html2Pdf html2Pdf = new Html2Pdf(html);
-			if(!html2Pdf.html2pdf2(html, null, pdfPathFileName)) {
-				log.error(String.format("Falha ao gerar pdf com html para pdfPathFileName:[%s]", pdfPathFileName));
+			if(!html2Pdf.html2pdf2(html, null, pdfPMEPathFileName)) {
+				log.error(String.format("Falha ao gerar pdf com html para pdfPMEPathFileName:[%s]", pdfPMEPathFileName));
 				return arquivoContratacao;
 			}
 
@@ -300,9 +307,9 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 			try {
 				arquivoContratacao.setCodigoEmpresa(tbodEmpresa.getCdEmpresa());
 				arquivoContratacao.setDataCriacao(dataCriacaoStringDTO);;
-				arquivoContratacao.setNomeArquivo(pdfFileName);
-				arquivoContratacao.setCaminhoCarga(pdfPathName);
-				arquivoContratacao.setTipoConteudo("application/pdf");
+				arquivoContratacao.setNomeArquivo(pdfPMEFileName);
+				arquivoContratacao.setCaminhoCarga(pdfPMEPathName);
+				arquivoContratacao.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE);
 				//arquivoContratacao.setTamanhoArquivo(tamanhoArquivo); //sera atribuido no adaptDtoToEntity()
 				//arquivoContratacao.setArquivoBase64(arquivoBase64); //sera atribuido no adaptDtoToEntity()
 				
@@ -470,7 +477,7 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 				
 				String prevista = "";
 				if(listVenda.get(0).getDtAceite()==null) { //se ainda nao tem data de aceite
-					prevista = " " + "PREVISTA"; //entao as datas de movimentacao e vigencia sao PREVISTAS
+					prevista = " " + "prevista"; //entao as datas de movimentacao e vigencia sao PREVISTAS //201808311638 - minÚsculo vide Pedro@Vector
 					//deixar despacito pra não relar
 				}				
 				
