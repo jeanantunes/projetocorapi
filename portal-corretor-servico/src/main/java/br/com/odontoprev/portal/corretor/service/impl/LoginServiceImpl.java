@@ -106,26 +106,31 @@ public class LoginServiceImpl implements LoginService {
 				return null;
 			}
 		} else {
-			final TbodLogin loginCorretora = loginDAO
-					.findByTbodCorretoras(login.getUsuario());
-			if (loginCorretora != null && login.getSenha() != null
-					&& loginCorretora.getSenha().equals(login.getSenha())) {
+			try {
+				final TbodLogin loginCorretora = loginDAO
+						.findByTbodCorretoras(login.getUsuario());
+				if (loginCorretora != null && login.getSenha() != null
+						&& loginCorretora.getSenha().equals(login.getSenha())) {
 
-				final Corretora corretora = serviceCorretora
-						.buscaCorretoraPorCnpj(login.getUsuario());
+					final Corretora corretora = serviceCorretora
+							.buscaCorretoraPorCnpj(login.getUsuario());
 
-				if (corretora.getCdCorretora() == 0) {
-					throw new ExecutionException(
-							"Dono de corretora sem corretora atrelada.");
+					if (corretora.getCdCorretora() == 0) {
+						throw new ExecutionException(
+								"Dono de corretora sem corretora atrelada.");
+					}
+
+					return new LoginResponse(
+							loginCorretora.getCdLogin(),
+							corretora.getRazaoSocial(), login.getUsuario(),
+							corretora.getCdCorretora(), corretora.getRazaoSocial(),
+							perfil);
+				} else {
+					return responseNotFound;
 				}
-
-				return new LoginResponse(
-						loginCorretora.getCdLogin(),
-						corretora.getRazaoSocial(), login.getUsuario(),
-						corretora.getCdCorretora(), corretora.getRazaoSocial(),
-						perfil);
-			} else {
-				return responseNotFound;
+			} catch (final Exception e){
+				log.error("Exception:["+ e.getMessage() +"]");
+				return null;
 			}
 		}
 	}

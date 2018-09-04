@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class Corretora implements Serializable {
 
@@ -166,4 +167,31 @@ public class Corretora implements Serializable {
 				+ "]";
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Corretora)) return false;
+		Corretora corretora = (Corretora) o;
+		return getCdCorretora() == corretora.getCdCorretora() &&
+				Objects.equals(getCnpj(), corretora.getCnpj()) &&
+				Objects.equals(getRazaoSocial(), corretora.getRazaoSocial()) &&
+				Objects.equals(getCnae(), corretora.getCnae()) &&
+				Objects.equals(getTelefone(), corretora.getTelefone()) &&
+				Objects.equals(getCelular(), corretora.getCelular()) &&
+				Objects.equals(getEmail(), corretora.getEmail()) &&
+				Objects.equals(getStatusCnpj(), corretora.getStatusCnpj()) &&
+				Objects.equals(getSimplesNacional(), corretora.getSimplesNacional()) &&
+				Objects.equals(getDataAbertura(), corretora.getDataAbertura()) &&
+				Objects.equals(getEnderecoCorretora(), corretora.getEnderecoCorretora()) &&
+				Objects.equals(getConta(), corretora.getConta()) &&
+				Objects.equals(getLogin(), corretora.getLogin()) &&
+				Objects.equals(getSenha(), corretora.getSenha()) &&
+				Objects.equals(getRepresentantes(), corretora.getRepresentantes());
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(getCdCorretora(), getCnpj(), getRazaoSocial(), getCnae(), getTelefone(), getCelular(), getEmail(), getStatusCnpj(), getSimplesNacional(), getDataAbertura(), getEnderecoCorretora(), getConta(), getLogin(), getSenha(), getRepresentantes());
+	}
 }

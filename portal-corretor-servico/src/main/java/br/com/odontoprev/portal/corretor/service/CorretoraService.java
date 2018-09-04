@@ -9,6 +9,6 @@ public interface CorretoraService {
 
 	public CorretoraResponse updateCorretoraLogin(Corretora corretora);
 
-	public Corretora buscaCorretoraPorCnpj(String cnpj);
+	public Corretora buscaCorretoraPorCnpj(String cnpj) throws Exception;
 	
 }

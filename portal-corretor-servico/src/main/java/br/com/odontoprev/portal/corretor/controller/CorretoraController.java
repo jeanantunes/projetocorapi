@@ -63,11 +63,29 @@ public class CorretoraController {
 	}
 	
 	@RequestMapping(value = "/corretora/{cnpj}", method = { RequestMethod.GET })
-	public Corretora buscaPorCnpj(@PathVariable String cnpj) {
+	public ResponseEntity<Corretora> buscaPorCnpj(@PathVariable String cnpj) {
 		
 		log.info("cnpj: [" + cnpj + "]");
-		
-		return corretoraService.buscaCorretoraPorCnpj(cnpj);
+
+		Corretora corretora;
+
+		try {
+
+			corretora = corretoraService.buscaCorretoraPorCnpj(cnpj);
+
+			if(corretora == null){
+
+				return ResponseEntity.noContent().build();
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			return ResponseEntity.status(500).build();
+
+		}
+
+		return ResponseEntity.ok(corretora);
 	}
 
 }

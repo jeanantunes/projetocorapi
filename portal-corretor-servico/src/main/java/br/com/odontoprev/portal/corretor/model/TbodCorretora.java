@@ -49,6 +49,9 @@ public class TbodCorretora implements Serializable {
 	@Column(name = "CPF_RESPONSAVEL")
 	private String cpfResponsavel;
 
+	@Column(name = "CPF_RESPONSAVEL2")
+	private String cpfResponsavel2;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "DATA_ABERTURA")
 	private Date dataAbertura;
@@ -158,6 +161,14 @@ public class TbodCorretora implements Serializable {
 
 	public void setCpfResponsavel(String cpfResponsavel) {
 		this.cpfResponsavel = cpfResponsavel;
+	}
+
+	public String getCpfResponsavel2() {
+		return cpfResponsavel2;
+	}
+
+	public void setCpfResponsavel2(String cpfResponsavel2) {
+		this.cpfResponsavel2 = cpfResponsavel2;
 	}
 
 	public Date getDataAbertura() {

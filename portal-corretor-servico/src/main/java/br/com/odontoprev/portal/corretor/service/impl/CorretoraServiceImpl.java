@@ -229,7 +229,7 @@ public class CorretoraServiceImpl implements CorretoraService {
 	}
 
 	@Override
-	public Corretora buscaCorretoraPorCnpj(String cnpj) {
+	public Corretora buscaCorretoraPorCnpj(String cnpj) throws Exception {
 
 		log.info("[buscaCorretoraPorCnpj]");
 		
@@ -240,7 +240,7 @@ public class CorretoraServiceImpl implements CorretoraService {
 
 			if (tbCorretora == null) {
 				log.error("buscaCorretoraPorCnpj :: cnpj:[" + cnpj + "] len:[" + cnpj.length() + "] não encontrado.");
-				return new Corretora();
+				return null;
 			}
 
 			// Corretora
@@ -281,24 +281,25 @@ public class CorretoraServiceImpl implements CorretoraService {
 			List<Representante> representantes = new ArrayList<Representante>();
 			Representante representante;
 
+			//Representantes
+			//rever campos nas tabelas 201803091426
+			if(tbCorretora.getNomeRepresentanteLegal1() != null && !tbCorretora.getNomeRepresentanteLegal1().isEmpty()) {
+				representante = new Representante();
+				representante.setNome(tbCorretora.getNomeRepresentanteLegal1());
+				representante.setCpf(tbCorretora.getCpfResponsavel());
+				representantes.add(representante);
+			}
+			if(tbCorretora.getNomeRepresentanteLegal2() != null && !tbCorretora.getNomeRepresentanteLegal2().isEmpty()) {
+				representante = new Representante();
+				representante.setNome(tbCorretora.getNomeRepresentanteLegal2());
+				representante.setCpf(tbCorretora.getCpfResponsavel2());
+				representantes.add(representante);
+			}
+			corretora.setRepresentantes(representantes);
+
 			//Dados Bancarios
 			if(tbCorretora.getTbodCorretoraBancos() != null && !tbCorretora.getTbodCorretoraBancos().isEmpty()) {
-				//Representantes
-				//rever campos nas tabelas 201803091426
-				if(tbCorretora.getNomeRepresentanteLegal1() != null && !tbCorretora.getNomeRepresentanteLegal1().isEmpty()) {
-					representante = new Representante();
-					representante.setNome(tbCorretora.getNomeRepresentanteLegal1());
-					representante.setCpf(tbCorretora.getTbodCorretoraBancos().get(0).getCpfResponsavelLegal1());
-					representantes.add(representante);
-				}
-				if(tbCorretora.getNomeRepresentanteLegal2() != null && !tbCorretora.getNomeRepresentanteLegal2().isEmpty()) {
-					representante = new Representante();
-					representante.setNome(tbCorretora.getNomeRepresentanteLegal2());
-					representante.setCpf(tbCorretora.getTbodCorretoraBancos().get(0).getCpfResponsavelLegal2());
-					representantes.add(representante);
-				}
-				corretora.setRepresentantes(representantes);
-				
+
 				if(tbCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta() != null) {
 					Conta conta = new Conta();
 					conta.setCdBancoConta(tbCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta().getCdBancoConta());
@@ -322,11 +323,17 @@ public class CorretoraServiceImpl implements CorretoraService {
 			}
 			
 		} catch (NonUniqueResultException e) {
+
 			log.error("buscaCorretoraPorCnpj :: Detalhe: [ Mais de um registro encontraco com o CNPJ informado]");
+			throw new Exception("buscaCorretoraPorCnpj :: Detalhe: [ Mais de um registro encontraco com o CNPJ informado]", e);
+
 		} catch (Exception e) {
+
 			log.error("buscaCorretoraPorCnpj :: Detalhe: [" + e.getMessage() + "]");
-			return new Corretora();
+			throw new Exception("buscaCorretoraPorCnpj :: Detalhe: [" + e.getMessage() + "]", e);
+
 		}
+
 		return corretora;
 	}
 }
