@@ -336,4 +336,47 @@ public class CorretoraServiceImpl implements CorretoraService {
 
 		return corretora;
 	}
+
+	@Override
+	public CorretoraResponse updateCorretoraDados(Corretora corretora) {
+
+		log.info("[updateCorretoraDados - ini]");
+
+		TbodCorretora tbodCorretora;
+
+		try {
+
+			tbodCorretora = corretoraDao.findOne(corretora.getCdCorretora());
+
+			if(tbodCorretora != null) {
+
+				//Update Email
+				if (corretora.getEmail() != null && !corretora.getEmail().isEmpty()) {
+
+					log.info("[updateCorretoraDados - tbodCorretora.setEmail(corretora.getEmail())]");
+					tbodCorretora.setEmail(corretora.getEmail());
+				}
+
+				log.info("[updateCorretoraDados - corretoraDao.save()]");
+				tbodCorretora = corretoraDao.save(tbodCorretora);
+
+				log.info("[updateCorretoraDados - fim]");
+				return new CorretoraResponse(tbodCorretora.getCdCorretora(),
+						"Corretora atualizada. CNPJ [" + tbodCorretora.getCnpj() + "]");
+			}
+			else {
+
+				log.info("[updateCorretoraDados - fim]");
+				return null;
+
+			}
+
+		} catch (Exception e) {
+			log.info("[updateCorretoraDados - erro]");
+			log.error("updateCorretoraDados :: Detalhe: [" + e.getMessage() + "]");
+			return new CorretoraResponse(0, "updateCorretoraDados; Erro:[" + e.getMessage() + "]");
+		}
+
+	}
+
 }
