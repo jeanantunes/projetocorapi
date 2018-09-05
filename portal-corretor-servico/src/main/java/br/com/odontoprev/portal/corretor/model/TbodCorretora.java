@@ -108,6 +108,12 @@ public class TbodCorretora implements Serializable {
 	@JoinColumn(name = "CD_LOGIN")
 	private TbodLogin tbodLogin;
 
+	@Column(name = "TEM_SUSEP")
+	private String temSusep;
+
+	@Column(name = "CODIGO_SUSEP")
+	private String codigoSusep;
+
 	// //bi-directional many-to-one association to TbodLogin
 	// @OneToMany(mappedBy="tbodCorretora")
 	// private List<TbodLogin> tbodLogins;
@@ -339,6 +345,22 @@ public class TbodCorretora implements Serializable {
 
 	public void setTbodLogin(TbodLogin tbodLogin) {
 		this.tbodLogin = tbodLogin;
+	}
+
+	public String getTemSusep() {
+		return temSusep;
+	}
+
+	public void setTemSusep(String temSusep) {
+		this.temSusep = temSusep;
+	}
+
+	public String getCodigoSusep() {
+		return codigoSusep;
+	}
+
+	public void setCodigoSusep(String codigoSusep) {
+		this.codigoSusep = codigoSusep;
 	}
 
 	// public List<TbodLogin> getTbodLogins() {

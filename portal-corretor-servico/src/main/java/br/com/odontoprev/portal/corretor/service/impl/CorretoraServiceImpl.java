@@ -120,6 +120,9 @@ public class CorretoraServiceImpl implements CorretoraService {
 			tbCorretora.setRegional("1"); // TODO Onde pega a Regional?
 			tbCorretora.setTbodEndereco(tbEndereco);
 
+			tbCorretora.setTemSusep(corretora.getTemSusep());
+			tbCorretora.setCodigoSusep(corretora.getCodigoSusep());
+
 			//Representantes
 			if (corretora.getRepresentantes() != null && !corretora.getRepresentantes().isEmpty()) {
 				tbCorretora.setNomeRepresentanteLegal1(corretora.getRepresentantes().get(0).getNome());
@@ -277,6 +280,9 @@ public class CorretoraServiceImpl implements CorretoraService {
 				}
 				corretora.setEnderecoCorretora(endereco);
 			}
+
+			corretora.setTemSusep(tbCorretora.getTemSusep());
+			corretora.setCodigoSusep(tbCorretora.getCodigoSusep());
 			
 			List<Representante> representantes = new ArrayList<Representante>();
 			Representante representante;

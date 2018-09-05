@@ -21,6 +21,8 @@ public class Corretora implements Serializable {
 	private Endereco enderecoCorretora;
 	private Conta conta;
 	private Login login;
+	private String temSusep;
+	private String codigoSusep;
 	
 	private String senha; //201807181317 - esert - COR-319 - incluida senha para json do put de troca de senha
 	
@@ -146,6 +148,22 @@ public class Corretora implements Serializable {
 		this.representantes = representantes;
 	}
 
+	public String getTemSusep() {
+		return temSusep;
+	}
+
+	public void setTemSusep(String temSusep) {
+		this.temSusep = temSusep;
+	}
+
+	public String getCodigoSusep() {
+		return codigoSusep;
+	}
+
+	public void setCodigoSusep(String codigoSusep) {
+		this.codigoSusep = codigoSusep;
+	}
+
 	@Override
 	public String toString() {
 		return "Corretora [" 
@@ -163,7 +181,9 @@ public class Corretora implements Serializable {
 				+ ", conta=" + (conta!=null?conta.toString():"NuLL") 
 				+ ", login=" + (login!=null?login.toString():"NuLL") 
 				+ ", senha=" + senha 
-				+ ", representantes=" + (representantes!=null?String.valueOf(representantes.size()):"NuLL") 
+				+ ", representantes=" + (representantes!=null?String.valueOf(representantes.size()):"NuLL")
+				+ "temSusep=" + temSusep
+				+ "codigoSusep=" + codigoSusep
 				+ "]";
 	}
 
