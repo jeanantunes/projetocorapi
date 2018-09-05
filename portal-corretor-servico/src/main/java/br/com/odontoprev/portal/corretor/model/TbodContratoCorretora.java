@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 
-//201808231711 - esert - COR-617 - nova tabela TBOD_ARQUIVO_CONTRATACAO
 @Entity
 @Table(name = "TBOD_CONTRATO_CORRETORA")
 public class TbodContratoCorretora implements Serializable {
