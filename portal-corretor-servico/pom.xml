@@ -272,7 +272,7 @@
 					<remote>false</remote>
 					<verbose>true</verbose>
 					<source>${project.build.directory}/${project.build.finalName}.war</source>
-					<name>${project.artifactId}</name>
+					<name>${project.artifactId}-${project.version}</name>
 					<targets>${weblogic.target}</targets>
 				</configuration>
 				<executions>
