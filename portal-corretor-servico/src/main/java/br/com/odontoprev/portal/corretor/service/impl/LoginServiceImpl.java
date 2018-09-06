@@ -1,8 +1,12 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
+import br.com.odontoprev.portal.corretor.dao.LoginDAO;
+import br.com.odontoprev.portal.corretor.dto.*;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
+import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
+import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.service.LoginService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.bytecode.buildtime.spi.ExecutionException;
@@ -14,124 +18,131 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.odontoprev.portal.corretor.dao.LoginDAO;
-import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
-import br.com.odontoprev.portal.corretor.dto.Login;
-import br.com.odontoprev.portal.corretor.dto.LoginResponse;
-import br.com.odontoprev.portal.corretor.dto.LoginRetorno;
-import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
-import br.com.odontoprev.portal.corretor.model.TbodLogin;
-import br.com.odontoprev.portal.corretor.service.LoginService;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
-	private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
+    private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
 
-	@Autowired
-	private LoginDAO loginDAO;
-	@Autowired
-	private ForcaVendaServiceImpl serviceFV;
-	@Autowired
-	private CorretoraServiceImpl serviceCorretora;
-	@Autowired
-	private ApiManagerTokenServiceImpl apiManagerTokenService;
+    @Autowired
+    private LoginDAO loginDAO;
+    @Autowired
+    private ForcaVendaServiceImpl serviceFV;
+    @Autowired
+    private CorretoraServiceImpl serviceCorretora;
+    @Autowired
+    private ContratoCorretoraDAO contratoCorretoraDAO;
+    @Autowired
+    private ApiManagerTokenServiceImpl apiManagerTokenService;
 
-	@Value("${DCSS_URL}")
-	private String dcssUrl;
+    @Value("${DCSS_URL}")
+    private String dcssUrl;
 
-	private final LoginResponse responseNotFound = new LoginResponse();
+    private final LoginResponse responseNotFound = new LoginResponse();
 
-	@Override
-	public LoginResponse login(Login login) {
+    @Override
+    public LoginResponse login(Login login) {
 
-		log.info("[login]");
+        log.info("[login]");
 
-		String perfil = "Corretora";
-		if (login.getUsuario() == null && login.getUsuario().isEmpty()) {
-			return null;
-		}
+        String perfil = "Corretora";
+        if (login.getUsuario() == null && login.getUsuario().isEmpty()) {
+            return null;
+        }
 
-		if (login.getUsuario().length() == 11) {
-			perfil = "Corretor";
-			final ForcaVenda forcaVenda = serviceFV.findForcaVendaByCpf(login.getUsuario());
+        if (login.getUsuario().length() == 11) {
+            perfil = "Corretor";
+            final ForcaVenda forcaVenda = serviceFV.findForcaVendaByCpf(login.getUsuario());
 
-			if (forcaVenda == null) {
-				return responseNotFound;
-			}
+            if (forcaVenda == null) {
+                return responseNotFound;
+            }
 
-			final RestTemplate restTemplate = new RestTemplate();
-			final Map<String, String> loginMap = new HashMap<>();
-			loginMap.put("login", login.getUsuario());
-			loginMap.put("senha", login.getSenha());
-			try {
+            final RestTemplate restTemplate = new RestTemplate();
+            final Map<String, String> loginMap = new HashMap<>();
+            loginMap.put("login", login.getUsuario());
+            loginMap.put("senha", login.getSenha());
+            try {
 
-				HttpHeaders headers = new HttpHeaders();
-				headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
 
-				HttpEntity<?> request = new HttpEntity<Map<String, String>>(loginMap, headers);
-				
-				final ResponseEntity<LoginRetorno> loginRetorno = restTemplate
-						.postForEntity(
-								(dcssUrl + "/login/1.0/"), 
-								//loginMap,
-								request,
-								LoginRetorno.class
-								);
+                HttpEntity<?> request = new HttpEntity<Map<String, String>>(loginMap, headers);
 
-				if(loginRetorno != null && loginRetorno.getBody().getCodigo() == 0) {
-					return null;
-				}
-				
-				LoginResponse loginResponse = new LoginResponse(
-						loginRetorno.getBody().getCodigo(),  //codigoDcss
-						forcaVenda.getCdForcaVenda(),		 //codigoUsuario
-						loginRetorno.getBody().getNomeUsuario(),
-						loginRetorno.getBody().getDocumento(),
-						forcaVenda.getCorretora().getCdCorretora(),
-						forcaVenda.getCorretora().getRazaoSocial(), perfil);
-				
-				log.info("loginResponse:["+ loginResponse +"]");
-				return loginResponse;
+                final ResponseEntity<LoginRetorno> loginRetorno = restTemplate
+                        .postForEntity(
+                                (dcssUrl + "/login/1.0/"),
+                                //loginMap,
+                                request,
+                                LoginRetorno.class
+                        );
 
-			} catch (final ApiTokenException e) {
-				//throw e;
-				log.error("ApiTokenException:["+ e.getMessage() +"]");
-				return null;
+                if (loginRetorno != null && loginRetorno.getBody().getCodigo() == 0) {
+                    return null;
+                }
 
-			} catch (final Exception e) {
-				//throw e;
-				log.error("Exception:["+ e.getMessage() +"]");
-				return null;
-			}
-		} else {
-			try {
-				final TbodLogin loginCorretora = loginDAO
-						.findByTbodCorretoras(login.getUsuario());
-				if (loginCorretora != null && login.getSenha() != null
-						&& loginCorretora.getSenha().equals(login.getSenha())) {
+                LoginResponse loginResponse = new LoginResponse(
+                        loginRetorno.getBody().getCodigo(),  //codigoDcss
+                        forcaVenda.getCdForcaVenda(),         //codigoUsuario
+                        loginRetorno.getBody().getNomeUsuario(),
+                        loginRetorno.getBody().getDocumento(),
+                        forcaVenda.getCorretora().getCdCorretora(),
+                        forcaVenda.getCorretora().getRazaoSocial(), perfil);
 
-					final Corretora corretora = serviceCorretora
-							.buscaCorretoraPorCnpj(login.getUsuario());
+                log.info("loginResponse:[" + loginResponse + "]");
+                return loginResponse;
 
-					if (corretora.getCdCorretora() == 0) {
-						throw new ExecutionException(
-								"Dono de corretora sem corretora atrelada.");
-					}
+            } catch (final ApiTokenException e) {
+                //throw e;
+                log.error("ApiTokenException:[" + e.getMessage() + "]");
+                return null;
 
-					return new LoginResponse(
-							loginCorretora.getCdLogin(),
-							corretora.getRazaoSocial(), login.getUsuario(),
-							corretora.getCdCorretora(), corretora.getRazaoSocial(),
-							perfil);
-				} else {
-					return responseNotFound;
-				}
-			} catch (final Exception e){
-				log.error("Exception:["+ e.getMessage() +"]");
-				return null;
-			}
-		}
-	}
+            } catch (final Exception e) {
+                //throw e;
+                log.error("Exception:[" + e.getMessage() + "]");
+                return null;
+            }
+        } else {
+            try {
+                final TbodLogin loginCorretora = loginDAO
+                        .findByTbodCorretoras(login.getUsuario());
+                if (loginCorretora != null && login.getSenha() != null
+                        && loginCorretora.getSenha().equals(login.getSenha())) {
+
+                    final Corretora corretora = serviceCorretora
+                            .buscaCorretoraPorCnpj(login.getUsuario());
+
+                    if (corretora.getCdCorretora() == 0) {
+                        throw new ExecutionException(
+                                "Dono de corretora sem corretora atrelada.");
+                    }
+
+                    String dtAceiteContrato = null;
+                    TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDAO.findOne(corretora.getCdCorretora());
+                    //System.out.println(cdCorretoraContrato);
+                    if (tbodContratoCorretora != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        dtAceiteContrato = sdf.format(tbodContratoCorretora.getDtAceiteContrato());
+                    }
+
+                    return new LoginResponse(
+                            loginCorretora.getCdLogin(),
+                            corretora.getRazaoSocial(),
+                            login.getUsuario(),
+                            corretora.getCdCorretora(),
+                            corretora.getRazaoSocial(),
+                            perfil,
+                            dtAceiteContrato);
+                } else {
+                    return responseNotFound;
+                }
+            } catch (final Exception e) {
+                log.error("Exception:[" + e.getMessage() + "]");
+                return null;
+            }
+        }
+    }
 }

@@ -4,106 +4,119 @@ import java.io.Serializable;
 
 public class LoginResponse implements Serializable {
 
-	private static final long serialVersionUID = -5493233987085523214L;
+    private static final long serialVersionUID = -5493233987085523214L;
 
-	private long codigoDcss;
-	private long codigoUsuario;
-	private String nomeUsuario;
-	private String documento;
-	private long codigoCorretora;
-	private String nomeCorretora;
-	private String perfil;
+    private long codigoDcss;
+    private long codigoUsuario;
+    private String nomeUsuario;
+    private String documento;
+    private long codigoCorretora;
+    private String nomeCorretora;
+    private String perfil;
+    private String dtAceiteContrato;
 
-	public LoginResponse() {
+    public LoginResponse() {
 
-	}
+    }
 
-	public LoginResponse(long codigoDcss, long codigoUsuario, String nomeUsuario, String documento,
-			long codigoCorretora, String nomeCorretora, String perfil) {
-		this.codigoDcss = codigoDcss;
-		this.codigoUsuario = codigoUsuario;
-		this.nomeUsuario = nomeUsuario;
-		this.documento = documento;
-		this.codigoCorretora = codigoCorretora;
-		this.nomeCorretora = nomeCorretora;
-		this.perfil = perfil;
-	}
-	
-	public LoginResponse(long codigoUsuario, String nomeUsuario, String documento,
-			long codigoCorretora, String nomeCorretora, String perfil) {
-		this.codigoUsuario = codigoUsuario;
-		this.nomeUsuario = nomeUsuario;
-		this.documento = documento;
-		this.codigoCorretora = codigoCorretora;
-		this.nomeCorretora = nomeCorretora;
-		this.perfil = perfil;
-	}
+    public LoginResponse(long codigoDcss, long codigoUsuario, String nomeUsuario, String documento,
+                         long codigoCorretora, String nomeCorretora, String perfil) {
+        this.codigoDcss = codigoDcss;
+        this.codigoUsuario = codigoUsuario;
+        this.nomeUsuario = nomeUsuario;
+        this.documento = documento;
+        this.codigoCorretora = codigoCorretora;
+        this.nomeCorretora = nomeCorretora;
+        this.perfil = perfil;
+    }
 
-	public long getCodigoDcss() {
-		return codigoDcss;
-	}
+    public LoginResponse(long codigoUsuario, String nomeUsuario, String documento,
+                         long codigoCorretora, String nomeCorretora, String perfil, String dtAceiteContrato) {
+        this.codigoUsuario = codigoUsuario;
+        this.nomeUsuario = nomeUsuario;
+        this.documento = documento;
+        this.codigoCorretora = codigoCorretora;
+        this.nomeCorretora = nomeCorretora;
+        this.perfil = perfil;
+        this.dtAceiteContrato = dtAceiteContrato;
+    }
 
-	public void setCodigoDcss(long codigoDcss) {
-		this.codigoDcss = codigoDcss;
-	}
+    public long getCodigoDcss() {
+        return codigoDcss;
+    }
 
-	public long getCodigoUsuario() {
-		return codigoUsuario;
-	}
+    public void setCodigoDcss(long codigoDcss) {
+        this.codigoDcss = codigoDcss;
+    }
 
-	public void setCodigoUsuario(long codigoUsuario) {
-		this.codigoUsuario = codigoUsuario;
-	}
+    public long getCodigoUsuario() {
+        return codigoUsuario;
+    }
 
-	public String getNomeUsuario() {
-		return nomeUsuario;
-	}
+    public void setCodigoUsuario(long codigoUsuario) {
+        this.codigoUsuario = codigoUsuario;
+    }
 
-	public void setNomeUsuario(String nomeUsuario) {
-		this.nomeUsuario = nomeUsuario;
-	}
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
 
-	public String getDocumento() {
-		return documento;
-	}
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
+    }
 
-	public void setDocumento(String documento) {
-		this.documento = documento;
-	}
+    public String getDocumento() {
+        return documento;
+    }
 
-	public long getCodigoCorretora() {
-		return codigoCorretora;
-	}
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
 
-	public String getNomeCorretora() {
-		return nomeCorretora;
-	}
+    public long getCodigoCorretora() {
+        return codigoCorretora;
+    }
 
-	public void setNomeCorretora(String nomeCorretora) {
-		this.nomeCorretora = nomeCorretora;
-	}
+    public String getNomeCorretora() {
+        return nomeCorretora;
+    }
 
-	public void setCodigoCorretora(long codigoCorretora) {
-		this.codigoCorretora = codigoCorretora;
-	}
+    public void setNomeCorretora(String nomeCorretora) {
+        this.nomeCorretora = nomeCorretora;
+    }
 
-	public String getPerfil() {
-		return perfil;
-	}
+    public void setCodigoCorretora(long codigoCorretora) {
+        this.codigoCorretora = codigoCorretora;
+    }
 
-	public void setPerfil(String perfil) {
-		this.perfil = perfil;
-	}
+    public String getPerfil() {
+        return perfil;
+    }
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
+    public void setPerfil(String perfil) {
+        this.perfil = perfil;
+    }
 
-	@Override
-	public String toString() {
-		return "LoginResponse [codigoDcss=" + codigoDcss + ", codigoUsuario=" + codigoUsuario + ", nomeUsuario="
-				+ nomeUsuario + ", documento=" + documento + ", codigoCorretora=" + codigoCorretora + ", nomeCorretora="
-				+ nomeCorretora + ", perfil=" + perfil + "]";
-	}
-	
+    public String getDtAceiteContrato() {
+        return dtAceiteContrato;
+    }
+
+    public void setDtAceiteContrato(String dtAceiteContrato) {
+        this.dtAceiteContrato = dtAceiteContrato;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginResponse{" +
+                "codigoDcss=" + codigoDcss +
+                ", codigoUsuario=" + codigoUsuario +
+                ", nomeUsuario='" + nomeUsuario + '\'' +
+                ", documento='" + documento + '\'' +
+                ", codigoCorretora=" + codigoCorretora +
+                ", nomeCorretora='" + nomeCorretora + '\'' +
+                ", perfil='" + perfil + '\'' +
+                ", dtAceiteContrato=" + dtAceiteContrato +
+                '}';
+    }
+
 }

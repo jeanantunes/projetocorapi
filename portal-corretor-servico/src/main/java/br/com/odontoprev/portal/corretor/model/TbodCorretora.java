@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the TBOD_CORRETORA database table.
- * 
+ *
  */
 @Entity
 @Table(name = "TBOD_CORRETORA")
