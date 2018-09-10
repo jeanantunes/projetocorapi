@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+//201809101646 - esert - COR-709 - Serviço - Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
+//201809101646 - esert - COR-751 - DB - nova tabela TBOD_CONTRATO_MODELO
 @Entity
 @Table(name = "TBOD_CONTRATO_MODELO")
 public class TbodContratoModelo implements Serializable {
