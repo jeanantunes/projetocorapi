@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.controller;
 
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
 import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +24,7 @@ public class ContratoCorretoraController {
 	ContratoCorretoraService contratoCorretoraService;
 
 	@RequestMapping(value = "/contratocorretora/{cdCorretora}/dataaceite", method = { RequestMethod.GET })
-	public ResponseEntity<ContratoCorretoraDataAceite> createArquivoContratacaoByEmpresa(@PathVariable Long cdCorretora) throws ParseException {
+	public ResponseEntity<ContratoCorretoraDataAceite> getDataAceiteContratoByCdCorretora(@PathVariable Long cdCorretora) throws ParseException {
 
 		try {
 
@@ -38,6 +39,32 @@ public class ContratoCorretoraController {
 			}
 
 			return ResponseEntity.ok(dtoDataAceiteContrato);
+
+		} catch (Exception e) {
+
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
+		}
+	}
+
+	//201809101646 - esert - COR-709 - Serviço - Novo serviço GET /CONTRATO CORRETORA/{IDCORRETORA}/TIPO/{IDTIPO}
+	@RequestMapping(value = "/contratocorretora/{cdCorretora}/tipo/{cdContratoModelo}", method = { RequestMethod.GET })
+	public ResponseEntity<ContratoCorretoraPreenchido> getContratoPreenchido(@PathVariable Long cdCorretora, @PathVariable Long cdContratoModelo) throws ParseException {
+
+		try {
+
+			if (cdCorretora == null){
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
+
+			ContratoCorretoraPreenchido dtoContratoCorretoraPreenchido = contratoCorretoraService.getContratoPreenchido(cdCorretora, cdContratoModelo);
+
+			if(dtoContratoCorretoraPreenchido==null) {
+				return ResponseEntity.noContent().build();
+			}
+
+			return ResponseEntity.ok(dtoContratoCorretoraPreenchido);
 
 		} catch (Exception e) {
 

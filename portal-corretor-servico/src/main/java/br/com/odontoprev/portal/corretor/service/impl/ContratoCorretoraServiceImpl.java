@@ -1,15 +1,19 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDataAceiteDAO;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
-import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
-import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
+import java.text.SimpleDateFormat;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
+import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDataAceiteDAO;
+import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
+import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
+import br.com.odontoprev.portal.corretor.model.TbodCorretora;
+import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
 
 @Service
 public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
@@ -18,9 +22,14 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 
 	@Autowired
 	ContratoCorretoraDataAceiteDAO contratoCorretoraDataAceiteDAO;
+	
+	@Autowired
+	CorretoraDAO corretoraDAO;
 
+	@Override
 	public ContratoCorretoraDataAceite getDataAceiteContratoByCdCorretora(long cdCorretora) throws Exception {
-
+		log.info("getDataAceiteContratoByCdCorretora(" + cdCorretora + ") - ini");
+		
 		ContratoCorretoraDataAceite contratoCorretora = new ContratoCorretoraDataAceite();
 
 		try {
@@ -28,6 +37,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDataAceiteDAO.findOne(cdCorretora);
 
 			if(tbodContratoCorretora == null){
+				log.info("getDataAceiteContratoByCdCorretora(" + cdCorretora + ") - fim null");
 				return null;
 			}
 
@@ -38,9 +48,51 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 
 
 		}catch (Exception e){
+			log.info("getDataAceiteContratoByCdCorretora(" + cdCorretora + ") - erro");
+			log.error(e);;
 			throw new Exception(e);
 		}
 
+		log.info("getDataAceiteContratoByCdCorretora(" + cdCorretora + ") - fim");
+		return contratoCorretora;
+	}
+	
+	//201809101646 - esert - COR-709 - Serviço - Novo serviço GET /CONTRATO CORRETORA/{IDCORRETORA}/TIPO/{IDTIPO}
+
+	@Override
+	public ContratoCorretoraPreenchido getContratoPreenchido(Long cdCorretora, Long cdContratoModelo) throws Exception {
+		log.info("getContratoPreenchido(" + cdCorretora + ", " + cdContratoModelo + ") - ini");
+		
+		ContratoCorretoraPreenchido contratoCorretora = new ContratoCorretoraPreenchido();
+
+		try {
+
+			TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDataAceiteDAO.findOne(cdCorretora);
+			TbodCorretora tbodCorretora = corretoraDAO.findOne(cdCorretora);
+
+			if(tbodContratoCorretora == null){
+				log.info("getContratoPreenchido(" + cdCorretora + ", " + cdContratoModelo + ") - fim null");
+				return null;
+			}
+
+			contratoCorretora.setCdCorretora(tbodContratoCorretora.getCdCorretora());
+			contratoCorretora.setCdContratoModelo(cdContratoModelo);
+			String contratoPreenchido = tbodContratoCorretora.toString();
+			contratoPreenchido = tbodCorretora.toString();
+			contratoPreenchido = contratoPreenchido.substring(contratoPreenchido.indexOf("{"), contratoPreenchido.length()) ;
+			contratoPreenchido = contratoPreenchido.replace("{", "<p>");
+			contratoPreenchido = contratoPreenchido.replaceAll(",", "</p><p>");
+			contratoPreenchido = contratoPreenchido.replace("}", "</p>");
+			contratoCorretora.setContratoPreenchido(contratoPreenchido);
+
+
+		}catch (Exception e){
+			log.info("getContratoPreenchido(" + cdCorretora + ", " + cdContratoModelo + ") - erro");
+			log.error(e);;
+			throw new Exception(e);
+		}
+
+		log.info("getContratoPreenchido(" + cdCorretora + ", " + cdContratoModelo + ") - fim");
 		return contratoCorretora;
 	}
 }
