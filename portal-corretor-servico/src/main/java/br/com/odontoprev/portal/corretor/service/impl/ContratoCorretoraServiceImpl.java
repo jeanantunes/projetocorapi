@@ -78,11 +78,14 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			contratoCorretora.setCdCorretora(tbodContratoCorretora.getCdCorretora());
 			contratoCorretora.setCdContratoModelo(cdContratoModelo);
 			String contratoPreenchido = tbodContratoCorretora.toString();
-			contratoPreenchido = tbodCorretora.toString();
 			contratoPreenchido = contratoPreenchido.substring(contratoPreenchido.indexOf("{"), contratoPreenchido.length()) ;
+			contratoPreenchido = tbodCorretora.toString();
+			contratoPreenchido = contratoPreenchido.substring(contratoPreenchido.indexOf("["), contratoPreenchido.length()) ;
 			contratoPreenchido = contratoPreenchido.replace("{", "<p>");
+			contratoPreenchido = contratoPreenchido.replace("[", "<p>");
 			contratoPreenchido = contratoPreenchido.replaceAll(",", "</p><p>");
 			contratoPreenchido = contratoPreenchido.replace("}", "</p>");
+			contratoPreenchido = contratoPreenchido.replace("]", "</p>");
 			contratoCorretora.setContratoPreenchido(contratoPreenchido);
 
 
