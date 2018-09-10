@@ -19,7 +19,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 	@Autowired
 	ContratoCorretoraDataAceiteDAO contratoCorretoraDataAceiteDAO;
 
-	public ContratoCorretoraDataAceite getDataAceiteContratoByCdCorretora(long cdCorretora){
+	public ContratoCorretoraDataAceite getDataAceiteContratoByCdCorretora(long cdCorretora) throws Exception {
 
 		ContratoCorretoraDataAceite contratoCorretora = new ContratoCorretoraDataAceite();
 
@@ -38,7 +38,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 
 
 		}catch (Exception e){
-
+			throw new Exception(e);
 		}
 
 		return contratoCorretora;
