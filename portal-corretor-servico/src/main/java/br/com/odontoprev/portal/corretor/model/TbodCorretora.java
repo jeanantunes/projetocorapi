@@ -363,6 +363,19 @@ public class TbodCorretora implements Serializable {
 		this.codigoSusep = codigoSusep;
 	}
 
+	@Override
+	public String toString() {
+		return "TbodCorretora [cdCorretora=" + cdCorretora + ", ativo=" + ativo + ", celular=" + celular + ", cnpj="
+				+ cnpj + ", codigo=" + codigo + ", cpfResponsavel=" + cpfResponsavel + ", cpfResponsavel2="
+				+ cpfResponsavel2 + ", dataAbertura=" + dataAbertura + ", email=" + email + ", nome=" + nome
+				+ ", nomeRepresentanteLegal1=" + nomeRepresentanteLegal1 + ", nomeRepresentanteLegal2="
+				+ nomeRepresentanteLegal2 + ", razaoSocial=" + razaoSocial + ", regional=" + regional
+				+ ", simplesNacional=" + simplesNacional + ", statusCnpj=" + statusCnpj + ", telefone=" + telefone
+				+ ", cnae=" + cnae + ", tbodEndereco=" + tbodEndereco + ", tbodCorretoraBancos=" + tbodCorretoraBancos
+				+ ", tbodDocumentoAssociados=" + tbodDocumentoAssociados + ", tbodForcaVendas=" + tbodForcaVendas
+				+ ", tbodLogin=" + tbodLogin + ", temSusep=" + temSusep + ", codigoSusep=" + codigoSusep + "]";
+	}
+
 	// public List<TbodLogin> getTbodLogins() {
 	// return tbodLogins;
 	// }
