@@ -1,80 +1,87 @@
 package br.com.odontoprev.portal.corretor.model;
 
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 @Entity
-@Table(name = "TBOD_CONTRATO_CORRETORA")
+@Table(name = "TBOD_CONTRATO_CORRETORA2")
 public class TbodContratoCorretora implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "CD_CORRETORA")
-    private Long cdCorretora;
+	@SequenceGenerator(
+	        name="SEQ_CONTRATO_CORRETORA",
+	        sequenceName="SEQ_CONTRATO_CORRETORA"
+	    )
+	@GeneratedValue(generator="SEQ_CONTRATO_CORRETORA",strategy=GenerationType.SEQUENCE)	
+    @Column(name = "CD_CONTRATO_CORRETORA")
+    private Long cdContratoCorretora;
+    
+	@ManyToOne
+	@JoinColumn(name = "CD_CORRETORA")
+    private TbodCorretora tbodCorretora;
+    
+	@ManyToOne
+	@JoinColumn(name = "CD_CONTRATO_MODELO")
+    private TbodContratoModelo tbodContratoModelo;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "DT_ACEITE_CONTRATO")
     private Date dtAceiteContrato;
 
-    @Column(name = "TAM_ARQUIVO")
-    private Long tamArquivo;
+	public Long getCdContratoCorretora() {
+		return cdContratoCorretora;
+	}
 
-    @Column(name = "TIPO_CONTEUDO")
-    private String tipoConteudo;
+	public void setCdContratoCorretora(Long cdContratoCorretora) {
+		this.cdContratoCorretora = cdContratoCorretora;
+	}
 
-    @Column(name = "ARQUIVO")
-    private byte[] arquivo;
+	public TbodCorretora getTbodCorretora() {
+		return tbodCorretora;
+	}
 
-    public Long getCdCorretora() {
-        return cdCorretora;
-    }
+	public void setTbodCorretora(TbodCorretora tbodCorretora) {
+		this.tbodCorretora = tbodCorretora;
+	}
 
-    public void setCdCorretora(Long cdCorretora) {
-        this.cdCorretora = cdCorretora;
-    }
+	public TbodContratoModelo getTbodContratoModelo() {
+		return tbodContratoModelo;
+	}
 
-    public Date getDtAceiteContrato() {
-        return dtAceiteContrato;
-    }
+	public void setTbodContratoModelo(TbodContratoModelo tbodContratoModelo) {
+		this.tbodContratoModelo = tbodContratoModelo;
+	}
 
-    public void setDtAceiteContrato(Date dtAceiteContrato) {
-        this.dtAceiteContrato = dtAceiteContrato;
-    }
+	public Date getDtAceiteContrato() {
+		return dtAceiteContrato;
+	}
 
-    public Long getTamArquivo() {
-        return tamArquivo;
-    }
+	public void setDtAceiteContrato(Date dtAceiteContrato) {
+		this.dtAceiteContrato = dtAceiteContrato;
+	}
 
-    public void setTamArquivo(Long tamArquivo) {
-        this.tamArquivo = tamArquivo;
-    }
+	@Override
+	public String toString() {
+		return "TbodContratoCorretora2 [" 
+				+ "cdContratoCorretora=" + cdContratoCorretora 
+				+ ", tbodCorretora=" + tbodCorretora
+				+ ", tbodContratoModelo=" + tbodContratoModelo 
+				+ ", dtAceiteContrato=" + dtAceiteContrato 
+				+ "]";
+	}
 
-    public String getTipoConteudo() {
-        return tipoConteudo;
-    }
-
-    public void setTipoConteudo(String tipoConteudo) {
-        this.tipoConteudo = tipoConteudo;
-    }
-
-    public byte[] getArquivo() {
-        return arquivo;
-    }
-
-    public void setArquivo(byte[] arquivo) {
-        this.arquivo = arquivo;
-    }
-
-    @Override
-    public String toString() {
-        return "TbodContratoCorretora{" +
-                "cdCorretora=" + cdCorretora +
-                ", dtAceiteContrato=" + dtAceiteContrato +
-                ", tamArquivo=" + tamArquivo +
-                ", tipoConteudo='" + tipoConteudo + '\'' +
-                ", arquivo=" + Arrays.toString(arquivo) +
-                '}';
-    }
+	
 }

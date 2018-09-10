@@ -1,12 +1,9 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
-import br.com.odontoprev.portal.corretor.dao.LoginDAO;
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
-import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
-import br.com.odontoprev.portal.corretor.model.TbodLogin;
-import br.com.odontoprev.portal.corretor.service.LoginService;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.bytecode.buildtime.spi.ExecutionException;
@@ -18,9 +15,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
+import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
+import br.com.odontoprev.portal.corretor.dao.LoginDAO;
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
+import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.dto.LoginResponse;
+import br.com.odontoprev.portal.corretor.dto.LoginRetorno;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
+import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
+import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.service.LoginService;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -121,7 +126,7 @@ public class LoginServiceImpl implements LoginService {
                     }
 
                     String dtAceiteContrato = null;
-                    TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDAO.findOne(corretora.getCdCorretora());
+                    TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDAO.findByTbodCorretoraCdCorretora(corretora.getCdCorretora());
                     //System.out.println(cdCorretoraContrato);
                     if (tbodContratoCorretora != null) {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
