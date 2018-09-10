@@ -8,28 +8,19 @@ import java.util.List;
 
 import javax.persistence.NonUniqueResultException;
 
+import br.com.odontoprev.portal.corretor.dao.*;
+import br.com.odontoprev.portal.corretor.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.odontoprev.portal.corretor.dao.BancoContaDAO;
-import br.com.odontoprev.portal.corretor.dao.CorretoraBancoDAO;
-import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
-import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
-import br.com.odontoprev.portal.corretor.dao.LoginDAO;
 import br.com.odontoprev.portal.corretor.dto.Conta;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.CorretoraResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.Login;
 import br.com.odontoprev.portal.corretor.dto.Representante;
-import br.com.odontoprev.portal.corretor.model.TbodBancoConta;
-import br.com.odontoprev.portal.corretor.model.TbodCorretora;
-import br.com.odontoprev.portal.corretor.model.TbodCorretoraBanco;
-import br.com.odontoprev.portal.corretor.model.TbodEndereco;
-import br.com.odontoprev.portal.corretor.model.TbodLogin;
-import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.service.CorretoraService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
@@ -50,6 +41,9 @@ public class CorretoraServiceImpl implements CorretoraService {
 
 	@Autowired
 	CorretoraBancoDAO corretoraBancoDAO;
+
+	@Autowired
+	ContratoCorretoraDAO contratoCorretoraDAO;
 	
 	@Autowired
 	LoginDAO loginDao;
@@ -133,7 +127,10 @@ public class CorretoraServiceImpl implements CorretoraService {
 					tbCorretoraBanco.setCpfResponsavelLegal2(corretora.getRepresentantes().get(1).getCpf());
 				}
 			}
-			
+
+			TbodContratoCorretora cdCorretoraContrato = contratoCorretoraDAO.findByCdCorretora(tbCorretora.getCdCorretora());
+			System.out.println(cdCorretoraContrato);
+
 			tbCorretora = corretoraDao.save(tbCorretora);
 
 			tbCorretoraBanco.setTbodCorretora(tbCorretora);
