@@ -1,7 +1,7 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Objects;
 
 public class ContratoCorretoraDataAceite implements Serializable  {
 
@@ -24,4 +24,18 @@ public class ContratoCorretoraDataAceite implements Serializable  {
 		this.dtAceiteContrato = dtAceiteContrato;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ContratoCorretoraDataAceite)) return false;
+		ContratoCorretoraDataAceite that = (ContratoCorretoraDataAceite) o;
+		return getCdCorretora() == that.getCdCorretora() &&
+				Objects.equals(getDtAceiteContrato(), that.getDtAceiteContrato());
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(getCdCorretora(), getDtAceiteContrato());
+	}
 }
