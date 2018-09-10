@@ -48,7 +48,7 @@ public class ContratoCorretoraController {
 		}
 	}
 
-	//201809101646 - esert - COR-709 - Serviço - Novo serviço GET /CONTRATO CORRETORA/{IDCORRETORA}/TIPO/{IDTIPO}
+	//201809101646 - esert - COR-709 - Serviço - Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
 	@RequestMapping(value = "/contratocorretora/{cdCorretora}/tipo/{cdContratoModelo}", method = { RequestMethod.GET })
 	public ResponseEntity<ContratoCorretoraPreenchido> getContratoPreenchido(@PathVariable Long cdCorretora, @PathVariable Long cdContratoModelo) throws ParseException {
 

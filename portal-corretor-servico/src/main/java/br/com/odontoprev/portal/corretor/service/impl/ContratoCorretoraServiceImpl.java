@@ -57,8 +57,9 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 		return contratoCorretora;
 	}
 	
-	//201809101646 - esert - COR-709 - Serviço - Novo serviço GET /CONTRATO CORRETORA/{IDCORRETORA}/TIPO/{IDTIPO}
+	//201809101646 - esert - COR-709 - Serviço - Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
 
+	//201809101700 - esert - COR-710 - Serviço - TDD Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
 	@Override
 	public ContratoCorretoraPreenchido getContratoPreenchido(Long cdCorretora, Long cdContratoModelo) throws Exception {
 		log.info("getContratoPreenchido(" + cdCorretora + ", " + cdContratoModelo + ") - ini");
