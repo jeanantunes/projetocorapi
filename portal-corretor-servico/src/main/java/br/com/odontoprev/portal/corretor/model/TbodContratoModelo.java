@@ -79,11 +79,11 @@ public class TbodContratoModelo implements Serializable {
 		this.tipoConteudo = tipoConteudo;
 	}
 
-	public byte[] getArquivo() {
+	public byte[] getArquivoBytes() {
 		return arquivo;
 	}
 
-	public void setArquivo(byte[] arquivo) {
+	public void setArquivoBytes(byte[] arquivo) {
 		this.arquivo = arquivo;
 	}
 

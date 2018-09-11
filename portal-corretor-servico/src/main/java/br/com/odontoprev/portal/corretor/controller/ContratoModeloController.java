@@ -51,6 +51,16 @@ public class ContratoModeloController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
 		
+		if(contratoModelo.getTipoConteudo()==null) {
+			log.info("BAD_REQUEST: contratoModelo.getTipoConteudo()==null");	
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
+		if(contratoModelo.getTipoConteudo().trim().isEmpty()) {
+			log.info("BAD_REQUEST: contratoModelo.getTipoConteudo().trim().isEmpty()");	
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		
 		try {
 			File file = new File(contratoModelo.getCaminhoCarga().concat(contratoModelo.getNomeArquivo()));
 			log.info("file.toString()" + file.toString());	
@@ -63,7 +73,7 @@ public class ContratoModeloController {
 		try {
 			responseObject = contratoModeloService.saveArquivo(contratoModelo);
 		} catch (Exception e) {
-			log.error("ERRO em getMaterialDivulgacao()", e);
+			log.error("carregarContratoModeloArquivo()", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		

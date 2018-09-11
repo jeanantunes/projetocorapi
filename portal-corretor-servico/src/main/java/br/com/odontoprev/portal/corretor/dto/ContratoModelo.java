@@ -1,7 +1,6 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 //201809101646 - esert - COR-709 - Serviço - Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
 //201809101646 - esert - COR-751 - DB - nova tabela TBOD_CONTRATO_MODELO
@@ -15,8 +14,9 @@ public class ContratoModelo implements Serializable {
     private String nomeArquivo;
     private Long tamanhoArquivo;
     private String tipoConteudo;
-    private String arquivoString;
+    private String arquivoBase64;
     private String caminhoCarga;
+    private String arquivoString;
 
 	public Long getCdContratoModelo() {
 		return cdContratoModelo;
@@ -58,12 +58,20 @@ public class ContratoModelo implements Serializable {
 		this.tipoConteudo = tipoConteudo;
 	}
 
+	public String getArquivoBase64() {
+		return arquivoBase64;
+	}
+
+	public void setArquivoBase64(String arquivo) {
+		this.arquivoBase64 = arquivo;
+	}
+
 	public String getArquivoString() {
 		return arquivoString;
 	}
 
-	public void setArquivoString(String arquivo) {
-		this.arquivoString = arquivo;
+	public void setArquivoString(String arquivoString) {
+		this.arquivoString = arquivoString;
 	}
 
 	public String getCaminhoCarga() {
@@ -82,6 +90,7 @@ public class ContratoModelo implements Serializable {
 				+ ", nomeArquivo=" + nomeArquivo
 				+ ", tamanhoArquivo=" + tamanhoArquivo
 				+ ", tipoConteudo=" + tipoConteudo
+				+ ", arquivoBase64=" + (arquivoBase64 != null ? String.valueOf(arquivoBase64.length()) : "NuLL") 
 				+ ", arquivoString=" + (arquivoString != null ? String.valueOf(arquivoString.length()) : "NuLL") 
 				+ ", caminhoCarga=" + caminhoCarga 
 				+ "]";

@@ -3,8 +3,8 @@ package br.com.odontoprev.portal.corretor.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +15,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.itextpdf.text.pdf.codec.Base64;
 
 import br.com.odontoprev.portal.corretor.dao.ContratoModeloDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
@@ -117,7 +119,7 @@ public class ContratoModeloServiceImpl implements ContratoModeloService {
 						fis.read(fileInBytes);
 						fis.close();
 						
-						entity.setArquivo(fileInBytes);
+						entity.setArquivoBytes(fileInBytes);
 						
 					} catch (FileNotFoundException e) {
 						// TODO Auto-generated catch block
@@ -129,7 +131,7 @@ public class ContratoModeloServiceImpl implements ContratoModeloService {
 						log.error(e);
 					}
 				} else {
-					entity.setArquivo(dto.getArquivoString().getBytes());
+					entity.setArquivoBytes(dto.getArquivoBase64().getBytes());
 				}
 			}
 		} catch (Exception e) {
@@ -163,8 +165,12 @@ public class ContratoModeloServiceImpl implements ContratoModeloService {
 				dto.setNomeArquivo(entity.getNomeArquivo());
 				dto.setTamanhoArquivo(entity.getTamanhoArquivo());
 				dto.setTipoConteudo(entity.getTipoConteudo());
-				dto.setArquivoString(String.valueOf(entity.getArquivo()));
-				dto.setTamanhoArquivo( dto.getArquivoString()!=null ? (long)dto.getArquivoString().length() : -1L );
+				
+				dto.setArquivoBase64(Base64.encodeBytes(entity.getArquivoBytes()));
+				dto.setArquivoString(new String(entity.getArquivoBytes(), Charset.defaultCharset())); //201809112014
+					
+				//dto.setTamanhoArquivo( dto.getArquivoBase64()!=null ? (long)dto.getArquivoBase64().length() : -1L );
+				//dto.setTamanhoArquivo( dto.getArquivoString()!=null ? (long)dto.getArquivoString().length() : -1L );
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
