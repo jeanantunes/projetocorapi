@@ -1,69 +1,66 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 
 public class ContratoCorretora implements Serializable {
 
-	private static final long serialVersionUID = 2180567984276302023L;
+    private static final long serialVersionUID = 2180567984276302023L;
 
-	private Long cdCorretora;
-	private Date dtAceiteContrato;
-	private Long tamArquivo;
-	private String tipoConteudo;
-	private byte[] arquivo;
+    private Long cdContratoCorretora;
+    private Long cdCorretora;
+    private Long cdContratoModelo;
+    private String dtAceiteContrato;
+    private String cdSusep;
 
-	public Long getCdCorretora() {
-		return cdCorretora;
-	}
+    public Long getCdContratoCorretora() {
+        return cdContratoCorretora;
+    }
 
-	public void setCdCorretora(Long cdCorretora) {
-		this.cdCorretora = cdCorretora;
-	}
+    public void setCdContratoCorretora(Long cdContratoCorretora) {
+        this.cdContratoCorretora = cdContratoCorretora;
+    }
 
-	public Date getDtAceiteContrato() {
-		return dtAceiteContrato;
-	}
+    public Long getCdCorretora() {
+        return cdCorretora;
+    }
 
-	public void setDtAceiteContrato(Date dtAceiteContrato) {
-		this.dtAceiteContrato = dtAceiteContrato;
-	}
+    public void setCdCorretora(Long cdCorretora) {
+        this.cdCorretora = cdCorretora;
+    }
 
-	public Long getTamArquivo() {
-		return tamArquivo;
-	}
+    public Long getCdContratoModelo() {
+        return cdContratoModelo;
+    }
 
-	public void setTamArquivo(Long tamArquivo) {
-		this.tamArquivo = tamArquivo;
-	}
+    public void setCdContratoModelo(Long cdContratoModelo) {
+        this.cdContratoModelo = cdContratoModelo;
+    }
 
-	public String getTipoConteudo() {
-		return tipoConteudo;
-	}
+    public String getDtAceiteContrato() {
+        return dtAceiteContrato;
+    }
 
-	public void setTipoConteudo(String tipoConteudo) {
-		this.tipoConteudo = tipoConteudo;
-	}
+    public void setDtAceiteContrato(String dtAceiteContrato) {
+        this.dtAceiteContrato = dtAceiteContrato;
+    }
 
-	public byte[] getArquivo() {
-		return arquivo;
-	}
+    public String getCdSusep() {
+        return cdSusep;
+    }
 
-	public void setArquivo(byte[] arquivo) {
-		this.arquivo = arquivo;
-	}
+    public void setCdSusep(String cdSusep) {
+        this.cdSusep = cdSusep;
+    }
 
-	@Override
-	public String toString() {
-		return "ContratoCorretora{" +
-				"cdCorretora=" + cdCorretora +
-				", dtAceiteContrato=" + dtAceiteContrato +
-				", tamArquivo=" + tamArquivo +
-				", tipoConteudo='" + tipoConteudo + '\'' +
-				", arquivo=" + Arrays.toString(arquivo) +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "ContratoCorretora{" +
+                "cdContratoCorretora=" + cdContratoCorretora +
+                ", cdCorretora=" + cdCorretora +
+                ", cdContratoModelo=" + cdContratoModelo +
+                ", dtAceiteContrato='" + dtAceiteContrato + '\'' +
+                ", cdSusep='" + cdSusep + '\'' +
+                '}';
+    }
 }
