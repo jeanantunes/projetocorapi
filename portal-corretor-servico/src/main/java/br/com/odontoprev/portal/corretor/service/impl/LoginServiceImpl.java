@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -26,6 +27,7 @@ import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
 import br.com.odontoprev.portal.corretor.service.LoginService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -126,11 +128,16 @@ public class LoginServiceImpl implements LoginService {
                     }
 
                     String dtAceiteContrato = null;
-                    TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDAO.findByTbodCorretoraCdCorretora(corretora.getCdCorretora());
+                    List<TbodContratoCorretora> listTbodContratoCorretora = 
+                    		//contratoCorretoraDAO.findByTbodCorretoraCdCorretora(corretora.getCdCorretora());
+                    		contratoCorretoraDAO.findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(
+                    				corretora.getCdCorretora(), 
+                    				Constantes.CONTRATO_CORRETAGEM_V1, 
+                    				Constantes.CONTRATO_INTERMEDIACAO_V1);
                     //System.out.println(cdCorretoraContrato);
-                    if (tbodContratoCorretora != null) {
+                    if (listTbodContratoCorretora != null && listTbodContratoCorretora.size()>0) {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        dtAceiteContrato = sdf.format(tbodContratoCorretora.getDtAceiteContrato());
+                        dtAceiteContrato = sdf.format(listTbodContratoCorretora.get(0).getDtAceiteContrato());
                     }
 
                     return new LoginResponse(

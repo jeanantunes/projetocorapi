@@ -128,8 +128,8 @@ public class CorretoraServiceImpl implements CorretoraService {
 				}
 			}
 
-			TbodContratoCorretora cdCorretoraContrato = contratoCorretoraDAO.findByTbodCorretoraCdCorretora(tbCorretora.getCdCorretora());
-			System.out.println(cdCorretoraContrato);
+//			TbodContratoCorretora cdCorretoraContrato = contratoCorretoraDAO.findByTbodCorretoraCdCorretora(tbCorretora.getCdCorretora());
+//			System.out.println(cdCorretoraContrato);
 
 			tbCorretora = corretoraDao.save(tbCorretora);
 
