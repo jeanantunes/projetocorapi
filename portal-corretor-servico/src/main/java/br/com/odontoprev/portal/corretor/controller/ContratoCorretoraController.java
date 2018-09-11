@@ -1,26 +1,22 @@
 package br.com.odontoprev.portal.corretor.controller;
 
-import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
-import br.com.odontoprev.portal.corretor.dao.ContratoModeloDAO;
-import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
-import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
-import br.com.odontoprev.portal.corretor.model.TbodContratoModelo;
-import br.com.odontoprev.portal.corretor.model.TbodCorretora;
-import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
+import java.text.ParseException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
+import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
 
 @RestController
 public class ContratoCorretoraController {
@@ -29,15 +25,6 @@ public class ContratoCorretoraController {
 
     @Autowired
     private ContratoCorretoraService contratoCorretoraService;
-
-    @Autowired
-    private CorretoraDAO corretoraDAO;
-
-    @Autowired
-    private ContratoModeloDAO contratoModeloDAO;
-
-    @Autowired
-    private ContratoCorretoraDAO contratoCorretoraDAO;
 
     @RequestMapping(value = "/contratocorretora/{cdCorretora}/dataaceite", method = {RequestMethod.GET})
     public ResponseEntity<ContratoCorretoraDataAceite> getDataAceiteContratoByCdCorretora(@PathVariable Long cdCorretora) throws ParseException {
@@ -93,49 +80,28 @@ public class ContratoCorretoraController {
 
     @RequestMapping(value = "/contratocorretora", method = {RequestMethod.POST})
     public ResponseEntity<ContratoCorretora> postContratoCorretora(@RequestBody ContratoCorretora contratoCorretora) {
-
         log.info("postContratoCorretora - ini");
-        TbodCorretora tbodCorretora = corretoraDAO.findOne(contratoCorretora.getCdCorretora());
-
-        if (tbodCorretora == null) {
-            log.error("postContratoCorretora - BAD_REQUEST - tbodCorretora null");
+        ContratoCorretora contratoCorretoraResponse = null;
+        
+        if(contratoCorretora.getCdCorretora()==null) {
+            log.error("postContratoCorretora - BAD_REQUEST - contratoCorretora.getCdCorretora()==null");
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        if (contratoCorretora.getCdSusep() != null) {
-            tbodCorretora.setTemSusep(Constantes.SIM);
-            tbodCorretora.setCodigoSusep(contratoCorretora.getCdSusep());
-            contratoCorretora.setCdContratoModelo(1L); // 1 - Contrato Corretagem
-        } else if (contratoCorretora.getCdSusep() == null) {
-            tbodCorretora.setTemSusep(Constantes.NAO);
-            tbodCorretora.setCodigoSusep(null);
-            contratoCorretora.setCdContratoModelo(2L); // 2 - Contrato Intermediação
+        
+        if(contratoCorretora.getCdSusep()==null) {
+            log.error("postContratoCorretora - BAD_REQUEST - contratoCorretora.getCdSusep()==null");
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        tbodCorretora = corretoraDAO.save(tbodCorretora);
-
-        TbodContratoCorretora tbodContratoCorretora = new TbodContratoCorretora();
-
-        tbodContratoCorretora.setTbodCorretora(tbodCorretora);
-
-        TbodContratoModelo tbodContratoModelo = contratoModeloDAO.findOne(contratoCorretora.getCdContratoModelo());
-
-        if (tbodContratoModelo == null) {
-            log.error("ERROR: tbodContratoModelo == null para " + contratoCorretora.getCdContratoModelo());
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        
+        try {
+        	contratoCorretoraResponse = contratoCorretoraService.postContratoCorretora(contratoCorretora);
+        }catch (Exception e) {
+			// TODO: handle exception
+        	ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        tbodContratoCorretora.setTbodContratoModelo(tbodContratoModelo);
-        tbodContratoCorretora.setDtAceiteContrato(new Date());
-
-        tbodContratoCorretora = contratoCorretoraDAO.save(tbodContratoCorretora);
-
-        contratoCorretora.setCdContratoCorretora(tbodContratoCorretora.getCdContratoCorretora());
-        contratoCorretora.setDtAceiteContrato(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tbodContratoCorretora.getDtAceiteContrato()));
-
+        
         log.info("postContratoCorretora - fim");
-
-        return ResponseEntity.ok(contratoCorretora);
+        return ResponseEntity.ok(contratoCorretoraResponse);
     }
 
 }
