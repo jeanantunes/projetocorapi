@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDataAceiteDAO;
+import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
@@ -21,7 +21,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 	private static final Log log = LogFactory.getLog(ContratoCorretoraServiceImpl.class);
 
 	@Autowired
-	ContratoCorretoraDataAceiteDAO contratoCorretoraDataAceiteDAO;
+	ContratoCorretoraDAO contratoCorretoraDAO;
 	
 	@Autowired
 	CorretoraDAO corretoraDAO;
@@ -34,14 +34,14 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 
 		try {
 
-			TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDataAceiteDAO.findOne(cdCorretora);
+			TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDAO.findByTbodCorretoraCdCorretora(cdCorretora);
 
 			if(tbodContratoCorretora == null){
 				log.info("getDataAceiteContratoByCdCorretora(" + cdCorretora + ") - fim null");
 				return null;
 			}
 
-			contratoCorretora.setCdCorretora(tbodContratoCorretora.getCdCorretora());
+			contratoCorretora.setCdCorretora(tbodContratoCorretora.getTbodCorretora().getCdCorretora());
 			contratoCorretora.setDtAceiteContrato(
 					(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
 							.format(tbodContratoCorretora.getDtAceiteContrato())); //201808271556 - esert
@@ -68,7 +68,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 
 		try {
 
-			TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDataAceiteDAO.findOne(cdCorretora);
+			TbodContratoCorretora tbodContratoCorretora = contratoCorretoraDAO.findByTbodCorretoraCdCorretora(cdCorretora);
 			TbodCorretora tbodCorretora = corretoraDAO.findOne(cdCorretora);
 
 			if(tbodContratoCorretora == null){
@@ -76,10 +76,11 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 				return null;
 			}
 
-			contratoCorretora.setCdCorretora(tbodContratoCorretora.getCdCorretora());
+			contratoCorretora.setCdCorretora(tbodContratoCorretora.getTbodCorretora().getCdCorretora());
 			contratoCorretora.setCdContratoModelo(cdContratoModelo);
-			String contratoPreenchido = tbodContratoCorretora.toString();
-			contratoPreenchido = contratoPreenchido.substring(contratoPreenchido.indexOf("{"), contratoPreenchido.length()) ;
+			String contratoPreenchido = null;
+			//contratoPreenchido = tbodContratoCorretora.toString();
+			//contratoPreenchido = contratoPreenchido.substring(contratoPreenchido.indexOf("{"), contratoPreenchido.length()) ;
 			contratoPreenchido = tbodCorretora.toString();
 			contratoPreenchido = contratoPreenchido.substring(contratoPreenchido.indexOf("["), contratoPreenchido.length()) ;
 			contratoPreenchido = contratoPreenchido.replace("{", "<p>");

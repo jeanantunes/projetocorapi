@@ -5,14 +5,16 @@ import java.util.Objects;
 
 public class ContratoCorretoraDataAceite implements Serializable  {
 
-	private long cdCorretora;
+	private static final long serialVersionUID = -945026165974015319L;
+	
+	private Long cdCorretora;
 	private String dtAceiteContrato;
 
 	public long getCdCorretora() {
 		return cdCorretora;
 	}
 
-	public void setCdCorretora(long cdCorretora) {
+	public void setCdCorretora(Long cdCorretora) {
 		this.cdCorretora = cdCorretora;
 	}
 
