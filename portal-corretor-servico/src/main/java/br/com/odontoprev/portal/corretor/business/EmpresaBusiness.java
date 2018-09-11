@@ -175,7 +175,7 @@ public class EmpresaBusiness {
 
             /***  dados forca venda ***/
             TbodForcaVenda tbodForcaVenda = forcaVendaDAO.findOne(vendaPME.getCdForcaVenda());
-            //TODO: Remover geracao arq
+            //TODO: Remover geracao arq //a geração de arquivo foi movida para metodo TokenAceiteServiceImpl.updateTokenAceite(TokenAceite)
             //xlsEmpresa.GerarEmpresaXLS(tbodEmpresa, empresa, tbodForcaVenda);
 
         } catch (Exception e) {
