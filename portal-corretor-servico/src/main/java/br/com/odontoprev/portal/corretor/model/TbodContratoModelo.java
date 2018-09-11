@@ -13,6 +13,7 @@ import javax.persistence.TemporalType;
 
 //201809101646 - esert - COR-709 - Serviço - Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
 //201809101646 - esert - COR-751 - DB - nova tabela TBOD_CONTRATO_MODELO
+//201809111157 - esert - COR-760 - Serviço - cria POST/contratomodelo
 @Entity
 @Table(name = "TBOD_CONTRATO_MODELO")
 public class TbodContratoModelo implements Serializable {
@@ -26,8 +27,17 @@ public class TbodContratoModelo implements Serializable {
     @Column(name = "DT_CRIACAO")
     private Date dtCriacao;
 
-    @Column(name = "ARQ_MODELO")
-    private byte[] arquivoModelo;
+    @Column(name = "NOME_ARQUIVO")
+    private String nomeArquivo;
+    
+    @Column(name = "TAMANHO_ARQUIVO")
+    private Long tamanhoArquivo;
+    
+    @Column(name = "TIPO_CONTEUDO")
+    private String tipoConteudo;
+    
+    @Column(name = "ARQUIVO")
+    private byte[] arquivo;
 
 	public Long getCdContratoModelo() {
 		return cdContratoModelo;
@@ -45,12 +55,36 @@ public class TbodContratoModelo implements Serializable {
 		this.dtCriacao = dtCriacao;
 	}
 
-	public byte[] getArquivoModelo() {
-		return arquivoModelo;
+	public String getNomeArquivo() {
+		return nomeArquivo;
 	}
 
-	public void setArquivoModelo(byte[] arquivoModelo) {
-		this.arquivoModelo = arquivoModelo;
+	public void setNomeArquivo(String nomeArquivo) {
+		this.nomeArquivo = nomeArquivo;
+	}
+
+	public Long getTamanhoArquivo() {
+		return tamanhoArquivo;
+	}
+
+	public void setTamanhoArquivo(Long tamanhoArquivo) {
+		this.tamanhoArquivo = tamanhoArquivo;
+	}
+
+	public String getTipoConteudo() {
+		return tipoConteudo;
+	}
+
+	public void setTipoConteudo(String tipoConteudo) {
+		this.tipoConteudo = tipoConteudo;
+	}
+
+	public byte[] getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(byte[] arquivo) {
+		this.arquivo = arquivo;
 	}
 
 	@Override
@@ -58,7 +92,10 @@ public class TbodContratoModelo implements Serializable {
 		return "TbodContratoModelo [" 
 				+ "cdContratoModelo=" + cdContratoModelo 
 				+ ", dtCriacao=" + dtCriacao
-				+ ", arquivoModelo=" + (arquivoModelo != null ? String.valueOf(Arrays.toString(arquivoModelo).length()) : "NuLL") + "]";
+				+ ", nomeArquivo=" + nomeArquivo
+				+ ", tamanhoArquivo=" + tamanhoArquivo
+				+ ", tipoConteudo=" + tipoConteudo
+				+ ", arquivo=" + (arquivo != null ? String.valueOf(Arrays.toString(arquivo).length()) : "NuLL") + "]";
 	}
 
 }

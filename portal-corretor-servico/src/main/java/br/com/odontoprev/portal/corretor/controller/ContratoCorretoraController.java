@@ -2,6 +2,10 @@ package br.com.odontoprev.portal.corretor.controller;
 
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
+import br.com.odontoprev.portal.corretor.dto.ContratoModelo;
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.CorretoraResponse;
+import br.com.odontoprev.portal.corretor.dto.MaterialDivulgacao;
 import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +26,9 @@ public class ContratoCorretoraController {
 	private static final Log log = LogFactory.getLog(ContratoCorretoraController.class);
 
 	@Autowired
-	ContratoCorretoraService contratoCorretoraService;
+	private ContratoCorretoraService contratoCorretoraService;
+
+	//private ContratoModeloService contratoModeloService;
 
 	@RequestMapping(value = "/contratocorretora/{cdCorretora}/dataaceite", method = { RequestMethod.GET })
 	public ResponseEntity<ContratoCorretoraDataAceite> getDataAceiteContratoByCdCorretora(@PathVariable Long cdCorretora) throws ParseException {
