@@ -76,9 +76,12 @@ public class ContratoModelo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TbodContratoModelo [" 
+		return "ContratoModelo [" 
 				+ "cdContratoModelo=" + cdContratoModelo 
 				+ ", dtCriacao=" + dtCriacao
+				+ ", nomeArquivo=" + nomeArquivo
+				+ ", tamanhoArquivo=" + tamanhoArquivo
+				+ ", tipoConteudo=" + tipoConteudo
 				+ ", arquivoString=" + (arquivoString != null ? String.valueOf(arquivoString.length()) : "NuLL") 
 				+ ", caminhoCarga=" + caminhoCarga 
 				+ "]";

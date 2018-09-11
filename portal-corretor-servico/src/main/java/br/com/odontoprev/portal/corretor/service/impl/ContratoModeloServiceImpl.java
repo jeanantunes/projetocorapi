@@ -3,8 +3,8 @@ package br.com.odontoprev.portal.corretor.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -93,7 +93,7 @@ public class ContratoModeloServiceImpl implements ContratoModeloService {
 				entity.setCdContratoModelo(dto.getCdContratoModelo());
 				try {
 					entity.setDtCriacao((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(dto.getDtCriacao()));
-				} catch (ParseException e1) {
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					//e1.printStackTrace();
 					log.error("Erro em parse: new SimpleDateFormat(yyyy-MM-dd HH:mm:ss)).parse(" + dto.getDtCriacao() + "), aplicado (new Date())", e1); //201808271556 - esert
@@ -163,6 +163,10 @@ public class ContratoModeloServiceImpl implements ContratoModeloService {
 				dto.setNomeArquivo(entity.getNomeArquivo());
 				dto.setTamanhoArquivo(entity.getTamanhoArquivo());
 				dto.setTipoConteudo(entity.getTipoConteudo());
+				int BUFFERSIZE = 4096; 
+				byte[] buffer = new byte[BUFFERSIZE];
+				FileOutputStream fos = new F
+
 				dto.setArquivoString(String.valueOf(entity.getArquivo()));
 				dto.setTamanhoArquivo( dto.getArquivoString()!=null ? (long)dto.getArquivoString().length() : -1L );
 			}

@@ -99,7 +99,7 @@ public class ContratoCorretoraController {
 
         if (tbodCorretora == null) {
             log.error("postContratoCorretora - BAD_REQUEST - tbodCorretora null");
-             ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         if (contratoCorretora.getCdSusep() != null) {
