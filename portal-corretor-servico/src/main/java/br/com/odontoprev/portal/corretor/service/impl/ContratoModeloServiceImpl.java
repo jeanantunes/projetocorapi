@@ -163,10 +163,6 @@ public class ContratoModeloServiceImpl implements ContratoModeloService {
 				dto.setNomeArquivo(entity.getNomeArquivo());
 				dto.setTamanhoArquivo(entity.getTamanhoArquivo());
 				dto.setTipoConteudo(entity.getTipoConteudo());
-				int BUFFERSIZE = 4096; 
-				byte[] buffer = new byte[BUFFERSIZE];
-				FileOutputStream fos = new F
-
 				dto.setArquivoString(String.valueOf(entity.getArquivo()));
 				dto.setTamanhoArquivo( dto.getArquivoString()!=null ? (long)dto.getArquivoString().length() : -1L );
 			}
