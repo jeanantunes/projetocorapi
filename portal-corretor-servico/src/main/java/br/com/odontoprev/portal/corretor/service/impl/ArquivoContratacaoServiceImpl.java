@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -130,7 +129,7 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 				entity.setCodigoEmpresa(dto.getCodigoEmpresa());
 				try {
 					entity.setDataCriacao((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(dto.getDataCriacao())); //201808271556 - esert
-				} catch (ParseException e1) {
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					//e1.printStackTrace();
 					log.error("Erro em parse: new SimpleDateFormat(yyyy-MM-dd HH:mm:ss)).parse(" + dto.getDataCriacao() + "), aplicado (new Date())", e1); //201808271556 - esert
