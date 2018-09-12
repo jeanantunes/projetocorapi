@@ -108,7 +108,7 @@ public class ContratoCorretoraControllerTest {
 		   contratoCorretoraPreenchido.setContratoPreenchido("<p> Paragrafo 1 Nome da Minha Empresa</p> <p> Paragrafo 2 Susep 99999999999</p><p> Paragrafo 3 Data aceite 31/12/0001</p>");
 	
 		   //Mockando Service que busca no banco de dados 
-		   given(service.getContratoPreenchido(cdCorretora, cdContratoModelo)).willReturn(contratoCorretoraPreenchido);
+		   given(service.getContratoPreenchidoDummy(cdCorretora, cdContratoModelo)).willReturn(contratoCorretoraPreenchido);
 		   
 		   //Efetua a requisição na rota e espera um status code
 		   mvc.perform(get("/contratocorretora/" + cdCorretora + "/tipo/" + cdContratoModelo)

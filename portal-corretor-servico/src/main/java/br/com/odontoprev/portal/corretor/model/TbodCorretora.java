@@ -102,6 +102,10 @@ public class TbodCorretora implements Serializable {
 	// bi-directional many-to-one association to TbodForcaVenda
 	@OneToMany(mappedBy = "tbodCorretora")
 	private List<TbodForcaVenda> tbodForcaVendas;
+	
+	// bi-directional many-to-one association to TbodForcaVenda
+	@OneToMany(mappedBy = "tbodCorretora")
+	private List<TbodContratoCorretora> tbodContratoCorretoras; //201809112123 - esert
 
 	// bi-directional many-to-one association to TbodLogin
 	@ManyToOne
@@ -363,17 +367,44 @@ public class TbodCorretora implements Serializable {
 		this.codigoSusep = codigoSusep;
 	}
 
+	public List<TbodContratoCorretora> getTbodContratoCorretoras() {
+		return tbodContratoCorretoras;
+	}
+
+	public void setTbodContratoCorretoras(List<TbodContratoCorretora> tbodContratoCorretoras) {
+		this.tbodContratoCorretoras = tbodContratoCorretoras;
+	}
+
 	@Override
 	public String toString() {
-		return "TbodCorretora [cdCorretora=" + cdCorretora + ", ativo=" + ativo + ", celular=" + celular + ", cnpj="
-				+ cnpj + ", codigo=" + codigo + ", cpfResponsavel=" + cpfResponsavel + ", cpfResponsavel2="
-				+ cpfResponsavel2 + ", dataAbertura=" + dataAbertura + ", email=" + email + ", nome=" + nome
-				+ ", nomeRepresentanteLegal1=" + nomeRepresentanteLegal1 + ", nomeRepresentanteLegal2="
-				+ nomeRepresentanteLegal2 + ", razaoSocial=" + razaoSocial + ", regional=" + regional
-				+ ", simplesNacional=" + simplesNacional + ", statusCnpj=" + statusCnpj + ", telefone=" + telefone
-				+ ", cnae=" + cnae + ", tbodEndereco=" + tbodEndereco + ", tbodCorretoraBancos=" + tbodCorretoraBancos
-				+ ", tbodDocumentoAssociados=" + tbodDocumentoAssociados + ", tbodForcaVendas=" + tbodForcaVendas
-				+ ", tbodLogin=" + tbodLogin + ", temSusep=" + temSusep + ", codigoSusep=" + codigoSusep + "]";
+		return "TbodCorretora [" 
+				+ "cdCorretora=" + cdCorretora 
+				+ ", ativo=" + ativo 
+				+ ", celular=" + celular 
+				+ ", cnpj=" + cnpj 
+				+ ", codigo=" + codigo 
+				+ ", cpfResponsavel=" + cpfResponsavel 
+				+ ", cpfResponsavel2=" + cpfResponsavel2 
+				+ ", dataAbertura=" + dataAbertura 
+				+ ", email=" + email 
+				+ ", nome=" + nome
+				+ ", nomeRepresentanteLegal1=" + nomeRepresentanteLegal1 
+				+ ", nomeRepresentanteLegal2=" + nomeRepresentanteLegal2 
+				+ ", razaoSocial=" + razaoSocial 
+				+ ", regional=" + regional
+				+ ", simplesNacional=" + simplesNacional 
+				+ ", statusCnpj=" + statusCnpj 
+				+ ", telefone=" + telefone
+				+ ", cnae=" + cnae 
+				+ ", tbodEndereco=" + tbodEndereco 
+				+ ", tbodCorretoraBancos=" + tbodCorretoraBancos
+				+ ", tbodDocumentoAssociados=" + tbodDocumentoAssociados 
+				+ ", tbodForcaVendas=" + tbodForcaVendas
+				+ ", tbodLogin=" + tbodLogin 
+				+ ", temSusep=" + temSusep 
+				+ ", codigoSusep=" + codigoSusep 
+				+ ", tbodContratoCorretoras=" + tbodContratoCorretoras //201809112126 - esert 
+				+ "]";
 	}
 
 	// public List<TbodLogin> getTbodLogins() {

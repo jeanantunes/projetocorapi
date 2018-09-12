@@ -10,7 +10,9 @@ public interface ContratoCorretoraService {
 
 	//201809101646 - esert - COR-709 - Serviço - Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
 	//201809101700 - esert - COR-710 - Serviço - TDD Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
-	public ContratoCorretoraPreenchido getContratoPreenchido(Long cdCorretora, Long cdContratoModelo) throws Exception;
+	public ContratoCorretoraPreenchido getContratoPreenchidoDummy(Long cdCorretora, Long cdContratoModelo) throws Exception;
+
+	public ContratoCorretoraPreenchido getContratoPreenchido(Long cdCorretora, Long cdContratoModelo, String cdSusep) throws Exception;
 
 	public ContratoCorretora postContratoCorretora(ContratoCorretora contratoCorretora);
 
