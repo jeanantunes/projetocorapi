@@ -99,6 +99,10 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 				)
 		);
 		
+		ContratoModelo contratoModelo = contratoModeloService.getByCdContratoModelo(cdContratoModelo);
+		contratoCorretoraPreenchido.setNomeArquivo(contratoModelo.getNomeArquivo()); //201809112249 - esert
+		contratoCorretoraPreenchido.setTipoConteudo(contratoModelo.getTipoConteudo()); //201809112249 - esert
+		
 		log.info("getContratoPreenchido - fim");
 		return  contratoCorretoraPreenchido;
 	}
@@ -232,6 +236,10 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 				return null;
 			}
 			
+			if(tbodCorretora.getCodigoSusep()!=null) {
+				cdSusep = tbodCorretora.getCodigoSusep(); //201809112302 - esert
+			}
+			
 			TbodEndereco tbodEndereco = tbodCorretora.getTbodEndereco();
 			if(tbodEndereco==null) {
 				tbodEndereco = new TbodEndereco();
@@ -262,7 +270,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			.replace("__RazaoSocial__", Objects.toString(tbodCorretora.getRazaoSocial(), ""))
 			.replace("__CNPJ__", Objects.toString(tbodCorretora.getCnpj(), ""))
 			
-			.replace("__SUSEP__", Objects.toString(tbodCorretora.getCodigoSusep(), "(n/a)"))
+			.replace("__SUSEP__", Objects.toString(cdSusep, "(n/a)"))
 			
 			.replace("__CEP__", Objects.toString(tbodEndereco.getCep(), ""))
 			

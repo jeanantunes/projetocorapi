@@ -10,6 +10,9 @@ public class ContratoCorretoraPreenchido implements Serializable  {
 	private Long cdCorretora;
 	private Long cdContratoModelo;
 	private String contratoPreenchido;
+	private String nomeArquivo;
+	private String tipoConteudo;
+	
 	public Long getCdCorretora() {
 		return cdCorretora;
 	}
@@ -29,10 +32,28 @@ public class ContratoCorretoraPreenchido implements Serializable  {
 		this.contratoPreenchido = contratoPreenchido;
 	}
 	
+	public String getNomeArquivo() {
+		return nomeArquivo;
+	}
+	public void setNomeArquivo(String nomeArquivo) {
+		this.nomeArquivo = nomeArquivo;
+	}
+	public String getTipoConteudo() {
+		return tipoConteudo;
+	}
+	public void setTipoConteudo(String tipoConteudo) {
+		this.tipoConteudo = tipoConteudo;
+	}
+	
 	@Override
 	public String toString() {
-		return "ContratoCorretoraPreenchido [cdCorretora=" + cdCorretora + ", cdContratoModelo=" + cdContratoModelo
-				+ ", contratoPreenchido=" + contratoPreenchido + "]";
+		return "ContratoCorretoraPreenchido [" 
+				+ "cdCorretora=" + cdCorretora 
+				+ ", cdContratoModelo=" + cdContratoModelo
+				+ ", contratoPreenchido=" + contratoPreenchido 
+				+ ", nomeArquivo=" + nomeArquivo 
+				+ ", tipoConteudo=" + tipoConteudo 
+				+ "]";
 	}
 
 	@Override
