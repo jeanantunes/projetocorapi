@@ -8,6 +8,7 @@ import javax.annotation.ManagedBean;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.api.manager.client.token.ApiManagerToken;
@@ -27,21 +28,32 @@ import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
 @ManagedBean
 @Transactional(rollbackFor={Exception.class})
 public class SendMailContratoCorretora {
-	
+
 	private static final Log log = LogFactory.getLog(SendMailContratoCorretora.class);
+
+	@Value("SENDMAIL_ENDPOINT_URL")
+	private String sendMailEndpointUrl; //= PropertiesUtils.getProperty(PropertiesUtils.SENDMAIL_ENDPOINT_URL);
+
+	@Value("requestmailContratoCorretora.body.recepientname")
+	private String recepientName; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_RECEPIENTNAME);
+	
+	@Value("requestmailContratoCorretora.body.sender")
+	private String sender; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDER);
+	
+	@Value("requestmailContratoCorretora.body.sendername")
+	private String senderName; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDERNAME);
+
+	@Value("requestmailContratoCorretora.body.type")
+	private String type; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_TYPE);
+	
+	@Value("requestmailContratoCorretora.body.subject")
+	private String subject; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT);
 
 	@Transactional(rollbackFor={Exception.class})
 	public boolean sendMail(EmailContratoCorretora email) {
 		log.info("sendMail - ini");
 		boolean retorno = false;
 		try {
-			
-			String sendMailEndpointUrl = PropertiesUtils.getProperty(PropertiesUtils.SENDMAIL_ENDPOINT_URL);
-			String recepientName = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_RECEPIENTNAME);
-			String sender = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDER);
-			String senderName = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDERNAME);
-			String type = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_TYPE);
-			String subject = PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT);
 			
 			ApiManagerToken apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 			ApiToken apiToken = apiManager.generateToken();
@@ -59,7 +71,7 @@ public class SendMailContratoCorretora {
 			body.setSender(sender);
 			body.setSenderName(senderName);
 			body.setType(type);
-			body.setSubject(subject);
+			body.setSubject(subject.replace("__RazaoSocial__", email.getNomeCorretora()));
 			
 			//208109121718 - esert - COR-714 - Serviço - Novo serviço gerar enviar contrato corretora
 			if(email.getContratoCorretora()!=null) {

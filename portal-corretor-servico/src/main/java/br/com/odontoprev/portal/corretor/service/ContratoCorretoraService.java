@@ -3,6 +3,7 @@ package br.com.odontoprev.portal.corretor.service;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
+import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
 
 public interface ContratoCorretoraService {
 
@@ -20,10 +21,9 @@ public interface ContratoCorretoraService {
 	public String montarHtmlContratoCorretagemIntermediacao(Long cdCorretora, Long cdContratoModelo, String cdSusep, String dataAceite, boolean apenasMiolo);
 
 	//201809121519 - esert - COR-714 - Serviço - TDD Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
-	public ContratoCorretora createPdfContratoCorretoraPorCorretora(Long cdCorretora);
+	public ContratoCorretora createPdfContratoCorretoraPorCorretora(TbodContratoCorretora tbodContratoCorretora);
 
 	//201809121519 - esert - COR-714 - Serviço - TDD Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
-	public ContratoCorretora enviarEmailContratoCorretagemIntermediacao(Long cdCorretora);
-
+	public ContratoCorretora enviarEmailContratoCorretagemIntermediacao(Long cdContratoCorretora);
 
 }

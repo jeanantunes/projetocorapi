@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -218,7 +217,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
         contratoCorretora.setCdContratoCorretora(tbodContratoCorretora.getCdContratoCorretora());
         contratoCorretora.setDtAceiteContrato(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tbodContratoCorretora.getDtAceiteContrato()));
 
-        ContratoCorretora contratoCorretoraRet = this.enviarEmailContratoCorretagemIntermediacao(contratoCorretora.getCdCorretora());
+        ContratoCorretora contratoCorretoraRet = this.enviarEmailContratoCorretagemIntermediacao(tbodContratoCorretora.getCdContratoCorretora());
         log.info(contratoCorretoraRet);
         
 		log.info("postContratoCorretora - fim");
@@ -247,7 +246,6 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			
 			String htmlCorretoraTemplate = contratoModelo.getArquivoString();
 			String htmlCorretoraValues = null;
-
 			
 			TbodCorretora tbodCorretora = corretoraDAO.findOne(cdCorretora);
 			if(tbodCorretora==null) {
@@ -260,26 +258,9 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			
 			TbodEndereco tbodEndereco = tbodCorretora.getTbodEndereco();
 			if(tbodEndereco==null) {
+				log.error("tbodEndereco==null para CdCorretora:[" + tbodCorretora.getCdCorretora() + "] - endereco ficara em branco");
 				tbodEndereco = new TbodEndereco();
 			}
-			
-			if(
-				tbodCorretora.getTbodContratoCorretoras()!=null 
-				&& 
-				tbodCorretora.getTbodContratoCorretoras().size()>0
-			) {
-				Optional<TbodContratoCorretora> optionalTbodContratoCorretora = 
-						tbodCorretora.getTbodContratoCorretoras()
-						.stream()
-						.filter(item -> item.getTbodContratoModelo().getCdContratoModelo() == cdContratoModelo)
-						.findFirst();
-				
-				if(optionalTbodContratoCorretora.isPresent()) {
-					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-					dataAceite = sdf.format(optionalTbodContratoCorretora.get().getDtAceiteContrato());
-				}
-			}
-
 
 			htmlCorretoraValues = htmlCorretoraTemplate
 
@@ -299,12 +280,9 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			.replace("__Endereco__", Objects.toString(tbodEndereco.getLogradouro(), ""))
 			.replace("__Numero__", Objects.toString(tbodEndereco.getNumero(), ""))
 			.replace("__Complemento__", Objects.toString(tbodEndereco.getComplemento(), ""))
-
-
 			;
 				
 			sbHtmlRet.append(htmlCorretoraValues);
-			
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -318,28 +296,27 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 
 	//201809121519 - esert - COR-714 - Serviço - Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
 	@Override
-	public ContratoCorretora createPdfContratoCorretoraPorCorretora(Long cdCorretora) {
-		log.info(String.format("createPdfContratoCorretoraPorCorretora(%d) - ini", cdCorretora));
+	public ContratoCorretora createPdfContratoCorretoraPorCorretora(TbodContratoCorretora tbodContratoCorretora) {
+		log.info(String.format("createPdfContratoCorretoraPorCorretora(%d) - ini", tbodContratoCorretora.getTbodCorretora().getCdCorretora()));
 		ContratoCorretora contratoCorretora = null;
 		try {
 			//obter empresa da venda
-			TbodCorretora tbodCorretora = corretoraDAO.findOne(cdCorretora);
+			TbodCorretora tbodCorretora = tbodContratoCorretora.getTbodCorretora();
 			
 			if(tbodCorretora==null) {
-				log.error(String.format("tbodCorretora==null para cdCorretora:[%d]", cdCorretora));
+				log.error(String.format("tbodCorretora==null para CdContratoCorretora:[%d]", tbodContratoCorretora.getCdContratoCorretora()));
 				return null;
 			}
 			
 			log.info("pdfContratoCorretora:[" + pdfContratoCorretoraPath + "]");
 			
-			Date agoraDate = new Date();
 			//String dataCriacaoString = (new SimpleDateFormat("yyyyMMddHHmmss")).format(agoraDate);
-			String dataCriacaoString = (new SimpleDateFormat("yyyy_MM_dd")).format(agoraDate);
+			String stringDataAceiteCorretora_YYYY_MM_DD = (new SimpleDateFormat("yyyy_MM_dd")).format(tbodContratoCorretora.getDtAceiteContrato());
 			
 			String pdfContratoCorretoraFileName = 
 					"Contrato Corretora_OdontoPrev" //201809121608 - esert - ajustado nome arquivo conforme COR-80 que redefine a COR-667
 					.concat("_").concat(StringsUtil.stripAccents(tbodCorretora.getRazaoSocial())) //201808311629 - esert - COR-617 - ajustado conf historia
-					.concat("_").concat(dataCriacaoString)
+					.concat("_").concat(stringDataAceiteCorretora_YYYY_MM_DD)
 					.concat(".").concat("pdf")
 					;
 			log.info("pdfContratoCorretoraFileName:[" + pdfContratoCorretoraFileName + "]");
@@ -347,31 +324,23 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			String pdfContratoCorretoraPathFileName = pdfContratoCorretoraPath + pdfContratoCorretoraFileName; 
 			log.info("pdfContratoCorretoraPathFileName:[" + pdfContratoCorretoraPathFileName + "]");
 	
-			//gerar html
-			List<TbodContratoCorretora> listTbodContratoCorretora = contratoCorretoraDAO.findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(cdCorretora, Constantes.CONTRATO_CORRETAGEM_V1, Constantes.CONTRATO_INTERMEDIACAO_V1);
-			
-			if(listTbodContratoCorretora==null || listTbodContratoCorretora.size()==0) {
-				log.error("enviarEmailContratoCorretagemIntermediacao - erro - listTbodContratoCorretora==null || listTbodContratoCorretora.size()==0");
-				return null;
-			}
-			
 			//gerar html preenchido
-			String html = montarHtmlContratoCorretagemIntermediacao(
-					listTbodContratoCorretora.get(0).getTbodCorretora().getCdCorretora(), 
-					listTbodContratoCorretora.get(0).getTbodContratoModelo().getCdContratoModelo(), 
-					listTbodContratoCorretora.get(0).getTbodCorretora().getCodigoSusep(), 
-					DataUtil.dateToStringParse(listTbodContratoCorretora.get(0).getDtAceiteContrato()),
+			String stringHtml = montarHtmlContratoCorretagemIntermediacao(
+					tbodContratoCorretora.getTbodCorretora().getCdCorretora(), 
+					tbodContratoCorretora.getTbodContratoModelo().getCdContratoModelo(), 
+					tbodContratoCorretora.getTbodCorretora().getCodigoSusep(), 
+					DataUtil.dateToStringParse(tbodContratoCorretora.getDtAceiteContrato()),
 					false //apenasMiolo=false para pdf //201809121522 - esert - COR-714
 					);
 
-			if(html==null) {
+			if(stringHtml==null) {
 				log.error(String.format("Falha ao gerar pdf com html==null para pdfContratoCorretoraPathFileName:[%s]", pdfContratoCorretoraPathFileName));
 				return null;
 			}
 			
 			//gerar pdf com html
-			Html2Pdf html2Pdf = new Html2Pdf(html);
-			if(!html2Pdf.html2pdf2(html, null, pdfContratoCorretoraPathFileName)) {
+			Html2Pdf html2Pdf = new Html2Pdf(stringHtml);
+			if(!html2Pdf.html2pdf2(stringHtml, null, pdfContratoCorretoraPathFileName)) {
 				log.error(String.format("Falha ao gerar pdf com html para pdfPMEPathFileName:[%s]", pdfContratoCorretoraPathFileName));
 				return null;
 			}
@@ -379,16 +348,16 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			contratoCorretora = new ContratoCorretora();
 			
 			//salvar pdf na base
-			String dataCriacaoStringDTO = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(agoraDate);
+			String stringDataAceiteCorretora_yyyyMMddHHmmss = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(tbodContratoCorretora.getDtAceiteContrato());
 			try {
 				contratoCorretora.setCdCorretora(tbodCorretora.getCdCorretora());
-				contratoCorretora.setDtAceiteContrato(dataCriacaoStringDTO);;
+				contratoCorretora.setDtAceiteContrato(stringDataAceiteCorretora_yyyyMMddHHmmss);;
 				contratoCorretora.setNomeArquivo(pdfContratoCorretoraFileName);
 				contratoCorretora.setCaminhoCarga(pdfContratoCorretoraPath);
 				contratoCorretora.setTipoConteudo(MediaType.TEXT_HTML_VALUE);
 				try {
-				Long tamanhoArquivo = new File(pdfContratoCorretoraPathFileName).length();
-				contratoCorretora.setTamanhoArquivo(tamanhoArquivo);
+					Long tamanhoArquivo = new File(pdfContratoCorretoraPathFileName).length();
+					contratoCorretora.setTamanhoArquivo(tamanhoArquivo);
 				} catch(Exception e) {
 					//#dexaketo //201809121637 - esert
 				}
@@ -411,7 +380,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			return null;
 		}
 		
-		log.info(String.format("createPdfContratoCorretoraPorCorretora(%d) - fim", cdCorretora));
+		log.info(String.format("createPdfContratoCorretoraPorCorretora(%d) - fim", tbodContratoCorretora.getTbodCorretora().getCdCorretora()));
 		return contratoCorretora;
 	}
 
@@ -420,15 +389,38 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 	public ContratoCorretora enviarEmailContratoCorretagemIntermediacao(Long cdCorretora) {
 		log.info("enviarEmailContratoCorretagemIntermediacao(" + cdCorretora + ") - ini");
 		ContratoCorretora contratoCorretora = null;
+		TbodContratoCorretora tbodContratoCorretora = null;
 		try {
+			List<TbodContratoCorretora> listTbodContratoCorretora = contratoCorretoraDAO.
+				findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(
+					cdCorretora, 
+					Constantes.CONTRATO_CORRETAGEM_V1, 
+					Constantes.CONTRATO_INTERMEDIACAO_V1 
+				);
+
+			if(
+				listTbodContratoCorretora==null 
+				|| 
+				listTbodContratoCorretora.size()==0
+			) {
+				log.info("listTbodContratoCorretora==null || size()==0 para cdCorretora:[" + cdCorretora + "]");
+				return null;
+			} else {
+				tbodContratoCorretora = listTbodContratoCorretora.get(0); //201809122014 - esert
+			}
 			
 			//gerar html preenchido
 			//e
 			//gerar arq pdf em dir temp
-			contratoCorretora  = createPdfContratoCorretoraPorCorretora(cdCorretora);
+			contratoCorretora  = createPdfContratoCorretoraPorCorretora(tbodContratoCorretora);
 						
-			EmailContratoCorretora emailContratoCorretora = new EmailContratoCorretora();
 			//montar/enviar email passando pdf anexo
+			EmailContratoCorretora emailContratoCorretora = new EmailContratoCorretora();
+			emailContratoCorretora.setContratoCorretora(contratoCorretora);
+			emailContratoCorretora.setCdCorretora(tbodContratoCorretora.getTbodCorretora().getCdCorretora());
+			emailContratoCorretora.setNomeCorretora(tbodContratoCorretora.getTbodCorretora().getRazaoSocial());
+			emailContratoCorretora.setEmailEnvio(tbodContratoCorretora.getTbodCorretora().getEmail());
+			
 			if(!sendEmailContratoCorretora.sendMail(emailContratoCorretora)) {
 				log.error("erro em sendEmailContratoCorretora.sendMail(" + emailContratoCorretora + ")");
 			};
