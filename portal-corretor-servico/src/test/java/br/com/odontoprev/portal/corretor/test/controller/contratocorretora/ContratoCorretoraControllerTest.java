@@ -3,6 +3,7 @@ package br.com.odontoprev.portal.corretor.test.controller.contratocorretora;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
@@ -18,16 +19,21 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.google.gson.Gson;
+
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
 import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
+
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = { ContratoCorretoraControllerTestConfig.class })
 @WebAppConfiguration
 public class ContratoCorretoraControllerTest {
 	
-	   
+	//201809121259
+	
 	private MockMvc mvc;
 
 	@Autowired
@@ -141,7 +147,7 @@ public class ContratoCorretoraControllerTest {
 		   given(service.getContratoPreenchido(cdCorretora, cdContratoModelo, cdSusep)).willReturn(contratoCorretoraPreenchido);
 	
 		   //Efetua a requisição na rota e espera um status code
-		   mvc.perform(get("/contratocorretora/" + cdCorretora + "/tipo/" + cdContratoModelo + "?susep=" + cdSusep)
+		   mvc.perform(get("/contratocorretora/" + cdCorretora + "/tipo/" + cdContratoModelo)
 				   .contentType(APPLICATION_JSON))
 				   .andExpect(MockMvcResultMatchers.jsonPath("$.cdCorretora").value(cdCorretora))
 				   .andExpect(MockMvcResultMatchers.jsonPath("$.cdContratoModelo").value(cdContratoModelo))
@@ -182,5 +188,46 @@ public class ContratoCorretoraControllerTest {
 		;
 	}
 
-	
+	//20180912???? - jean - COR-712 - Serviço - TDD Novo serviço POST /CONTRATO CORRETORA para salvar respostas	
+    @Test
+    public void testOk200ContratoCorretoraComSusep() throws Exception {
+
+        ContratoCorretora contratoCorretora = new ContratoCorretora();
+        contratoCorretora.setCdCorretora(21L);
+        contratoCorretora.setCdContratoModelo(1L);
+        contratoCorretora.setCdContratoCorretora(1L);
+        contratoCorretora.setDtAceiteContrato("2018-09-12");
+        contratoCorretora.setCdSusep("12.34567890987-3");
+
+        String json = new Gson().toJson(contratoCorretora);
+        given(service.postContratoCorretora(contratoCorretora)).willReturn(contratoCorretora);
+
+        //Efetua a requisição na rota e espera um status code
+        mvc.perform(post("/contratocorretora")
+                .content(json)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+	//20180912???? - jean - COR-712 - Serviço - TDD Novo serviço POST /CONTRATO CORRETORA para salvar respostas	
+    @Test
+    public void testOk200ContratoCorretoraSemSusep() throws Exception {
+
+        ContratoCorretora contratoCorretora = new ContratoCorretora();
+        contratoCorretora.setCdCorretora(21L);
+        contratoCorretora.setCdContratoModelo(1L);
+        contratoCorretora.setCdContratoCorretora(1L);
+        contratoCorretora.setDtAceiteContrato("2018-09-12");
+        contratoCorretora.setCdSusep(null);
+
+        String json = new Gson().toJson(contratoCorretora);
+        given(service.postContratoCorretora(contratoCorretora)).willReturn(contratoCorretora);
+
+        //Efetua a requisição na rota e espera um status code
+        mvc.perform(post("/contratocorretora")
+                .content(json)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    
 }
