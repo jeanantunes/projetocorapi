@@ -16,4 +16,14 @@ public interface ContratoCorretoraService {
 
 	public ContratoCorretora postContratoCorretora(ContratoCorretora contratoCorretora);
 
+	//201809121519 - esert - COR-714 - Serviço - TDD Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
+	public String montarHtmlContratoCorretagemIntermediacao(Long cdCorretora, Long cdContratoModelo, String cdSusep, String dataAceite, boolean apenasMiolo);
+
+	//201809121519 - esert - COR-714 - Serviço - TDD Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
+	public ContratoCorretora createPdfContratoCorretoraPorCorretora(Long cdCorretora);
+
+	//201809121519 - esert - COR-714 - Serviço - TDD Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
+	public ContratoCorretora enviarEmailContratoCorretagemIntermediacao(Long cdCorretora);
+
+
 }

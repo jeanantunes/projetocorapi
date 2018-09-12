@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -228,6 +229,26 @@ public class ContratoCorretoraControllerTest {
                 .content(json)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+    
+    //201809121500 - esert - COR-670 - Serviço - TDD Novo serviço gerar enviar contrato corretora	
+    @Test
+    public void testOk200enviarEmailContratoCorretora() throws Exception {
+    	
+    	Long cdCorretora = 21L;
+    	
+    	ContratoCorretora contratoCorretora = new ContratoCorretora();
+    	contratoCorretora.setCdContratoCorretora(123456L);
+    	contratoCorretora.setCdCorretora(21L);
+    	contratoCorretora.setCdContratoModelo(1L);
+    	contratoCorretora.setDtAceiteContrato("2018-09-12");
+    	contratoCorretora.setCdSusep("12.3456789012345-6");
+    	contratoCorretora.setNomeArquivo("Contrato Corretora_Odontoprev_Teste Corretora HML_12_09_2018.pdf");
+    	contratoCorretora.setTamanhoArquivo(12345L);
+    	contratoCorretora.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE);
+    	
+    	given(service.enviarEmailContratoCorretagemIntermediacao(cdCorretora)).willReturn(contratoCorretora);
+    	
     }
     
 }
