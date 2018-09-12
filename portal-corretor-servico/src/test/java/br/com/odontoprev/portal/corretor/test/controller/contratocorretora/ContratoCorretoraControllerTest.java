@@ -1,10 +1,8 @@
 package br.com.odontoprev.portal.corretor.test.controller.contratocorretora;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
+import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +16,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
-import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = { ContratoCorretoraControllerTestConfig.class })
@@ -96,28 +95,28 @@ public class ContratoCorretoraControllerTest {
 	}
 
 	//201809101700 - esert - COR-710 - Serviço - TDD Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
-	@Test
-	public void testOk200getContratoPreenchido() throws Exception {
-	
-		   Long cdCorretora = 21L;
-		   Long cdContratoModelo = 1L;
-	
-		   ContratoCorretoraPreenchido contratoCorretoraPreenchido = new ContratoCorretoraPreenchido();
-		   contratoCorretoraPreenchido.setCdCorretora(cdCorretora);
-		   contratoCorretoraPreenchido.setCdContratoModelo(cdContratoModelo);
-		   contratoCorretoraPreenchido.setContratoPreenchido("<p> Paragrafo 1 Nome da Minha Empresa</p> <p> Paragrafo 2 Susep 99999999999</p><p> Paragrafo 3 Data aceite 31/12/0001</p>");
-	
-		   //Mockando Service que busca no banco de dados 
-		   given(service.getContratoPreenchidoDummy(cdCorretora, cdContratoModelo)).willReturn(contratoCorretoraPreenchido);
-		   
-		   //Efetua a requisição na rota e espera um status code
-		   mvc.perform(get("/contratocorretora/" + cdCorretora + "/tipo/" + cdContratoModelo)
-				   .contentType(APPLICATION_JSON))
-				   .andExpect(MockMvcResultMatchers.jsonPath("$.cdCorretora").value(cdCorretora))
-				   .andExpect(MockMvcResultMatchers.jsonPath("$.cdContratoModelo").value(cdContratoModelo))
-		   .andExpect(status().isOk())
-		   ;
-	}
+	//@Test
+	//public void testOk200getContratoPreenchido() throws Exception {
+	//
+	//	   Long cdCorretora = 21L;
+	//	   Long cdContratoModelo = 1L;
+	//
+	//	   ContratoCorretoraPreenchido contratoCorretoraPreenchido = new ContratoCorretoraPreenchido();
+	//	   contratoCorretoraPreenchido.setCdCorretora(cdCorretora);
+	//	   contratoCorretoraPreenchido.setCdContratoModelo(cdContratoModelo);
+	//	   contratoCorretoraPreenchido.setContratoPreenchido("<p> Paragrafo 1 Nome da Minha Empresa</p> <p> Paragrafo 2 Susep 99999999999</p><p> Paragrafo 3 Data aceite 31/12/0001</p>");
+	//
+	//	   //Mockando Service que busca no banco de dados
+	//	   given(service.getContratoPreenchidoDummy(cdCorretora, cdContratoModelo)).willReturn(contratoCorretoraPreenchido);
+	//
+	//	   //Efetua a requisição na rota e espera um status code
+	//	   mvc.perform(get("/contratocorretora/" + cdCorretora + "/tipo/" + cdContratoModelo)
+	//			   .contentType(APPLICATION_JSON))
+	//			   .andExpect(MockMvcResultMatchers.jsonPath("$.cdCorretora").value(cdCorretora))
+	//			   .andExpect(MockMvcResultMatchers.jsonPath("$.cdContratoModelo").value(cdContratoModelo))
+	//	   .andExpect(status().isOk())
+	//	   ;
+	//}
 
 	//201809101700 - esert - COR-710 - Serviço - TDD Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo
 	@Test
