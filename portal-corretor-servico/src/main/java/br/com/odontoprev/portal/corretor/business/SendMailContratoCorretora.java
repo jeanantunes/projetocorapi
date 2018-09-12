@@ -1,9 +1,11 @@
 package br.com.odontoprev.portal.corretor.business;
 
+import java.io.File;
 import java.util.Arrays;
 
 import javax.annotation.ManagedBean;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +15,7 @@ import br.com.odontoprev.api.manager.client.token.ApiManagerTokenFactory;
 import br.com.odontoprev.api.manager.client.token.ApiToken;
 import br.com.odontoprev.api.manager.client.token.enumerator.ApiManagerTokenEnum;
 import br.com.odontoprev.api.manager.client.token.util.ConfigurationUtils;
-import br.com.odontoprev.portal.corretor.dto.EmailAceite;
-import br.com.odontoprev.portal.corretor.dto.Plano;
+import br.com.odontoprev.portal.corretor.dto.EmailContratoCorretora;
 import br.com.odontoprev.portal.corretor.serviceEmail.ApiException;
 import br.com.odontoprev.portal.corretor.serviceEmail.api.DefaultApi;
 import br.com.odontoprev.portal.corretor.serviceEmail.model.Attachment;
@@ -30,10 +31,9 @@ public class SendMailContratoCorretora {
 	private static final Log log = LogFactory.getLog(SendMailContratoCorretora.class);
 
 	@Transactional(rollbackFor={Exception.class})
-	public void sendMail(EmailAceite email) {
-		
+	public boolean sendMail(EmailContratoCorretora email) {
 		log.info("sendMail - ini");
-		
+		boolean retorno = false;
 		try {
 			
 			String sendMailEndpointUrl = PropertiesUtils.getProperty(PropertiesUtils.SENDMAIL_ENDPOINT_URL);
@@ -62,28 +62,43 @@ public class SendMailContratoCorretora {
 			body.setSubject(subject);
 			
 			//208109121718 - esert - COR-714 - Serviço - Novo serviço gerar enviar contrato corretora
-			//if(email.getArquivoBase64()!=null) {
-			if(email.getArquivoContratacao().getArquivoBase64()!=null) { //208108240106
+			if(email.getContratoCorretora()!=null) {
+				String arquivoBase64 = 
+						Base64.encodeBase64String(
+								FileReaderUtil.readContentIntoByteArray(
+										new File(
+												email.
+												getContratoCorretora().
+												getCaminhoCarga().
+												concat(email.getContratoCorretora().getNomeArquivo())
+										)
+								)
+						);
+				
 				Attachment attachment = new Attachment();
-				attachment.setContentAttachmentBase64(email.getArquivoContratacao().getArquivoBase64()); //208108231952
-				attachment.setFileNameAttachment(email.getArquivoContratacao().getNomeArquivo()); //208108240106
+				attachment.setContentAttachmentBase64(arquivoBase64);
+				attachment.setFileNameAttachment(email.getContratoCorretora().getNomeArquivo());
 				body.setAttachment(attachment);
 			}
 
-			apiInstance.sendEmail(body); //TODO 201808221825 - esert - DESCOMENTAR
+			apiInstance.sendEmail(body);
+			retorno = true;
 			
 		} catch (ApiException e) {
 			log.error("SendMailAceite.sendMail(); getMessage:[" + e.getMessage() + "]"); 
 			log.error("SendMailAceite.sendMail(); getResponseBody:[" + e.getResponseBody() + "]");
 			e.printStackTrace();
+			retorno = false;
 		} catch(Exception ex) {
 			log.error(ex.getLocalizedMessage());
+			retorno = false;
 		}
 		
 		log.info("sendMail - fim");
+		return retorno;
 	}
 
-	private String montarBodyMsg(EmailAceite email) {
+	private String montarBodyMsg(EmailContratoCorretora email) {
 		
 		log.info("montarBodyMsg");
 		
@@ -98,19 +113,10 @@ public class SendMailContratoCorretora {
 				throw new Exception(" Html Contrato Corretora email vazio!");
 			}
 			else {
-				StringBuilder planosSb = new StringBuilder("");
-				StringBuilder precosSb = new StringBuilder("");
 				
-				for(Plano plano : email.getPlanos()) {
-					planosSb.append(plano.getDescricao() + ",");
-					precosSb.append(plano.getValor() + ",");
-				}
-				
-				htmlStr = htmlStr.replace("@NOMEDOCORRETOR", email.getNomeCorretor())
-						.replace("@CORRETORA", email.getNomeCorretora())
-						.replace("@EMPRESA", email.getNomeEmpresa())
-						.replace("@PLANO", planosSb.toString())
-						.replace("@PREÇOPLANO", precosSb.toString().replace(".",","));
+				htmlStr = htmlStr
+						.replace("@RAZAOSOCIAL", email.getNomeCorretora())
+						;
 				
 				String imgEmailBase = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_BASE);
 				String imgEmailHeader = PropertiesUtils.getProperty(PropertiesUtils.IMG_EMAIL_HEADER);

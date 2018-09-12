@@ -7,6 +7,7 @@ public class EmailContratoCorretora {
 	private String nomeCorretora;
 	private String nomeEmpresa;
 	private String emailEnvio;
+	private String token;
 	private Long cdCorretora;
 	private ContratoCorretora contratoCorretora; //201808240102 - esert - COR-617 Serviço Geração PDF Contratação PME
 
@@ -42,6 +43,14 @@ public class EmailContratoCorretora {
 		this.emailEnvio = emailEnvio;
 	}
 
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	public Long getCdCorretora() {
 		return cdCorretora;
 	}
@@ -60,14 +69,16 @@ public class EmailContratoCorretora {
 
 	@Override
 	public String toString() {
-		return "Email [" 
+		return "EmailContratoCorretora [" 
 				+ "nomeCorretor=" + nomeCorretor 
 				+ ", nomeCorretora=" + nomeCorretora 
 				+ ", nomeEmpresa=" + nomeEmpresa 
-				+ ", cdCorretora=" + cdCorretora 
 				+ ", emailEnvio=" + emailEnvio 
+				+ ", token=" + token 
+				+ ", cdCorretora=" + cdCorretora 
 				+ ", contratoCorretora=" + contratoCorretora 
 				+ "]";
 	}
+
 	
 }

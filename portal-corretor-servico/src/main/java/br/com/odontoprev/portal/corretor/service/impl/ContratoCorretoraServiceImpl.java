@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import br.com.odontoprev.portal.corretor.business.SendMailContratoCorretora;
 import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.ContratoModeloDAO;
 import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
@@ -23,6 +24,7 @@ import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
 import br.com.odontoprev.portal.corretor.dto.ContratoModelo;
+import br.com.odontoprev.portal.corretor.dto.EmailContratoCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodContratoModelo;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
@@ -50,6 +52,9 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 
     @Autowired
 	private ContratoModeloService contratoModeloService;
+
+    @Autowired
+	private SendMailContratoCorretora sendEmailContratoCorretora;
 
 	@Value("${server.path.pdfcontratocorretora}") //201809121533 - esert - COR-714 gerar enviar pdf contrato corretora
 	private String pdfContratoCorretoraPath; //201809121533 - esert - COR-714 gerar enviar pdf contrato corretora
@@ -209,11 +214,12 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
         tbodContratoCorretora.setDtAceiteContrato(new Date());
 
         tbodContratoCorretora = contratoCorretoraDAO.save(tbodContratoCorretora);
-
-        this.enviarEmailContratoCorretagemIntermediacao(contratoCorretora.getCdCorretora());
         
         contratoCorretora.setCdContratoCorretora(tbodContratoCorretora.getCdContratoCorretora());
         contratoCorretora.setDtAceiteContrato(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tbodContratoCorretora.getDtAceiteContrato()));
+
+        ContratoCorretora contratoCorretoraRet = this.enviarEmailContratoCorretagemIntermediacao(contratoCorretora.getCdCorretora());
+        log.info(contratoCorretoraRet);
         
 		log.info("postContratoCorretora - fim");
         return contratoCorretora;
@@ -415,23 +421,17 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 		log.info("enviarEmailContratoCorretagemIntermediacao(" + cdCorretora + ") - ini");
 		ContratoCorretora contratoCorretora = null;
 		try {
-			List<TbodContratoCorretora> listTbodContratoCorretora = 
-					contratoCorretoraDAO.findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(
-							cdCorretora, 
-							Constantes.CONTRATO_CORRETAGEM_V1, 
-							Constantes.CONTRATO_INTERMEDIACAO_V1);
-			
-			if(listTbodContratoCorretora==null || listTbodContratoCorretora.size()==0) {
-				log.error("enviarEmailContratoCorretagemIntermediacao - erro - listTbodContratoCorretora==null || listTbodContratoCorretora.size()==0");
-				return null;
-			}
 			
 			//gerar html preenchido
 			//e
 			//gerar arq pdf em dir temp
 			contratoCorretora  = createPdfContratoCorretoraPorCorretora(cdCorretora);
 						
+			EmailContratoCorretora emailContratoCorretora = new EmailContratoCorretora();
 			//montar/enviar email passando pdf anexo
+			if(!sendEmailContratoCorretora.sendMail(emailContratoCorretora)) {
+				log.error("erro em sendEmailContratoCorretora.sendMail(" + emailContratoCorretora + ")");
+			};
 			
 		}catch(Exception e) {
 			log.info("enviarEmailContratoCorretagemIntermediacao(" + cdCorretora + ") - erro");
