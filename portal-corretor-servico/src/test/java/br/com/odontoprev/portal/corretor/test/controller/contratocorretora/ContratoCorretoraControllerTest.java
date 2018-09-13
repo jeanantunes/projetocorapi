@@ -251,5 +251,85 @@ public class ContratoCorretoraControllerTest {
     	given(service.enviarEmailContratoCorretagemIntermediacao(cdCorretora, cdContratoCorretora)).willReturn(contratoCorretora); //201809122223 - esert - COR-714 - inc Long cdContratoCorretora
     	
     }
+
+	//201809131030 - esert - COR-671 - Serviço - TDD Novo serviço GET/contratocorretora/cdCorretora/arquivo devolve PDF
+	@Test
+	public void testOk200getContratoCorretoraPreenchidoByteArray() throws Exception {
+	
+		   Long cdCorretora = 21L;
+		   Long cdContratoModelo= 1L;
+
+		   ContratoCorretora contratoCorretora = new ContratoCorretora();
+		   contratoCorretora.setCdContratoCorretora(123456L);
+		   contratoCorretora.setCdCorretora(cdCorretora);
+		   contratoCorretora.setCdContratoModelo(cdContratoModelo);
+		   contratoCorretora.setNomeArquivo("Contrato Corretora_OdontoPrev_Teste Corretora HML_2018_09_12.pdf");
+		   contratoCorretora.setCaminhoCarga("c:\\arquivos_gerados\\pdf_contrato_corretora\\");
+		   contratoCorretora.setTipoConteudo(org.springframework.http.MediaType.APPLICATION_PDF_VALUE);
+		   contratoCorretora.setTamanhoArquivo(1228L);
+	
+		   //Mockando Service que busca no banco de dados
+		   given(service.getContratoCorretoraPreenchidoByteArray(cdCorretora)).willReturn(contratoCorretora);
+	
+		   //Efetua a requisição na rota e espera um status code
+		   mvc.perform(get("/contratocorretora/" + cdCorretora + "/arquivo")
+				   .contentType(APPLICATION_JSON))
+				   .andExpect(status().isOk())
+		   ;
+	}
+
+	//201809131030 - esert - COR-671 - Serviço - TDD Novo serviço GET/contratocorretora/cdCorretora/arquivo devolve PDF
+	@Test
+	public void testNoContent204getContratoCorretoraPreenchidoByteArray() throws Exception {
+	
+	   Long cdCorretoraNoContent = 21234L;
+	   Long cdCorretora = 21L;
+	   Long cdContratoModelo= 1L;
+	
+	   ContratoCorretora contratoCorretora = new ContratoCorretora();
+	   contratoCorretora.setCdContratoCorretora(123456L);
+	   contratoCorretora.setCdCorretora(cdCorretora);
+	   contratoCorretora.setCdContratoModelo(cdContratoModelo);
+	   contratoCorretora.setNomeArquivo("Contrato Corretora_OdontoPrev_Teste Corretora HML_2018_09_12.pdf");
+	   contratoCorretora.setCaminhoCarga("c:\\arquivos_gerados\\pdf_contrato_corretora\\");
+	   contratoCorretora.setTipoConteudo(org.springframework.http.MediaType.APPLICATION_PDF_VALUE);
+	   contratoCorretora.setTamanhoArquivo(1228L);
+	
+		   //Mockando Service que busca no banco de dados
+		   given(service.getContratoCorretoraPreenchidoByteArray(cdCorretora)).willReturn(contratoCorretora);
+	
+		   //Efetua a requisição na rota e espera um status code
+		   mvc.perform(get("/contratocorretora/" + cdCorretoraNoContent + "/arquivo")
+				   .contentType(APPLICATION_JSON))
+				   .andExpect(status().isNoContent())
+		   ;
+	}
+
+	//201809131030 - esert - COR-671 - Serviço - TDD Novo serviço GET/contratocorretora/cdCorretora/arquivo devolve PDF
+	@Test
+	public void testBadRequest400getContratoCorretoraPreenchidoByteArray() throws Exception {
+	
+	   String cdCorretoraBadRequest = "bad";
+	   Long cdCorretora = 21L;
+	   Long cdContratoModelo= 1L;
+	
+	   ContratoCorretora contratoCorretora = new ContratoCorretora();
+	   contratoCorretora.setCdContratoCorretora(123456L);
+	   contratoCorretora.setCdCorretora(cdCorretora);
+	   contratoCorretora.setCdContratoModelo(cdContratoModelo);
+	   contratoCorretora.setNomeArquivo("Contrato Corretora_OdontoPrev_Teste Corretora HML_2018_09_12.pdf");
+	   contratoCorretora.setCaminhoCarga("c:\\arquivos_gerados\\pdf_contrato_corretora\\");
+	   contratoCorretora.setTipoConteudo(org.springframework.http.MediaType.APPLICATION_PDF_VALUE);
+	   contratoCorretora.setTamanhoArquivo(1228L);
+	
+		   //Mockando Service que busca no banco de dados
+		   given(service.getContratoCorretoraPreenchidoByteArray(cdCorretora)).willReturn(contratoCorretora);
+	
+		   //Efetua a requisição na rota e espera um status code
+		   mvc.perform(get("/contratocorretora/" + cdCorretoraBadRequest + "/arquivo")
+				   .contentType(APPLICATION_JSON))
+				   .andExpect(status().isBadRequest())
+		   ;
+	}
     
 }
