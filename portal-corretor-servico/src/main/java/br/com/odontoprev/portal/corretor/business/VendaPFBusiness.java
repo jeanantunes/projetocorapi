@@ -311,7 +311,8 @@ public class VendaPFBusiness {
 		,propostaDCMSResponse.getNumeroProposta() //numeroProposta
 		,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) //dtVenda
 		,propostaDCMSResponse.getMensagemErro() //mensagemErro
-		,tbVenda.getTbodEmpresa().getCdEmpresa() //cdEmpresa
+		//,tbVenda.getTbodEmpresa().getCdEmpresa() //cdEmpresa //201809131651 - esert - excluido 
+		,(tbVenda.getTbodEmpresa()!=null ? tbVenda.getTbodEmpresa().getCdEmpresa() : null) //cdEmpresa  //201809131651 - esert - aplicado sprint13 //201809042045 - esert - venda pf nao tem TbodEmpresa deve testar null
 		);
 	}
 
