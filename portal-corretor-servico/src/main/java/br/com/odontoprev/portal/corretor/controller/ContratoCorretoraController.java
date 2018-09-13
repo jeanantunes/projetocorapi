@@ -162,7 +162,7 @@ public class ContratoCorretoraController {
 //		    String[] tipoConteudo = contratoCorretora.getTipoConteudo().split("/");
 //		    String type = tipoConteudo[0];
 //		    String subType = tipoConteudo[1];
-			log.info("getArquivoByteArray - fim");	
+			log.info("getContratoPreenchidoByteArray - fim");	
 		    return ResponseEntity
 		    		.ok()
 		    		//.contentType(new MediaType(type, subType))
