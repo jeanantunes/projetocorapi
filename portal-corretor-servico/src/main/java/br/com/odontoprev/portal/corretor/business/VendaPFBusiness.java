@@ -111,7 +111,7 @@ public class VendaPFBusiness {
 	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public VendaResponse salvarVendaComTitularesComDependentes(Venda venda, Boolean isIntegraDCSS) throws Exception {
 
-		log.info("[salvarVendaComTitularesComDependentes]");
+		log.info("salvarVendaComTitularesComDependentes - ini");
 
 		TbodVenda tbVenda = new TbodVenda();
 		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();
@@ -297,7 +297,7 @@ public class VendaPFBusiness {
 				atualizarNumeroPropostaVenda(venda, tbVenda, propostaDCMSResponse);
 			}
 			
-			log.error("salvarVendaComTitularesComDependentes - fim");
+			log.info("salvarVendaComTitularesComDependentes - fim");
 
 		} 
 
@@ -311,7 +311,6 @@ public class VendaPFBusiness {
 		,propostaDCMSResponse.getNumeroProposta() //numeroProposta
 		,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) //dtVenda
 		,propostaDCMSResponse.getMensagemErro() //mensagemErro
-		//,tbVenda.getTbodEmpresa().getCdEmpresa() //cdEmpresa //201809131651 - esert - excluido 
 		,(tbVenda.getTbodEmpresa()!=null ? tbVenda.getTbodEmpresa().getCdEmpresa() : null) //cdEmpresa  //201809131651 - esert - aplicado sprint13 //201809042045 - esert - venda pf nao tem TbodEmpresa deve testar null
 		);
 	}
@@ -737,7 +736,8 @@ public class VendaPFBusiness {
 			
 			throw new RollbackException(msgErro); //201806291524 - esert - se o DCMS falhar deve fazer rollback - COR-352 rollback pf
 			
-			//201808021330 - fake
+			////201808021330 - fake
+			////201809131714 - fake - novo teste apos aplicar/merge do COR-736 no sprint13 - esert
 			//propostaDCMSResponse.setMensagemErro(propostaDCMSResponse.getMensagemErro().concat(";fake-999999"));
 			//propostaDCMSResponse.setNumeroProposta("999999");
 			//return propostaDCMSResponse;
