@@ -1,8 +1,8 @@
 package br.com.odontoprev.portal.corretor.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public class ContratoCorretoraController {
 
     //201809101646 - esert - COR-709 - Serviço - Novo serviço GET/contratocorretora/cdCor/tipo/cdTipo?susep=12.3456789012345-6
     @RequestMapping(value = "/contratocorretora/{cdCorretora}/tipo/{cdContratoModelo}", method = {RequestMethod.GET})
-    public ResponseEntity<ContratoCorretoraPreenchido> getContratoPreenchido(@PathVariable Long cdCorretora, @PathVariable Long cdContratoModelo, @RequestParam("susep") Optional<String> cdSusep) throws ParseException {
+    public ResponseEntity<ContratoCorretoraPreenchido> getContratoCorretoraPreenchidoHTML(@PathVariable Long cdCorretora, @PathVariable Long cdContratoModelo, @RequestParam("susep") Optional<String> cdSusep) throws ParseException {
     	log.info("getContratoPreenchido - ini");
 
         try {
@@ -101,16 +101,27 @@ public class ContratoCorretoraController {
         
         if(contratoCorretora.getCdCorretora()==null) {
             log.error("postContratoCorretora - BAD_REQUEST - contratoCorretora.getCdCorretora()==null");
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         
         try {
         	contratoCorretoraResponse = contratoCorretoraService.postContratoCorretora(contratoCorretora);
         	
+        	if(contratoCorretoraResponse==null) {
+                log.error("postContratoCorretora - NO_CONTENT - contratoCorretoraResponse==null apos contratoCorretoraService.postContratoCorretora().");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        	}
+        	
         	contratoCorretoraResponse = contratoCorretoraService.enviarEmailContratoCorretagemIntermediacao(contratoCorretoraResponse.getCdCorretora(), contratoCorretoraResponse.getCdContratoCorretora());
+        	
+        	if(contratoCorretoraResponse==null) {
+                log.error("postContratoCorretora - BAD_REQUEST - contratoCorretoraResponse==null apos contratoCorretoraService.enviarEmailContratoCorretagemIntermediacao().");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        	}
+
         }catch (Exception e) {
 			// TODO: handle exception
-        	ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         
         log.info("postContratoCorretora - fim");
@@ -135,9 +146,9 @@ public class ContratoCorretoraController {
 			
 			byte[] pdfInBytes = new byte[(int)file.length()];
 			try {
-				FileOutputStream fos = new FileOutputStream(file);
-				fos.write(pdfInBytes);
-				fos.close();
+				FileInputStream fis = new FileInputStream(file);
+				fis.read(pdfInBytes);
+				fis.close();
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
@@ -148,13 +159,14 @@ public class ContratoCorretoraController {
 				log.error(e);
 			}
 		    
-		    String[] tipoConteudo = contratoCorretora.getTipoConteudo().split("/");
-		    String type = tipoConteudo[0];
-		    String subType = tipoConteudo[1];
+//		    String[] tipoConteudo = contratoCorretora.getTipoConteudo().split("/");
+//		    String type = tipoConteudo[0];
+//		    String subType = tipoConteudo[1];
 			log.info("getArquivoByteArray - fim");	
 		    return ResponseEntity
 		    		.ok()
-		    		.contentType(new MediaType(type, subType))
+		    		//.contentType(new MediaType(type, subType))
+		    		.contentType(MediaType.APPLICATION_PDF) //201809131426 - esert - aqui eh PDF e nao HTML salvo no banco
 		    		.header(
 		    				"Content-Disposition", 
 		    				String.format("attachment; filename=%s", contratoCorretora.getNomeArquivo())

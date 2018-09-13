@@ -175,18 +175,21 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 	@Override
 	public ContratoCorretora postContratoCorretora(ContratoCorretora contratoCorretora) {
 		log.info("postContratoCorretora - ini");
+
+        if (contratoCorretora == null) {
+            log.error("postContratoCorretora - BAD_REQUEST - tbodCorretora null");
+            //ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return null;
+        }
+
 		log.info("contratoCorretora[" + contratoCorretora.toString() + "]");
-		
+
         TbodCorretora tbodCorretora = corretoraDAO.findOne(contratoCorretora.getCdCorretora());
 
         if (tbodCorretora == null) {
-            log.error("postContratoCorretora - BAD_REQUEST - tbodCorretora null");
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        if (tbodCorretora == null) {
-            log.error("postContratoCorretora - BAD_REQUEST - tbodCorretora null");
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            log.error("postContratoCorretora - NO_CONTENT - tbodCorretora == null");
+            //ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return null;
         }
 
         if (contratoCorretora.getCdSusep() != null) {
@@ -469,6 +472,10 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
+			//a mensagem de erro peculiar deve_se ao fato que uma excecao pode representar mais de uma situacao
+			//havendo registro(s), o erro pode ser um mal funcionamento qualquer
+			//NAO havendo registro, o erro sera java.lang.IndexOutOfBoundsException
+			//mas em ambos os casos vai retornar NULL que representa NOCONTENT no CONTROLLER
 			log.info("getContratoCorretoraPreenchidoByteArray(" + cdCorretora + ") - erro de lista vazia/nula ou outro pior:( ");
 			log.error(e);
 			return null;
