@@ -296,9 +296,15 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 	//201809121519 - esert - COR-714 - Serviço - Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
 	@Override
 	public ContratoCorretora createPdfContratoCorretora(TbodContratoCorretora tbodContratoCorretora) {
-		log.info(String.format("createPdfContratoCorretora(%d) - ini", tbodContratoCorretora.getTbodCorretora().getCdCorretora()));
+		log.info(String.format("createPdfContratoCorretora - ini"));
 		ContratoCorretora contratoCorretora = null;
 		try {
+			if(tbodContratoCorretora==null) { //201809131208 - esert - protecao
+				log.error(String.format("tbodContratoCorretora==null"));
+				return null;
+			}
+			//log.info(String.format("createPdfContratoCorretora(%s)", tbodContratoCorretora));
+			
 			//obter empresa da venda
 			TbodCorretora tbodCorretora = tbodContratoCorretora.getTbodCorretora();
 			
@@ -444,6 +450,29 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 		
 		log.info("enviarEmailContratoCorretagemIntermediacao(" + cdCorretora + ") - fim");
 		return contratoCorretora;
+	}
+
+	//201809121030 - esert - COR-718 - Serviço - Novo serviço GET/contratocorretora/cdCorretora/arquivo retorna PDF
+	@Override
+	public ContratoCorretora getContratoCorretoraPreenchidoByteArray(Long cdCorretora) {
+		log.info("getContratoCorretoraPreenchidoByteArray(" + cdCorretora + ") - ini");
+		try {
+			log.info("getContratoCorretoraPreenchidoByteArray(" + cdCorretora + ") - fim");
+			return createPdfContratoCorretora(
+				contratoCorretoraDAO
+				.findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(
+						cdCorretora, 
+						Constantes.CONTRATO_CORRETAGEM_V1, 
+						Constantes.CONTRATO_INTERMEDIACAO_V1
+				).get(0)
+			);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			log.info("getContratoCorretoraPreenchidoByteArray(" + cdCorretora + ") - erro de lista vazia/nula ou outro pior:( ");
+			log.error(e);
+			return null;
+		}
 	}
 
 }

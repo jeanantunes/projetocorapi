@@ -26,4 +26,7 @@ public interface ContratoCorretoraService {
 	//201809121519 - esert - COR-714 - Serviço - TDD Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
 	public ContratoCorretora enviarEmailContratoCorretagemIntermediacao(Long cdCorretora, Long cdContratoCorretora); //201809122217
 
+	//201809121030 - esert - COR-718 - Serviço - Novo serviço GET/contratocorretora/cdCorretora/arquivo retorna PDF
+	public ContratoCorretora getContratoCorretoraPreenchidoByteArray(Long cdCorretora);
+
 }

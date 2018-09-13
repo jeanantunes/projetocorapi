@@ -399,7 +399,7 @@ public class TbodCorretora implements Serializable {
 				+ ", tbodEndereco=" + tbodEndereco 
 				+ ", tbodCorretoraBancos=" + tbodCorretoraBancos
 				+ ", tbodDocumentoAssociados=" + tbodDocumentoAssociados 
-				+ ", tbodForcaVendas=" + tbodForcaVendas
+				//+ ", tbodForcaVendas=" + tbodForcaVendas //201809131236 - esert - exc para aliviar o retorno
 				+ ", tbodLogin=" + tbodLogin 
 				+ ", temSusep=" + temSusep 
 				+ ", codigoSusep=" + codigoSusep 

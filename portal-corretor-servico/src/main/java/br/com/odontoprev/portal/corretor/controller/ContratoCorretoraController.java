@@ -1,5 +1,9 @@
 package br.com.odontoprev.portal.corretor.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Optional;
 
@@ -7,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -111,5 +116,54 @@ public class ContratoCorretoraController {
         log.info("postContratoCorretora - fim");
         return ResponseEntity.ok(contratoCorretoraResponse);
     }
+
+	//201809121030 - esert - COR-718 - Serviço - Novo serviço GET/contratocorretora/cdCorretora/arquivo retorna PDF
+	@RequestMapping(value = "/contratocorretora/{cdCorretora}/arquivo", method = {RequestMethod.GET})
+	public ResponseEntity<byte[]> getContratoCorretoraPreenchidoByteArray(@PathVariable Long cdCorretora) throws ParseException {
+		log.info("getContratoPreenchidoByteArray - ini");
+		try {
+			ContratoCorretora contratoCorretora = contratoCorretoraService.getContratoCorretoraPreenchidoByteArray(cdCorretora);
+			if(contratoCorretora==null) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //201808241726 - esert
+			}
+		    //byte[] arquivoPDF = Base64.getDecoder().decode(contratoCorretora.getArquivoBase64()); //201808311641 - bugfix		    
+			File file = new File(contratoCorretora.getCaminhoCarga().concat(contratoCorretora.getNomeArquivo()));
+			
+			if(contratoCorretora.getTamanhoArquivo()==null) {
+				contratoCorretora.setTamanhoArquivo(file.length());
+			}
+			
+			byte[] pdfInBytes = new byte[(int)file.length()];
+			try {
+				FileOutputStream fos = new FileOutputStream(file);
+				fos.write(pdfInBytes);
+				fos.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				log.error(e);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				log.error(e);
+			}
+		    
+		    String[] tipoConteudo = contratoCorretora.getTipoConteudo().split("/");
+		    String type = tipoConteudo[0];
+		    String subType = tipoConteudo[1];
+			log.info("getArquivoByteArray - fim");	
+		    return ResponseEntity
+		    		.ok()
+		    		.contentType(new MediaType(type, subType))
+		    		.header(
+		    				"Content-Disposition", 
+		    				String.format("attachment; filename=%s", contratoCorretora.getNomeArquivo())
+		    				)
+		    		.body(pdfInBytes);
+		} catch (Exception e) {
+			log.info("getContratoPreenchidoByteArray - erro");	
+		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //201808241726 - esert
+		}
+	}
 
 }
