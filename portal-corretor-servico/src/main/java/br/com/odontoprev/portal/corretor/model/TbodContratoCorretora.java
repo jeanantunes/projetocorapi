@@ -16,16 +16,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "TBOD_CONTRATO_CORRETORA2")
+@Table(name = "TBOD_CONTRATO_CORRETORA")
 public class TbodContratoCorretora implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-	@SequenceGenerator(
-	        name="SEQ_CONTRATO_CORRETORA",
-	        sequenceName="SEQ_CONTRATO_CORRETORA"
-	    )
-	@GeneratedValue(generator="SEQ_CONTRATO_CORRETORA",strategy=GenerationType.SEQUENCE)	
+	@SequenceGenerator(name = "SEQ_TBOD_CONTRATO_CORRETORA", sequenceName = "SEQ_TBOD_CONTRATO_CORRETORA", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(generator="SEQ_TBOD_CONTRATO_CORRETORA",strategy=GenerationType.SEQUENCE)	
     @Column(name = "CD_CONTRATO_CORRETORA")
     private Long cdContratoCorretora;
     

@@ -236,6 +236,7 @@ public class ContratoCorretoraControllerTest {
     public void testOk200enviarEmailContratoCorretora() throws Exception {
     	
     	Long cdCorretora = 21L;
+    	Long cdContratoCorretora = 1L;
     	
     	ContratoCorretora contratoCorretora = new ContratoCorretora();
     	contratoCorretora.setCdContratoCorretora(123456L);
@@ -247,7 +248,7 @@ public class ContratoCorretoraControllerTest {
     	contratoCorretora.setTamanhoArquivo(12345L);
     	contratoCorretora.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE);
     	
-    	given(service.enviarEmailContratoCorretagemIntermediacao(cdCorretora)).willReturn(contratoCorretora);
+    	given(service.enviarEmailContratoCorretagemIntermediacao(cdCorretora, cdContratoCorretora)).willReturn(contratoCorretora); //201809122223 - esert - COR-714 - inc Long cdContratoCorretora
     	
     }
     

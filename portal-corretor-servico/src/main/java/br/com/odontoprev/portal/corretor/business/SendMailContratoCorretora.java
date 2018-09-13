@@ -31,22 +31,22 @@ public class SendMailContratoCorretora {
 
 	private static final Log log = LogFactory.getLog(SendMailContratoCorretora.class);
 
-	@Value("SENDMAIL_ENDPOINT_URL")
+	@Value("${SENDMAIL_ENDPOINT_URL}")
 	private String sendMailEndpointUrl; //= PropertiesUtils.getProperty(PropertiesUtils.SENDMAIL_ENDPOINT_URL);
 
-	@Value("requestmailContratoCorretora.body.recepientname")
+	@Value("${requestmailContratoCorretora.body.recepientname}")
 	private String recepientName; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_RECEPIENTNAME);
 	
-	@Value("requestmailContratoCorretora.body.sender")
+	@Value("${requestmailContratoCorretora.body.sender}")
 	private String sender; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDER);
 	
-	@Value("requestmailContratoCorretora.body.sendername")
+	@Value("${requestmailContratoCorretora.body.sendername}")
 	private String senderName; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SENDERNAME);
 
-	@Value("requestmailContratoCorretora.body.type")
+	@Value("${requestmailContratoCorretora.body.type}")
 	private String type; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_TYPE);
 	
-	@Value("requestmailContratoCorretora.body.subject")
+	@Value("${requestmailContratoCorretora.body.subject}")
 	private String subject; //= PropertiesUtils.getProperty(PropertiesUtils.REQUESTMAIL_SUBJECT);
 
 	@Transactional(rollbackFor={Exception.class})

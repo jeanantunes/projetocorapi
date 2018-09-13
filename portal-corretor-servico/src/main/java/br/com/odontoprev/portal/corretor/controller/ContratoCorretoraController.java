@@ -101,6 +101,8 @@ public class ContratoCorretoraController {
         
         try {
         	contratoCorretoraResponse = contratoCorretoraService.postContratoCorretora(contratoCorretora);
+        	
+        	contratoCorretoraResponse = contratoCorretoraService.enviarEmailContratoCorretagemIntermediacao(contratoCorretoraResponse.getCdCorretora(), contratoCorretoraResponse.getCdContratoCorretora());
         }catch (Exception e) {
 			// TODO: handle exception
         	ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

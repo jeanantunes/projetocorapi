@@ -16,4 +16,6 @@ public interface ContratoCorretoraDAO extends CrudRepository<TbodContratoCorreto
 	
 	public List<TbodContratoCorretora> findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(Long cdCorretora, Long cdContratoModelo1, Long cdContratoModelo2); //201809111820 - esert - apos COR-752 - alter TBOD_CONTRATO_CORRETORA este find passa retornar lista
 	
+	public List<TbodContratoCorretora> findByCdContratoCorretoraAndTbodCorretoraCdCorretora(Long cdContratoCorretora, Long cdCorretora); //201809122219 - esert - apos COR-752 - alter TBOD_CONTRATO_CORRETORA este find passa retornar lista
+	
 }
