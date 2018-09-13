@@ -191,7 +191,7 @@ public class ContratoCorretoraControllerTest {
 
 	//20180912???? - jean - COR-712 - Serviço - TDD Novo serviço POST /CONTRATO CORRETORA para salvar respostas	
     @Test
-    public void testOk200ContratoCorretoraComSusep() throws Exception {
+    public void testOk200postContratoCorretoraComSusep() throws Exception {
 
         ContratoCorretora contratoCorretora = new ContratoCorretora();
         contratoCorretora.setCdCorretora(21L);
@@ -202,6 +202,7 @@ public class ContratoCorretoraControllerTest {
 
         String json = new Gson().toJson(contratoCorretora);
         given(service.postContratoCorretora(contratoCorretora)).willReturn(contratoCorretora);
+        given(service.enviarEmailContratoCorretagemIntermediacao(contratoCorretora.getCdCorretora(), contratoCorretora.getCdContratoCorretora())).willReturn(contratoCorretora); //201809131756 - esert - novo metodo incluido no controller deve ser mockado tbm
 
         //Efetua a requisição na rota e espera um status code
         mvc.perform(post("/contratocorretora")
@@ -212,7 +213,7 @@ public class ContratoCorretoraControllerTest {
 
 	//20180912???? - jean - COR-712 - Serviço - TDD Novo serviço POST /CONTRATO CORRETORA para salvar respostas	
     @Test
-    public void testOk200ContratoCorretoraSemSusep() throws Exception {
+    public void testOk200postContratoCorretoraSemSusep() throws Exception {
 
         ContratoCorretora contratoCorretora = new ContratoCorretora();
         contratoCorretora.setCdCorretora(21L);
@@ -223,6 +224,7 @@ public class ContratoCorretoraControllerTest {
 
         String json = new Gson().toJson(contratoCorretora);
         given(service.postContratoCorretora(contratoCorretora)).willReturn(contratoCorretora);
+        given(service.enviarEmailContratoCorretagemIntermediacao(contratoCorretora.getCdCorretora(), contratoCorretora.getCdContratoCorretora())).willReturn(contratoCorretora); //201809131756 - esert - novo metodo incluido no controller deve ser mockado tbm
 
         //Efetua a requisição na rota e espera um status code
         mvc.perform(post("/contratocorretora")

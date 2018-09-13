@@ -105,14 +105,17 @@ public class ContratoCorretoraController {
         }
         
         try {
-        	contratoCorretoraResponse = contratoCorretoraService.postContratoCorretora(contratoCorretora);
+        	contratoCorretoraResponse = contratoCorretoraService.postContratoCorretora(
+        			contratoCorretora);
         	
         	if(contratoCorretoraResponse==null) {
                 log.error("postContratoCorretora - NO_CONTENT - contratoCorretoraResponse==null apos contratoCorretoraService.postContratoCorretora().");
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         	}
         	
-        	contratoCorretoraResponse = contratoCorretoraService.enviarEmailContratoCorretagemIntermediacao(contratoCorretoraResponse.getCdCorretora(), contratoCorretoraResponse.getCdContratoCorretora());
+        	contratoCorretoraResponse = contratoCorretoraService.enviarEmailContratoCorretagemIntermediacao(
+        			contratoCorretoraResponse.getCdCorretora(), 
+        			contratoCorretoraResponse.getCdContratoCorretora());
         	
         	if(contratoCorretoraResponse==null) {
                 log.error("postContratoCorretora - BAD_REQUEST - contratoCorretoraResponse==null apos contratoCorretoraService.enviarEmailContratoCorretagemIntermediacao().");
