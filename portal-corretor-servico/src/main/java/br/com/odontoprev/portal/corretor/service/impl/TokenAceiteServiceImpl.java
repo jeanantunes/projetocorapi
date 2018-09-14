@@ -219,28 +219,48 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
         log.info("updateTokenAceite");
 
         try {
+            if (tokenAceite == null) {
+                log.error("tokenAceite == null");
+                return new TokenAceiteResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString()); //201809141505 - esert - COR-734 - equalizar status todas vendas mesma pme empresa
+            }
+            if (tokenAceite.getCdVenda() == null) {
+                log.error("tokenAceite.getCdVenda() == null");
+                return new TokenAceiteResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString()); //201809141505 - esert - COR-734 - equalizar status todas vendas mesma pme empresa
+            }
+            if (tokenAceite.getToken() == null) {
+            	log.error("tokenAceite.getToken() == null");
+            	return new TokenAceiteResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString()); //201809141505 - esert - COR-734 - equalizar status todas vendas mesma pme empresa
+            }
+            if (tokenAceite.getEmail() == null) {
+            	log.error("tokenAceite.getEmail() == null");
+            	return new TokenAceiteResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString()); //201809141505 - esert - COR-734 - equalizar status todas vendas mesma pme empresa
+            }
 
-            TbodTokenAceite tbodTokenAceite = new TbodTokenAceite();
-            tbodTokenAceite = tokenAceiteDAO.findTokenPorVendaToken(tokenAceite.getCdVenda(), tokenAceite.getToken(), tokenAceite.getEmail());
+            TbodTokenAceite tbodTokenAceite = tokenAceiteDAO.findTokenPorVendaToken(
+            		tokenAceite.getCdVenda(), 
+            		tokenAceite.getToken(), 
+            		tokenAceite.getEmail()
+            		);
 
             if (tbodTokenAceite == null) {
-                return new TokenAceiteResponse(404, HttpStatus.NOT_FOUND.toString()); //TODO: Trocar para HttpStatus.no_cotent 201808031156
+            	log.error("tbodTokenAceite == null");
+                return new TokenAceiteResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.toString()); //TODO: Trocar para HttpStatus.no_cotent 201808031156 (pesquisar impacto no front 201809141232 esert)
             }
 
             if (tbodTokenAceite.getDtAceite() != null) {
-
                 SimpleDateFormat sdfDDMMYYYY = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                return new TokenAceiteResponse(HttpStatus.FORBIDDEN.value(), "Aceite já realizado em [" + sdfDDMMYYYY.format(tbodTokenAceite.getDtAceite()) + "]."); //TODO: Trocar para HttpStatus.no_cotent 201808031156
-
+                String msg = "Aceite já realizado em [" + sdfDDMMYYYY.format(tbodTokenAceite.getDtAceite()) + "].";
+            	log.info("tbodTokenAceite.getDtAceite() != null => [" + msg + "]");
+                return new TokenAceiteResponse(HttpStatus.FORBIDDEN.value(), msg); //TODO: Trocar para HttpStatus.no_cotent 201808031156
             }
 
             Date dateHoje = new Date();
 
             if (tbodTokenAceite.getDtExpiracao().getTime() < dateHoje.getTime()) {
-
                 SimpleDateFormat sdfDDMMYYYY = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                return new TokenAceiteResponse(HttpStatus.FORBIDDEN.value(), "Token expirado em [" + sdfDDMMYYYY.format(tbodTokenAceite.getDtExpiracao()) + "]."); //TODO: Trocar para HttpStatus.no_cotent 201808031156
-
+                String msg = "Token expirado em [" + sdfDDMMYYYY.format(tbodTokenAceite.getDtExpiracao()) + "].";
+            	log.info("tbodTokenAceite.getDtExpiracao().getTime() < dateHoje.getTime() => [" + msg + "]");
+                return new TokenAceiteResponse(HttpStatus.FORBIDDEN.value(), msg); //TODO: Trocar para HttpStatus.no_cotent 201808031156
             }
 
             List<TbodTokenAceite> listTbodTokenAceite = tokenAceiteDAO.findTokenPorVenda(tokenAceite.getCdVenda());
@@ -254,51 +274,75 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
 
                     tbodTokenAceite = tokenAceiteDAO.save(itemTbodTokenAceite);
 
-                    TbodVenda tbodVenda = vendaDAO.findOne(tokenAceite.getCdVenda());
-
-                    tbodVenda.setDtVigencia(dataUtil.isEffectiveDate(tbodVenda.getFaturaVencimento(), tbodTokenAceite.getDtAceite()));
-
-                    Calendar calMovimentacao = new GregorianCalendar();
-                    calMovimentacao.setTime(tbodVenda.getDtVigencia());
-                    calMovimentacao.set(
-                            calMovimentacao.get(Calendar.YEAR),
-                            calMovimentacao.get(Calendar.MONTH),
-                            calMovimentacao.get(Calendar.DAY_OF_MONTH),
-                            0,
-                            0,
-                            0
-                    );
-                    calMovimentacao.add(Calendar.DATE, -11);
-                    tbodVenda.setDtMovimentacao(calMovimentacao.getTime());
-                    TbodStatusVenda tbodStatusVenda = statusVendaDAO.findOne(Constantes.STATUS_VENDA_ENVIADO);
-                    if (tbodStatusVenda == null){
-                        throw new Exception("Status Venda não encontrado " + "[" + Constantes.STATUS_VENDA_ENVIADO + "]");
+                    TbodVenda tbodVendaAceite = vendaDAO.findOne(tokenAceite.getCdVenda());
+                    
+                    if(tbodVendaAceite.getTbodEmpresa()==null) {
+                    	log.error("tbodVenda.getTbodEmpresa()==null para tokenAceite.getCdVenda():[" + tokenAceite.getCdVenda() + "]");
+                    	continue; //vai para proximo token                    	
                     }
-                    tbodVenda.setTbodStatusVenda(tbodStatusVenda);
-                    tbodVenda.setDtAceite(tbodTokenAceite.getDtAceite());
-                    tbodVenda = vendaDAO.save(tbodVenda);
+                    
+                    if(tbodVendaAceite.getTbodEmpresa().getTbodVendas()==null) {
+                    	log.error("tbodVendaAceite.getTbodEmpresa().getTbodVendas()==null para ");
+                    	continue; //vai para proximo token                    	
+                    }
+                    
+                    for(TbodVenda tbodVendaItem : tbodVendaAceite.getTbodEmpresa().getTbodVendas()) {
+	
+	                    tbodVendaItem.setDtVigencia(dataUtil.isEffectiveDate(
+	                    		tbodVendaItem.getFaturaVencimento(), 
+	                    		tbodTokenAceite.getDtAceite()
+	                    		)
+	                    	);
+	
+	                    Calendar calMovimentacao = new GregorianCalendar();
+	                    calMovimentacao.setTime(tbodVendaItem.getDtVigencia());
+	                    calMovimentacao.set(
+	                            calMovimentacao.get(Calendar.YEAR),
+	                            calMovimentacao.get(Calendar.MONTH),
+	                            calMovimentacao.get(Calendar.DAY_OF_MONTH),
+	                            0,
+	                            0,
+	                            0
+	                    );
+	                    calMovimentacao.add(Calendar.DATE, -11);
+	                    tbodVendaItem.setDtMovimentacao(calMovimentacao.getTime());
+	                    
+	                    TbodStatusVenda tbodStatusVenda = statusVendaDAO.findOne(Constantes.STATUS_VENDA_ENVIADO);
+	                    if (tbodStatusVenda == null){
+	                        throw new Exception("Status Venda não encontrado " + "[" + Constantes.STATUS_VENDA_ENVIADO + "]");
+	                    }
+	                    tbodVendaItem.setTbodStatusVenda(tbodStatusVenda);
+	                    
+	                    tbodVendaItem.setDtAceite(tbodTokenAceite.getDtAceite());
+	                    
+	                    tbodVendaItem = vendaDAO.save(tbodVendaItem);
+                    
+                    } //for(TbodVenda tbodVenda : tbodVenda.getTbodEmpresa().getTbodVendas())
 
-                    xlsEmpresa.GerarEmpresaXLS(tbodVenda);
+                    xlsEmpresa.GerarEmpresaXLS(tbodVendaAceite);
                     
                     //201808281701 - esert - COR-656 atualizar pdf pme no click aceite.
-                    ArquivoContratacao arquivoContratacao = arquivoContratacaoService.createPdfPmePorEmpresa(tbodVenda.getTbodEmpresa().getCdEmpresa()); //201808281701 - esert - COR-656 atualizar pdf pme no click aceite.
+                    ArquivoContratacao arquivoContratacao = arquivoContratacaoService.createPdfPmePorEmpresa(tbodVendaAceite.getTbodEmpresa().getCdEmpresa()); //201808281701 - esert - COR-656 atualizar pdf pme no click aceite.
                     if(arquivoContratacao==null) {
-                    	throw new Exception("Erro atualização pdf pme detalhes contratação para CdEmpresa:[" + tbodVenda.getTbodEmpresa().getCdEmpresa() + "]");
+                    	log.info("arquivoContratacao==null para tbodVenda.getTbodEmpresa().getCdEmpresa():[" + tbodVendaAceite.getTbodEmpresa().getCdEmpresa() + "]");
+                    	throw new Exception("Erro atualização pdf pme detalhes contratação para CdEmpresa:[" + tbodVendaAceite.getTbodEmpresa().getCdEmpresa() + "]");
                     }
                     
                 }
 
             } else {
-                return new TokenAceiteResponse(404, HttpStatus.NOT_FOUND.toString()); //TODO: Trocar para HttpStatus.no_cotent 201808031156
+            	log.info("listTbodTokenAceite == null");
+                return new TokenAceiteResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.toString()); //TODO: Trocar para HttpStatus.no_cotent 201808031156
             }
 
-            return new TokenAceiteResponse(200, HttpStatus.OK.toString());
+            return new TokenAceiteResponse(HttpStatus.OK.value(), HttpStatus.OK.toString());
 
         } catch (Exception e) {
             log.error(e);
             log.error("Erro ao confirmar data de aceite :: Detalhe: [" + e.getMessage() + "]");
             return new TokenAceiteResponse(0, "Erro ao confirmar data de aceite. Detalhe: [" + e.getMessage() + "]");
         }
-
+        
     }
+    
 }
