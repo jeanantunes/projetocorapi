@@ -9,27 +9,26 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import br.com.odontoprev.portal.corretor.controller.ForcaVendaController;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.service.BloqueioService;
 
-
+//201809181600 - esert - COR-731 : TDD - Novo serviço (processar bloqueio)
 //Classe responsável por configurar objetos que queremos mockar
 @Configuration
 @ComponentScan(
 	    value = "br.com.odontoprev.portal.corretor.controller",
 	    useDefaultFilters = false,
 	    includeFilters = {
-	        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ForcaVendaController.class)
+	        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = BloqueioService.class)
 	    })
 
 @EnableWebMvc
-public class ForcaVendaControllerTestConfig {
+public class BloqueioControllerTestConfig {
 
 	 //Mocando service que injetado no Controller
 	 @Bean
 	 @Primary
 	 @Scope("application")
-     public ForcaVendaService service() { 
-		 return Mockito.mock(ForcaVendaService.class); 
+     public BloqueioService service() { 
+		 return Mockito.mock(BloqueioService.class); 
 	 }	 	 
 }
