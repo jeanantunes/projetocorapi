@@ -1,10 +1,13 @@
 package br.com.odontoprev.portal.corretor.test.controller.login;
 
 import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.dto.LoginResponse;
 import br.com.odontoprev.portal.corretor.service.LoginService;
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -13,6 +16,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
@@ -38,28 +46,79 @@ public class LoginControllerTest {
     private LoginService service;
 
     @Test
-    public void testLoginOk200() throws Exception {
+    public void testLoginForcaOk200() throws Exception {
         //Montando Request
         Login login = new Login();
         login.setCdLogin(21L);
         login.setCdTipoLogin(1L);
         login.setFotoPerfilB64("fotoemBase64");
-        login.setUsuario("64154543000146");
         login.setSenha("10203040");
+        login.setUsuario("64154543000146");
+        login.setTemBloqueio(false);
+        login.setCodigoTipoBloqueio("0"); // 1
+        login.setDescricaoTipoBloqueio("SEM BLOQUEIO"); //PENDENTE ACEITAR CONTRATO DE CORRETAGEM OU INTERMEDIAÇÃO
 
-		/*
-		//Mockando Service que busca no banco de dados
-		given(service.buscarPorTokenLogin(deviceToken.getToken(), codigoForcaVenda)).willReturn(Arrays.asList(deviceToken));
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setCodigoDcss(1L);
+        loginResponse.setCodigoUsuario(1L);
+        loginResponse.setNomeUsuario("Nome User");
+        loginResponse.setDocumento("Doc");
+        loginResponse.setCodigoCorretora(1L);
+        loginResponse.setNomeCorretora("Nome Corretora");
+        loginResponse.setPerfil("Perfil");
+        loginResponse.setDtAceiteContrato("2018-09-18");
 
-		//Efetua a requisição na rota e espera um status code
-		mvc.perform(post("/devicetoken/forcavenda/"+codigoForcaVenda).content(new Gson().toJson(deviceToken))
-				.contentType(APPLICATION_JSON))
-				.andExpect(status().isOk());
+        String json = new Gson().toJson(login);
 
-		//Verifica se os metódos da lógica interna foram chamados
-		BDDMockito.verify(service).buscarPorTokenLogin(deviceToken.getToken(), codigoForcaVenda);
-		BDDMockito.verify(service).atualizar(deviceToken, codigoForcaVenda);
-		*/
+        //Mockando Service que busca no banco de dados
+        given(service.login(login)).willReturn(loginResponse);
+
+        //Efetua a requisição na rota e espera um status code
+        mvc.perform(post("/login").content(json)
+                .contentType(String.valueOf(APPLICATION_JSON)))
+                .andExpect(status().isOk());
+
+        //Verifica se os metódos da lógica interna foram chamados
+        BDDMockito.verify(service).login(login);
+
+    }
+
+
+    @Test
+    public void testLoginCorretoraOk200() throws Exception {
+        //Montando Request
+        Login login = new Login();
+        login.setCdLogin(21L);
+        login.setCdTipoLogin(1L);
+        login.setFotoPerfilB64("fotoemBase64");
+        login.setSenha("10203040");
+        login.setUsuario("12345678909");
+        login.setTemBloqueio(false);
+        login.setCodigoTipoBloqueio("0"); // 1
+        login.setDescricaoTipoBloqueio("SEM BLOQUEIO"); //PENDENTE ACEITAR CONTRATO DE CORRETAGEM OU INTERMEDIAÇÃO
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setCodigoDcss(1L);
+        loginResponse.setCodigoUsuario(1L);
+        loginResponse.setNomeUsuario("Nome User");
+        loginResponse.setDocumento("Doc");
+        loginResponse.setCodigoCorretora(1L);
+        loginResponse.setNomeCorretora("Nome Corretora");
+        loginResponse.setPerfil("Perfil");
+        loginResponse.setDtAceiteContrato("2018-09-18");
+
+        String json = new Gson().toJson(login);
+
+        //Mockando Service que busca no banco de dados
+        given(service.login(login)).willReturn(loginResponse);
+
+        //Efetua a requisição na rota e espera um status code
+        mvc.perform(post("/login").content(json)
+                .contentType(String.valueOf(APPLICATION_JSON)))
+                .andExpect(status().isOk());
+
+        //Verifica se os metódos da lógica interna foram chamados
+        BDDMockito.verify(service).login(login);
 
     }
 
