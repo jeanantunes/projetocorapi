@@ -6,17 +6,17 @@ import java.io.Serializable;
 public class TipoBloqueio implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long cdTipoBloqueio;
+	private Long cdTipoBloqueio;
 	private String descricao;
 
 	public TipoBloqueio() {
 	}
 
-	public long getCdTipoBloqueio() {
+	public Long getCdTipoBloqueio() {
 		return cdTipoBloqueio;
 	}
 
-	public void setCdTipoBloqueio(long cdTipoBloqueio) {
+	public void setCdTipoBloqueio(Long cdTipoBloqueio) {
 		this.cdTipoBloqueio = cdTipoBloqueio;
 	}
 

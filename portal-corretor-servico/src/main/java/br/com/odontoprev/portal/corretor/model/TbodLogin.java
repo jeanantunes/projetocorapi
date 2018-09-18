@@ -52,11 +52,6 @@ public class TbodLogin implements Serializable {
 	@OneToMany(mappedBy = "tbodLogin")
 	private List<TbodForcaVenda> tbodForcaVendas;
 
-	// bi-directional many-to-one association to TbodForcaVenda
-	@OneToMany(mappedBy = "tbodLogin")
-	private List<TbodTipoBloqueio> tbodTipoBloqueios; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
-
-
 	public TbodLogin() {
 	}
 
@@ -142,14 +137,6 @@ public class TbodLogin implements Serializable {
 
 	public void setTemBloqueio(String temBloqueio) {
 		this.temBloqueio = temBloqueio;
-	}
-
-	public List<TbodTipoBloqueio> getTbodTipoBloqueios() {
-		return tbodTipoBloqueios;
-	}
-
-	public void setTbodTipoBloqueios(List<TbodTipoBloqueio> tbodTipoBloqueios) {
-		this.tbodTipoBloqueios = tbodTipoBloqueios;
 	}
 
 	public TbodTipoBloqueio getTbodTipoBloqueio() {

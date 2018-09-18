@@ -12,7 +12,7 @@ public class TbodTipoBloqueio implements Serializable {
 
 	@Id
 	@Column(name="CD_TIPO_BLOQUEIO")
-	private long cdTipoBloqueio;
+	private Long cdTipoBloqueio;
 
 	@Column(name="DESCRICAO")
 	private String descricao;
@@ -24,11 +24,11 @@ public class TbodTipoBloqueio implements Serializable {
 	public TbodTipoBloqueio() {
 	}
 
-	public long getCdTipoBloqueio() {
+	public Long getCdTipoBloqueio() {
 		return cdTipoBloqueio;
 	}
 
-	public void setCdTipoBloqueio(long cdTipoBloqueio) {
+	public void setCdTipoBloqueio(Long cdTipoBloqueio) {
 		this.cdTipoBloqueio = cdTipoBloqueio;
 	}
 

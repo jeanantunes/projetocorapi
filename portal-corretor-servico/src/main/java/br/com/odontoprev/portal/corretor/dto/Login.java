@@ -12,7 +12,7 @@ public class Login implements Serializable {
 	private String senha;
 	private String usuario;
 	private boolean temBloqueio; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
-	private String codigoTipoBloqueio; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+	private Long codigoTipoBloqueio; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 	private String descricaoTipoBloqueio; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 
 	public String getSenha() {
@@ -63,11 +63,11 @@ public class Login implements Serializable {
 		this.temBloqueio = temBloqueio;
 	}
 
-	public String getCodigoTipoBloqueio() {
+	public Long getCodigoTipoBloqueio() {
 		return codigoTipoBloqueio;
 	}
 
-	public void setCodigoTipoBloqueio(String codigoTipoBloqueio) {
+	public void setCodigoTipoBloqueio(Long codigoTipoBloqueio) {
 		this.codigoTipoBloqueio = codigoTipoBloqueio;
 	}
 
