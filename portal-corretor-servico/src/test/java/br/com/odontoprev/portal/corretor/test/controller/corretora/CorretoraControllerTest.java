@@ -6,12 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-
-import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.CorretoraResponse;
-import br.com.odontoprev.portal.corretor.service.CorretoraService;
-import br.com.odontoprev.portal.corretor.test.controller.corretora.CorretoraControllerTestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,11 +15,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 import com.google.gson.Gson;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.CorretoraResponse;
+import br.com.odontoprev.portal.corretor.service.CorretoraService;
 
 
 

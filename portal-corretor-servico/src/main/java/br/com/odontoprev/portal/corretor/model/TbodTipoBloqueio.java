@@ -18,7 +18,7 @@ public class TbodTipoBloqueio implements Serializable {
 	private String descricao;
 
 	//bi-directional many-to-one association to TbodPlano
-	@OneToMany(mappedBy="tbodLogin")
+	@OneToMany(mappedBy="tbodTipoBloqueio")
 	private List<TbodLogin> tbodLogins;
 
 	public TbodTipoBloqueio() {
