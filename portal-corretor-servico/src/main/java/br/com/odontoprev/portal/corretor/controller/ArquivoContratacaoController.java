@@ -1,22 +1,17 @@
 package br.com.odontoprev.portal.corretor.controller;
 
-import java.text.ParseException;
-import java.util.Base64;
-
+import br.com.odontoprev.portal.corretor.dto.ArquivoContratacao;
+import br.com.odontoprev.portal.corretor.service.ArquivoContratacaoService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.odontoprev.portal.corretor.dto.ArquivoContratacao;
-import br.com.odontoprev.portal.corretor.service.ArquivoContratacaoService;
+import java.text.ParseException;
+import java.util.Base64;
 
 //201808241147 - esert - COR-620 tdd servico obter pdf pme
 //201808241147 - esert - COR-619 criar servico obter pdf pme

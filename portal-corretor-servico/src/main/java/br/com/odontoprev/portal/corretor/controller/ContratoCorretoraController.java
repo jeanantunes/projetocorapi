@@ -1,29 +1,24 @@
 package br.com.odontoprev.portal.corretor.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Optional;
-
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
+import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
-import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Optional;
 
 @RestController
 public class ContratoCorretoraController {
@@ -180,5 +175,53 @@ public class ContratoCorretoraController {
 		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //201808241726 - esert
 		}
 	}
+
+    @RequestMapping(value = "/contratocorretora/{cdCorretora}/json", method = {RequestMethod.GET})
+    public ResponseEntity<ContratoCorretoraPreenchido> getContratoCorretoraPreenchidoJson(@PathVariable Long cdCorretora) throws ParseException {
+        log.info("getContratoPreenchidoJson - ini");
+        try {
+            ContratoCorretora contratoCorretora = contratoCorretoraService.getContratoCorretoraPreenchidoByteArray(cdCorretora);
+            if(contratoCorretora==null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //201808241726 - esert
+            }
+
+            File file = new File(contratoCorretora.getCaminhoCarga().concat(contratoCorretora.getNomeArquivo()));
+
+            if(contratoCorretora.getTamanhoArquivo()==null) {
+                contratoCorretora.setTamanhoArquivo(file.length());
+            }
+
+            byte[] pdfInBytes = new byte[(int)file.length()];
+
+            ContratoCorretoraPreenchido contratoCorretoraPreenchido = new ContratoCorretoraPreenchido();
+
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                fis.read(pdfInBytes);
+                fis.close();
+
+
+                contratoCorretoraPreenchido.setNomeArquivo(contratoCorretora.getNomeArquivo());
+                contratoCorretoraPreenchido.setTipoConteudo(MediaType.APPLICATION_PDF.toString());
+                contratoCorretoraPreenchido.setContratoPreenchido(Base64.encodeBase64String(pdfInBytes));
+
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace();
+                log.error(e);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                log.error(e);
+            }
+
+            log.info("getContratoPreenchidoJson - fim");
+            return ResponseEntity.ok(contratoCorretoraPreenchido);
+
+        } catch (Exception e) {
+            log.info("getContratoPreenchidoJson - erro");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); //201808241726 - esert
+        }
+    }
 
 }
