@@ -37,6 +37,12 @@ public class TbodLogin implements Serializable {
 
 	@Column(name = "SENHA")
 	private String senha;
+	
+	@Column(name = "TEM_BLOQUEIO") //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+	private String temBloqueio; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+	
+	@Column(name = "CD_TIPO_BLOQUEIO") //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+	private TbodTipoBloqueio tbodTipoBloqueio; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 
 	// bi-directional many-to-one association to TbodCorretora
 	@OneToMany(mappedBy = "tbodLogin")
@@ -46,17 +52,10 @@ public class TbodLogin implements Serializable {
 	@OneToMany(mappedBy = "tbodLogin")
 	private List<TbodForcaVenda> tbodForcaVendas;
 
-	// // bi-directional one-to-one association to TbodCorretora
-	// @ManyToOne
-	// @JoinColumn(name = "CD_FORCA_VENDA_CORRETORA", insertable = false, updatable
-	// = false)
-	// private TbodCorretora tbodCorretora;
-	//
-	// // bi-directional many-to-one association to TbodForcaVenda
-	// @ManyToOne
-	// @JoinColumn(name = "CD_FORCA_VENDA_CORRETORA", insertable = false, updatable
-	// = false)
-	// private TbodForcaVenda tbodForcaVenda;
+	// bi-directional many-to-one association to TbodForcaVenda
+	@OneToMany(mappedBy = "tbodLogin")
+	private List<TbodTipoBloqueio> tbodTipoBloqueios; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+
 
 	public TbodLogin() {
 	}
@@ -135,6 +134,30 @@ public class TbodLogin implements Serializable {
 		tbodForcaVenda.setTbodLogin(null);
 
 		return tbodForcaVenda;
+	}
+
+	public String getTemBloqueio() {
+		return temBloqueio;
+	}
+
+	public void setTemBloqueio(String temBloqueio) {
+		this.temBloqueio = temBloqueio;
+	}
+
+	public List<TbodTipoBloqueio> getTbodTipoBloqueios() {
+		return tbodTipoBloqueios;
+	}
+
+	public void setTbodTipoBloqueios(List<TbodTipoBloqueio> tbodTipoBloqueios) {
+		this.tbodTipoBloqueios = tbodTipoBloqueios;
+	}
+
+	public TbodTipoBloqueio getTbodTipoBloqueio() {
+		return tbodTipoBloqueio;
+	}
+
+	public void setTbodTipoBloqueio(TbodTipoBloqueio tbodTipoBloqueio) {
+		this.tbodTipoBloqueio = tbodTipoBloqueio;
 	}
 
 	// public TbodCorretora getTbodCorretora() {
