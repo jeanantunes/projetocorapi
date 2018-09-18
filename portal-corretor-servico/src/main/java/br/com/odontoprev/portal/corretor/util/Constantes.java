@@ -40,4 +40,7 @@ public final class Constantes {
 	
 	public static final Long CONTRATO_CORRETAGEM_V1 = 1l; //201809111832 - esert - COR-752 - DB - alterar tabela TBOD_CONTRATO_CORRETORA
 	public static final Long CONTRATO_INTERMEDIACAO_V1 = 2L; //201809111832 - esert - COR-752 - DB - alterar tabela TBOD_CONTRATO_CORRETORA
+	
+	public static final Long TIPO_BLOQUEIO_SEM_BLOQUEIO = 0L; //201809181744 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+	public static final Long TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO = 1L; //201809181744 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 }
