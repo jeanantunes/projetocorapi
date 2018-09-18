@@ -249,9 +249,19 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			if(contratoModelo==null) {
 				throw new Exception("contratoModelo==null para cdContratoModelo:[" + cdContratoModelo + "]");
 			}
-			
-			String htmlCorretoraTemplate = contratoModelo.getArquivoString();
-			String htmlCorretoraValues = null;
+
+			String htmlContratoModeloTemplate = null;
+
+			if (apenasMiolo){
+
+				htmlContratoModeloTemplate = extrairMiolo(contratoModelo.getArquivoString());
+			}else {
+
+				htmlContratoModeloTemplate = contratoModelo.getArquivoString();
+			}
+
+
+			String htmlContratoModeloValues = null;
 			
 			TbodCorretora tbodCorretora = corretoraDAO.findOne(cdCorretora);
 			if(tbodCorretora==null) {
@@ -264,7 +274,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 				tbodEndereco = new TbodEndereco();
 			}
 
-			htmlCorretoraValues = htmlCorretoraTemplate
+			htmlContratoModeloValues = htmlContratoModeloTemplate
 
 			.replace("__DataAceite__", Objects.toString(dataAceite, ""))
 
@@ -284,16 +294,36 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			.replace("__Complemento__", Objects.toString(tbodEndereco.getComplemento(), ""))
 			;
 				
-			sbHtmlRet.append(htmlCorretoraValues);
+			sbHtmlRet.append(htmlContratoModeloValues);
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			log.info("montarHtmlContratoCorretagemIntermediacao - erro");
+			log.error(e);
 			return null;
 		}
 		
 		log.info("montarHtmlContratoCorretagemIntermediacao - fim");
 		return sbHtmlRet.toString();
+	}
+
+	//COR-773
+	private String extrairMiolo(String arquivoString) {
+		String strInicio = "<!-- INICIO MIOLO -->";
+		String strFinal = "<!-- FINAL MIOLO -->";
+
+		Integer posInicioMiolo = arquivoString.indexOf(strInicio);
+		if (posInicioMiolo == -1){
+			posInicioMiolo = 0;
+		}else {
+			posInicioMiolo += strInicio.length();
+		}
+
+		Integer posFinalMiolo = arquivoString.indexOf(strFinal);
+		if (posFinalMiolo == -1){
+			posFinalMiolo = arquivoString.length();
+		}
+
+		return arquivoString.substring(posInicioMiolo, posFinalMiolo);
 	}
 
 	//201809121519 - esert - COR-714 - Serviço - Novo serviço gerar enviar contrato corretora - (apenasMiolo) define se html deve ser =(true=>para tela) ou (false>=para pdf)
