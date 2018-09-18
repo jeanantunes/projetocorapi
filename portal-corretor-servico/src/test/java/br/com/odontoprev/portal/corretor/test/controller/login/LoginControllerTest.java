@@ -3,6 +3,7 @@ package br.com.odontoprev.portal.corretor.test.controller.login;
 import br.com.odontoprev.portal.corretor.dto.Login;
 import br.com.odontoprev.portal.corretor.dto.LoginResponse;
 import br.com.odontoprev.portal.corretor.service.LoginService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class LoginControllerTest {
         login.setSenha("10203040");
         login.setUsuario("64154543000146");
         login.setTemBloqueio(false);
-        login.setCodigoTipoBloqueio(0L); // 1
+        login.setCodigoTipoBloqueio(Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO); // Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO
         login.setDescricaoTipoBloqueio("SEM BLOQUEIO"); //PENDENTE ACEITAR CONTRATO DE CORRETAGEM OU INTERMEDIAÇÃO
 
         LoginResponse loginResponse = new LoginResponse();
@@ -94,7 +95,7 @@ public class LoginControllerTest {
         login.setSenha("10203040");
         login.setUsuario("12345678909");
         login.setTemBloqueio(false);
-        login.setCodigoTipoBloqueio(0L); // 1
+        login.setCodigoTipoBloqueio(Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO); // Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO
         login.setDescricaoTipoBloqueio("SEM BLOQUEIO"); //PENDENTE ACEITAR CONTRATO DE CORRETAGEM OU INTERMEDIAÇÃO
 
         LoginResponse loginResponse = new LoginResponse();
