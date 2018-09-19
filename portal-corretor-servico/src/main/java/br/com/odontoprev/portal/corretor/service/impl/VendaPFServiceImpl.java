@@ -8,6 +8,7 @@ import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import br.com.odontoprev.portal.corretor.service.VendaPFService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,28 @@ public class VendaPFServiceImpl implements VendaPFService {
 
 		TbodForcaVenda forcaVenda = forcaVendaDAO.findByCdForcaVenda(venda.getCdForcaVenda());
 
+		log.info("[VendaPFServiceImpl::checando status forca venda]");
+
+		if (forcaVenda.getTbodLogin() != null){
+
+			if (forcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM)){
+
+				log.info("[VendaPFServiceImpl::forca venda bloqueado]");
+
+				boolean temBloqueio = true;
+				Long cdTipoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio();
+				String descricaoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao();
+				String mensagemVenda = "[Venda PF não finalizada por bloqueio forca venda]";
+
+				VendaResponse vendaResponse = new VendaResponse(temBloqueio, cdTipoBloqueio, descricaoBloqueio, mensagemVenda);
+
+				return vendaResponse;
+
+			}
+
+
+		}
+
 		log.info("[VendaPFServiceImpl::addVenda]");
 		
 		return vendaPFBusiness.salvarVendaComTitularesComDependentes(venda, Boolean.TRUE);
@@ -43,11 +66,32 @@ public class VendaPFServiceImpl implements VendaPFService {
 	@Override
 	@Transactional(rollbackFor={Exception.class}) //201806280926 - esert - COR-348 rollback pme
 	public VendaResponse addVendaPME(VendaPME vendaPME) {
-	
-		log.info("[VendaPFServiceImpl::addVendaPME]");
 
 		TbodForcaVenda forcaVenda = forcaVendaDAO.findByCdForcaVenda(vendaPME.getCdForcaVenda());
-		
+
+		log.info("[VendaPFServiceImpl::checando status forca venda]");
+
+		if (forcaVenda.getTbodLogin() != null){
+
+			if (forcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM)){
+
+				log.info("[VendaPFServiceImpl::forca venda bloqueado]");
+
+				boolean temBloqueio = true;
+				Long cdTipoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio();
+				String descricaoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao();
+				String mensagemVenda = "[Venda PME não finalizada por bloqueio forca venda]";
+
+				VendaResponse vendaResponse = new VendaResponse(temBloqueio, cdTipoBloqueio, descricaoBloqueio, mensagemVenda);
+
+				return vendaResponse;
+
+			}
+
+		}
+
+		log.info("[VendaPFServiceImpl::addVendaPME]");
+
 		return vendaPMEBusiness.salvarVendaPMEComEmpresasPlanosTitularesDependentes(vendaPME);
 	}
 }
