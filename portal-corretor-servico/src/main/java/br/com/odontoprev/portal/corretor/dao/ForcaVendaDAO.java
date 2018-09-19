@@ -1,18 +1,19 @@
 package br.com.odontoprev.portal.corretor.dao;
 
-import java.util.List;
-
+import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
+import java.util.List;
 
 @Repository
 public interface ForcaVendaDAO extends CrudRepository<TbodForcaVenda, Long> {
 
 	public List<TbodForcaVenda> findByCpf(String cpf);
+
+	public TbodForcaVenda findByCdForcaVenda(Long cdForcaVenda);
 	
 	public TbodForcaVenda findByCdForcaVendaAndTbodCorretoraCnpj(Long cdForcaVenda, String cnpj);
 
