@@ -1,11 +1,10 @@
 package br.com.odontoprev.portal.corretor.test.controller.corretora;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.CorretoraResponse;
+import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.service.CorretoraService;
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +14,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.google.gson.Gson;
-
-import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.CorretoraResponse;
-import br.com.odontoprev.portal.corretor.service.CorretoraService;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 
@@ -143,6 +143,74 @@ public class CorretoraControllerTest {
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isNoContent())
         ;
+
+    }
+
+    @Test
+    public void testGetCorretoraOk200retornandoSemBloqueio() throws Exception {
+
+        String cnpjCorretora = "64154543000146";
+
+        long cdCorretora = 2551151L;
+
+        boolean temBloqueio = false;
+        Long cdTipoBloqueio = 0L;
+        String stringSemBloqueio = "SEM BLOQUEIO";
+
+        Login loginGiven = new Login();
+        loginGiven.setTemBloqueio(temBloqueio);
+        loginGiven.setCodigoTipoBloqueio(cdTipoBloqueio);
+        loginGiven.setDescricaoTipoBloqueio(stringSemBloqueio);
+
+        Corretora corretora = new Corretora();
+        corretora.setEmail("fernandinha@odontoprev.com");
+        corretora.setCdCorretora(cdCorretora);
+        corretora.setLogin(loginGiven);
+
+        //Mockando Service que busca no banco de dados
+        given(service.buscaCorretoraPorCnpj(cnpjCorretora)).willReturn(corretora);
+
+        //Efetua a requisição na rota e espera um status code
+        mvc.perform(get("/corretora/"+cnpjCorretora)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login.temBloqueio").value(temBloqueio))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login.codigoTipoBloqueio").value(cdTipoBloqueio))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login.descricaoTipoBloqueio").value(stringSemBloqueio));
+
+    }
+
+    @Test
+    public void testGetCorretoraOk200retornandoComBloqueio() throws Exception {
+
+        String cnpjCorretora = "64154543000146";
+
+        long cdCorretora = 2551151L;
+
+        boolean temBloqueio = true;
+        Long cdTipoBloqueio = 1L;
+        String stringSemBloqueio = "PENDENTE ACEITAR CONTRATO DE CORRETAGEM OU INTERMEDIAÇÃO.";
+
+        Login loginGiven = new Login();
+        loginGiven.setTemBloqueio(temBloqueio);
+        loginGiven.setCodigoTipoBloqueio(cdTipoBloqueio);
+        loginGiven.setDescricaoTipoBloqueio(stringSemBloqueio);
+
+        Corretora corretora = new Corretora();
+        corretora.setEmail("fernandinha@odontoprev.com");
+        corretora.setCdCorretora(cdCorretora);
+        corretora.setLogin(loginGiven);
+
+        //Mockando Service que busca no banco de dados
+        given(service.buscaCorretoraPorCnpj(cnpjCorretora)).willReturn(corretora);
+
+        //Efetua a requisição na rota e espera um status code
+        mvc.perform(get("/corretora/"+cnpjCorretora)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login.temBloqueio").value(temBloqueio))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login.codigoTipoBloqueio").value(cdTipoBloqueio))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.login.descricaoTipoBloqueio").value(stringSemBloqueio));
 
     }
 
