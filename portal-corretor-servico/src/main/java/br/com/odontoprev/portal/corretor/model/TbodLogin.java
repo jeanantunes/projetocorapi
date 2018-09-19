@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -41,7 +43,9 @@ public class TbodLogin implements Serializable {
 	@Column(name = "TEM_BLOQUEIO") //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 	private String temBloqueio; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 	
-	@Column(name = "CD_TIPO_BLOQUEIO") //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+    // bi-directional many-to-one association to TbodPlano
+    @ManyToOne
+    @JoinColumn(name = "CD_TIPO_BLOQUEIO") //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 	private TbodTipoBloqueio tbodTipoBloqueio; //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 
 	// bi-directional many-to-one association to TbodCorretora

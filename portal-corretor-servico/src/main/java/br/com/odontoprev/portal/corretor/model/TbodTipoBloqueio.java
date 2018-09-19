@@ -1,8 +1,13 @@
 package br.com.odontoprev.portal.corretor.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 //201809181556 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 @Entity
@@ -38,6 +43,11 @@ public class TbodTipoBloqueio implements Serializable {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	@Override
+	public String toString() {
+		return "TbodTipoBloqueio [cdTipoBloqueio=" + cdTipoBloqueio + ", descricao=" + descricao + "]";
 	}
 
 	public List<TbodLogin> getTbodLogins() {
