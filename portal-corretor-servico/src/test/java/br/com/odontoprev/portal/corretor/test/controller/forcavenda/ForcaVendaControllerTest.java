@@ -1,10 +1,13 @@
 package br.com.odontoprev.portal.corretor.test.controller.forcavenda;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
+import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,17 +17,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.google.gson.Gson;
-
-import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
-import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
-import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = { ForcaVendaControllerTestConfig.class })
@@ -75,6 +76,52 @@ public class ForcaVendaControllerTest {
 			.content(json)
 			.contentType(APPLICATION_JSON))
 			.andExpect(status().isOk());	
+	}
+
+	@Test
+	public void testOk200GetForcaVenda() throws Exception {
+		//Given
+		boolean temBloqueio = false;
+
+		Long cdForcaVendaGiven = 6L;
+		Long cdTipoBloqueio = 0L;
+		String cpfForcaVenda = "38330982874";
+		String stringSemBloqueio = "SEM BLOQUEIO";
+
+		ForcaVenda forcaVendaGiven = new ForcaVenda();
+		forcaVendaGiven.setCdForcaVenda(cdForcaVendaGiven);
+		forcaVendaGiven.setNome("FERNANDO SETAI");
+		forcaVendaGiven.setCelular("11980910754");
+		forcaVendaGiven.setEmail("fernando.mota@odontoprev.com.br");
+		forcaVendaGiven.setCorretora(new Corretora());
+		forcaVendaGiven.getCorretora().setCdCorretora(21L);
+		forcaVendaGiven.setStatusForcaVenda(String.valueOf(StatusForcaVendaEnum.ATIVO.getCodigo()));
+		forcaVendaGiven.setCpf("38330982874");
+		forcaVendaGiven.setStatus(Constantes.ATIVO);
+		forcaVendaGiven.setDataNascimento(null);
+		forcaVendaGiven.setCargo(null);
+		forcaVendaGiven.setDepartamento(null);
+
+		Login loginGiven = new Login();
+
+		loginGiven.setTemBloqueio(temBloqueio);
+		loginGiven.setCodigoTipoBloqueio(cdTipoBloqueio);
+		loginGiven.setDescricaoTipoBloqueio(stringSemBloqueio);
+
+		forcaVendaGiven.setLogin(loginGiven);
+
+		// Mockando Service que busca no banco de dados
+		given(service.findForcaVendaByCpf(cpfForcaVenda))
+				.willReturn(forcaVendaGiven);
+
+		// Efetua a requisição na rota e espera um status code
+		mvc.perform(get("/forcavenda/" + cpfForcaVenda)
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.login.temBloqueio").value(temBloqueio))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.login.codigoTipoBloqueio").value(cdTipoBloqueio))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.login.descricaoTipoBloqueio").value(stringSemBloqueio));
+
 	}
 
 	@Test
