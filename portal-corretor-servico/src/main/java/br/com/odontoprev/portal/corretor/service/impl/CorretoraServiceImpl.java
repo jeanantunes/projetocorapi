@@ -322,6 +322,13 @@ public class CorretoraServiceImpl implements CorretoraService {
 				login.setFotoPerfilB64(tbLogin.getFotoPerfilB64());
 				login.setSenha(tbLogin.getSenha());
 				login.setUsuario(tbCorretora.getCnpj());
+				if (tbLogin.getTemBloqueio() != null) {
+					login.setTemBloqueio(tbLogin.getTemBloqueio().equals(Constantes.SIM));
+				}
+				if (tbLogin.getTbodTipoBloqueio() != null) {
+					login.setCodigoTipoBloqueio(tbLogin.getTbodTipoBloqueio().getCdTipoBloqueio());
+					login.setDescricaoTipoBloqueio(tbLogin.getTbodTipoBloqueio().getDescricao());
+				}
 				corretora.setLogin(login);
 			}
 			

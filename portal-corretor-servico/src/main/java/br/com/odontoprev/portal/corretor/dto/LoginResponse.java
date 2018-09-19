@@ -14,13 +14,17 @@ public class LoginResponse implements Serializable {
     private String nomeCorretora;
     private String perfil;
     private String dtAceiteContrato;
+    private boolean temBloqueio;
+    private Long codigoTipoBloqueio;
+    private String descricaoTipoBloqueio;
 
     public LoginResponse() {
 
     }
 
     public LoginResponse(long codigoDcss, long codigoUsuario, String nomeUsuario, String documento,
-                         long codigoCorretora, String nomeCorretora, String perfil) {
+                         long codigoCorretora, String nomeCorretora, String perfil,
+                         boolean temBloqueio, long codigoTipoBloqueio, String descricaoTipoBloqueio) {
         this.codigoDcss = codigoDcss;
         this.codigoUsuario = codigoUsuario;
         this.nomeUsuario = nomeUsuario;
@@ -28,10 +32,14 @@ public class LoginResponse implements Serializable {
         this.codigoCorretora = codigoCorretora;
         this.nomeCorretora = nomeCorretora;
         this.perfil = perfil;
+        this.temBloqueio = temBloqueio;
+        this.codigoTipoBloqueio = codigoTipoBloqueio;
+        this.descricaoTipoBloqueio = descricaoTipoBloqueio;
     }
 
     public LoginResponse(long codigoUsuario, String nomeUsuario, String documento,
-                         long codigoCorretora, String nomeCorretora, String perfil, String dtAceiteContrato) {
+                         long codigoCorretora, String nomeCorretora, String perfil, String dtAceiteContrato,
+                         boolean temBloqueio, long codigoTipoBloqueio, String descricaoTipoBloqueio) {
         this.codigoUsuario = codigoUsuario;
         this.nomeUsuario = nomeUsuario;
         this.documento = documento;
@@ -39,6 +47,9 @@ public class LoginResponse implements Serializable {
         this.nomeCorretora = nomeCorretora;
         this.perfil = perfil;
         this.dtAceiteContrato = dtAceiteContrato;
+        this.temBloqueio = temBloqueio;
+        this.codigoTipoBloqueio = codigoTipoBloqueio;
+        this.descricaoTipoBloqueio = descricaoTipoBloqueio;
     }
 
     public long getCodigoDcss() {
@@ -105,6 +116,30 @@ public class LoginResponse implements Serializable {
         this.dtAceiteContrato = dtAceiteContrato;
     }
 
+    public boolean isTemBloqueio() {
+        return temBloqueio;
+    }
+
+    public void setTemBloqueio(boolean temBloqueio) {
+        this.temBloqueio = temBloqueio;
+    }
+
+    public Long getCodigoTipoBloqueio() {
+        return codigoTipoBloqueio;
+    }
+
+    public void setCodigoTipoBloqueio(Long codigoTipoBloqueio) {
+        this.codigoTipoBloqueio = codigoTipoBloqueio;
+    }
+
+    public String getDescricaoTipoBloqueio() {
+        return descricaoTipoBloqueio;
+    }
+
+    public void setDescricaoTipoBloqueio(String descricaoTipoBloqueio) {
+        this.descricaoTipoBloqueio = descricaoTipoBloqueio;
+    }
+
     @Override
     public String toString() {
         return "LoginResponse{" +
@@ -115,7 +150,10 @@ public class LoginResponse implements Serializable {
                 ", codigoCorretora=" + codigoCorretora +
                 ", nomeCorretora='" + nomeCorretora + '\'' +
                 ", perfil='" + perfil + '\'' +
-                ", dtAceiteContrato=" + dtAceiteContrato +
+                ", dtAceiteContrato='" + dtAceiteContrato + '\'' +
+                ", temBloqueio=" + temBloqueio +
+                ", codigoTipoBloqueio=" + codigoTipoBloqueio +
+                ", descricaoTipoBloqueio='" + descricaoTipoBloqueio + '\'' +
                 '}';
     }
 

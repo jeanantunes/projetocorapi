@@ -97,7 +97,11 @@ public class LoginServiceImpl implements LoginService {
                         loginRetorno.getBody().getNomeUsuario(),
                         loginRetorno.getBody().getDocumento(),
                         forcaVenda.getCorretora().getCdCorretora(),
-                        forcaVenda.getCorretora().getRazaoSocial(), perfil);
+                        forcaVenda.getCorretora().getRazaoSocial(),
+                        perfil,
+                        forcaVenda.getLogin().getTemBloqueio(),
+                        forcaVenda.getLogin().getCodigoTipoBloqueio(),
+                        forcaVenda.getLogin().getDescricaoTipoBloqueio());
 
                 log.info("loginResponse:[" + loginResponse + "]");
                 return loginResponse;
@@ -147,7 +151,10 @@ public class LoginServiceImpl implements LoginService {
                             corretora.getCdCorretora(),
                             corretora.getRazaoSocial(),
                             perfil,
-                            dtAceiteContrato);
+                            dtAceiteContrato,
+                            corretora.getLogin().getTemBloqueio(),
+                            corretora.getLogin().getCodigoTipoBloqueio(),
+                            corretora.getLogin().getDescricaoTipoBloqueio());
                 } else {
                     return responseNotFound;
                 }
