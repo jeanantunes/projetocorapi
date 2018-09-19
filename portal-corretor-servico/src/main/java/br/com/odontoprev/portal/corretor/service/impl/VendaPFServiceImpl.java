@@ -47,7 +47,7 @@ public class VendaPFServiceImpl implements VendaPFService {
 				boolean temBloqueio = true;
 				Long cdTipoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio();
 				String descricaoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao();
-				String mensagemVenda = "[Venda PF não finalizada por bloqueio forca venda]";
+				String mensagemVenda = "[Venda PF nao finalizada por bloqueio forca venda]";
 
 				VendaResponse vendaResponse = new VendaResponse(temBloqueio, cdTipoBloqueio, descricaoBloqueio, mensagemVenda);
 
@@ -80,7 +80,7 @@ public class VendaPFServiceImpl implements VendaPFService {
 				boolean temBloqueio = true;
 				Long cdTipoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio();
 				String descricaoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao();
-				String mensagemVenda = "[Venda PME não finalizada por bloqueio forca venda]";
+				String mensagemVenda = "[Venda PME nao finalizada por bloqueio forca venda]";
 
 				VendaResponse vendaResponse = new VendaResponse(temBloqueio, cdTipoBloqueio, descricaoBloqueio, mensagemVenda);
 
