@@ -16,6 +16,34 @@ public class VendaResponse implements Serializable {
 	private String dtVenda;
 	private String mensagemErro;
 	private Long cdEmpresa;
+	private boolean temBloqueio;
+
+	@Override
+	public String toString() {
+		return "VendaResponse{" +
+				"id=" + id +
+				", mensagem='" + mensagem + '\'' +
+				", cdVenda=" + cdVenda +
+				", numeroProposta='" + numeroProposta + '\'' +
+				", dtVenda='" + dtVenda + '\'' +
+				", mensagemErro='" + mensagemErro + '\'' +
+				", cdEmpresa=" + cdEmpresa +
+				", temBloqueio=" + temBloqueio +
+				", codigoTipoBloqueio=" + codigoTipoBloqueio +
+				", descricaoTipoBloqueio='" + descricaoTipoBloqueio + '\'' +
+				'}';
+	}
+
+	private Long codigoTipoBloqueio;
+	private String descricaoTipoBloqueio;
+
+	public VendaResponse(boolean temBloqueio, Long codigoTipoBloqueio, String descricaoTipoBloqueio, String mensagem) {
+
+		this.temBloqueio = temBloqueio;
+		this.codigoTipoBloqueio = codigoTipoBloqueio;
+		this.descricaoTipoBloqueio = descricaoTipoBloqueio;
+		this.mensagem = mensagem;
+	}
 
 	public VendaResponse(long id) {
 		this.id = id;
@@ -77,16 +105,28 @@ public class VendaResponse implements Serializable {
 		return cdEmpresa;
 	}
 
-	@Override
-	public String toString() {
-		return "VendaResponse [" 
-			+ "id=" + id 
-			+ ", mensagem=" + mensagem 
-			+ ", cdVenda=" + cdVenda 
-			+ ", numeroProposta=" + numeroProposta 
-			+ ", dtVenda=" + dtVenda 
-			+ ", mensagemErro=" + mensagemErro 
-			+ ", cdEmpresa=" + cdEmpresa 
-			+ "]";
+	public boolean getTemBloqueio() {
+		return temBloqueio;
 	}
+
+	public void setTemBloqueio(boolean temBloqueio) {
+		this.temBloqueio = temBloqueio;
+	}
+
+	public Long getCodigoTipoBloqueio() {
+		return codigoTipoBloqueio;
+	}
+
+	public void setCodigoTipoBloqueio(Long codigoTipoBloqueio) {
+		this.codigoTipoBloqueio = codigoTipoBloqueio;
+	}
+
+	public String getDescricaoTipoBloqueio() {
+		return descricaoTipoBloqueio;
+	}
+
+	public void setDescricaoTipoBloqueio(String descricaoTipoBloqueio) {
+		this.descricaoTipoBloqueio = descricaoTipoBloqueio;
+	}
+
 }
