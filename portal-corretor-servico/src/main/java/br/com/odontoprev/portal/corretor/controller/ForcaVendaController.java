@@ -1,21 +1,16 @@
 package br.com.odontoprev.portal.corretor.controller;
 
-import java.util.List;
-
+import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
+import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
-import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import java.util.List;
 
 @RestController
 public class ForcaVendaController {
@@ -73,7 +68,7 @@ public class ForcaVendaController {
 
 		log.info(cpf);
 
-		return forcaVendaService.findForcaVendaByCpf(cpf);
+		return forcaVendaService.findForcaVendaByCpf(cpf); // TODO: Debito tecnico retornar response entity 20180919
 	}
 
 	@RequestMapping(value = "/forcavenda/{cdForcaVenda}/corretora/{cnpj}", method = { RequestMethod.GET })

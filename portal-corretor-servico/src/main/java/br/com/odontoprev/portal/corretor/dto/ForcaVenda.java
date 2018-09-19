@@ -23,7 +23,8 @@ public class ForcaVenda implements Serializable {
 	private String rg;
 	private String senha;
 	private String canalVenda;
-	private String status;	
+	private String status;
+	private Login login;
 
 	public String getStatus() {
 		return status;
@@ -167,6 +168,14 @@ public class ForcaVenda implements Serializable {
 
 	public void setCanalVenda(String canalVenda) {
 		this.canalVenda = canalVenda;
+	}
+
+	public Login getLogin() {
+		return login;
+	}
+
+	public void setLogin(Login login) {
+		this.login = login;
 	}
 
 	@Override

@@ -1,15 +1,17 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.AGUARDANDO_APRO;
-import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.ATIVO;
-import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.PRE_CADASTRO;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
+import br.com.odontoprev.portal.corretor.dao.*;
+import br.com.odontoprev.portal.corretor.dto.*;
+import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
+import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
+import br.com.odontoprev.portal.corretor.enums.TipoNotificationTemplate;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
+import br.com.odontoprev.portal.corretor.model.*;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
+import br.com.odontoprev.portal.corretor.util.DataUtil;
+import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,37 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
-import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
-import br.com.odontoprev.portal.corretor.dao.DeviceTokenDAO;
-import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
-import br.com.odontoprev.portal.corretor.dao.LoginDAO;
-import br.com.odontoprev.portal.corretor.dao.NotificacaoDAO;
-import br.com.odontoprev.portal.corretor.dao.SistemaPushDAO;
-import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
-import br.com.odontoprev.portal.corretor.dao.TokenDAO;
-import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.DCSSLoginResponse;
-import br.com.odontoprev.portal.corretor.dto.Endereco;
-import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
-import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
-import br.com.odontoprev.portal.corretor.dto.PushNotification;
-import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
-import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
-import br.com.odontoprev.portal.corretor.enums.TipoNotificationTemplate;
-import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
-import br.com.odontoprev.portal.corretor.model.TbodCorretora;
-import br.com.odontoprev.portal.corretor.model.TbodDeviceToken;
-import br.com.odontoprev.portal.corretor.model.TbodEndereco;
-import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
-import br.com.odontoprev.portal.corretor.model.TbodLogin;
-import br.com.odontoprev.portal.corretor.model.TbodNotificationTemplate;
-import br.com.odontoprev.portal.corretor.model.TbodSistemaPush;
-import br.com.odontoprev.portal.corretor.model.TbodStatusForcaVenda;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
-import br.com.odontoprev.portal.corretor.util.DataUtil;
-import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.*;
 
 @Service
 public class ForcaVendaServiceImpl implements ForcaVendaService {
@@ -504,6 +482,17 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				corretora.setRazaoSocial(tbCorretora.getRazaoSocial());
 
 				forcaVenda.setCorretora(corretora);
+			}
+
+			if (tbForcaVenda.getTbodLogin() != null){
+
+				Login loginForcaVenda = new Login();
+				loginForcaVenda.
+						setTemBloqueio(tbForcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM));
+				loginForcaVenda.setCodigoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio());
+				loginForcaVenda.setDescricaoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao());
+				forcaVenda.setLogin(loginForcaVenda);
+
 			}
 
 			final String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
