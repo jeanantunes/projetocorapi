@@ -30,4 +30,6 @@ public interface ForcaVendaService {
 	/***** status excluir ou reprovar - Força *****/
 	ForcaVendaResponse updateForcaVendaStatusByCpf(ForcaVenda forcaVenda, String opcaoStatus) throws Exception;
 
+	public ForcaVenda findByCdForcaVenda(Long cdForcaVenda);
+
 }
