@@ -961,4 +961,68 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
 		return pushNotificationService.envioMensagemPush(pushNotification);
 	}
+
+	@Override
+	public ForcaVenda findByCdForcaVenda(Long cdForcaVenda) {
+			log.info("[findByCdForcaVenda]");
+
+			final ForcaVenda forcaVenda = new ForcaVenda();
+
+			final TbodForcaVenda tbForcaVenda = forcaVendaDao.findOne(cdForcaVenda);
+
+			if (tbForcaVenda != null) {
+
+				forcaVenda.setCdForcaVenda(tbForcaVenda.getCdForcaVenda());
+				forcaVenda.setNome(tbForcaVenda.getNome());
+				forcaVenda.setCelular(tbForcaVenda.getCelular());
+				forcaVenda.setEmail(tbForcaVenda.getEmail());
+				forcaVenda.setCpf(tbForcaVenda.getCpf());
+				forcaVenda.setAtivo(Constantes.ATIVO.equals(tbForcaVenda.getAtivo()));
+
+				String dataStr = "00/00/0000";
+				final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				try {
+					dataStr = sdf.format(tbForcaVenda.getDataNascimento());
+				} catch (final Exception e) {
+					log.error("Erro ao formatar data de nascimento :: Detalhe: [" + e.getMessage() + "]");
+				}
+				forcaVenda.setDataNascimento(dataStr);
+
+				forcaVenda.setCargo(tbForcaVenda.getCargo());
+				forcaVenda.setDepartamento(tbForcaVenda.getDepartamento());
+
+				final String statusForca = tbForcaVenda.getTbodStatusForcaVenda() != null
+						? tbForcaVenda.getTbodStatusForcaVenda().getDescricao() : "";
+				forcaVenda.setStatusForcaVenda(statusForca);
+
+				if (tbForcaVenda.getTbodCorretora() != null) {
+
+					final TbodCorretora tbCorretora = tbForcaVenda.getTbodCorretora();
+					final Corretora corretora = new Corretora();
+
+					corretora.setCdCorretora(tbCorretora.getCdCorretora());
+					corretora.setCnpj(tbCorretora.getCnpj());
+					corretora.setRazaoSocial(tbCorretora.getRazaoSocial());
+
+					forcaVenda.setCorretora(corretora);
+				}
+
+				if (tbForcaVenda.getTbodLogin() != null){
+
+					Login loginForcaVenda = new Login();
+					loginForcaVenda.
+							setTemBloqueio(tbForcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM));
+					loginForcaVenda.setCodigoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio());
+					loginForcaVenda.setDescricaoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao());
+					forcaVenda.setLogin(loginForcaVenda);
+
+				}
+
+				final String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
+				forcaVenda.setSenha(senha);
+			}
+
+			return forcaVenda;
+
+	}
 }

@@ -1,8 +1,11 @@
 package br.com.odontoprev.portal.corretor.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Login implements Serializable {
 
     private static final long serialVersionUID = -5493233987085523214L;
