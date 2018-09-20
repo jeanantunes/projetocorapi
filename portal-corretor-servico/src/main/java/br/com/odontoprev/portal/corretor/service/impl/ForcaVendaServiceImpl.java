@@ -487,12 +487,25 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			if (tbForcaVenda.getTbodLogin() != null){
 
 				Login loginForcaVenda = new Login();
-				loginForcaVenda.
-						setTemBloqueio(tbForcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM));
+				loginForcaVenda.setTemBloqueio(tbForcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM));
 				loginForcaVenda.setCodigoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio());
 				loginForcaVenda.setDescricaoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao());
 				forcaVenda.setLogin(loginForcaVenda);
 
+			} else { 
+				//201809201634 - esert/yalm - COR-796 : APP - Block Modal Pré-Cadastro Consulta CPF
+				//201809201634 - esert/yalm - quando o TBOD_FORCA_VENDA.CD_STATUS_FORCA_VENDAS = 5(PRE CADASTRO) ele NAO TEM TBOD_LOGIN (CD_LOGIN is NULL)
+				//201809201634 - esert/yalm - entao precisa buscar o bloqueio no TBOD_LOGIN da CORRETORA dele
+				if (tbForcaVenda.getTbodCorretora() != null) {
+					//201809201634 - esert/yalm - isso SE A CORRETORA dele tiver TBOD_LOGIN (deveria sempre)
+					if (tbForcaVenda.getTbodCorretora().getTbodLogin() != null) {
+						Login loginForcaVenda = new Login();
+						loginForcaVenda.setTemBloqueio(tbForcaVenda.getTbodCorretora().getTbodLogin().getTemBloqueio().equals(Constantes.SIM));
+						loginForcaVenda.setCodigoTipoBloqueio(tbForcaVenda.getTbodCorretora().getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio());
+						loginForcaVenda.setDescricaoTipoBloqueio(tbForcaVenda.getTbodCorretora().getTbodLogin().getTbodTipoBloqueio().getDescricao());
+						forcaVenda.setLogin(loginForcaVenda);
+					}
+				}
 			}
 
 			final String senha = tbForcaVenda.getTbodLogin() != null ? tbForcaVenda.getTbodLogin().getSenha() : "";
