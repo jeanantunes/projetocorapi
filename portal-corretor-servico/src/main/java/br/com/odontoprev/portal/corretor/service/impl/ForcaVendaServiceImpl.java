@@ -493,6 +493,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 				forcaVenda.setLogin(loginForcaVenda);
 
 			} else { 
+				//201809201634 - esert/yalm - COR-816 : ForcaVenda Status PreCadastro(5) nao tem TBOD_LOGIN ainda
 				//201809201634 - esert/yalm - COR-796 : APP - Block Modal Pré-Cadastro Consulta CPF
 				//201809201634 - esert/yalm - quando o TBOD_FORCA_VENDA.CD_STATUS_FORCA_VENDAS = 5(PRE CADASTRO) ele NAO TEM TBOD_LOGIN (CD_LOGIN is NULL)
 				//201809201634 - esert/yalm - entao precisa buscar o bloqueio no TBOD_LOGIN da CORRETORA dele
