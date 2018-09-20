@@ -139,7 +139,7 @@ public class ForcaVendaController {
                 responseObject.setDescricaoTipoBloqueio(forcaVenda.getLogin().getDescricaoTipoBloqueio());
             }else {
                 log.info("cpf == NULL AND CdForcaVenda == null - fim");
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
         } catch (Exception e) {
             log.error("ERRO em getForcaVendaBloqueio()", e);
