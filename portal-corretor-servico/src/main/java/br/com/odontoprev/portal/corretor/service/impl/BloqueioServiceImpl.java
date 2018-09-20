@@ -52,49 +52,55 @@ public class BloqueioServiceImpl implements BloqueioService {
 	
 	@Override
 	public boolean doBloqueioCorretora(Corretora corretoraDTO) throws Exception {
-		log.info("doBloqueioCorretora - ini");
-		log.info(corretoraDTO);
-		
-		TbodCorretora tbodCorretora = corretoraDAO.findByCnpj(corretoraDTO.getCnpj());
-
-		if(tbodCorretora==null) {
-			log.error("tbodCorretora==null para corretoraDTO.getCnpj():[" + corretoraDTO.getCnpj() + "]");
+		try {
+			log.info("doBloqueioCorretora - ini");
+			log.info(corretoraDTO);
+			
+			TbodCorretora tbodCorretora = corretoraDAO.findByCnpj(corretoraDTO.getCnpj());
+	
+			if(tbodCorretora==null) {
+				log.error("tbodCorretora==null para corretoraDTO.getCnpj():[" + corretoraDTO.getCnpj() + "]");
+				return false;
+			}
+	
+			Optional<TbodContratoCorretora> optionalTbodContratoCorretora = tbodCorretora.getTbodContratoCorretoras().stream().filter(
+				item ->
+				item.getTbodContratoModelo().getCdContratoModelo().equals(Constantes.CONTRATO_CORRETAGEM_V1)
+				||
+				item.getTbodContratoModelo().getCdContratoModelo().equals(Constantes.CONTRATO_INTERMEDIACAO_V1)
+			).findFirst();
+	
+			TbodLogin tbodLoginCorretora = tbodCorretora.getTbodLogin();
+	
+			if(optionalTbodContratoCorretora.isPresent()) {
+				log.info("optionalTbodContratoCorretora.isPresent() para corretoraDTO.getCnpj():[" + corretoraDTO.getCnpj() + "]");
+				tbodLoginCorretora.setTemBloqueio(Constantes.NAO);
+				TbodTipoBloqueio tbodTipoBloqueio = tipoBloqueioDAO.findOne(Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO);
+				if(tbodTipoBloqueio==null) {
+					log.info("tbodTipoBloqueio==null para Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO:[" + Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO + "]");
+					return false;
+				}
+				tbodLoginCorretora.setTbodTipoBloqueio(tbodTipoBloqueio);
+			} else {
+				log.info("!optionalTbodContratoCorretora.isPresent() para corretoraDTO.getCnpj():[" + corretoraDTO.getCnpj() + "]");
+				tbodLoginCorretora.setTemBloqueio(Constantes.SIM);
+				TbodTipoBloqueio tbodTipoBloqueio = tipoBloqueioDAO.findOne(Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO);
+				if(tbodTipoBloqueio==null) {
+					log.info("tbodTipoBloqueio==null para Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO:[" + Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO + "]");
+					return false;
+				}
+				tbodLoginCorretora.setTbodTipoBloqueio(tbodTipoBloqueio);
+			}
+			
+			tbodLoginCorretora = loginDAO.save(tbodLoginCorretora);
+	
+			log.info("doBloqueioCorretora - fim");
+			return true;
+			
+		}catch (Exception e) {
+			log.error("doBloqueioCorretora - erro", e); //201809201053 - esert - COR-730 - protecao 
 			return false;
 		}
-
-		Optional<TbodContratoCorretora> optionalTbodContratoCorretora = tbodCorretora.getTbodContratoCorretoras().stream().filter(
-			item ->
-			item.getTbodContratoModelo().getCdContratoModelo().equals(Constantes.CONTRATO_CORRETAGEM_V1)
-			||
-			item.getTbodContratoModelo().getCdContratoModelo().equals(Constantes.CONTRATO_INTERMEDIACAO_V1)
-		).findFirst();
-
-		TbodLogin tbodLoginCorretora = tbodCorretora.getTbodLogin();
-
-		if(optionalTbodContratoCorretora.isPresent()) {
-			log.info("optionalTbodContratoCorretora.isPresent() para corretoraDTO.getCnpj():[" + corretoraDTO.getCnpj() + "]");
-			tbodLoginCorretora.setTemBloqueio(Constantes.NAO);
-			TbodTipoBloqueio tbodTipoBloqueio = tipoBloqueioDAO.findOne(Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO);
-			if(tbodTipoBloqueio==null) {
-				log.info("tbodTipoBloqueio==null para Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO:[" + Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO + "]");
-				return false;
-			}
-			tbodLoginCorretora.setTbodTipoBloqueio(tbodTipoBloqueio);
-		} else {
-			log.info("!optionalTbodContratoCorretora.isPresent() para corretoraDTO.getCnpj():[" + corretoraDTO.getCnpj() + "]");
-			tbodLoginCorretora.setTemBloqueio(Constantes.SIM);
-			TbodTipoBloqueio tbodTipoBloqueio = tipoBloqueioDAO.findOne(Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO);
-			if(tbodTipoBloqueio==null) {
-				log.info("tbodTipoBloqueio==null para Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO:[" + Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO + "]");
-				return false;
-			}
-			tbodLoginCorretora.setTbodTipoBloqueio(tbodTipoBloqueio);
-		}
-		
-		tbodLoginCorretora = loginDAO.save(tbodLoginCorretora);
-
-		log.info("doBloqueioCorretora - fim");
-		return true;
 	}
 
 	@Override
@@ -106,62 +112,67 @@ public class BloqueioServiceImpl implements BloqueioService {
 
 	@Override
 	public boolean doBloqueioForcaVenda(ForcaVenda forcaVendaDTO) {
-		log.info("doBloqueioForcaVenda(ForcaVenda) - ini");
-		log.info(forcaVendaDTO);
-		
-		
-		List<TbodForcaVenda> listTbodForcaVenda = forcaVendaDAO.findByCpf(forcaVendaDTO.getCpf());
-
-		if(listTbodForcaVenda==null || listTbodForcaVenda.size()==0) {
-			log.error("listTbodForcaVenda==null || size()==0 para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
-			return false;
-		}
-
-		if(listTbodForcaVenda.size()>1) {
-			log.error("listTbodForcaVenda.size()>1 para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
-			return false;
-		}
-		
-		TbodForcaVenda tbodForcaVenda = listTbodForcaVenda.get(0);
-		
-		if(tbodForcaVenda.getTbodCorretora()==null) {
-			log.error("listTbodForcaVenda.get(0).getTbodCorretora()==null para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
-			return false;
-		}
+		try {
+			log.info("doBloqueioForcaVenda(ForcaVenda) - ini");
+			log.info(forcaVendaDTO);
 			
-		Optional<TbodContratoCorretora> optionalTbodContratoCorretora = tbodForcaVenda.getTbodCorretora().getTbodContratoCorretoras().stream().filter(
-			item ->
-			item.getTbodContratoModelo().getCdContratoModelo().equals(Constantes.CONTRATO_CORRETAGEM_V1)
-			||
-			item.getTbodContratoModelo().getCdContratoModelo().equals(Constantes.CONTRATO_INTERMEDIACAO_V1)
-		).findFirst();
-
-		TbodLogin tbodLoginForcaVenda = tbodForcaVenda.getTbodLogin();
-		
-		if(optionalTbodContratoCorretora.isPresent()) {
-			log.info("optionalTbodContratoCorretora.isPresent() para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
-			tbodLoginForcaVenda.setTemBloqueio(Constantes.NAO);
-			TbodTipoBloqueio tbodTipoBloqueio = tipoBloqueioDAO.findOne(Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO);
-			if(tbodTipoBloqueio==null) {
-				log.info("tbodTipoBloqueio==null para Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO:[" + Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO + "]");
+			List<TbodForcaVenda> listTbodForcaVenda = forcaVendaDAO.findByCpf(forcaVendaDTO.getCpf());
+	
+			if(listTbodForcaVenda==null || listTbodForcaVenda.size()==0) {
+				log.error("listTbodForcaVenda==null || size()==0 para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
 				return false;
 			}
-			tbodLoginForcaVenda.setTbodTipoBloqueio(tbodTipoBloqueio);
-		} else {
-			log.info("!optionalTbodContratoCorretora.isPresent() para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
-			tbodLoginForcaVenda.setTemBloqueio(Constantes.SIM);
-			TbodTipoBloqueio tbodTipoBloqueio = tipoBloqueioDAO.findOne(Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO);
-			if(tbodTipoBloqueio==null) {
-				log.info("tbodTipoBloqueio==null para Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO:[" + Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO + "]");
+	
+			if(listTbodForcaVenda.size()>1) {
+				log.error("listTbodForcaVenda.size()>1 para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
 				return false;
 			}
-			tbodLoginForcaVenda.setTbodTipoBloqueio(tbodTipoBloqueio);
+			
+			TbodForcaVenda tbodForcaVenda = listTbodForcaVenda.get(0);
+			
+			if(tbodForcaVenda.getTbodCorretora()==null) {
+				log.error("listTbodForcaVenda.get(0).getTbodCorretora()==null para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
+				return false;
+			}
+				
+			Optional<TbodContratoCorretora> optionalTbodContratoCorretora = tbodForcaVenda.getTbodCorretora().getTbodContratoCorretoras().stream().filter(
+				item ->
+				item.getTbodContratoModelo().getCdContratoModelo().equals(Constantes.CONTRATO_CORRETAGEM_V1)
+				||
+				item.getTbodContratoModelo().getCdContratoModelo().equals(Constantes.CONTRATO_INTERMEDIACAO_V1)
+			).findFirst();
+	
+			TbodLogin tbodLoginForcaVenda = tbodForcaVenda.getTbodLogin();
+			
+			if(optionalTbodContratoCorretora.isPresent()) {
+				log.info("optionalTbodContratoCorretora.isPresent() para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
+				tbodLoginForcaVenda.setTemBloqueio(Constantes.NAO);
+				TbodTipoBloqueio tbodTipoBloqueio = tipoBloqueioDAO.findOne(Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO);
+				if(tbodTipoBloqueio==null) {
+					log.info("tbodTipoBloqueio==null para Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO:[" + Constantes.TIPO_BLOQUEIO_SEM_BLOQUEIO + "]");
+					return false;
+				}
+				tbodLoginForcaVenda.setTbodTipoBloqueio(tbodTipoBloqueio);
+			} else {
+				log.info("!optionalTbodContratoCorretora.isPresent() para forcaVendaDTO.getCpf():[" + forcaVendaDTO.getCpf() + "]");
+				tbodLoginForcaVenda.setTemBloqueio(Constantes.SIM);
+				TbodTipoBloqueio tbodTipoBloqueio = tipoBloqueioDAO.findOne(Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO);
+				if(tbodTipoBloqueio==null) {
+					log.info("tbodTipoBloqueio==null para Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO:[" + Constantes.TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO + "]");
+					return false;
+				}
+				tbodLoginForcaVenda.setTbodTipoBloqueio(tbodTipoBloqueio);
+			}
+			
+			tbodLoginForcaVenda = loginDAO.save(tbodLoginForcaVenda);
+	
+			log.info("doBloqueioForcaVenda - fim");
+			return true;
+			
+		}catch (Exception e) {
+			log.error("doBloqueioForcaVenda - erro", e); //201809201053 - esert - COR-730 - protecao 
+			return false;
 		}
-		
-		tbodLoginForcaVenda = loginDAO.save(tbodLoginForcaVenda);
-
-		log.info("doBloqueioForcaVenda - fim");
-		return true;
 	}
 
 	@Override

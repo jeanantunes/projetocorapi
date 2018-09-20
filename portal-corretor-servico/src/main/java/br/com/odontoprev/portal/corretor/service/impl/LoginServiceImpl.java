@@ -52,7 +52,7 @@ public class LoginServiceImpl implements LoginService {
     private final LoginResponse responseNotFound = new LoginResponse();
 
     @Autowired
-	private BloqueioService bloqueioService; //201809181600 - esert - COR-731 : TDD - Novo servi�o (processar bloqueio)
+	private BloqueioService bloqueioService; //201809181600 - esert - COR-730 : Novo servico (processar bloqueio)
 
     @Override
     public LoginResponse login(Login login) {
@@ -65,36 +65,39 @@ public class LoginServiceImpl implements LoginService {
         }
 
         if (login.getUsuario().length() == 11) {
-            perfil = "Corretor";
-            
-            boolean retBloqueioForcaVenda = bloqueioService.doBloqueioForcaVenda(login.getUsuario()); //201809181600 - esert - COR-730 : Novo servico (processar bloqueio)
-            
-            final ForcaVenda forcaVenda = serviceFV.findForcaVendaByCpf(login.getUsuario());
-
-            if (forcaVenda == null) {
-                return responseNotFound;
-            }
-
-            final RestTemplate restTemplate = new RestTemplate();
-            final Map<String, String> loginMap = new HashMap<>();
-            loginMap.put("login", login.getUsuario());
-            loginMap.put("senha", login.getSenha());
             try {
+	            perfil = "Corretor";
+	            
+	            if(!bloqueioService.doBloqueioForcaVenda(login.getUsuario())) { //201809181600 - esert - COR-730 - protecao
+	        		throw new Exception("ERRO doBloqueioForcaVenda(login.getUsuario(" + login.getUsuario() + "))"); //201809201050 - esert - COR-730 : Novo servico (processar bloqueio)
+	        	}
+	
+	            final ForcaVenda forcaVenda = serviceFV.findForcaVendaByCpf(login.getUsuario());
+	
+	            if (forcaVenda == null) {
+	                return responseNotFound;
+	            }
+	
+	            final RestTemplate restTemplate = new RestTemplate();
+	            final Map<String, String> loginMap = new HashMap<>();
+	            loginMap.put("login", login.getUsuario());
+	            loginMap.put("senha", login.getSenha());
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
 
                 HttpEntity<?> request = new HttpEntity<Map<String, String>>(loginMap, headers);
 
-//                final ResponseEntity<LoginRetorno> loginRetorno = restTemplate
-//                        .postForEntity(
-//                                (dcssUrl + "/login/1.0/"),
-//                                //loginMap,
-//                                request,
-//                                LoginRetorno.class
-//                        );
+                final ResponseEntity<LoginRetorno> loginRetorno = restTemplate
+                        .postForEntity(
+                                (dcssUrl + "/login/1.0/"),
+                                //loginMap,
+                                request,
+                                LoginRetorno.class
+                        );
                 
-                final ResponseEntity<LoginRetorno> loginRetorno = ResponseEntity.ok(new LoginRetorno("nome fake teste", "doc fake teste", 999)); 
+                //201809201027 - esert - COR-730 - desligar resposta dcss fake p teste unitario
+                //final ResponseEntity<LoginRetorno> loginRetorno = ResponseEntity.ok(new LoginRetorno("nome fake teste", "doc fake teste", 999)); 
 
                 if (loginRetorno != null && loginRetorno.getBody().getCodigo() == 0) {
                     return null;
@@ -128,7 +131,9 @@ public class LoginServiceImpl implements LoginService {
         } else {
             try {
 
-                boolean retBloqueioCorretora = bloqueioService.doBloqueioCorretora(login.getUsuario()); //201809181600 - esert - COR-730 : Novo servico (processar bloqueio)
+                if(!bloqueioService.doBloqueioCorretora(login.getUsuario())) { //201809181600 - esert - COR-730 : protecao
+                	throw new Exception("ERRO doBloqueioCorretora(login.getUsuario(" + login.getUsuario() + "))"); //201809201050 - esert - COR-730 : Novo servico (processar bloqueio)
+                }
 
             	final TbodLogin loginCorretora = loginDAO
                         .findByTbodCorretoras(login.getUsuario());
