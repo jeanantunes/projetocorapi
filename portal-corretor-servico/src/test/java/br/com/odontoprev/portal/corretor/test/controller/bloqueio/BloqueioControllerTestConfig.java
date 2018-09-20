@@ -36,17 +36,17 @@ public class BloqueioControllerTestConfig {
 		 return Mockito.mock(LoginService.class); 
 	 }	 	 
 	 
-	 @Bean
-	 @Primary
-	 @Scope("application")
-	 public BloqueioService bloqueioServiceMock() { 
-		 return Mockito.mock(BloqueioService.class); 
-	 }	 	 
-	 
-	 @Bean
-	 @Primary
-	 @Scope("application")
-	 public ForcaVendaService forcaVendaServiceMock() { 
-		 return Mockito.mock(ForcaVendaService.class); 
-	 }	 	 
+//	 @Bean
+//	 @Primary
+//	 @Scope("application")
+//	 public BloqueioService bloqueioServiceMock() { 
+//		 return Mockito.mock(BloqueioService.class); 
+//	 }	 	 
+//	 
+//	 @Bean
+//	 @Primary
+//	 @Scope("application")
+//	 public ForcaVendaService forcaVendaServiceMock() { 
+//		 return Mockito.mock(ForcaVendaService.class); 
+//	 }	 	 
 }

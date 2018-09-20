@@ -74,6 +74,7 @@ public class BloqueioControllerTest {
 //		given(bloqueioServiceMock.doBloqueioForcaVenda(forcaVendaGiven)).willReturn(true);
 //	}
 
+	//201809201446 - esert - COR-731 : TDD - Novo serviço (processar bloqueio) (esert) //DEBITO TECNICO TESTE DE DAO
 	@Test
 	public void testOkdoBloqueioForcaVendaCPF() throws Exception {
 		//Given
@@ -125,6 +126,7 @@ public class BloqueioControllerTest {
 //		given(bloqueioServiceMock.doBloqueioCorretora(corretoraGiven)).willReturn(true);		
 //	}
 	
+	//201809201446 - esert - COR-731 : TDD - Novo serviço (processar bloqueio) (esert) //DEBITO TECNICO TESTE DE DAO
 	@Test
 	public void testOkdoBloqueioCorretoraCNPJ() throws Exception {
 		//Given
