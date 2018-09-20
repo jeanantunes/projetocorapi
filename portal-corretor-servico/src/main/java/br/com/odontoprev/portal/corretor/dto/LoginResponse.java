@@ -116,7 +116,7 @@ public class LoginResponse implements Serializable {
         this.dtAceiteContrato = dtAceiteContrato;
     }
 
-    public boolean isTemBloqueio() {
+    public boolean getTemBloqueio() { //201809201225 - esert - padrao get set
         return temBloqueio;
     }
 
