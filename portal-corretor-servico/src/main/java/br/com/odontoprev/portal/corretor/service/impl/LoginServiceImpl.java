@@ -26,7 +26,6 @@ import br.com.odontoprev.portal.corretor.dto.LoginRetorno;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
-import br.com.odontoprev.portal.corretor.service.ApiManagerTokenService;
 import br.com.odontoprev.portal.corretor.service.BloqueioService;
 import br.com.odontoprev.portal.corretor.service.CorretoraService;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
@@ -40,14 +39,20 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private LoginDAO loginDAO;
+    
     @Autowired
     private ForcaVendaService forcaVendaService;
+    
     @Autowired
     private CorretoraService corretoraService;
+    
     @Autowired
     private ContratoCorretoraDAO contratoCorretoraDAO;
+    
     @Autowired
-    private ApiManagerTokenService apiManagerTokenService;
+    private ApiManagerTokenServiceImpl apiManagerTokenService;
+    //201809201646 - esert - aqui so funciona com ApiManagerTokenServiceImpl
+    //201809201646 - esert - Field apiManagerTokenService in br.com.odontoprev.portal.corretor.service.impl.LoginServiceImpl required a bean of type 'br.com.odontoprev.portal.corretor.service.ApiManagerTokenService' that could not be found.
 
     @Value("${DCSS_URL}")
     private String dcssUrl;
