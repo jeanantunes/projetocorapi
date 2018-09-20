@@ -258,4 +258,47 @@ public class ForcaVendaControllerTest {
 				.andExpect(status().isOk());
 
 	}
+
+    @Test
+    public void testBadRequest400GetForcaVendaBloqueio() throws Exception {
+        //Given
+        boolean temBloqueio = false;
+
+        Long cdForcaVendaGiven = null;
+        Long cdTipoBloqueio = 0L;
+        String cpfForcaVenda = null;
+        String stringSemBloqueio = "SEM BLOQUEIO";
+
+        ForcaVenda forcaVendaGiven = new ForcaVenda();
+        forcaVendaGiven.setCdForcaVenda(cdForcaVendaGiven);
+        forcaVendaGiven.setNome("FERNANDO SETAI");
+        forcaVendaGiven.setCelular("11980910754");
+        forcaVendaGiven.setEmail("fernando.mota@odontoprev.com.br");
+        forcaVendaGiven.setCorretora(new Corretora());
+        forcaVendaGiven.getCorretora().setCdCorretora(21L);
+        forcaVendaGiven.setStatusForcaVenda(String.valueOf(StatusForcaVendaEnum.ATIVO.getCodigo()));
+        forcaVendaGiven.setCpf(null);
+        forcaVendaGiven.setStatus(Constantes.ATIVO);
+        forcaVendaGiven.setDataNascimento(null);
+        forcaVendaGiven.setCargo(null);
+        forcaVendaGiven.setDepartamento(null);
+
+        Login loginGiven = new Login();
+
+        loginGiven.setTemBloqueio(temBloqueio);
+        loginGiven.setCodigoTipoBloqueio(cdTipoBloqueio);
+        loginGiven.setDescricaoTipoBloqueio(stringSemBloqueio);
+
+        forcaVendaGiven.setLogin(loginGiven);
+
+        // Mockando Service que busca no banco de dados
+        given(service.findForcaVendaByCpf(cpfForcaVenda))
+                .willReturn(forcaVendaGiven);
+
+        // Efetua a requisição na rota e espera um status code
+        mvc.perform(get("/forcavenda/bloqueio")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+    }
 }
