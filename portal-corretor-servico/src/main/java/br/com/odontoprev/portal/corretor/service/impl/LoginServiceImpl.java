@@ -26,7 +26,10 @@ import br.com.odontoprev.portal.corretor.dto.LoginRetorno;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.service.ApiManagerTokenService;
 import br.com.odontoprev.portal.corretor.service.BloqueioService;
+import br.com.odontoprev.portal.corretor.service.CorretoraService;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import br.com.odontoprev.portal.corretor.service.LoginService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 
@@ -38,13 +41,13 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private LoginDAO loginDAO;
     @Autowired
-    private ForcaVendaServiceImpl serviceFV;
+    private ForcaVendaService forcaVendaService;
     @Autowired
-    private CorretoraServiceImpl serviceCorretora;
+    private CorretoraService corretoraService;
     @Autowired
     private ContratoCorretoraDAO contratoCorretoraDAO;
     @Autowired
-    private ApiManagerTokenServiceImpl apiManagerTokenService;
+    private ApiManagerTokenService apiManagerTokenService;
 
     @Value("${DCSS_URL}")
     private String dcssUrl;
@@ -72,7 +75,7 @@ public class LoginServiceImpl implements LoginService {
 	        		throw new Exception("ERRO doBloqueioForcaVenda(login.getUsuario(" + login.getUsuario() + "))"); //201809201050 - esert - COR-730 : Novo servico (processar bloqueio)
 	        	}
 	
-	            final ForcaVenda forcaVenda = serviceFV.findForcaVendaByCpf(login.getUsuario());
+	            final ForcaVenda forcaVenda = forcaVendaService.findForcaVendaByCpf(login.getUsuario());
 	
 	            if (forcaVenda == null) {
 	                return responseNotFound;
@@ -140,7 +143,7 @@ public class LoginServiceImpl implements LoginService {
                 if (loginCorretora != null && login.getSenha() != null
                         && loginCorretora.getSenha().equals(login.getSenha())) {
 
-                    final Corretora corretora = serviceCorretora
+                    final Corretora corretora = corretoraService
                             .buscaCorretoraPorCnpj(login.getUsuario());
 
                     if (corretora.getCdCorretora() == 0) {
