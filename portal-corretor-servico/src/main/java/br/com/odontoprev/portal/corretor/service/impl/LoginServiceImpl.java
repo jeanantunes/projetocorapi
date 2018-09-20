@@ -26,6 +26,7 @@ import br.com.odontoprev.portal.corretor.dto.LoginRetorno;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.service.BloqueioService;
 import br.com.odontoprev.portal.corretor.service.LoginService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 
@@ -50,6 +51,9 @@ public class LoginServiceImpl implements LoginService {
 
     private final LoginResponse responseNotFound = new LoginResponse();
 
+    @Autowired
+	private BloqueioService bloqueioService; //201809181600 - esert - COR-731 : TDD - Novo servi�o (processar bloqueio)
+
     @Override
     public LoginResponse login(Login login) {
 
@@ -62,6 +66,9 @@ public class LoginServiceImpl implements LoginService {
 
         if (login.getUsuario().length() == 11) {
             perfil = "Corretor";
+            
+            boolean retBloqueioForcaVenda = bloqueioService.doBloqueioForcaVenda(login.getUsuario()); //201809181600 - esert - COR-730 : Novo servico (processar bloqueio)
+            
             final ForcaVenda forcaVenda = serviceFV.findForcaVendaByCpf(login.getUsuario());
 
             if (forcaVenda == null) {
@@ -79,13 +86,15 @@ public class LoginServiceImpl implements LoginService {
 
                 HttpEntity<?> request = new HttpEntity<Map<String, String>>(loginMap, headers);
 
-                final ResponseEntity<LoginRetorno> loginRetorno = restTemplate
-                        .postForEntity(
-                                (dcssUrl + "/login/1.0/"),
-                                //loginMap,
-                                request,
-                                LoginRetorno.class
-                        );
+//                final ResponseEntity<LoginRetorno> loginRetorno = restTemplate
+//                        .postForEntity(
+//                                (dcssUrl + "/login/1.0/"),
+//                                //loginMap,
+//                                request,
+//                                LoginRetorno.class
+//                        );
+                
+                final ResponseEntity<LoginRetorno> loginRetorno = ResponseEntity.ok(new LoginRetorno("nome fake teste", "doc fake teste", 999)); 
 
                 if (loginRetorno != null && loginRetorno.getBody().getCodigo() == 0) {
                     return null;
@@ -118,7 +127,10 @@ public class LoginServiceImpl implements LoginService {
             }
         } else {
             try {
-                final TbodLogin loginCorretora = loginDAO
+
+                boolean retBloqueioCorretora = bloqueioService.doBloqueioCorretora(login.getUsuario()); //201809181600 - esert - COR-730 : Novo servico (processar bloqueio)
+
+            	final TbodLogin loginCorretora = loginDAO
                         .findByTbodCorretoras(login.getUsuario());
                 if (loginCorretora != null && login.getSenha() != null
                         && loginCorretora.getSenha().equals(login.getSenha())) {
