@@ -487,9 +487,13 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 			if (tbForcaVenda.getTbodLogin() != null){
 
 				Login loginForcaVenda = new Login();
-				loginForcaVenda.setTemBloqueio(tbForcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM));
-				loginForcaVenda.setCodigoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio());
-				loginForcaVenda.setDescricaoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao());
+				if(tbForcaVenda.getTbodLogin().getTemBloqueio()!=null) { //201809201853 - esert/yalm - COR-816 : ForcaVenda Status PreCadastro(5) nao tem TBOD_LOGIN ainda
+					loginForcaVenda.setTemBloqueio(tbForcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM));
+				}
+				if(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio()!=null) { //201809201853 - esert/yalm - COR-816 : ForcaVenda Status PreCadastro(5) nao tem TBOD_LOGIN ainda
+					loginForcaVenda.setCodigoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio());
+					loginForcaVenda.setDescricaoTipoBloqueio(tbForcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao());
+				}
 				forcaVenda.setLogin(loginForcaVenda);
 
 			} else { 
