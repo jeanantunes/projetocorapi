@@ -1,31 +1,9 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import br.com.odontoprev.portal.corretor.dao.ArquivoContratacaoDAO;
 import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaDAO;
-import br.com.odontoprev.portal.corretor.dto.ArquivoContratacao;
-import br.com.odontoprev.portal.corretor.dto.Beneficiario;
-import br.com.odontoprev.portal.corretor.dto.BeneficiarioPaginacao;
-import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
+import br.com.odontoprev.portal.corretor.dto.*;
 import br.com.odontoprev.portal.corretor.model.TbodArquivoContratacao;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
 import br.com.odontoprev.portal.corretor.model.TbodVenda;
@@ -36,6 +14,23 @@ import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.FileReaderUtil;
 import br.com.odontoprev.portal.corretor.util.Html2Pdf;
 import br.com.odontoprev.portal.corretor.util.StringsUtil;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 //201808231715 - esert - COR-617 - novo servico para nova tabela TBOD_ARQUIVO_CONTRATACAO
 @Service
@@ -68,8 +63,15 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 		ArquivoContratacao dto = null;
 		try {
 			TbodArquivoContratacao entity = arquivoContratacaoDAO.findOne(cdEmpresa);
-							
-			dto = adaptEntityToDto(entity, isArquivo);
+
+			if(entity == null){
+				dto = createPdfPmePorEmpresa(cdEmpresa);
+			}
+			else
+			{
+				dto = adaptEntityToDto(entity, isArquivo);
+			}
+
 		} catch (Exception e) {
 			log.error("getByCdEmpresa - erro", e);
 			return null;
