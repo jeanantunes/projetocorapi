@@ -1,28 +1,16 @@
 package br.com.odontoprev.portal.corretor.controller;
 
 
-import java.text.ParseException;
-
+import br.com.odontoprev.portal.corretor.dto.*;
+import br.com.odontoprev.portal.corretor.service.EmpresaService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.odontoprev.portal.corretor.dto.CnpjDados;
-import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
-import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
-import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
-import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import java.text.ParseException;
 
 
 @RestController
@@ -142,6 +130,34 @@ public class EmpresaController {
 			log.info("findEmpresa - erro");	
 			log.error(e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();			
+		}
+	}
+
+	//
+	@RequestMapping(value = "/empresa", method = { RequestMethod.PUT })
+	public ResponseEntity<EmpresaResponse> updateEmpresa(@RequestBody Empresa empresa) throws ParseException { //201807241620 - esert - COR-398
+		try {
+
+			log.info("updateEmpresaEmail - ini");
+
+			if (empresa.getCdEmpresa() == null) {
+				log.error("updateEmpresaEmail - cdEmpresa nao informado"); // TODO: Mover para controller
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			}
+
+			EmpresaResponse empresaRetorno = empresaService.updateEmpresa(empresa);
+
+			if(empresaRetorno==null) {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+			}
+
+			log.info("findEmpresa - fim");
+			return ResponseEntity.ok(empresaRetorno);
+
+		}catch (Exception e) {
+			log.info("findEmpresa - erro");
+			log.error(e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 }

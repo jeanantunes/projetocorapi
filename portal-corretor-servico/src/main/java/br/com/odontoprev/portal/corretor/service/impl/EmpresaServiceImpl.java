@@ -730,30 +730,25 @@ public class EmpresaServiceImpl implements EmpresaService {
     public EmpresaResponse updateEmpresa(Empresa empresa) throws Exception {
 
         log.info("updateEmpresaEmail - ini");
-        TbodEmpresa tbEmpresa;
+        TbodEmpresa tbodEmpresa;
 
-        if (empresa.getCdEmpresa() == null || empresa.getCdEmpresa() == 0) {
-            log.error("updateEmpresaEmail - cdEmpresa nao informado"); // TODO: Mover para controller
-            throw new Exception("cdEmpresa nao informado");
-        }
+        tbodEmpresa = empresaDAO.findOne(empresa.getCdEmpresa());
 
-        tbEmpresa = empresaDAO.findOne(empresa.getCdEmpresa());
-
-        if (tbEmpresa == null){
+        if (tbodEmpresa == null){
             log.info("updateEmpresaEmail - empresa nao encontrada");
             return null;
         }
 
         if (empresa.getEmail() != null && !empresa.getEmail().isEmpty()) {
 
-            tbEmpresa.setEmail(empresa.getEmail());
-            empresaDAO.save(tbEmpresa);
+            tbodEmpresa.setEmail(empresa.getEmail());
+            tbodEmpresa = empresaDAO.save(tbodEmpresa);
             log.info("updateEmpresaEmail - email alterado");
 
         }
 
         log.info("updateEmpresaEmail - fim");
-        return new EmpresaResponse(empresa.getCdEmpresa(), "Empresa atualizada");
+        return new EmpresaResponse(HttpStatus.OK.value(), String.format("Empresa: [%d], atualizada.", tbodEmpresa.getCdEmpresa()));
 
     }
 }
