@@ -1,17 +1,9 @@
 package br.com.odontoprev.portal.corretor.service;
 
-import java.text.ParseException;
-
+import br.com.odontoprev.portal.corretor.dto.*;
 import org.springframework.http.ResponseEntity;
 
-import br.com.odontoprev.portal.corretor.dto.CnpjDados;
-import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
-import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
-import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
+import java.text.ParseException;
 
 public interface EmpresaService {
 
@@ -30,4 +22,6 @@ public interface EmpresaService {
 	public Empresa findByCdEmpresa(Long cdEmpresa);
 
 	public EmpresaArquivoResponse gerarArquivoEmpresa(EmpresaArquivo cdEmpresas);
+
+	public EmpresaResponse updateEmpresa(Empresa empresa) throws Exception;
 }
