@@ -307,7 +307,7 @@ public class ArquivoContratacaoServiceImpl implements ArquivoContratacaoService 
 			String dataCriacaoStringDTO = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(agoraDate);
 			try {
 				arquivoContratacao.setCodigoEmpresa(tbodEmpresa.getCdEmpresa());
-				arquivoContratacao.setDataCriacao(dataCriacaoStringDTO);;
+				arquivoContratacao.setDataCriacao(dataCriacaoStringDTO);
 				arquivoContratacao.setNomeArquivo(pdfPMEFileName);
 				arquivoContratacao.setCaminhoCarga(pdfPMEPathName);
 				arquivoContratacao.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE);

@@ -750,8 +750,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
         }
 
-        arquivoContratacaoDAO.delete(empresa.getCdEmpresa());
-        arquivoContratacaoService.createPdfPmePorEmpresa(empresa.getCdEmpresa());
+        arquivoContratacaoService.createPdfPmePorEmpresa(tbodEmpresa.getCdEmpresa());
 
         log.info("updateEmpresaEmail - fim");
         return new EmpresaResponse(HttpStatus.OK.value(), String.format("Empresa: [%d], atualizada.", tbodEmpresa.getCdEmpresa()));
