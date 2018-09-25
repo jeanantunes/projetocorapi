@@ -7,10 +7,7 @@ import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
 import br.com.odontoprev.portal.corretor.dao.*;
 import br.com.odontoprev.portal.corretor.dto.*;
 import br.com.odontoprev.portal.corretor.model.*;
-import br.com.odontoprev.portal.corretor.service.EmpresaService;
-import br.com.odontoprev.portal.corretor.service.PlanoService;
-import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
-import br.com.odontoprev.portal.corretor.service.VendaService;
+import br.com.odontoprev.portal.corretor.service.*;
 import br.com.odontoprev.portal.corretor.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,6 +78,12 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Autowired
     private TokenAceiteService tokenAceiteService; //201805181856 - esert - COR-171
+
+    @Autowired
+    ArquivoContratacaoService arquivoContratacaoService;
+
+    @Autowired
+    ArquivoContratacaoDAO arquivoContratacaoDAO;
 
     @Override
     @Transactional
@@ -746,6 +749,9 @@ public class EmpresaServiceImpl implements EmpresaService {
             log.info("updateEmpresaEmail - email alterado");
 
         }
+
+        arquivoContratacaoDAO.delete(empresa.getCdEmpresa());
+        arquivoContratacaoService.createPdfPmePorEmpresa(empresa.getCdEmpresa());
 
         log.info("updateEmpresaEmail - fim");
         return new EmpresaResponse(HttpStatus.OK.value(), String.format("Empresa: [%d], atualizada.", tbodEmpresa.getCdEmpresa()));
