@@ -24,4 +24,7 @@ public interface EmpresaService {
 	public EmpresaArquivoResponse gerarArquivoEmpresa(EmpresaArquivo cdEmpresas);
 
 	public EmpresaResponse updateEmpresa(Empresa empresa) throws Exception;
+	
+	public EmpresaResponse enviarEmpresaEmailAceite(EmpresaEmailAceite empresaEmail); //201809251843 - esert - COR-820 Criar POST /empresa-emailaceite
+
 }

@@ -122,7 +122,8 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
             emailAceite.setPlanos(planos);
             
             //201808232000 - esert - COR-617 servico gerar pdf detalhe contratacao pme
-            ArquivoContratacao arquivoContratacao = arquivoContratacaoService.getByCdEmpresa(venda.getTbodEmpresa().getCdEmpresa(),true);
+            //ArquivoContratacao arquivoContratacao = arquivoContratacaoService.getByCdEmpresa(venda.getTbodEmpresa().getCdEmpresa(),true);
+            ArquivoContratacao arquivoContratacao = arquivoContratacaoService.createPdfPmePorEmpresa(venda.getTbodEmpresa().getCdEmpresa()); //201809251858 - esert - COR-820 - BUG: precisa regerar o pdf apos save do (novo) email
             //nem preciso falar que ...
             if(arquivoContratacao!=null) {
             	if(

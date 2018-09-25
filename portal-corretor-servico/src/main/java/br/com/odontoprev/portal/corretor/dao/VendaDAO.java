@@ -11,4 +11,6 @@ import br.com.odontoprev.portal.corretor.model.TbodVenda;
 public interface VendaDAO extends CrudRepository<TbodVenda, Long> {
 	
 	public List<TbodVenda> findByTbodEmpresaCdEmpresa(Long cdEmpresa);
+
+	public TbodVenda findByCdVendaAndTbodEmpresaCdEmpresa(Long cdVenda, Long cdEmpresa); //201809251911 - esert - COR-820 : Serviço - Criar POST /empresa-emailaceite
 }
