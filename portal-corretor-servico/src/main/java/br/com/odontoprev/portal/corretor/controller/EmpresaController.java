@@ -160,4 +160,36 @@ public class EmpresaController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+	
+	//201809251831 - esert - COR-820 Criar POST /empresa-emailaceite
+	@RequestMapping(value = "/empresa-emailaceite", method = { RequestMethod.POST })
+	public ResponseEntity<EmpresaResponse> postEmpresaEmailAceite(@RequestBody EmpresaEmailAceite empresaEmailAceite) {
+		try {
+			log.info("postEmpresaEmailAceite - ini");	
+			
+			log.info(empresaEmailAceite);
+			
+			if(empresaEmailAceite.getCdEmpresa()==null) {
+				log.info("empresaEmailAceite.getCdEmpresa()==null");
+				return ResponseEntity.badRequest().build();
+			}
+			
+			if(empresaEmailAceite.getCdVenda()==null) {
+				log.info("empresaEmailAceite.getCdVenda()==null");
+				return ResponseEntity.badRequest().build();
+			}
+			
+			EmpresaResponse response = empresaService.enviarEmpresaEmailAceite(empresaEmailAceite);
+			
+			if(response==null) {
+				return ResponseEntity.noContent().build();
+			}
+			
+			log.info("postEmpresaEmailAceite - fim");	
+			return ResponseEntity.ok(response);
+		
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 }

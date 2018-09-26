@@ -16,9 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.util.ArrayList;
-
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -162,7 +160,7 @@ public class EmpresaControllerTest {
 	}
 
 	@Test
-	public void testEmpresaArquivo200ComEmpresaNaoEncontrada() throws Exception {
+	public void testOk200EmpresaArquivoComEmpresaNaoEncontrada() throws Exception {
 
 	   	Long empresaPesquisada = 5448448L;
 	   	String mensagemEsperada = "Empresa nao encontrada.";
@@ -192,7 +190,7 @@ public class EmpresaControllerTest {
 	}
 
 	@Test
-	public void testEmpresaArquivoBadResquest400() throws Exception {
+	public void testBadResquest400EmpresaArquivo() throws Exception {
 
 		EmpresaArquivo cdEmpresa = new EmpresaArquivo();
 		cdEmpresa.setListCdEmpresa(new ArrayList<Long>());
@@ -207,5 +205,85 @@ public class EmpresaControllerTest {
 				.andExpect(status().isBadRequest())
 		;
 
+	}
+
+    //201809251930 - esert - COR-820 Criar POST /empresa-emailaceite
+	@Test
+	public void testOk200PostEmpresaEmailAceite() throws Exception {
+	
+		Long cdEmpresaGiven = 2566L;
+		Long cdVendaGiven = 4346L;
+		EmpresaEmailAceite empresaEmailAceite = new EmpresaEmailAceite();
+		empresaEmailAceite.setCdEmpresa(cdEmpresaGiven);
+		empresaEmailAceite.setCdVenda(cdVendaGiven);
+		String jsonRequest = new Gson().toJson(empresaEmailAceite);
+		
+		EmpresaResponse empresaResponse = new EmpresaResponse(HttpStatus.OK.value(), HttpStatus.OK.name());
+		//Mockando Service que busca no banco de dados
+		given(service.enviarEmpresaEmailAceite(empresaEmailAceite)).willReturn(empresaResponse);
+	
+		//Efetua a requisição na rota e espera um status code
+		mvc.perform(post("/empresa-emailaceite")
+				.content(jsonRequest)
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isOk())
+		;
+	
+	}
+	
+	//201809251945 - esert - COR-820 Criar POST /empresa-emailaceite
+	@Test
+	public void testBadRequest400PostEmpresaEmailAceite() throws Exception {
+		
+		Long cdEmpresaGiven = null;
+		Long cdVendaGiven = null;
+		EmpresaEmailAceite empresaEmailAceite = new EmpresaEmailAceite();
+		empresaEmailAceite.setCdEmpresa(cdEmpresaGiven);
+		empresaEmailAceite.setCdVenda(cdVendaGiven);
+		String jsonRequest = new Gson().toJson(empresaEmailAceite);
+		
+		EmpresaResponse empresaResponse = new EmpresaResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name());
+		
+		//Mockando Service que busca no banco de dados
+		given(service.enviarEmpresaEmailAceite(empresaEmailAceite)).willReturn(empresaResponse);
+		
+		//Efetua a requisição na rota e espera um status code
+		mvc.perform(post("/empresa-emailaceite")
+				.content(jsonRequest)
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isBadRequest())
+		;
+		
+	}
+	
+	//201809251956 - esert - COR-820 Criar POST /empresa-emailaceite
+	@Test
+	public void testNoContent204PostEmpresaEmailAceite() throws Exception {
+		
+		Long cdEmpresaGiven = 2566L;
+		Long cdVendaGiven = 4346L;
+		EmpresaEmailAceite empresaEmailAceiteGiven = new EmpresaEmailAceite();
+		empresaEmailAceiteGiven.setCdEmpresa(cdEmpresaGiven);
+		empresaEmailAceiteGiven.setCdVenda(cdVendaGiven);
+
+		EmpresaResponse empresaResponse = new EmpresaResponse(HttpStatus.OK.value(), HttpStatus.OK.name());
+
+		Long cdEmpresaReq = 2566L;
+		Long cdVendaReq = 2566L;
+		EmpresaEmailAceite empresaEmailAceiteReq = new EmpresaEmailAceite();
+		empresaEmailAceiteReq.setCdEmpresa(cdEmpresaReq);
+		empresaEmailAceiteReq.setCdVenda(cdVendaReq);
+		String jsonRequest = new Gson().toJson(empresaEmailAceiteReq);
+		
+		//Mockando Service que busca no banco de dados
+		given(service.enviarEmpresaEmailAceite(empresaEmailAceiteGiven)).willReturn(empresaResponse);
+		
+		//Efetua a requisição na rota e espera um status code
+		mvc.perform(post("/empresa-emailaceite")
+				.content(jsonRequest)
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isNoContent())
+		;
+		
 	}
 }
