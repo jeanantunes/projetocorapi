@@ -1,18 +1,14 @@
 package br.com.odontoprev.portal.corretor.test.controller.empresa;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-
+import br.com.odontoprev.portal.corretor.dto.*;
+import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -21,13 +17,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.google.gson.Gson;
+import java.util.ArrayList;
 
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponseItem;
-import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
@@ -82,6 +77,66 @@ public class EmpresaControllerTest {
 	               .andExpect(status().isNoContent()) //e nao deve retornar resultado
 	               ;	       	       	               	       
 	   }
+
+	@Test
+	public void testPutEmpresaBadRequest400() throws Exception {
+
+	   	Empresa empresa = new Empresa();
+
+		String json = new Gson().toJson(empresa);
+
+		//Efetua a requisição na rota e espera um status code
+		mvc.perform(put("/empresa") // chamando put empresa sem enviar cdEmpresa
+				.content(json)
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isBadRequest()) //e nao deve retornar 400
+		;
+	}
+
+	@Test
+	public void testPutEmpresaNoContent204() throws Exception {
+
+		Empresa empresa = new Empresa();
+		empresa.setCdEmpresa(000L);
+		empresa.setEmail("teste@nocontent.com");
+
+		String json = new Gson().toJson(empresa);
+
+		given(service.updateEmpresa(empresa)).willReturn(null);
+
+
+		//Efetua a requisição na rota e espera um status code
+		mvc.perform(put("/empresa") // chamando put empresa sem enviar nada
+				.content(json)
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isNoContent()) //e nao deve retornar 204
+		;
+	}
+
+	@Test
+	public void testPutEmpresaOk200() throws Exception {
+
+	   	// Request put empresa
+		Empresa empresa = new Empresa();
+		empresa.setCdEmpresa(2548L);
+		empresa.setEmail("teste@nocontent.com");
+		String json = new Gson().toJson(empresa);
+
+		// Response put empresa
+		long statusReponse = HttpStatus.OK.value();
+		String mensagemRetorno = String.format("Empresa: [%d], atualizada.", statusReponse);
+		EmpresaResponse empresaResponse = new EmpresaResponse(statusReponse, mensagemRetorno);
+		given(service.updateEmpresa(empresa)).willReturn(empresaResponse);
+
+		//Efetua a requisição na rota e espera um status code
+		mvc.perform(put("/empresa") // chamando put empresa enviando email e cdEmpresa
+				.content(json)
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isOk()) //e deve retornar 200
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(statusReponse))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.mensagem").value(mensagemRetorno))
+		;
+	}
 
 	@Test
 	public void testOk200EmpresaArquivo() throws Exception {

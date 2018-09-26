@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class Empresa implements Serializable  {
 
@@ -266,4 +267,41 @@ public class Empresa implements Serializable  {
 	}
 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Empresa)) return false;
+		Empresa empresa = (Empresa) o;
+		return isContatoEmpresa() == empresa.isContatoEmpresa() &&
+				getVencimentoFatura() == empresa.getVencimentoFatura() &&
+				Objects.equals(getCnpj(), empresa.getCnpj()) &&
+				Objects.equals(getRazaoSocial(), empresa.getRazaoSocial()) &&
+				Objects.equals(getIncEstadual(), empresa.getIncEstadual()) &&
+				Objects.equals(getRamoAtividade(), empresa.getRamoAtividade()) &&
+				Objects.equals(getNomeFantasia(), empresa.getNomeFantasia()) &&
+				Objects.equals(getRepresentanteLegal(), empresa.getRepresentanteLegal()) &&
+				Objects.equals(getTelefone(), empresa.getTelefone()) &&
+				Objects.equals(getCelular(), empresa.getCelular()) &&
+				Objects.equals(getEmail(), empresa.getEmail()) &&
+				Objects.equals(getCnae(), empresa.getCnae()) &&
+				Objects.equals(getDataVencimentoFatura(), empresa.getDataVencimentoFatura()) &&
+				Objects.equals(getEnderecoEmpresa(), empresa.getEnderecoEmpresa()) &&
+				Objects.equals(getPlanos(), empresa.getPlanos()) &&
+				Objects.equals(getCnpjCorretora(), empresa.getCnpjCorretora()) &&
+				Objects.equals(getNomeCorretora(), empresa.getNomeCorretora()) &&
+				Objects.equals(getContactEmpresa(), empresa.getContactEmpresa()) &&
+				Objects.equals(getDataVigencia(), empresa.getDataVigencia()) &&
+				Objects.equals(getDataMovimentacao(), empresa.getDataMovimentacao()) &&
+				Objects.equals(getDataAceite(), empresa.getDataAceite()) &&
+				Objects.equals(getCdStatusVenda(), empresa.getCdStatusVenda()) &&
+				Objects.equals(getCdEmpresa(), empresa.getCdEmpresa()) &&
+				Objects.equals(getEmpDcms(), empresa.getEmpDcms()) &&
+				Objects.equals(getCpfRepresentante(), empresa.getCpfRepresentante());
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(getCnpj(), getRazaoSocial(), getIncEstadual(), getRamoAtividade(), getNomeFantasia(), getRepresentanteLegal(), isContatoEmpresa(), getTelefone(), getCelular(), getEmail(), getVencimentoFatura(), getCnae(), getDataVencimentoFatura(), getEnderecoEmpresa(), getPlanos(), getCnpjCorretora(), getNomeCorretora(), getContactEmpresa(), getDataVigencia(), getDataMovimentacao(), getDataAceite(), getCdStatusVenda(), getCdEmpresa(), getEmpDcms(), getCpfRepresentante());
+	}
 }
