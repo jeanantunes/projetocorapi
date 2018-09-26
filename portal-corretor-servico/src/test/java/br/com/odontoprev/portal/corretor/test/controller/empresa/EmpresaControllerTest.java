@@ -1,8 +1,14 @@
 package br.com.odontoprev.portal.corretor.test.controller.empresa;
 
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.service.EmpresaService;
-import com.google.gson.Gson;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,11 +22,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import java.util.ArrayList;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.google.gson.Gson;
+
+import br.com.odontoprev.portal.corretor.dto.Empresa;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponseItem;
+import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
+import br.com.odontoprev.portal.corretor.service.EmpresaService;
 
 
 @RunWith(SpringRunner.class)
@@ -212,15 +222,13 @@ public class EmpresaControllerTest {
 	public void testOk200PostEmpresaEmailAceite() throws Exception {
 	
 		Long cdEmpresaGiven = 2566L;
-		Long cdVendaGiven = 4346L;
-		EmpresaEmailAceite empresaEmailAceite = new EmpresaEmailAceite();
-		empresaEmailAceite.setCdEmpresa(cdEmpresaGiven);
-		empresaEmailAceite.setCdVenda(cdVendaGiven);
-		String jsonRequest = new Gson().toJson(empresaEmailAceite);
+		Empresa empresa = new Empresa();
+		empresa.setCdEmpresa(cdEmpresaGiven);
+		String jsonRequest = new Gson().toJson(empresa);
 		
 		EmpresaResponse empresaResponse = new EmpresaResponse(HttpStatus.OK.value(), HttpStatus.OK.name());
 		//Mockando Service que busca no banco de dados
-		given(service.enviarEmpresaEmailAceite(empresaEmailAceite)).willReturn(empresaResponse);
+		given(service.enviarEmpresaEmailAceite(empresa)).willReturn(empresaResponse);
 	
 		//Efetua a requisição na rota e espera um status code
 		mvc.perform(post("/empresa-emailaceite")
@@ -236,16 +244,14 @@ public class EmpresaControllerTest {
 	public void testBadRequest400PostEmpresaEmailAceite() throws Exception {
 		
 		Long cdEmpresaGiven = null;
-		Long cdVendaGiven = null;
-		EmpresaEmailAceite empresaEmailAceite = new EmpresaEmailAceite();
-		empresaEmailAceite.setCdEmpresa(cdEmpresaGiven);
-		empresaEmailAceite.setCdVenda(cdVendaGiven);
-		String jsonRequest = new Gson().toJson(empresaEmailAceite);
+		Empresa empresa = new Empresa();
+		empresa.setCdEmpresa(cdEmpresaGiven);
+		String jsonRequest = new Gson().toJson(empresa);
 		
 		EmpresaResponse empresaResponse = new EmpresaResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name());
 		
 		//Mockando Service que busca no banco de dados
-		given(service.enviarEmpresaEmailAceite(empresaEmailAceite)).willReturn(empresaResponse);
+		given(service.enviarEmpresaEmailAceite(empresa)).willReturn(empresaResponse);
 		
 		//Efetua a requisição na rota e espera um status code
 		mvc.perform(post("/empresa-emailaceite")
@@ -261,22 +267,19 @@ public class EmpresaControllerTest {
 	public void testNoContent204PostEmpresaEmailAceite() throws Exception {
 		
 		Long cdEmpresaGiven = 2566L;
-		Long cdVendaGiven = 4346L;
-		EmpresaEmailAceite empresaEmailAceiteGiven = new EmpresaEmailAceite();
-		empresaEmailAceiteGiven.setCdEmpresa(cdEmpresaGiven);
-		empresaEmailAceiteGiven.setCdVenda(cdVendaGiven);
+		Empresa empresaGiven = new Empresa();
+		empresaGiven.setCdEmpresa(cdEmpresaGiven);
 
 		EmpresaResponse empresaResponse = new EmpresaResponse(HttpStatus.OK.value(), HttpStatus.OK.name());
 
-		Long cdEmpresaReq = 2566L;
-		Long cdVendaReq = 2566L;
-		EmpresaEmailAceite empresaEmailAceiteReq = new EmpresaEmailAceite();
-		empresaEmailAceiteReq.setCdEmpresa(cdEmpresaReq);
-		empresaEmailAceiteReq.setCdVenda(cdVendaReq);
-		String jsonRequest = new Gson().toJson(empresaEmailAceiteReq);
+		Long cdEmpresaReq = 1234L;
+		Empresa empresa = new Empresa();
+		empresa.setCdEmpresa(cdEmpresaReq);
+
+		String jsonRequest = new Gson().toJson(empresa);
 		
 		//Mockando Service que busca no banco de dados
-		given(service.enviarEmpresaEmailAceite(empresaEmailAceiteGiven)).willReturn(empresaResponse);
+		given(service.enviarEmpresaEmailAceite(empresaGiven)).willReturn(empresaResponse);
 		
 		//Efetua a requisição na rota e espera um status code
 		mvc.perform(post("/empresa-emailaceite")

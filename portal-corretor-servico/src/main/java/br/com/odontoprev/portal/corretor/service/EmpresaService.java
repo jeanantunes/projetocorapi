@@ -25,6 +25,6 @@ public interface EmpresaService {
 
 	public EmpresaResponse updateEmpresa(Empresa empresa) throws Exception;
 	
-	public EmpresaResponse enviarEmpresaEmailAceite(EmpresaEmailAceite empresaEmail); //201809251843 - esert - COR-820 Criar POST /empresa-emailaceite
+	public EmpresaResponse enviarEmpresaEmailAceite(Empresa empresa); //201809251843 - esert - COR-820 Criar POST /empresa-emailaceite
 
 }

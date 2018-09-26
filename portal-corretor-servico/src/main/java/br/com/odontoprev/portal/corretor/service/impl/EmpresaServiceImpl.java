@@ -1,14 +1,14 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
-import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
-import br.com.odontoprev.portal.corretor.business.SendMailAceite;
-import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
-import br.com.odontoprev.portal.corretor.dao.*;
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.model.*;
-import br.com.odontoprev.portal.corretor.service.*;
-import br.com.odontoprev.portal.corretor.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.swing.text.MaskFormatter;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.MaskFormatter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
+import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
+import br.com.odontoprev.portal.corretor.business.SendMailAceite;
+import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
+import br.com.odontoprev.portal.corretor.dao.ArquivoContratacaoDAO;
+import br.com.odontoprev.portal.corretor.dao.EmpresaContatoDAO;
+import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
+import br.com.odontoprev.portal.corretor.dao.LogEmailBoasVindasPMEDAO;
+import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
+import br.com.odontoprev.portal.corretor.dao.VendaDAO;
+import br.com.odontoprev.portal.corretor.dto.CnpjDados;
+import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
+import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
+import br.com.odontoprev.portal.corretor.dto.Empresa;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
+import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponseItem;
+import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
+import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
+import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
+import br.com.odontoprev.portal.corretor.dto.TokenAceite;
+import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
+import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
+import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
+import br.com.odontoprev.portal.corretor.model.TbodLogEmailBoasVindasPME;
+import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
+import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.model.TbodVida;
+import br.com.odontoprev.portal.corretor.service.ArquivoContratacaoService;
+import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.service.PlanoService;
+import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
+import br.com.odontoprev.portal.corretor.service.VendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
+import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
+import br.com.odontoprev.portal.corretor.util.DataUtil;
+import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
+import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
+import br.com.odontoprev.portal.corretor.util.XlsVidas;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -759,23 +791,22 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     //201809251843 - esert - COR-820 Criar POST /empresa-emailaceite
 	@Override
-	public EmpresaResponse enviarEmpresaEmailAceite(EmpresaEmailAceite empresaEmail) {
+	public EmpresaResponse enviarEmpresaEmailAceite(Empresa empresa) {
 
         log.info("enviarEmpresaEmailAceite - ini");
 
-        TbodEmpresa tbEmpresa = new TbodEmpresa();
-
         try {
 
-            tbEmpresa = empresaDAO.findOne(empresaEmail.getCdEmpresa());
+        	TbodEmpresa tbodEmpresa = empresaDAO.findOne(empresa.getCdEmpresa());
+            if (tbodEmpresa != null) {
 
-            if (tbEmpresa != null) {
-
-                TbodVenda tbodVenda = vendaDAO.findByCdVendaAndTbodEmpresaCdEmpresa(empresaEmail.getCdVenda(), empresaEmail.getCdEmpresa());
-                if (tbodVenda == null) {
-                    log.error("TbodVenda nao encontrado para empresaEmail.getCdVenda(" + empresaEmail.getCdVenda() + " e getCdEmpresa(" + empresaEmail.getCdEmpresa() + ") )!");
+                List<TbodVenda> listTbodVenda = tbodEmpresa.getTbodVendas();
+                if (listTbodVenda == null || listTbodVenda.size() == 0) {
+                    log.error("listTbodVenda == null || listTbodVenda.size() == 0 para empresa.getCdEmpresa(" + empresa.getCdEmpresa() + ")!");
                     return null;
                 }
+                
+                TbodVenda tbodVenda = listTbodVenda.get(listTbodVenda.size()-1);
 
                 TokenAceite tokenAceite = new TokenAceite(); //201805181904 - esert - COR-171
                 tokenAceite.setCdTokenAceite(null); //sera atribuido dentro de addTokenAceite() //201805181904 - esert - COR-171
@@ -798,7 +829,7 @@ public class EmpresaServiceImpl implements EmpresaService {
                 }
 
             } else {
-                //throw new Exception("CdEmpresa [" + empresaEmail.getCdEmpresa() + "] nao encontrado !"); //201705172015 - esert
+                log.error("CdEmpresa [" + empresa.getCdEmpresa() + "] nao encontrado !"); //201705172015 - esert
             	return null; //NoContent //201809251905 - esert
             }
 
@@ -808,6 +839,6 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
 
         log.info("enviarEmpresaEmailAceite - fim");
-        return new EmpresaResponse(HttpStatus.OK.value(), String.format("Empresa: [%d], email enviado.", empresaEmail.getCdEmpresa()));
+        return new EmpresaResponse(HttpStatus.OK.value(), String.format("Empresa: [%d], email enviado.", empresa.getCdEmpresa()));
 	}
 }

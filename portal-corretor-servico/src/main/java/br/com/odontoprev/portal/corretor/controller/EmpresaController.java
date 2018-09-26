@@ -163,29 +163,24 @@ public class EmpresaController {
 	
 	//201809251831 - esert - COR-820 Criar POST /empresa-emailaceite
 	@RequestMapping(value = "/empresa-emailaceite", method = { RequestMethod.POST })
-	public ResponseEntity<EmpresaResponse> postEmpresaEmailAceite(@RequestBody EmpresaEmailAceite empresaEmailAceite) {
+	public ResponseEntity<EmpresaResponse> enviarEmpresaEmailAceite(@RequestBody Empresa empresa) {
 		try {
-			log.info("postEmpresaEmailAceite - ini");	
+			log.info("enviarEmpresaEmailAceite - ini");	
 			
-			log.info(empresaEmailAceite);
+			log.info(empresa);
 			
-			if(empresaEmailAceite.getCdEmpresa()==null) {
-				log.info("empresaEmailAceite.getCdEmpresa()==null");
+			if(empresa.getCdEmpresa()==null) {
+				log.info("empresa.getCdEmpresa()==null");
 				return ResponseEntity.badRequest().build();
 			}
 			
-			if(empresaEmailAceite.getCdVenda()==null) {
-				log.info("empresaEmailAceite.getCdVenda()==null");
-				return ResponseEntity.badRequest().build();
-			}
-			
-			EmpresaResponse response = empresaService.enviarEmpresaEmailAceite(empresaEmailAceite);
+			EmpresaResponse response = empresaService.enviarEmpresaEmailAceite(empresa);
 			
 			if(response==null) {
 				return ResponseEntity.noContent().build();
 			}
 			
-			log.info("postEmpresaEmailAceite - fim");	
+			log.info("enviarEmpresaEmailAceite - fim");	
 			return ResponseEntity.ok(response);
 		
 		}catch (Exception e) {
