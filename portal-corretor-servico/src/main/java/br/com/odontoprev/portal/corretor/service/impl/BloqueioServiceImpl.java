@@ -13,6 +13,7 @@ import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
 import br.com.odontoprev.portal.corretor.dao.LoginDAO;
 import br.com.odontoprev.portal.corretor.dao.TipoBloqueioDAO;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
@@ -180,6 +181,42 @@ public class BloqueioServiceImpl implements BloqueioService {
 		log.info("doBloqueioForcaVenda(cpf:["+ cpf +"]) - ini");
 		log.info("doBloqueioForcaVenda(cpf:["+ cpf +"]) - fim");
 		return this.doBloqueioForcaVenda(forcaVendaService.findForcaVendaByCpf(cpf));
+	}
+
+	//201809271155 - esert/jota/yalm - COR-833 : Desbloquear Corretora e Força após aceite
+	@Override
+	public boolean doDesbloqueioCorretoraForcaVenda(ContratoCorretora contratoCorretora) throws Exception {
+		log.info("doDesbloqueioCorretora - ini");
+
+        if (contratoCorretora == null) {
+            log.error("doDesbloqueioCorretora - BAD_REQUEST - tbodCorretora null");
+            return false;
+        }
+
+		log.info("contratoCorretora[" + contratoCorretora.toString() + "]");
+
+        TbodCorretora tbodCorretora = corretoraDAO.findOne(contratoCorretora.getCdCorretora());
+
+        if (tbodCorretora == null) {
+            log.error("doDesbloqueioCorretora - NO_CONTENT - tbodCorretora == null");
+            return false;
+        }
+        
+        this.doBloqueioCorretora(tbodCorretora.getCnpj());
+        List<TbodForcaVenda> listTbodForcaVenda = tbodCorretora.getTbodForcaVendas();
+      
+        if (listTbodForcaVenda == null) {
+            log.error("doDesbloqueioCorretora - NO_CONTENT - listTbodForcaVenda == null");
+            //return false; Corretora sem ForcaVenda
+        }else {
+    		log.info("listTbodForcaVenda.size():[" + listTbodForcaVenda.size() + "]");
+        	for(TbodForcaVenda tbodForcaVenda : listTbodForcaVenda) {
+        		this.doBloqueioForcaVenda(tbodForcaVenda.getCpf());
+        	}
+        }
+        
+		log.info("doDesbloqueioCorretora - fim");
+        return true;
 	}
 
 }

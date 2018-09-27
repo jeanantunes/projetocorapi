@@ -1,9 +1,12 @@
 package br.com.odontoprev.portal.corretor.controller;
 
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
-import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Optional;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,14 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Optional;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
+import br.com.odontoprev.portal.corretor.service.BloqueioService;
+import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
 
 @RestController
 public class ContratoCorretoraController {
@@ -27,6 +34,9 @@ public class ContratoCorretoraController {
 
     @Autowired
     private ContratoCorretoraService contratoCorretoraService;
+
+    @Autowired
+	private BloqueioService bloqueioService;
 
     @RequestMapping(value = "/contratocorretora/{cdCorretora}/dataaceite", method = {RequestMethod.GET})
     public ResponseEntity<ContratoCorretoraDataAceite> getDataAceiteContratoByCdCorretora(@PathVariable Long cdCorretora) throws ParseException {
@@ -100,12 +110,19 @@ public class ContratoCorretoraController {
         }
         
         try {
-        	contratoCorretoraResponse = contratoCorretoraService.postContratoCorretora(
-        			contratoCorretora);
+        	contratoCorretoraResponse = contratoCorretoraService.postContratoCorretora(contratoCorretora);
         	
         	if(contratoCorretoraResponse==null) {
                 log.error("postContratoCorretora - NO_CONTENT - contratoCorretoraResponse==null apos contratoCorretoraService.postContratoCorretora().");
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        	}
+        	
+        	//201809271155 - esert/jota/yalm - COR-833 : Desbloquear Corretora e Força após aceite
+        	boolean bloqueioOk = bloqueioService.doDesbloqueioCorretoraForcaVenda(contratoCorretoraResponse);
+        	if(!bloqueioOk) {
+        		log.error("postContratoCorretora - INTERNAL_SERVER_ERROR - !bloqueioOk apos doDesbloqueioCorretoraForcaVenda(contratoCorretoraResponse).");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                //throw new Exception("!bloqueioOk");
         	}
         	
         	contratoCorretoraResponse = contratoCorretoraService.enviarEmailContratoCorretagemIntermediacao(

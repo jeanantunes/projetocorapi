@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.service;
 
+import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 
@@ -13,6 +14,9 @@ public interface BloqueioService {
 	public boolean doBloqueioForcaVenda(ForcaVenda forcaVenda);
 	
 	public boolean doBloqueioForcaVenda(String cpf);
+
+	//201809271155 - esert/jota/yalm - COR-833 : Desbloquear Corretora e Força após aceite
+	public boolean doDesbloqueioCorretoraForcaVenda(ContratoCorretora contratoCorretoraResponse) throws Exception;
 
 }
 
