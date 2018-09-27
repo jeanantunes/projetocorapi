@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
 import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
+import br.com.odontoprev.portal.corretor.service.BloqueioService;
 import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
 
 
@@ -50,6 +51,9 @@ public class ContratoCorretoraControllerTest {
 
 	@Autowired
 	private ContratoCorretoraService service;
+	
+	@Autowired
+	private BloqueioService bloqueioService; //201809271549 - esert - BUG - COR-833
 
 	@Test
 	public void testOk200getDataAceiteContratoByCdCorretora() throws Exception {
@@ -202,6 +206,7 @@ public class ContratoCorretoraControllerTest {
 
         String json = new Gson().toJson(contratoCorretora);
         given(service.postContratoCorretora(contratoCorretora)).willReturn(contratoCorretora);
+        given(bloqueioService.doDesbloqueioCorretoraForcaVenda(contratoCorretora)).willReturn(true); //201809271549 - esert - BUG - COR-833
         given(service.enviarEmailContratoCorretagemIntermediacao(contratoCorretora.getCdCorretora(), contratoCorretora.getCdContratoCorretora())).willReturn(contratoCorretora); //201809131756 - esert - novo metodo incluido no controller deve ser mockado tbm
 
         //Efetua a requisição na rota e espera um status code
@@ -224,6 +229,7 @@ public class ContratoCorretoraControllerTest {
 
         String json = new Gson().toJson(contratoCorretora);
         given(service.postContratoCorretora(contratoCorretora)).willReturn(contratoCorretora);
+        given(bloqueioService.doDesbloqueioCorretoraForcaVenda(contratoCorretora)).willReturn(true); //201809271549 - esert - BUG - COR-833
         given(service.enviarEmailContratoCorretagemIntermediacao(contratoCorretora.getCdCorretora(), contratoCorretora.getCdContratoCorretora())).willReturn(contratoCorretora); //201809131756 - esert - novo metodo incluido no controller deve ser mockado tbm
 
         //Efetua a requisição na rota e espera um status code

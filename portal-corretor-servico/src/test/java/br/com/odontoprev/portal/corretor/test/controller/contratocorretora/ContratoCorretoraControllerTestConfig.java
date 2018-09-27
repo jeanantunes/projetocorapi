@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import br.com.odontoprev.portal.corretor.controller.ContratoCorretoraController;
+import br.com.odontoprev.portal.corretor.service.BloqueioService;
 import br.com.odontoprev.portal.corretor.service.ContratoCorretoraService;
 
 //Classe responsável por configurar objetos que queremos mockar
@@ -30,5 +31,13 @@ public class ContratoCorretoraControllerTestConfig {
 	 @Scope("application")
      public ContratoCorretoraService service() {
 		 return Mockito.mock(ContratoCorretoraService.class);
+	 }	 	 
+
+	 //Mocando service que injetado no Controller
+	 @Bean
+	 @Primary
+	 @Scope("application")
+	 public BloqueioService bloqueioService() {
+		 return Mockito.mock(BloqueioService.class); //201809271549 - esert - BUG - COR-833
 	 }	 	 
 }
