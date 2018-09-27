@@ -17,6 +17,7 @@ public class LoginResponse implements Serializable {
     private boolean temBloqueio;
     private Long codigoTipoBloqueio;
     private String descricaoTipoBloqueio;
+    private String email;
 
     public LoginResponse() {
 
@@ -24,7 +25,8 @@ public class LoginResponse implements Serializable {
 
     public LoginResponse(long codigoDcss, long codigoUsuario, String nomeUsuario, String documento,
                          long codigoCorretora, String nomeCorretora, String perfil,
-                         boolean temBloqueio, long codigoTipoBloqueio, String descricaoTipoBloqueio) {
+                         boolean temBloqueio, long codigoTipoBloqueio, String descricaoTipoBloqueio,
+                         String email) {
         this.codigoDcss = codigoDcss;
         this.codigoUsuario = codigoUsuario;
         this.nomeUsuario = nomeUsuario;
@@ -35,11 +37,13 @@ public class LoginResponse implements Serializable {
         this.temBloqueio = temBloqueio;
         this.codigoTipoBloqueio = codigoTipoBloqueio;
         this.descricaoTipoBloqueio = descricaoTipoBloqueio;
+        this.email = email;
     }
 
     public LoginResponse(long codigoUsuario, String nomeUsuario, String documento,
                          long codigoCorretora, String nomeCorretora, String perfil, String dtAceiteContrato,
-                         boolean temBloqueio, long codigoTipoBloqueio, String descricaoTipoBloqueio) {
+                         boolean temBloqueio, long codigoTipoBloqueio, String descricaoTipoBloqueio,
+                         String email) {
         this.codigoUsuario = codigoUsuario;
         this.nomeUsuario = nomeUsuario;
         this.documento = documento;
@@ -50,6 +54,7 @@ public class LoginResponse implements Serializable {
         this.temBloqueio = temBloqueio;
         this.codigoTipoBloqueio = codigoTipoBloqueio;
         this.descricaoTipoBloqueio = descricaoTipoBloqueio;
+        this.email = email;
     }
 
     public long getCodigoDcss() {
@@ -140,6 +145,14 @@ public class LoginResponse implements Serializable {
         this.descricaoTipoBloqueio = descricaoTipoBloqueio;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "LoginResponse{" +
@@ -154,6 +167,7 @@ public class LoginResponse implements Serializable {
                 ", temBloqueio=" + temBloqueio +
                 ", codigoTipoBloqueio=" + codigoTipoBloqueio +
                 ", descricaoTipoBloqueio='" + descricaoTipoBloqueio + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 

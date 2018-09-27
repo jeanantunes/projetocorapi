@@ -1,10 +1,16 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
+import br.com.odontoprev.portal.corretor.dao.LoginDAO;
+import br.com.odontoprev.portal.corretor.dto.*;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
+import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
+import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.service.BloqueioService;
+import br.com.odontoprev.portal.corretor.service.CorretoraService;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.service.LoginService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.bytecode.buildtime.spi.ExecutionException;
@@ -16,21 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
-import br.com.odontoprev.portal.corretor.dao.LoginDAO;
-import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
-import br.com.odontoprev.portal.corretor.dto.Login;
-import br.com.odontoprev.portal.corretor.dto.LoginResponse;
-import br.com.odontoprev.portal.corretor.dto.LoginRetorno;
-import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
-import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
-import br.com.odontoprev.portal.corretor.model.TbodLogin;
-import br.com.odontoprev.portal.corretor.service.BloqueioService;
-import br.com.odontoprev.portal.corretor.service.CorretoraService;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
-import br.com.odontoprev.portal.corretor.service.LoginService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -121,7 +116,8 @@ public class LoginServiceImpl implements LoginService {
                         perfil,
                         forcaVenda.getLogin().getTemBloqueio(),
                         forcaVenda.getLogin().getCodigoTipoBloqueio(),
-                        forcaVenda.getLogin().getDescricaoTipoBloqueio());
+                        forcaVenda.getLogin().getDescricaoTipoBloqueio(),
+                        forcaVenda.getEmail());
 
                 log.info("loginResponse:[" + loginResponse + "]");
                 return loginResponse;
@@ -179,7 +175,9 @@ public class LoginServiceImpl implements LoginService {
                             dtAceiteContrato,
                             corretora.getLogin().getTemBloqueio(),
                             corretora.getLogin().getCodigoTipoBloqueio(),
-                            corretora.getLogin().getDescricaoTipoBloqueio());
+                            corretora.getLogin().getDescricaoTipoBloqueio(),
+                            corretora.getEmail()
+                    );
                 } else {
                     return responseNotFound;
                 }
