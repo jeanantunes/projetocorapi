@@ -660,9 +660,8 @@ public class VendaPFBusiness {
 		String msgErro = "";
 
 		try {
-//			String URLAPI = dcss_venda_propostaUrl + dcss_venda_propostaPath; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
+			String URLAPI = dcss_venda_propostaUrl + dcss_venda_propostaPath; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
 
-			String URLAPI = "http://localhost:7001/cli-dcssvendas-api-rs-1.0-SNAPSHOT/proposta";
 //			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 //			apiToken = apiManager.generateToken();
 
