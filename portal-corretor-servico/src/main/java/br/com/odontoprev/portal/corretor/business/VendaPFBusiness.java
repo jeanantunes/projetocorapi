@@ -388,7 +388,8 @@ public class VendaPFBusiness {
 
 		TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda());
 
-		propostaDCMS.setCorretora(new CorretoraPropostaDCMS());
+		propostaDCMS.setCorretoraMaster(new CorretoraPropostaDCMS());
+		propostaDCMS.setAngariador(new CorretoraPropostaDCMS());
 
 		//propostaDCMS.getCorretora().setCodigo(tbodForcaVenda.getTbodCorretora().getCdCorretora());
 		Long corretoraCodigo = -1L;
@@ -400,10 +401,13 @@ public class VendaPFBusiness {
 			log.error(message);
 			throw new Exception(message);
 		}
-		propostaDCMS.getCorretora().setCodigo(corretoraCodigo);
+		propostaDCMS.getCorretoraMaster().setCodigo(corretoraCodigo);
+		propostaDCMS.getCorretoraMaster().setCnpj(tbodForcaVenda.getTbodCorretora().getCnpj());
+		propostaDCMS.getCorretoraMaster().setNome(tbodForcaVenda.getTbodCorretora().getNome());
 
-		propostaDCMS.getCorretora().setCnpj(tbodForcaVenda.getTbodCorretora().getCnpj());
-		propostaDCMS.getCorretora().setNome(tbodForcaVenda.getTbodCorretora().getNome());
+		propostaDCMS.getAngariador().setCodigo(corretoraCodigo);
+		propostaDCMS.getAngariador().setCnpj(tbodForcaVenda.getTbodCorretora().getCnpj());
+		propostaDCMS.getAngariador().setNome(tbodForcaVenda.getTbodCorretora().getNome());
 
 		//propostaDCMS.setCodigoEmpresaDCMS("997692"); //codigoEmpresaDCMS: 997692
 		//propostaDCMS.setCodigoEmpresaDCMS(venda.getCdEmpresaDCMS()); //201803021320 esertorio para moliveira
@@ -656,8 +660,9 @@ public class VendaPFBusiness {
 		String msgErro = "";
 
 		try {
-			String URLAPI = dcss_venda_propostaUrl + dcss_venda_propostaPath; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
+//			String URLAPI = dcss_venda_propostaUrl + dcss_venda_propostaPath; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
 
+			String URLAPI = "http://172.16.244.148:7001/cli-dcssvendas-api-rs-1.0-SNAPSHOT/proposta";
 //			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 //			apiToken = apiManager.generateToken();
 

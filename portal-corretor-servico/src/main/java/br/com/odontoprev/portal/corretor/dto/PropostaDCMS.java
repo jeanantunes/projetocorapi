@@ -4,7 +4,9 @@ import java.util.List;
 
 public class PropostaDCMS {
 
-	private CorretoraPropostaDCMS corretora;
+	private CorretoraPropostaDCMS corretoraMaster;
+
+	private CorretoraPropostaDCMS angariador;
 	
 	private String codigoEmpresaDCMS;
 	
@@ -20,12 +22,20 @@ public class PropostaDCMS {
 	
 	private ResponsavelContratual responsavelContratual;
 
-	public CorretoraPropostaDCMS getCorretora() {
-		return corretora;
+	public CorretoraPropostaDCMS getCorretoraMaster() {
+		return corretoraMaster;
 	}
 
-	public void setCorretora(CorretoraPropostaDCMS corretora) {
-		this.corretora = corretora;
+	public void setCorretoraMaster(CorretoraPropostaDCMS corretoraMaster) {
+		this.corretoraMaster = corretoraMaster;
+	}
+
+	public CorretoraPropostaDCMS getAngariador() {
+		return angariador;
+	}
+
+	public void setAngariador(CorretoraPropostaDCMS angariador) {
+		this.angariador = angariador;
 	}
 
 	public String getCodigoEmpresaDCMS() {
@@ -86,14 +96,16 @@ public class PropostaDCMS {
 
 	@Override
 	public String toString() {
-		return "Proposta [" 
-				+ "corretora=" + corretora 
-				+ ", codigoEmpresaDCMS=" + codigoEmpresaDCMS
-				+ ", codigoCanalVendas=" + codigoCanalVendas 
-				+ ", codigoUsuario=" + codigoUsuario 
-				+ ", tipoCobranca=" + tipoCobranca 
-				+ ", dadosBancarios=" + dadosBancarios 
-				+ ", beneficiarios=" + beneficiarios
-				+ "]";
-	}	
+		return "PropostaDCMS{" +
+				"corretoraMaster=" + corretoraMaster +
+				", angariador=" + angariador +
+				", codigoEmpresaDCMS='" + codigoEmpresaDCMS + '\'' +
+				", codigoCanalVendas='" + codigoCanalVendas + '\'' +
+				", codigoUsuario=" + codigoUsuario +
+				", tipoCobranca=" + tipoCobranca +
+				", dadosBancarios=" + dadosBancarios +
+				", beneficiarios=" + beneficiarios +
+				", responsavelContratual=" + responsavelContratual +
+				'}';
+	}
 }
