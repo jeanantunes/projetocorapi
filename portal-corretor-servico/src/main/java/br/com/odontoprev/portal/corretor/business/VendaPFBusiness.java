@@ -388,7 +388,7 @@ public class VendaPFBusiness {
 
 		TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda());
 
-		propostaDCMS.setCorretoraMaster(new CorretoraPropostaDCMS());
+		propostaDCMS.setCorretorMaster(new CorretoraPropostaDCMS());
 		propostaDCMS.setAngariador(new CorretoraPropostaDCMS());
 
 		//propostaDCMS.getCorretora().setCodigo(tbodForcaVenda.getTbodCorretora().getCdCorretora());
@@ -401,9 +401,9 @@ public class VendaPFBusiness {
 			log.error(message);
 			throw new Exception(message);
 		}
-		propostaDCMS.getCorretoraMaster().setCodigo(corretoraCodigo);
-		propostaDCMS.getCorretoraMaster().setCnpj(tbodForcaVenda.getTbodCorretora().getCnpj());
-		propostaDCMS.getCorretoraMaster().setNome(tbodForcaVenda.getTbodCorretora().getNome());
+		propostaDCMS.getCorretorMaster().setCodigo(corretoraCodigo);
+		propostaDCMS.getCorretorMaster().setCnpj(tbodForcaVenda.getTbodCorretora().getCnpj());
+		propostaDCMS.getCorretorMaster().setNome(tbodForcaVenda.getTbodCorretora().getNome());
 
 		propostaDCMS.getAngariador().setCodigo(corretoraCodigo);
 		propostaDCMS.getAngariador().setCnpj(tbodForcaVenda.getTbodCorretora().getCnpj());
@@ -662,7 +662,7 @@ public class VendaPFBusiness {
 		try {
 //			String URLAPI = dcss_venda_propostaUrl + dcss_venda_propostaPath; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
 
-			String URLAPI = "http://172.16.244.148:7001/cli-dcssvendas-api-rs-1.0-SNAPSHOT/proposta";
+			String URLAPI = "http://localhost:7001/cli-dcssvendas-api-rs-1.0-SNAPSHOT/proposta";
 //			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 //			apiToken = apiManager.generateToken();
 

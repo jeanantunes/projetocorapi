@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PropostaDCMS {
 
-	private CorretoraPropostaDCMS corretoraMaster;
+	private CorretoraPropostaDCMS corretorMaster;
 
 	private CorretoraPropostaDCMS angariador;
 	
@@ -22,12 +22,12 @@ public class PropostaDCMS {
 	
 	private ResponsavelContratual responsavelContratual;
 
-	public CorretoraPropostaDCMS getCorretoraMaster() {
-		return corretoraMaster;
+	public CorretoraPropostaDCMS getCorretorMaster() {
+		return corretorMaster;
 	}
 
-	public void setCorretoraMaster(CorretoraPropostaDCMS corretoraMaster) {
-		this.corretoraMaster = corretoraMaster;
+	public void setCorretorMaster(CorretoraPropostaDCMS corretorMaster) {
+		this.corretorMaster = corretorMaster;
 	}
 
 	public CorretoraPropostaDCMS getAngariador() {
@@ -97,7 +97,7 @@ public class PropostaDCMS {
 	@Override
 	public String toString() {
 		return "PropostaDCMS{" +
-				"corretoraMaster=" + corretoraMaster +
+				"corretoraMaster=" + corretorMaster +
 				", angariador=" + angariador +
 				", codigoEmpresaDCMS='" + codigoEmpresaDCMS + '\'' +
 				", codigoCanalVendas='" + codigoCanalVendas + '\'' +
