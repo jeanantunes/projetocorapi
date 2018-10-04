@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +23,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMSResponse;
 import br.com.odontoprev.portal.corretor.model.TbodUploadForcavenda;
 import br.com.odontoprev.portal.corretor.service.UploadService;
 
 @Controller
 public class UploadController {
 	
-	private static final Log log = LogFactory.getLog(UploadController.class);
+	private static final Logger log = LoggerFactory.getLogger(UploadController.class);
 	
 	@Autowired
 	UploadService uploadService;
@@ -114,6 +115,33 @@ public class UploadController {
          
         log.info("##### Server File Location: " + serverFile.getAbsolutePath());
 		return serverFile;
+	}
+
+	//201810041803 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	@RequestMapping(value="upload/lotedcms/{cdCorretora}", method = RequestMethod.POST)
+	public ResponseEntity<FileUploadLoteDCMSResponse> fileuploadLoteDCMS(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cdCorretora  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
+		log.info("fileuploadLoteDCMS:cdCorretora:[{}], uploadFile.getSize:[{}]", cdCorretora, uploadFile.getSize());
+		FileUploadLoteDCMSResponse fileUploadLoteDCMSResponse = new FileUploadLoteDCMSResponse();
+		File serverFile = serverFile(uploadFile);  
+				
+		BufferedReader bufferedReader = null;
+		
+		try {
+//			String lines;
+			bufferedReader = new BufferedReader(new FileReader(serverFile.getAbsolutePath()));
+			bufferedReader.readLine();
+//			while ((lines = bufferedReader.readLine()) != null) {				
+//				uploadService.addDadosUpload(csvToArrayList(lines, cdCorretora, uploadFile.getOriginalFilename()));  
+//			}
+			
+		} catch (IOException e) {
+			log.info("##### Error csv: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		} finally {
+			if (bufferedReader != null) bufferedReader.close();
+		}
+		      
+        return ResponseEntity.ok(fileUploadLoteDCMSResponse);
 	}
 
 }
