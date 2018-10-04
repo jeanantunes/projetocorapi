@@ -62,52 +62,52 @@ public class VendaPFBusiness {
 	private static final Log log = LogFactory.getLog(VendaPFBusiness.class);
 
 	private RestTemplate restTemplate = null;
-	
+
 	@PostConstruct
-	private void init() {		
+	private void init() {
 		if(restTemplate  == null)
 			restTemplate = new RestTemplate();
 	}
-	
+
 	@Autowired
 	VendaDAO vendaDao;
-	
+
 	@Autowired
 	EmpresaDAO empresaDao;
-	
+
 	@Autowired
 	PlanoDAO planoDao;
-	
+
 	@Autowired
 	ForcaVendaDAO forcaVendaDao;
 
 	@Autowired
 	StatusVendaDAO statusVendaDao;
-	
+
 	@Autowired
 	BeneficiarioBusiness beneficiarioBusiness;
-	
+
 	@Autowired
 	ApiManagerTokenServiceImpl apiManagerTokenService;
-	
+
 	@Autowired
 	ResponsavelContratualBusiness responsavelContratualBusiness;
-    
-    @Autowired
+
+	@Autowired
 	OdpvAuditorService odpvAuditor; //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 
-	@Value("${DCSS_URL}")
-	private String dcssUrl;
+	@Value("${DCSS_VENDAS_PROPOSTA_URL}") //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
+	private String dcss_venda_propostaUrl; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
 
 	@Value("${DCSS_VENDAS_PROPOSTA_PATH}")
 	private String dcss_venda_propostaPath;
-	
+
 	@Value("${DCSS_CODIGO_CANAL_VENDAS}")
 	private String dcss_codigo_canal_vendas; //201803021328 esertorio para moliveira
-	
+
 	@Value("${DCSS_CODIGO_EMPRESA_DCMS}")
 	private String dcss_codigo_empresa_dcms; //201803021538 esertorio para moliveira
-	
+
 	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public VendaResponse salvarVendaComTitularesComDependentes(Venda venda, Boolean isIntegraDCSS) throws Exception {
 
@@ -115,22 +115,22 @@ public class VendaPFBusiness {
 
 		TbodVenda tbVenda = new TbodVenda();
 		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();
-		
-		//try 
-		{		
-			
+
+		//try
+		{
+
 			if(venda != null) {
 				if(venda.getCdVenda() != null) {
-					tbVenda = vendaDao.findOne(venda.getCdVenda());					
+					tbVenda = vendaDao.findOne(venda.getCdVenda());
 				}
 			}
 
 			if(tbVenda == null) {
 				throw new Exception("Venda CdVenda:[" + venda.getCdVenda() + "] não existe!");
 			}
-			
+
 			tbVenda.setCdVenda(venda.getCdVenda());
-						
+
 			if(venda.getCdEmpresa() != null) {
 				TbodEmpresa tbodEmpresa = empresaDao.findOne(venda.getCdEmpresa());
 				tbVenda.setTbodEmpresa(tbodEmpresa);
@@ -148,40 +148,40 @@ public class VendaPFBusiness {
 			}
 
 			if(venda.getCdForcaVenda() != null) {
-				TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
+				TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda());
 				if(tbodForcaVenda == null) {
-					throw new Exception("tbodForcaVenda == null para venda.getCdForcaVenda():[" + venda.getCdForcaVenda() + "]"); //201806261245 - esert - protecao					
-				}				
+					throw new Exception("tbodForcaVenda == null para venda.getCdForcaVenda():[" + venda.getCdForcaVenda() + "]"); //201806261245 - esert - protecao
+				}
 				tbVenda.setTbodForcaVenda(tbodForcaVenda);
 				venda.setCdDCSSUsuario(tbodForcaVenda.getCodigoDcssUsuario());
 
 				tbVenda.setTbodCorretora(tbodForcaVenda.getTbodCorretora()); //201807311613 - esert - COR-468:Atrelar Venda com a Corretora
 			}
-			
+
 			if(venda.getDataVenda() != null) {
 				tbVenda.setDtVenda(venda.getDataVenda());
 			} else {
 				tbVenda.setDtVenda(new Date());
 			}
-			
+
 			//TbodVendaVida tbodVendaVida = null;
 			//tbVenda.getTbodVendaVida().setCdVendaVida((Long) null);
-			
+
 			if(venda.getCdStatusVenda() != null) {
 				TbodStatusVenda tbodStatusVenda = statusVendaDao.findOne(venda.getCdStatusVenda());
 				tbVenda.setTbodStatusVenda(tbodStatusVenda);
 			}
-			
+
 			if(venda.getFaturaVencimento() != null) {
 				tbVenda.setFaturaVencimento(venda.getFaturaVencimento());
 			} else {
-				tbVenda.setFaturaVencimento((long)0);				
+				tbVenda.setFaturaVencimento((long)0);
 			}
-			
+
 			if(venda.getDataVigencia() != null) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
 				tbVenda.setDtVigencia(venda.getDataVigencia()); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
 			}
-			
+
 			if(venda.getDataMovimentacao() != null) { //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
 				tbVenda.setDtMovimentacao(venda.getDataMovimentacao()); //201806141829 - esert - (COR-303 Modificar Servico /vendapme)
 			}
@@ -192,9 +192,9 @@ public class VendaPFBusiness {
 
 			//20180802 - yalm - [COR-532]
 			if(
-				venda.getTitulares() != null
-				&&
-				!venda.getTitulares().isEmpty()
+					venda.getTitulares() != null
+							&&
+							!venda.getTitulares().isEmpty()
 			) {
 
 				for (Beneficiario titular : venda.getTitulares()) {
@@ -221,22 +221,22 @@ public class VendaPFBusiness {
 			}
 
 			if(venda.getTitulares() != null
-				&& !venda.getTitulares().isEmpty()
-				&& venda.getTitulares().get(0) != null
-				&& venda.getTitulares().get(0).getDadosBancarios() != null
+					&& !venda.getTitulares().isEmpty()
+					&& venda.getTitulares().get(0) != null
+					&& venda.getTitulares().get(0).getDadosBancarios() != null
 			) {
 
 				DadosBancariosVenda dadosBancariosVenda = venda.getTitulares().get(0).getDadosBancarios();
-				
+
 				//Dados Bancarios
 				if(dadosBancariosVenda.getTipoConta() != null) {
 					tbVenda.setTipoConta(dadosBancariosVenda.getTipoConta());
 				}
-				
+
 				if(dadosBancariosVenda.getCodigoBanco() != null) {
 					tbVenda.setBanco(dadosBancariosVenda.getCodigoBanco());
 				}
-				
+
 				if(dadosBancariosVenda.getAgencia() != null) {
 					//dadosBancariosVenda.setAgencia(dadosBancariosVenda.getAgencia().replace("-", ""));
 
@@ -249,7 +249,7 @@ public class VendaPFBusiness {
 						tbVenda.setAgenciaDv(agDV);
 					}
 				} //if(dadosBancariosVenda.getAgencia() != null)
-				
+
 				if(dadosBancariosVenda.getConta() != null) {
 					dadosBancariosVenda.setConta(dadosBancariosVenda.getConta().replace("-", ""));
 					if(!dadosBancariosVenda.getConta().isEmpty()) {
@@ -260,25 +260,25 @@ public class VendaPFBusiness {
 					}
 				} //if(dadosBancariosVenda.getConta() != null)
 			} //if(beneficiarioTitular.getDadosBancarios() != null)
-			
+
 			if(venda.getTipoPagamento() != null) {
 				tbVenda.setTipoPagamento(venda.getTipoPagamento());
 			}
-			
+
 			//Responsavel Contratual para venda PF, se titular menor de idade 201803281040
 			if(venda.getResponsavelContratual() != null) {
-				
+
 				TbodResponsavelContratual tbodResponsavelContratual = responsavelContratualBusiness
 						.salvarResponsavelContratualComEndereco(venda.getResponsavelContratual());
-				
+
 				if(tbodResponsavelContratual != null) {
 					tbVenda.setTbodResponsavelContratual(tbodResponsavelContratual);
 				}
-				
+
 			}
-			
+
 			tbVenda = vendaDao.save(tbVenda);
-			
+
 			if(venda.getTitulares() != null) {
 				for (Beneficiario titular : venda.getTitulares()) {
 					titular.setCdVenda(tbVenda.getCdVenda());
@@ -286,37 +286,37 @@ public class VendaPFBusiness {
 			}
 
 			BeneficiarioResponse beneficiarioResponse = beneficiarioBusiness.salvarTitularComDependentes(venda.getTitulares());
-			
+
 			if(beneficiarioResponse.getId() == 0) {
 				throw new Exception(beneficiarioResponse.getMensagem());
 			}
-			
+
 
 			if(isIntegraDCSS) {
 				propostaDCMSResponse = chamarWsDcssLegado(venda, tbodPlano);
 				atualizarNumeroPropostaVenda(venda, tbVenda, propostaDCMSResponse);
 			}
-			
+
 			log.info("salvarVendaComTitularesComDependentes - fim");
 
-		} 
+		}
 
-		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada." 
-		+ " CdVenda:[" + tbVenda.getCdVenda() + "];" 
-		+ " NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "];" 
-		+ " DtVenda:[" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) + "];"
-		+ " MensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "];"
-		//201808241648 - esert - COR-619 - passar cdEmpresa para App/Web
-		,tbVenda.getCdVenda() //cdVenda 
-		,propostaDCMSResponse.getNumeroProposta() //numeroProposta
-		,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) //dtVenda
-		,propostaDCMSResponse.getMensagemErro() //mensagemErro
-		,(tbVenda.getTbodEmpresa()!=null ? tbVenda.getTbodEmpresa().getCdEmpresa() : null) //cdEmpresa  //201809131651 - esert - aplicado sprint13 //201809042045 - esert - venda pf nao tem TbodEmpresa deve testar null
+		return new VendaResponse(tbVenda.getCdVenda(), "Venda cadastrada."
+				+ " CdVenda:[" + tbVenda.getCdVenda() + "];"
+				+ " NumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "];"
+				+ " DtVenda:[" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) + "];"
+				+ " MensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "];"
+				//201808241648 - esert - COR-619 - passar cdEmpresa para App/Web
+				,tbVenda.getCdVenda() //cdVenda
+				,propostaDCMSResponse.getNumeroProposta() //numeroProposta
+				,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(tbVenda.getDtVenda()) //dtVenda
+				,propostaDCMSResponse.getMensagemErro() //mensagemErro
+				,(tbVenda.getTbodEmpresa()!=null ? tbVenda.getTbodEmpresa().getCdEmpresa() : null) //cdEmpresa  //201809131651 - esert - aplicado sprint13 //201809042045 - esert - venda pf nao tem TbodEmpresa deve testar null
 		);
 	}
 
 	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
-	public void atualizarNumeroPropostaVenda(Venda venda, TbodVenda tbVenda, PropostaDCMSResponse propostaDCMSResponse) throws Exception 
+	public void atualizarNumeroPropostaVenda(Venda venda, TbodVenda tbVenda, PropostaDCMSResponse propostaDCMSResponse) throws Exception
 	{
 		log.info("atualizarNumeroPropostaVenda - ini");
 
@@ -324,10 +324,10 @@ public class VendaPFBusiness {
 		TbodVenda tbodVendaUpdate = vendaDao.findOne(tbVenda.getCdVenda());
 		try {
 			if(tbodVendaUpdate != null) {
-				
-				if(propostaDCMSResponse!=null 
-				    && propostaDCMSResponse.getNumeroProposta() != null 
-					&& !propostaDCMSResponse.getNumeroProposta().isEmpty()
+
+				if(propostaDCMSResponse!=null
+						&& propostaDCMSResponse.getNumeroProposta() != null
+						&& !propostaDCMSResponse.getNumeroProposta().isEmpty()
 				) {
 					tbodVendaUpdate.setPropostaDcms(propostaDCMSResponse.getNumeroProposta());
 					tbodStatusVenda = statusVendaDao.findOne(new Long(1)); //1=Aprovado
@@ -341,11 +341,11 @@ public class VendaPFBusiness {
 						throw new Exception("atualizarNumeroPropostaVenda; Não achou tbodStatusVenda.getCdStatusVenda(2)");
 					}
 				}
-				
+
 				tbodVendaUpdate.setTbodStatusVenda(tbodStatusVenda);
-				
+
 				tbodVendaUpdate = vendaDao.save(tbodVendaUpdate);
-				
+
 				log.info("atualizarNumeroPropostaVenda - fim");
 			} else {
 				String message = "atualizarNumeroPropostaVenda; Não achou tbVenda.getCdVenda():["+ tbVenda.getCdVenda() +"]";
@@ -363,33 +363,33 @@ public class VendaPFBusiness {
 	@Transactional(rollbackFor={Exception.class}) //201806290936 - esert - COR-352 rollback pf
 	public PropostaDCMSResponse chamarWsDcssLegado(Venda venda, TbodPlano tbodPlano) throws Exception {
 		log.info("chamarWsDcssLegado - ini");
-								
+
 		PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
-					
+
 		PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
-		
+
 		//201807201529 - esert - mock-teste
 		//PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();//mock-teste
 		//propostaDCMSResponse.setNumeroProposta("APP999999999999");//mock-teste
 		//propostaDCMSResponse.setMensagemErro("chamarWSLegadoPropostaPOST(fake)");//mock-teste
-		
+
 		if(propostaDCMSResponse != null) {
 			log.info("chamarWsDcssLegado; propostaDCMSResponse.getNumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; getMensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "]");
 		}
-		
+
 		log.info("chamarWsDcssLegado - fim");
 		return propostaDCMSResponse;
 	}
 
 	@Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 	private PropostaDCMS atribuirVendaPFParaPropostaDCMS(Venda venda, TbodPlano tbodPlano) throws Exception {
-		
+
 		PropostaDCMS propostaDCMS = new PropostaDCMS();
 
-		TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda()); 
-				
+		TbodForcaVenda tbodForcaVenda = forcaVendaDao.findOne(venda.getCdForcaVenda());
+
 		propostaDCMS.setCorretora(new CorretoraPropostaDCMS());
-		
+
 		//propostaDCMS.getCorretora().setCodigo(tbodForcaVenda.getTbodCorretora().getCdCorretora());
 		Long corretoraCodigo = -1L;
 		try {
@@ -410,43 +410,43 @@ public class VendaPFBusiness {
 		propostaDCMS.setCodigoEmpresaDCMS(dcss_codigo_empresa_dcms); //201803021538 esertorio para moliveira
 
 		//propostaDCMS.setCodigoCanalVendas((long)57); //codigoCanalVendas: 57
-		//propostaDCMS.setCodigoCanalVendas("46"); //201803010449 RODRIGAO 
+		//propostaDCMS.setCodigoCanalVendas("46"); //201803010449 RODRIGAO
 		//propostaDCMS.setCodigoCanalVendas("57"); //201803011730 ROBERTO
 		propostaDCMS.setCodigoCanalVendas(dcss_codigo_canal_vendas); //201803021328 esertorio para moliveira
-		
+
 		propostaDCMS.setCodigoUsuario(venda.getCdDCSSUsuario());
-		
+
 		propostaDCMS.setTipoCobranca(new TipoCobrancaPropostaDCMS());
-				
-		if(venda.getTitulares() != null 
-			&& venda.getTitulares().size() > 0
-			&& venda.getTitulares().get(0) != null
-			&& venda.getTitulares().get(0).getDadosBancarios() != null
-			&& venda.getTitulares().get(0).getDadosBancarios().getCodigoBanco() != null
-			&& !venda.getTitulares().get(0).getDadosBancarios().getCodigoBanco().isEmpty()
+
+		if(venda.getTitulares() != null
+				&& venda.getTitulares().size() > 0
+				&& venda.getTitulares().get(0) != null
+				&& venda.getTitulares().get(0).getDadosBancarios() != null
+				&& venda.getTitulares().get(0).getDadosBancarios().getCodigoBanco() != null
+				&& !venda.getTitulares().get(0).getDadosBancarios().getCodigoBanco().isEmpty()
 		) {
-						
+
 			Beneficiario beneficiarioTitular = venda.getTitulares().get(0);
-			DadosBancariosVenda dadosBancariosVenda = beneficiarioTitular.getDadosBancarios(); 
-			
-			DadosBancariosPropostaDCMS dadosBancariosPropostaDCMS = new DadosBancariosPropostaDCMS(); 
-			
+			DadosBancariosVenda dadosBancariosVenda = beneficiarioTitular.getDadosBancarios();
+
+			DadosBancariosPropostaDCMS dadosBancariosPropostaDCMS = new DadosBancariosPropostaDCMS();
+
 			if(dadosBancariosVenda.getCodigoBanco() != null) {
 				dadosBancariosPropostaDCMS.setCodigoBanco(dadosBancariosVenda.getCodigoBanco());
 			}
-			
+
 			//54	DA	S	Débito Santander - Febraban 150 - Disque - 033
 			if(dadosBancariosPropostaDCMS.getCodigoBanco().equals("033")) { //
 				propostaDCMS.getTipoCobranca().setCodigo((long)54); //TODO //Informar o que vem do serviço da empresa
 				propostaDCMS.getTipoCobranca().setSigla("DA"); //BO = Boleto / DA = Debito automatico
 			}
-			
+
 			//61	DA	S	Débito Bradesco - CNAB400 - Disque - 237
 			if(dadosBancariosPropostaDCMS.getCodigoBanco().equals("237")) { //
 				propostaDCMS.getTipoCobranca().setCodigo((long)61); //TODO //Informar o que vem do serviço da empresa
 				propostaDCMS.getTipoCobranca().setSigla("DA"); //BO = Boleto / DA = Debito automatico
 			}
-			
+
 			//62	DA	S	Débito Itau - Febraban 150 - Disque - 341
 			if(dadosBancariosPropostaDCMS.getCodigoBanco().equals("341")) { //
 				propostaDCMS.getTipoCobranca().setCodigo((long)62); //TODO //Informar o que vem do serviço da empresa
@@ -459,16 +459,16 @@ public class VendaPFBusiness {
 
 					String agDV = calcularDigitoAgencia(dadosBancariosVenda.getAgencia(),dadosBancariosVenda.getCodigoBanco());
 					String ag = dadosBancariosVenda.getAgencia();
-					dadosBancariosPropostaDCMS.setAgencia(ag); 
+					dadosBancariosPropostaDCMS.setAgencia(ag);
 					dadosBancariosPropostaDCMS.setAgenciaDV(agDV);
 
 				}
 			}
-			
+
 			if(dadosBancariosVenda.getTipoConta() != null) {
 				dadosBancariosPropostaDCMS.setTipoConta(dadosBancariosVenda.getTipoConta());
 			}
-			
+
 			if(dadosBancariosVenda.getConta() != null) {
 				dadosBancariosVenda.setConta(dadosBancariosVenda.getConta().replace("-", ""));
 				if(!dadosBancariosVenda.getConta().isEmpty()) {
@@ -478,26 +478,26 @@ public class VendaPFBusiness {
 					dadosBancariosPropostaDCMS.setContaDV(ccDv);
 				}
 			}
-			
+
 			propostaDCMS.setDadosBancarios(dadosBancariosPropostaDCMS);
-			
+
 		} else {
 			//60	BO	N	Boleto Bradesco C/ Registro - MultiEmpresa - 237
 			propostaDCMS.getTipoCobranca().setCodigo((long)60); //TODO //Informar o que vem do serviço da empresa
 			propostaDCMS.getTipoCobranca().setSigla("BO"); //BO = Boleto / DA = Debito automatico
 		}
-		
+
 		//Responsavel Contratual para venda PF, se titular menor de idade 201803281502
 		if(venda.getResponsavelContratual() != null) {
 			ResponsavelContratual responsavelContratualDCMS = new ResponsavelContratual();
 			ResponsavelContratual responsavelContratualVenda = venda.getResponsavelContratual();
-			
+
 			responsavelContratualDCMS.setNome(responsavelContratualVenda.getNome());
-			
+
 			if(responsavelContratualVenda.getCpf() != null && !responsavelContratualVenda.getCpf().isEmpty()) {
 				responsavelContratualDCMS.setCpf(responsavelContratualVenda.getCpf().replace(".", "").replace("-", ""));
 			}
-			
+
 			responsavelContratualDCMS.setDataNascimento(responsavelContratualVenda.getDataNascimento());
 			SimpleDateFormat sdfApp = new SimpleDateFormat("dd/MM/yyyy");
 			Date dateDataNascimento = null;
@@ -510,18 +510,18 @@ public class VendaPFBusiness {
 			//String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000Z"); //201806061853 - esert/fsetai/rmarques - excluida notacao GMT ZERO
 			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000-0300"); //201806061853 - esert/fsetai/rmarques - incluida notacao para GMT-3 Hora de Brasilia
 			responsavelContratualDCMS.setDataNascimento(stringDataNascimentoJSON);
-			
+
 			responsavelContratualDCMS.setEmail(responsavelContratualVenda.getEmail());
-			
+
 			if(responsavelContratualVenda.getCelular() != null && !responsavelContratualVenda.getCelular().isEmpty()) {
 				responsavelContratualDCMS.setCelular(responsavelContratualVenda.getCelular()
-					.replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", ""));
+						.replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", ""));
 			}
-			
+
 			responsavelContratualDCMS.setSexo(responsavelContratualVenda.getSexo());
-			
+
 			EnderecoProposta endereco = responsavelContratualVenda.getEndereco();
-			
+
 			responsavelContratualDCMS.setEndereco(new EnderecoProposta());
 			if(endereco.getCep() != null && !endereco.getCep().isEmpty()) {
 				responsavelContratualDCMS.getEndereco().setCep(endereco.getCep().replaceAll("-", ""));
@@ -532,19 +532,19 @@ public class VendaPFBusiness {
 			responsavelContratualDCMS.getEndereco().setBairro(endereco.getBairro());
 			responsavelContratualDCMS.getEndereco().setCidade(endereco.getCidade());
 			responsavelContratualDCMS.getEndereco().setEstado(endereco.getEstado());
-			
+
 			propostaDCMS.setResponsavelContratual(responsavelContratualDCMS);
 		}// FIM Responsavel Contratual para venda PF, se titular menor de idade
 
 		propostaDCMS.setBeneficiarios(new ArrayList<>());
-		
+
 		for (Beneficiario titular : venda.getTitulares()) {
-			
+
 			BeneficiarioPropostaDCMS beneficiarioPropostaTitular = new BeneficiarioPropostaDCMS();
 			beneficiarioPropostaTitular.setNome(titular.getNome());
 			beneficiarioPropostaTitular.setCpf(titular.getCpf().replace(".", "").replace("-", ""));
 			beneficiarioPropostaTitular.setSexo(titular.getSexo());
-			
+
 			beneficiarioPropostaTitular.setDataNascimento(titular.getDataNascimento());
 			SimpleDateFormat sdfApp = new SimpleDateFormat("dd/MM/yyyy");
 			Date dateDataNascimento = null;
@@ -557,11 +557,11 @@ public class VendaPFBusiness {
 			//String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000Z"); //201806061853 - esert/fsetai/rmarques - excluida notacao GMT ZERO
 			String stringDataNascimentoJSON = sdfJsonString.format(dateDataNascimento).replace(" ", "T").concat(".000-0300"); //201806061853 - esert/fsetai/rmarques - incluida notacao para GMT-3 Hora de Brasilia
 			beneficiarioPropostaTitular.setDataNascimento(stringDataNascimentoJSON);
-			
+
 			beneficiarioPropostaTitular.setNomeMae(titular.getNomeMae());
 			beneficiarioPropostaTitular.setCelular(titular.getCelular().replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", ""));
 			beneficiarioPropostaTitular.setEmail(titular.getEmail());
-			
+
 //			if(venda.getPlanos() != null && !venda.getPlanos().isEmpty()) {
 //				beneficiarioPropostaTitular.setCodigoPlano(String.valueOf(venda.getPlanos().get(0).getCdPlano()));
 //			}
@@ -572,9 +572,9 @@ public class VendaPFBusiness {
 				beneficiarioPropostaTitular.getPlano().setTipoNegociacao(tbodPlano.getTbodTipoPlano().getDescricao());
 				beneficiarioPropostaTitular.getPlano().setValorPlano(Float.parseFloat(tbodPlano.getValorMensal().toString()));
 			}
-			
+
 			beneficiarioPropostaTitular.setTitular(true); //TRUE PARA DEPENDENTE
-			
+
 			beneficiarioPropostaTitular.setEndereco(new EnderecoProposta());
 			beneficiarioPropostaTitular.getEndereco().setCep(titular.getEndereco().getCep().replaceAll("-", ""));
 			beneficiarioPropostaTitular.getEndereco().setLogradouro(titular.getEndereco().getLogradouro());
@@ -583,16 +583,16 @@ public class VendaPFBusiness {
 			beneficiarioPropostaTitular.getEndereco().setBairro(titular.getEndereco().getBairro());
 			beneficiarioPropostaTitular.getEndereco().setCidade(titular.getEndereco().getCidade());
 			beneficiarioPropostaTitular.getEndereco().setEstado(titular.getEndereco().getEstado());
-			
+
 			propostaDCMS.getBeneficiarios().add(beneficiarioPropostaTitular);
-			
+
 			for (Beneficiario dependente : titular.getDependentes()) {
 
 				BeneficiarioPropostaDCMS beneficiarioPropostaDependente = new BeneficiarioPropostaDCMS();
 				beneficiarioPropostaDependente.setNome(dependente.getNome());
 				beneficiarioPropostaDependente.setCpf(dependente.getCpf().replace(".", "").replace("-", ""));
 				beneficiarioPropostaDependente.setSexo(dependente.getSexo());
-				
+
 				beneficiarioPropostaDependente.setDataNascimento(dependente.getDataNascimento());
 				SimpleDateFormat sdfAppDep = new SimpleDateFormat("dd/MM/yyyy");
 				Date dateDataNascimentoDep = null;
@@ -605,11 +605,11 @@ public class VendaPFBusiness {
 				//String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000Z"); //201806061853 - esert/fsetai/rmarques - excluida notacao GMT ZERO
 				String stringDataNascimentoJSONDep = sdfJsonStringDep.format(dateDataNascimentoDep).replace(" ", "T").concat(".000-0300"); //201806061853 - esert/fsetai/rmarques - incluida notacao para GMT-3 Hora de Brasilia
 				beneficiarioPropostaDependente.setDataNascimento(stringDataNascimentoJSONDep);
-				
+
 				beneficiarioPropostaDependente.setNomeMae(dependente.getNomeMae());
 				beneficiarioPropostaDependente.setCelular(dependente.getCelular().replace(".", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", ""));
 				beneficiarioPropostaDependente.setEmail(dependente.getEmail());
-				
+
 //				if(venda.getPlanos() != null && !venda.getPlanos().isEmpty()) {
 //					beneficiarioPropostaDependente.setCodigoPlano(String.valueOf(venda.getPlanos().get(0).getCdPlano()));
 //				}
@@ -623,9 +623,9 @@ public class VendaPFBusiness {
 					beneficiarioPropostaDependente.getPlano().setTipoNegociacao(tbodPlano.getTbodTipoPlano().getDescricao());
 					beneficiarioPropostaDependente.getPlano().setValorPlano(Float.parseFloat(tbodPlano.getValorMensal().toString()));
 				}
-				
+
 				beneficiarioPropostaDependente.setTitular(false); //FALSE PARA DEPENDENTE
-				
+
 				beneficiarioPropostaDependente.setEndereco(new EnderecoProposta());
 				beneficiarioPropostaDependente.getEndereco().setCep(titular.getEndereco().getCep().replaceAll("-", ""));
 				beneficiarioPropostaDependente.getEndereco().setLogradouro(titular.getEndereco().getLogradouro());
@@ -634,11 +634,11 @@ public class VendaPFBusiness {
 				beneficiarioPropostaDependente.getEndereco().setBairro(titular.getEndereco().getBairro());
 				beneficiarioPropostaDependente.getEndereco().setCidade(titular.getEndereco().getCidade());
 				beneficiarioPropostaDependente.getEndereco().setEstado(titular.getEndereco().getEstado());
-				
+
 				propostaDCMS.getBeneficiarios().add(beneficiarioPropostaDependente); //201803050437
 
 			} //for (Beneficiario dependente : titular.getDependentes())
-			
+
 		} //for (Beneficiario titular : venda.getTitulares())
 
 		return propostaDCMS;
@@ -648,7 +648,7 @@ public class VendaPFBusiness {
 	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
 	private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS propostaDCMS) throws Exception {
 		log.info("chamarWSLegadoPropostaPOST - ini");
-		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse(); 
+		PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();
 //		ApiManagerToken apiManager = null;
 //		ApiToken apiToken = null;
 		ResponseEntity<PropostaDCMSResponse> response;
@@ -656,7 +656,7 @@ public class VendaPFBusiness {
 		String msgErro = "";
 
 		try {
-			String URLAPI = dcssUrl + dcss_venda_propostaPath;
+			String URLAPI = dcss_venda_propostaUrl + dcss_venda_propostaPath; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
 
 //			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
 //			apiToken = apiManager.generateToken();
@@ -668,32 +668,32 @@ public class VendaPFBusiness {
 			headers.add("Content-Type", "application/json");
 
 			Gson gson = new Gson();
-			String propostaJson = gson.toJson(propostaDCMS);			
+			String propostaJson = gson.toJson(propostaDCMS);
 			//log.info("propostaJson:[" + propostaJson + "];");
-	        //odpvAuditor.audit(dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
+			//odpvAuditor.audit(dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 			odpvAuditor.audit(URLAPI, null, propostaJson, "VendaPFBusiness.chamarWsDcssLegado", LoggerInterceptor.getHeaders(headers), null); //201806291203 - esert - log do json com headers
 
 			HttpEntity<?> request = new HttpEntity<PropostaDCMS>(propostaDCMS, headers);
-			
+
 			response = restTemplate.exchange(
-					URLAPI, 
-					HttpMethod.POST, 
-					request, 
+					URLAPI,
+					HttpMethod.POST,
+					request,
 					PropostaDCMSResponse.class);
-			
+
 //			response = restTemplate.postForEntity(
 //				URLAPI, 
 //				proposta, 
 //				PropostaDCMSResponse.class
 //			);
-			
+
 			if(response != null) {
 				log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + response.getStatusCode() + "];");
 			}
-	
-			if(response == null 
-				|| (response.getStatusCode() == HttpStatus.FORBIDDEN)				
-				|| (response.getStatusCode() == HttpStatus.BAD_REQUEST)
+
+			if(response == null
+					|| (response.getStatusCode() == HttpStatus.FORBIDDEN)
+					|| (response.getStatusCode() == HttpStatus.BAD_REQUEST)
 			) {
 				msgErro = "chamarWSLegadoPropostaPOST; HTTP_STATUS "+response.getStatusCode();
 				log.error(msgErro);
@@ -733,9 +733,9 @@ public class VendaPFBusiness {
 			log.error(msgErro);
 			//e.printStackTrace();
 			propostaDCMSResponse.setMensagemErro(msgErro);
-			
+
 			throw new RollbackException(msgErro); //201806291524 - esert - se o DCMS falhar deve fazer rollback - COR-352 rollback pf
-			
+
 			////201808021330 - fake
 			////201809131714 - fake - novo teste apos aplicar/merge do COR-736 no sprint13 - esert
 			//propostaDCMSResponse.setMensagemErro(propostaDCMSResponse.getMensagemErro().concat(";fake-999999"));
@@ -743,10 +743,10 @@ public class VendaPFBusiness {
 			//return propostaDCMSResponse;
 		}
 		propostaDCMSResponse = response.getBody();
-					
+
 		log.info("chamarWSLegadoPropostaPOST; fim;");
 		return propostaDCMSResponse;
-			
+
 	}
 
 	private String calcularDigitoAgencia(String agencia, String banco){
@@ -782,8 +782,8 @@ public class VendaPFBusiness {
 				}
 				break;
 
-				default:
-					return "";
+			default:
+				return "";
 
 		}
 		return digito;
