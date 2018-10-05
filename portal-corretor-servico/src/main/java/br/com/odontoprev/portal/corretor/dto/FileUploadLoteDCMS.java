@@ -3,10 +3,13 @@ package br.com.odontoprev.portal.corretor.dto;
 import java.io.Serializable;
 
 //201810051557 - yalm/esert - COR-865:Definição de Contrato
-public class FileUploadLoteDCMSResponse implements Serializable {
-	
-	private static final long serialVersionUID = -2818456229298410509L;
+public class FileUploadLoteDCMS implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7413451254197849416L;
+	
 	private String tipoConteudo; //"tipoConteudo":"application/vnd.ms-excel",
 	private String arquivoBase64; //"arquivoBase64":"qwertyuiopasdfghjklzxcvbnm"
 	private String nomeArquivo; //"nomeArquivo":"loteDcms20181005.xls",
@@ -62,7 +65,7 @@ public class FileUploadLoteDCMSResponse implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FileUploadLoteDCMSResponse other = (FileUploadLoteDCMSResponse) obj;
+		FileUploadLoteDCMS other = (FileUploadLoteDCMS) obj;
 		if (arquivoBase64 == null) {
 			if (other.arquivoBase64 != null)
 				return false;
