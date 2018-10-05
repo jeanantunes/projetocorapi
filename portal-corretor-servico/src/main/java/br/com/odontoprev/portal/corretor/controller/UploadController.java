@@ -129,6 +129,12 @@ public class UploadController {
 		
 			log.info(fileUploadLoteDCMS.toString());
 
+			//201810051716 - esert - dummy para teste yago
+			fileUploadLoteDCMSResponse.setArquivoBase64(fileUploadLoteDCMS.getArquivoBase64());
+			fileUploadLoteDCMSResponse.setNomeArquivo(fileUploadLoteDCMS.getNomeArquivo());
+			fileUploadLoteDCMSResponse.setTamanho(fileUploadLoteDCMS.getTamanho());
+			fileUploadLoteDCMSResponse.setTipoConteudo(fileUploadLoteDCMS.getTipoConteudo());
+			
 			log.info("fileuploadLoteDCMS - fim");		      
 	        return ResponseEntity.ok(fileUploadLoteDCMSResponse);
 		} catch (Exception e) {
