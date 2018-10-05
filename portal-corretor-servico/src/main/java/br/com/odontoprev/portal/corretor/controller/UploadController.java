@@ -18,11 +18,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMS;
 import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMSResponse;
 import br.com.odontoprev.portal.corretor.model.TbodUploadForcavenda;
 import br.com.odontoprev.portal.corretor.service.UploadService;
@@ -118,30 +120,23 @@ public class UploadController {
 	}
 
 	//201810041803 - esert - COR-861:Serviço - Receber / Retornar Planilha
-	@RequestMapping(value="upload/lotedcms/{cdCorretora}", method = RequestMethod.POST)
-	public ResponseEntity<FileUploadLoteDCMSResponse> fileuploadLoteDCMS(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cdCorretora  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
-		log.info("fileuploadLoteDCMS:cdCorretora:[{}], uploadFile.getSize:[{}]", cdCorretora, uploadFile.getSize());
+	//201810051600 - esert - COR-861:Serviço - Receber / Retornar Planilha - refactor
+	@RequestMapping(value="fileupload/lotedcms", method = RequestMethod.POST)
+	public ResponseEntity<FileUploadLoteDCMSResponse> fileuploadLoteDCMS(@RequestBody FileUploadLoteDCMS fileUploadLoteDCMS) throws IOException, EncryptedDocumentException, InvalidFormatException{	
+		log.info("fileuploadLoteDCMS - ini");
 		FileUploadLoteDCMSResponse fileUploadLoteDCMSResponse = new FileUploadLoteDCMSResponse();
-		File serverFile = serverFile(uploadFile);  
-				
-		BufferedReader bufferedReader = null;
-		
 		try {
-//			String lines;
-			bufferedReader = new BufferedReader(new FileReader(serverFile.getAbsolutePath()));
-			bufferedReader.readLine();
-//			while ((lines = bufferedReader.readLine()) != null) {				
-//				uploadService.addDadosUpload(csvToArrayList(lines, cdCorretora, uploadFile.getOriginalFilename()));  
-//			}
-			
-		} catch (IOException e) {
-			log.info("##### Error csv: " + e.getMessage());
+		
+			log.info(fileUploadLoteDCMS.toString());
+
+			log.info("fileuploadLoteDCMS - fim");		      
+	        return ResponseEntity.ok(fileUploadLoteDCMSResponse);
+		} catch (Exception e) {
+			log.error("Exception", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		} finally {
-			if (bufferedReader != null) bufferedReader.close();
+			log.info("fileuploadLoteDCMS - finally");		      
 		}
-		      
-        return ResponseEntity.ok(fileUploadLoteDCMSResponse);
 	}
 
 }
