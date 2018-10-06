@@ -27,4 +27,6 @@ public interface EmpresaService {
 	
 	public EmpresaResponse enviarEmpresaEmailAceite(Empresa empresa); //201809251843 - esert - COR-820 Criar POST /empresa-emailaceite
 
+	public FileUploadLoteDCMSResponse processarLoteDCMS(FileUploadLoteDCMS fileUploadLoteDCMS);
+
 }

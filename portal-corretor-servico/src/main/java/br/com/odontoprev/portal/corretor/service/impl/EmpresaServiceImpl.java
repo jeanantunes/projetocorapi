@@ -1,16 +1,35 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.text.MaskFormatter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -36,8 +55,12 @@ import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
 import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
 import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponseItem;
 import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
+import br.com.odontoprev.portal.corretor.dto.EmpresaDcmsEntrada;
+import br.com.odontoprev.portal.corretor.dto.EmpresaDcmsRetorno;
 import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
+import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMS;
+import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMSResponse;
 import br.com.odontoprev.portal.corretor.dto.TokenAceite;
 import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
 import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
@@ -841,4 +864,294 @@ public class EmpresaServiceImpl implements EmpresaService {
         log.info("enviarEmpresaEmailAceite - fim");
         return new EmpresaResponse(HttpStatus.OK.value(), String.format("Empresa: [%d], email enviado.", empresa.getCdEmpresa()));
 	}
+
+	//201810051800 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	@Override
+	public FileUploadLoteDCMSResponse processarLoteDCMS(FileUploadLoteDCMS fileUploadLoteDCMS) {
+		FileUploadLoteDCMSResponse fileUploadLoteDCMSResponse = new FileUploadLoteDCMSResponse();
+		
+		File fileXLSReq = this.convertBase64ToFile( 
+				fileUploadLoteDCMS.getArquivoBase64(), 
+				fileUploadLoteDCMS.getNomeArquivo(),
+				fileUploadLoteDCMS.getCaminhoArquivo() //201810052115 - esert - ferramenta para testes locais via postman
+				);
+
+		List<EmpresaDcmsEntrada> listEmpresaDCMSReq = this.convertXLSReqToListEmpresaDCMS(fileXLSReq);
+		
+		List<EmpresaDcmsRetorno> listEmpresaDCMSRes = empresaBusiness.processarLoteDCMS(listEmpresaDCMSReq);
+
+		File fileXLSRes = this.convertListEmpresaDCMSToXLSRes( 
+				listEmpresaDCMSRes, 
+				fileUploadLoteDCMS.getNomeArquivo()
+				);
+
+		@SuppressWarnings("unused")
+		String arquivoBase64Res = convertFileToBase64(fileXLSRes);
+
+		//201810051716 - esert - dummy para teste yago
+		fileUploadLoteDCMSResponse.setArquivoBase64(fileUploadLoteDCMS.getArquivoBase64());
+		fileUploadLoteDCMSResponse.setNomeArquivo(fileUploadLoteDCMS.getNomeArquivo());
+		fileUploadLoteDCMSResponse.setTamanho(fileUploadLoteDCMS.getTamanho());
+		fileUploadLoteDCMSResponse.setTipoConteudo(fileUploadLoteDCMS.getTipoConteudo());
+		
+		return fileUploadLoteDCMSResponse;
+	}
+
+	//201810051810 - esert
+	private File convertBase64ToFile(String arquivoBase64, String nomeArquivo, String caminhoArquivo) {
+		File file = null;
+		byte[] byteArray = null;
+		if(caminhoArquivo==null || caminhoArquivo.isEmpty()) { //201810052115 - esert - ferramenta para testes locais via postman
+			byteArray = Base64.getDecoder().decode(arquivoBase64);
+			try (OutputStream stream = new FileOutputStream(nomeArquivo)) {
+			    try {
+					stream.write(byteArray);
+				    file = new File(nomeArquivo);
+				} catch (IOException e) {
+					log.error(e);
+				}
+			} catch (FileNotFoundException e1) {
+				log.error(e1);
+			} catch (IOException e1) {
+				log.error(e1);
+			}
+		} else {
+			String caminhoNomeArquivo = caminhoArquivo + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
+			file = new File(caminhoNomeArquivo); //201810052115 - esert - ferramenta para testes locais via postman
+		}
+		return file;
+	}
+
+	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	@SuppressWarnings("deprecation")
+	private List<EmpresaDcmsEntrada> convertXLSReqToListEmpresaDCMS(File fileXLSReq) {
+		List<EmpresaDcmsEntrada> listEmpresaDcms = null;
+		
+		if(fileXLSReq==null) {
+			return null;
+		}
+
+        try {
+
+            FileInputStream excelFile = new FileInputStream(fileXLSReq);
+            @SuppressWarnings("resource")
+			Workbook workbook = new XSSFWorkbook(excelFile);
+            Sheet datatypeSheet = workbook.getSheetAt(0);
+            Iterator<Row> iterator = datatypeSheet.iterator();
+
+            listEmpresaDcms = new ArrayList<EmpresaDcmsEntrada>();
+            
+            while (iterator.hasNext()) {
+
+                Row currentRow = iterator.next();
+                Iterator<Cell> cellIterator = currentRow.iterator();
+                
+                EmpresaDcmsEntrada empresaDcmsEntrada = new EmpresaDcmsEntrada(); 
+
+                while (cellIterator.hasNext()) {
+
+                    //CD_VENDA //01
+                    Cell currentCell1 = cellIterator.next();
+                    //getCellTypeEnum shown as deprecated for version 3.15
+                    //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
+                    if (currentCell1.getCellType() == CellType.STRING.getCode()) {
+                    	log.debug(currentCell1.getStringCellValue() + "--");
+                    	if(currentCell1.getStringCellValue().equals("CD_VENDA")) {
+                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+                    	}
+                        empresaDcmsEntrada.setCdVenda(Long.getLong(currentCell1.getStringCellValue()));
+                    } else if (currentCell1.getCellType() == CellType.NUMERIC.getCode()) {
+                    	log.debug(currentCell1.getNumericCellValue() + "--");
+                        empresaDcmsEntrada.setCdVenda(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
+                    }
+
+                    if(!cellIterator.hasNext()) { 
+                    	continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha                     	
+                    }
+
+                    //CD_EMPRESA //02
+                    Cell currentCell2 = cellIterator.next();
+                    //getCellTypeEnum shown as deprecated for version 3.15
+                    //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
+                    if (currentCell2.getCellType() == CellType.STRING.getCode()) {
+                    	log.debug(currentCell2.getStringCellValue() + "--");
+                        empresaDcmsEntrada.setCdEmpresa((Long.getLong(currentCell2.getStringCellValue())));
+                    } else if (currentCell2.getCellType() == CellType.NUMERIC.getCode()) {
+                    	log.debug(currentCell2.getNumericCellValue() + "--");
+                        empresaDcmsEntrada.setCdEmpresa(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
+                    }
+
+                    if(!cellIterator.hasNext()) { 
+                    	continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha                     	
+                    }
+
+                    //CNPJ_CLIENTE //03
+                    Cell currentCell3 = cellIterator.next();
+                    //getCellTypeEnum shown as deprecated for version 3.15
+                    //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
+                    if (currentCell3.getCellType() == CellType.STRING.getCode()) {
+                    	log.debug(currentCell3.getStringCellValue() + "--");
+                        empresaDcmsEntrada.setCnpj(currentCell3.getStringCellValue());
+                    } else if (currentCell3.getCellType() == CellType.NUMERIC.getCode()) {
+                        log.debug(currentCell3.getNumericCellValue() + "--");
+                        empresaDcmsEntrada.setCnpj(String.valueOf(currentCell3.getNumericCellValue()));
+                    }
+                    
+                    if(!cellIterator.hasNext()) { 
+                    	continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha                     	
+                    }
+                    
+                    //RAZAO_SOCIAL_CLIENTE //04
+                    Cell currentCell4 = cellIterator.next();
+                    //getCellTypeEnum shown as deprecated for version 3.15
+                    //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
+                    if (currentCell4.getCellType() == CellType.STRING.getCode()) {
+                        log.debug(currentCell4.getStringCellValue() + "--");
+                        empresaDcmsEntrada.setRazaoSocial(currentCell4.getStringCellValue());
+                    } else if (currentCell4.getCellType() == CellType.NUMERIC.getCode()) {
+                        log.debug(currentCell4.getNumericCellValue() + "--");
+                        empresaDcmsEntrada.setRazaoSocial(String.valueOf(currentCell4.getNumericCellValue()));
+                    }
+
+                    if(!cellIterator.hasNext()) { 
+                    	continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha                     	
+                    }
+                    
+                    //CAD_DCMS //05
+                    Cell currentCell5 = cellIterator.next();
+                    //getCellTypeEnum shown as deprecated for version 3.15
+                    //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
+                    if (currentCell5.getCellType() == CellType.STRING.getCode()) {
+                        log.debug(currentCell5.getStringCellValue() + "--");
+                        empresaDcmsEntrada.setEmpDcms(currentCell5.getStringCellValue());
+                    } else if (currentCell5.getCellType() == CellType.NUMERIC.getCode()) {
+                        log.debug(currentCell5.getNumericCellValue() + "--");
+                        empresaDcmsEntrada.setEmpDcms(String.valueOf(currentCell5.getNumericCellValue()));
+                    }
+
+                    break;
+                    
+                } //while (cellIterator.hasNext())
+                
+                listEmpresaDcms.add(empresaDcmsEntrada);
+
+            } //while (iterator.hasNext())
+            
+        } catch (FileNotFoundException e) {
+            log.error(e);
+            return null;
+        } catch (IOException e) {
+            log.error(e);
+            return null;
+        }
+
+		listEmpresaDcms = new ArrayList<EmpresaDcmsEntrada>();
+		
+		//201810051920 - esert - fake
+		EmpresaDcmsEntrada empresaDcmsComCod = new EmpresaDcmsEntrada();
+		empresaDcmsComCod.setCnpj("07.498.076/0001-38");
+		empresaDcmsComCod.setEmpDcms("353768");
+		listEmpresaDcms.add(empresaDcmsComCod);
+		
+		//201810051920 - esert - fake
+		EmpresaDcmsEntrada empresaDcmsSemCod = new EmpresaDcmsEntrada();
+		empresaDcmsSemCod.setCnpj("27.701.019/0001-11");
+		empresaDcmsSemCod.setEmpDcms("123456");
+		listEmpresaDcms.add(empresaDcmsSemCod);
+
+		return listEmpresaDcms;
+	}
+
+	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	private File convertListEmpresaDCMSToXLSRes(List<EmpresaDcmsRetorno> listEmpresaDCMSRes, String nomeArquivo) {
+		final File file = new File(nomeArquivo);
+
+        log.info("convertListEmpresaDCMSToXLSRes - ini");
+
+        try {
+
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet sheet = workbook.createSheet(nomeArquivo); //usa nome do arquivo para nomear a aba/sheet
+
+            HSSFRow rowhead = sheet.createRow((short) 0);
+            //CD_VENDA //01
+            rowhead.createCell(0).setCellValue("CD_VENDA");//01
+            //CD_EMPRESA //02
+            rowhead.createCell(1).setCellValue("CD_EMPRESA");//02
+            //CNPJ_CLIENTE //03
+            rowhead.createCell(2).setCellValue("CNPJ_CLIENTE");//03
+            //RAZAO_SOCIAL_CLIENTE //04
+            rowhead.createCell(3).setCellValue("RAZAO_SOCIAL_CLIENTE");//04
+            //CAD_DCMS //05
+            rowhead.createCell(4).setCellValue("CAD_DCMS");//05
+            //RETORNO //06 //"OK" ou "ERRO"
+            rowhead.createCell(5).setCellValue("RETORNO");//06
+            //MENSAGEM_RETORNO //07 //"CNPJ Duplicado na Base"; "CNPJ não encontrado"; "Erro no serviço"...
+            rowhead.createCell(6).setCellValue("MENSAGEM_RETORNO");//07
+
+            int rowCount = 0;
+
+            for (EmpresaDcmsRetorno item : listEmpresaDCMSRes) {
+
+                rowCount++;
+                Row row = sheet.createRow(rowCount);
+
+                //CD_VENDA //01
+                row.createCell(0).setCellValue(Objects.toString(item.getCdVenda(),""));//01
+                //CD_EMPRESA //02
+                row.createCell(1).setCellValue(Objects.toString(item.getCdEmpresa(),""));//02
+                //CNPJ_CLIENTE //03
+                row.createCell(2).setCellValue(Objects.toString(item.getCnpj(),""));//03
+                //RAZAO_SOCIAL_CLIENTE //04
+                row.createCell(3).setCellValue(Objects.toString(item.getRazaoSocial(),""));//04
+                //CAD_DCMS //05
+                row.createCell(4).setCellValue(Objects.toString(item.getEmpDcms(),""));//05
+                //RETORNO //06 //"OK" ou "ERRO"
+                row.createCell(5).setCellValue(Objects.toString(item.getRetorno(),""));//06
+                //MENSAGEM_RETORNO //07 //"CNPJ Duplicado na Base"; "CNPJ não encontrado"; "Erro no serviço"...
+                row.createCell(6).setCellValue(Objects.toString(item.getMensagemRetorno(),""));//07
+
+            }
+
+            log.info("for (... item : listEmpresaDCMSRes); rowCount=[" + rowCount + "]");
+
+            ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
+            workbook.write(fileOut);
+            //fileOut.close();
+            workbook.close();
+
+            @SuppressWarnings("resource")
+			FileOutputStream fos = new FileOutputStream(file);
+            fos.write(fileOut.toByteArray());
+            
+            log.info("convertListEmpresaDCMSToXLSRes - fim");
+            return file;
+
+        } catch (Exception e) {
+            log.info("convertListEmpresaDCMSToXLSRes - erro");
+            String msgErro = "gerarCorretoraTotalVidasPMEXLS; Erro; Message:[" + e.getMessage() + "]; Cause:[" + e.getCause() + "]";
+            //throw new Exception(msgErro, e);
+            log.error(msgErro, e);
+            return null;
+        }
+	}
+	
+	//201810051810 - esert
+
+	private String convertFileToBase64(File fileXLSRes) {
+		String arquivoBase64 = null;
+		byte[] byteArray = new byte[(int)fileXLSRes.length()];
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(fileXLSRes);
+			fis.read(byteArray);
+			Base64.getEncoder().encodeToString(byteArray);
+		} catch (FileNotFoundException e) {
+			log.error(e);
+		} catch (IOException e) {
+			log.error(e);
+		}
+		return arquivoBase64;
+	}
+
 }

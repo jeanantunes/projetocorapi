@@ -43,4 +43,7 @@ public final class Constantes {
 	
 	public static final Long TIPO_BLOQUEIO_SEM_BLOQUEIO = 0L; //201809181744 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
 	public static final Long TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO = 1L; //201809181744 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+	
+	public static final String OK = "OK"; //201810051928 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	public static final String ERRO = "ERRO"; //201810051928 - esert - COR-861:Serviço - Receber / Retornar Planilha
 }

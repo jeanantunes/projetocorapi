@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMS;
 import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMSResponse;
 import br.com.odontoprev.portal.corretor.model.TbodUploadForcavenda;
+import br.com.odontoprev.portal.corretor.service.EmpresaService;
 import br.com.odontoprev.portal.corretor.service.UploadService;
 
 @Controller
@@ -36,6 +37,9 @@ public class UploadController {
 	
 	@Autowired
 	UploadService uploadService;
+
+	@Autowired
+	private EmpresaService empresaService;
 	
 	@RequestMapping(value="upload/{cdCorretora}", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cdCorretora  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
@@ -129,19 +133,15 @@ public class UploadController {
 		
 			log.info(fileUploadLoteDCMS.toString());
 
-			//201810051716 - esert - dummy para teste yago
-			fileUploadLoteDCMSResponse.setArquivoBase64(fileUploadLoteDCMS.getArquivoBase64());
-			fileUploadLoteDCMSResponse.setNomeArquivo(fileUploadLoteDCMS.getNomeArquivo());
-			fileUploadLoteDCMSResponse.setTamanho(fileUploadLoteDCMS.getTamanho());
-			fileUploadLoteDCMSResponse.setTipoConteudo(fileUploadLoteDCMS.getTipoConteudo());
+			fileUploadLoteDCMSResponse = empresaService.processarLoteDCMS(fileUploadLoteDCMS);
 			
 			log.info("fileuploadLoteDCMS - fim");		      
 	        return ResponseEntity.ok(fileUploadLoteDCMSResponse);
+	        
 		} catch (Exception e) {
+			log.info("fileuploadLoteDCMS - erro");		      
 			log.error("Exception", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		} finally {
-			log.info("fileuploadLoteDCMS - finally");		      
 		}
 	}
 

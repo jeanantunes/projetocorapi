@@ -15,6 +15,8 @@ public class FileUploadLoteDCMS implements Serializable {
 	private String nomeArquivo; //"nomeArquivo":"loteDcms20181005.xls",
 	private Long tamanho; //"tamanho":12345
 	
+	private String caminhoArquivo; //201810052110 - esert - para teste unitario usando planilha em path local via postman
+	
 	public String getTipoConteudo() {
 		return tipoConteudo;
 	}
@@ -43,7 +45,7 @@ public class FileUploadLoteDCMS implements Serializable {
 	@Override
 	public String toString() {
 		return "FileUploadLoteDCMS [tipoConteudo=" + tipoConteudo + ", arquivoBase64=" + arquivoBase64
-				+ ", nomeArquivo=" + nomeArquivo + ", tamanho=" + tamanho + "]";
+				+ ", nomeArquivo=" + nomeArquivo + ", tamanho=" + tamanho + ", caminhoArquivo=" + caminhoArquivo + "]";
 	}
 	
 	@Override
@@ -51,6 +53,7 @@ public class FileUploadLoteDCMS implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((arquivoBase64 == null) ? 0 : arquivoBase64.hashCode());
+		result = prime * result + ((caminhoArquivo == null) ? 0 : caminhoArquivo.hashCode());
 		result = prime * result + ((nomeArquivo == null) ? 0 : nomeArquivo.hashCode());
 		result = prime * result + ((tamanho == null) ? 0 : tamanho.hashCode());
 		result = prime * result + ((tipoConteudo == null) ? 0 : tipoConteudo.hashCode());
@@ -71,6 +74,11 @@ public class FileUploadLoteDCMS implements Serializable {
 				return false;
 		} else if (!arquivoBase64.equals(other.arquivoBase64))
 			return false;
+		if (caminhoArquivo == null) {
+			if (other.caminhoArquivo != null)
+				return false;
+		} else if (!caminhoArquivo.equals(other.caminhoArquivo))
+			return false;
 		if (nomeArquivo == null) {
 			if (other.nomeArquivo != null)
 				return false;
@@ -87,6 +95,12 @@ public class FileUploadLoteDCMS implements Serializable {
 		} else if (!tipoConteudo.equals(other.tipoConteudo))
 			return false;
 		return true;
+	}
+	public String getCaminhoArquivo() {
+		return caminhoArquivo;
+	}
+	public void setCaminhoArquivo(String caminhoArquivo) {
+		this.caminhoArquivo = caminhoArquivo;
 	}
 
 }
