@@ -837,7 +837,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		List<EmpresaDcmsEntrada> listEmpresaDCMSReq = this.convertXLSReqToListEmpresaDCMS(fileXLSReq);
 		
-		List<EmpresaDcmsRetorno> listEmpresaDCMSRes = empresaBusiness.processarLoteDCMS(listEmpresaDCMSReq);
+		List<EmpresaDcmsEntrada> listEmpresaDCMSRes = empresaBusiness.processarLoteDCMS(listEmpresaDCMSReq);
 
 		File fileXLSRes = this.convertListEmpresaDCMSToXLSRes( 
 				listEmpresaDCMSRes, 
@@ -1087,7 +1087,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
-	private File convertListEmpresaDCMSToXLSRes(List<EmpresaDcmsRetorno> listEmpresaDCMSRes, String nomeArquivo) {
+	private File convertListEmpresaDCMSToXLSRes(List<EmpresaDcmsEntrada> listEmpresaDCMSRes, String nomeArquivo) {
 		final File file = new File(nomeArquivo);
 
         log.info("convertListEmpresaDCMSToXLSRes - ini");
@@ -1115,7 +1115,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
             int rowCount = 0;
 
-            for (EmpresaDcmsRetorno item : listEmpresaDCMSRes) {
+            for (EmpresaDcmsEntrada item : listEmpresaDCMSRes) {
 
                 rowCount++;
                 Row row = sheet.createRow(rowCount);

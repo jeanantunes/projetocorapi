@@ -46,4 +46,9 @@ public final class Constantes {
 	
 	public static final String OK = "OK"; //201810051928 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	public static final String ERRO = "ERRO"; //201810051928 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	public static final String CNPJ_NAO_ENCONTRADO = "CNPJ NAO ENCONTRADO NA BASE";
+	public static final String CNPJ_DUPLICADO = "CNPJ DUPLICADO NA BASE";
+	public static final String CNPJ_POSSUI_CD_DCMS = "CNPJ JA POSSUI CD_DCMS";
+	public static final String CNPJ_INVALIDO = "CNPJ INVALIDO";
+
 }

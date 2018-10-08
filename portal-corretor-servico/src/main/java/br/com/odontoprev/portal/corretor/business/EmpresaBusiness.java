@@ -1,47 +1,23 @@
 package br.com.odontoprev.portal.corretor.business;
 
-import static br.com.odontoprev.portal.corretor.util.Constantes.ERRO; //201810051928 - esert - COR-861:Serviço - Receber / Retornar Planilha
-import static br.com.odontoprev.portal.corretor.util.Constantes.NAO;
-import static br.com.odontoprev.portal.corretor.util.Constantes.OK; //201810051928 - esert - COR-861:Serviço - Receber / Retornar Planilha
-import static br.com.odontoprev.portal.corretor.util.Constantes.SIM;
+import br.com.odontoprev.portal.corretor.dao.*;
+import br.com.odontoprev.portal.corretor.dto.*;
+import br.com.odontoprev.portal.corretor.model.*;
+import br.com.odontoprev.portal.corretor.service.EmpresaService;
+import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.ManagedBean;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.ManagedBean;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-import br.com.odontoprev.portal.corretor.dao.EmpresaContatoDAO;
-import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
-import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
-import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
-import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
-import br.com.odontoprev.portal.corretor.dao.TipoEnderecoDAO;
-import br.com.odontoprev.portal.corretor.dao.VendaDAO;
-import br.com.odontoprev.portal.corretor.dto.CnpjDados;
-import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcmsEntrada;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcmsRetorno;
-import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
-import br.com.odontoprev.portal.corretor.dto.Endereco;
-import br.com.odontoprev.portal.corretor.dto.Plano;
-import br.com.odontoprev.portal.corretor.dto.VendaPME;
-import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
-import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
-import br.com.odontoprev.portal.corretor.model.TbodEndereco;
-import br.com.odontoprev.portal.corretor.model.TbodPlano;
-import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
-import br.com.odontoprev.portal.corretor.model.TbodVenda;
-import br.com.odontoprev.portal.corretor.service.EmpresaService;
-import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
+import static br.com.odontoprev.portal.corretor.util.Constantes.*;
 
 @ManagedBean
 public class EmpresaBusiness {
@@ -218,70 +194,82 @@ public class EmpresaBusiness {
         return new EmpresaResponse(tbodEmpresa.getCdEmpresa(), "Empresa cadastrada.");
     }
 
-    //201810051800 - esert - COR-861:Serviço - Receber / Retornar Planilha
-	public List<EmpresaDcmsRetorno> processarLoteDCMS(List<EmpresaDcmsEntrada> listEmpresaDCMSReq) {
-		List<EmpresaDcmsRetorno> listEmpresaDcmsRetorno = null;
+	public List<EmpresaDcmsEntrada> processarLoteDCMS(List<EmpresaDcmsEntrada> listEmpresaDCMSReq) {
+
+        log.info("processarLoteDCMS() - ini");
+        List<EmpresaDcmsEntrada> listEmpresaDcmsRetorno = null;
 		
 		if(listEmpresaDCMSReq==null) {
-			return null;
+            log.info("processarLoteDCMS() listEmpresaDCMSReq==null - erro");
+            return null;
 		}
 		
-		listEmpresaDcmsRetorno = new ArrayList<EmpresaDcmsRetorno>();
+		listEmpresaDcmsRetorno = new ArrayList<EmpresaDcmsEntrada>();
 		
 		for(EmpresaDcmsEntrada empresaDcmsReq : listEmpresaDCMSReq) {
-			
-			//201810051938 - esert - ponto de partida - conferir regras da historia e testar
-			EmpresaDcmsRetorno empresaDcmsRetorno = new EmpresaDcmsRetorno();
+
+            EmpresaDcmsEntrada empresaDcmsRetorno = new EmpresaDcmsEntrada();
 			CnpjDados cnpjDados;
+
 			try {
-				cnpjDados = empresaService.findDadosEmpresaByCnpj(empresaDcmsReq.getCnpj());
-				empresaDcmsReq.setCdEmpresa(cnpjDados.getCdEmpresa());
-//				EmpresaResponse empresaResponse = empresaService.updateEmpresa(empresaDcmsReq);
-				EmpresaResponse empresaResponse = new EmpresaResponse(0, ERRO);
-				if(empresaResponse.getId()==0) {
-					//deu ruim
-					empresaDcmsRetorno.setRetorno(ERRO);
-					empresaDcmsRetorno.setMensagemRetorno(empresaResponse.getMensagem());
-				} else {
-					//deu bom
-					empresaDcmsRetorno.setRetorno(OK);
-					empresaDcmsRetorno.setMensagemRetorno(empresaResponse.getMensagem());
-				}
+
+				cnpjDados = empresaService.findDadosEmpresaByCnpj(empresaDcmsReq.getCnpj().replaceAll("[^0-9]",""));
+
+				if (cnpjDados.getCdEmpresa() != null){
+
+                    if (cnpjDados.getEmpDcms() == null){
+
+                        empresaDcmsReq.setCdEmpresa(cnpjDados.getCdEmpresa());
+                        log.info("processarLoteDCMS() - update empresa - ini");
+                        EmpresaResponse empresaResponse = empresaService.updateEmpresa(empresaDcmsReq);
+
+                        if(empresaResponse.getId()==0) {
+                            log.info("processarLoteDCMS() - update empresa error");
+                            empresaDcmsRetorno.setRetorno(ERRO);
+                            empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
+                            empresaDcmsRetorno.setMensagemRetorno(empresaResponse.getMensagem());
+
+                        } else {
+
+                            log.info("processarLoteDCMS() - update empresa sucesso");
+                            empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
+                            empresaDcmsRetorno.setRetorno(OK);
+                            empresaDcmsRetorno.setMensagemRetorno(empresaResponse.getMensagem());
+                        }
+
+                        log.info("processarLoteDCMS() - update empresa - fim");
+
+                    } else {
+
+                        log.info("processarLoteDCMS() - Empresa ja possui cd_dcms");
+                        empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
+                        empresaDcmsRetorno.setMensagemRetorno(CNPJ_POSSUI_CD_DCMS);
+                        empresaDcmsRetorno.setRetorno(ERRO);
+
+                    }
+
+                } else {
+
+                    log.info("processarLoteDCMS() - Empresa nao encontrada");
+                    empresaDcmsRetorno.setRetorno(ERRO);
+                    empresaDcmsRetorno.setMensagemRetorno(cnpjDados.getObservacaoLoteDcms());
+
+                }
+
 			} catch (ParseException e) {
 				log.error(e);
 				empresaDcmsRetorno.setRetorno(ERRO);
 				empresaDcmsRetorno.setMensagemRetorno(e.getMessage());
 			}
-			listEmpresaDcmsRetorno.add(empresaDcmsRetorno);
-			
-			EmpresaDcmsRetorno empresaDcmsRetornoOK = new EmpresaDcmsRetorno();
-			empresaDcmsRetornoOK.setCdEmpresa(empresaDcmsReq.getCdEmpresa());
-			empresaDcmsRetornoOK.setCnpj(empresaDcmsReq.getCnpj());
-			empresaDcmsRetornoOK.setEmpDcms(empresaDcmsReq.getEmpDcms());
-			empresaDcmsRetornoOK.setRetorno(OK);
-			empresaDcmsRetornoOK.setMensagemRetorno(String.format("DCMS foi atribuido [{}]", empresaDcmsReq.getEmpDcms()));
-			listEmpresaDcmsRetorno.add(empresaDcmsRetornoOK);
 
-			EmpresaDcmsRetorno empresaDcmsRetornoOK2 = new EmpresaDcmsRetorno();
-			empresaDcmsRetornoOK2.setCdEmpresa(empresaDcmsReq.getCdEmpresa());
-			empresaDcmsRetornoOK2.setCnpj(empresaDcmsReq.getCnpj());
-			empresaDcmsRetornoOK2.setEmpDcms(empresaDcmsReq.getEmpDcms());
-			empresaDcmsRetornoOK2.setRetorno(OK);
-			empresaDcmsRetornoOK2.setMensagemRetorno(String.format("DCMS ja atribuido [{}]", 987654));
-			listEmpresaDcmsRetorno.add(empresaDcmsRetornoOK2);
-			
-			EmpresaDcmsRetorno empresaDcmsRetornoERRO = new EmpresaDcmsRetorno();
-			empresaDcmsRetornoERRO.setCdEmpresa(empresaDcmsReq.getCdEmpresa());
-			empresaDcmsRetornoERRO.setCnpj(empresaDcmsReq.getCnpj());
-			empresaDcmsRetornoERRO.setEmpDcms(empresaDcmsReq.getEmpDcms());
-			empresaDcmsRetornoERRO.setRetorno(ERRO);
-			empresaDcmsRetornoERRO.setMensagemRetorno(ERRO);
-			listEmpresaDcmsRetorno.add(empresaDcmsRetornoOK);
-			
-			break; //sai do loop de teste
+            empresaDcmsRetorno.setCnpj(empresaDcmsReq.getCnpj());
+            empresaDcmsRetorno.setRazaoSocial(empresaDcmsReq.getRazaoSocial());
+			listEmpresaDcmsRetorno.add(empresaDcmsRetorno);
+
 		}
-		
-		return listEmpresaDcmsRetorno;
+
+        log.info("processarLoteDCMS() - fim");
+        return listEmpresaDcmsRetorno;
 	}
 
 }
