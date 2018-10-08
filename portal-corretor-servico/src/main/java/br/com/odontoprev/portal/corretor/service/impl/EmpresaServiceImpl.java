@@ -9,13 +9,13 @@ import br.com.odontoprev.portal.corretor.dto.*;
 import br.com.odontoprev.portal.corretor.model.*;
 import br.com.odontoprev.portal.corretor.service.*;
 import br.com.odontoprev.portal.corretor.util.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -34,7 +34,7 @@ import static br.com.odontoprev.portal.corretor.util.Constantes.*;
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
 
-    private static final Log log = LogFactory.getLog(EmpresaServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(EmpresaServiceImpl.class); //201810081251 - esert - troca 
 
     @Autowired
     EmpresaDAO empresaDAO;
@@ -867,12 +867,12 @@ public class EmpresaServiceImpl implements EmpresaService {
 					stream.write(byteArray);
 				    file = new File(nomeArquivo);
 				} catch (IOException e) {
-					log.error(e);
+					log.error("IOException", e);
 				}
 			} catch (FileNotFoundException e1) {
-				log.error(e1);
+				log.error("FileNotFoundException", e1);
 			} catch (IOException e1) {
-				log.error(e1);
+				log.error("IOException", e1);
 			}
 		} else {
 			String caminhoNomeArquivo = caminhoArquivo + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
@@ -884,11 +884,14 @@ public class EmpresaServiceImpl implements EmpresaService {
 	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	@SuppressWarnings("deprecation")
 	private List<EmpresaDcmsEntrada> convertXLSReqToListEmpresaDCMS(File fileXLSReq) {
+		log.info("convertXLSReqToListEmpresaDCMS - ini");
 		List<EmpresaDcmsEntrada> listEmpresaDcms = null;
 		
 		if(fileXLSReq==null) {
 			return null;
 		}
+
+		log.info("fileXLSReq:[{}]", fileXLSReq.getName());
 
         try {
 
@@ -934,6 +937,9 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell2.getCellType() == CellType.STRING.getCode()) {
                     	log.debug(currentCell2.getStringCellValue() + "--");
+                    	if(currentCell2.getStringCellValue().equals("CD_EMPRESA")) {
+                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+                    	}
                         empresaDcmsEntrada.setCdEmpresa((Long.getLong(currentCell2.getStringCellValue())));
                     } else if (currentCell2.getCellType() == CellType.NUMERIC.getCode()) {
                     	log.debug(currentCell2.getNumericCellValue() + "--");
@@ -950,6 +956,9 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell3.getCellType() == CellType.STRING.getCode()) {
                     	log.debug(currentCell3.getStringCellValue() + "--");
+                    	if(currentCell3.getStringCellValue().equals("CNPJ_CLIENTE")) {
+                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+                    	}
                         empresaDcmsEntrada.setCnpj(currentCell3.getStringCellValue());
                     } else if (currentCell3.getCellType() == CellType.NUMERIC.getCode()) {
                         log.debug(currentCell3.getNumericCellValue() + "--");
@@ -966,6 +975,9 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell4.getCellType() == CellType.STRING.getCode()) {
                         log.debug(currentCell4.getStringCellValue() + "--");
+                    	if(currentCell4.getStringCellValue().equals("RAZAO_SOCIAL_CLIENTE")) {
+                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+                    	}
                         empresaDcmsEntrada.setRazaoSocial(currentCell4.getStringCellValue());
                     } else if (currentCell4.getCellType() == CellType.NUMERIC.getCode()) {
                         log.debug(currentCell4.getNumericCellValue() + "--");
@@ -982,6 +994,9 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell5.getCellType() == CellType.STRING.getCode()) {
                         log.debug(currentCell5.getStringCellValue() + "--");
+                    	if(currentCell5.getStringCellValue().equals("CAD_DCMS")) {
+                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+                    	}
                         empresaDcmsEntrada.setEmpDcms(currentCell5.getStringCellValue());
                     } else if (currentCell5.getCellType() == CellType.NUMERIC.getCode()) {
                         log.debug(currentCell5.getNumericCellValue() + "--");
@@ -992,19 +1007,30 @@ public class EmpresaServiceImpl implements EmpresaService {
                     
                 } //while (cellIterator.hasNext())
                 
-                listEmpresaDcms.add(empresaDcmsEntrada);
+                String msgValidaEmpresaDcmsEntrada = validaEmpresaDcmsEntrada(empresaDcmsEntrada);
+                if(msgValidaEmpresaDcmsEntrada!=null && !msgValidaEmpresaDcmsEntrada.trim().isEmpty()) {
+                	log.info("linha invalida; msgValidaEmpresaDcmsEntrada:[{}]; empresaDcmsEntrada:[{}]", 
+                			msgValidaEmpresaDcmsEntrada, 
+                			empresaDcmsEntrada
+                			);
+                	//linha invalida = retornar motivo
+                	empresaDcmsEntrada.setRetorno(Constantes.ERRO);
+                	empresaDcmsEntrada.setMensagemRetorno(msgValidaEmpresaDcmsEntrada);
+                }
+                
+            	listEmpresaDcms.add(empresaDcmsEntrada);
 
             } //while (iterator.hasNext())
             
         } catch (FileNotFoundException e) {
-            log.error(e);
+            log.error("FileNotFoundException", e);
             return null;
         } catch (IOException e) {
-            log.error(e);
+            log.error("IOException", e);
             return null;
         }
 
-		listEmpresaDcms = new ArrayList<EmpresaDcmsEntrada>();
+		//listEmpresaDcms = new ArrayList<EmpresaDcmsEntrada>();
 		
 		//201810051920 - esert - fake
 		EmpresaDcmsEntrada empresaDcmsCnpjRepetido = new EmpresaDcmsEntrada();
@@ -1029,6 +1055,35 @@ public class EmpresaServiceImpl implements EmpresaService {
         listEmpresaDcms.add(empresaValida);
 
 		return listEmpresaDcms;
+	}
+
+	//201810081550 - esert - COR-861:Servico Rec/Ret Plan
+	private String validaEmpresaDcmsEntrada(EmpresaDcmsEntrada empresaDcmsEntrada) {
+		String retorno = "";
+		if(empresaDcmsEntrada==null) {
+			retorno += ",OBJETO NULO";
+		} else {
+			if(empresaDcmsEntrada.getCnpj()==null){
+				retorno += ",CNPJ_CLIENTE NULO";
+			} else {
+				if(empresaDcmsEntrada.getCnpj().trim().isEmpty()){
+					retorno += ",CNPJ_CLIENTE VAZIO";
+				}
+			}
+			if(empresaDcmsEntrada.getEmpDcms()==null){
+				retorno += ",CAD_DCMS NULO";
+			} else {
+				if(empresaDcmsEntrada.getEmpDcms().trim().isEmpty()){
+					retorno += ",CAD_DCMS VAZIO";
+				}
+			}
+		}
+		if(retorno!=null) {
+			if(!retorno.trim().isEmpty()) {
+				retorno = retorno.substring(1,retorno.length());
+			}
+		}
+		return retorno;
 	}
 
 	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
@@ -1116,9 +1171,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 			fis.read(byteArray);
 			Base64.getEncoder().encodeToString(byteArray);
 		} catch (FileNotFoundException e) {
-			log.error(e);
+			log.error("FileNotFoundException", e);
 		} catch (IOException e) {
-			log.error(e);
+			log.error("IOException", e);
 		}
 		return arquivoBase64;
 	}
