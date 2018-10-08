@@ -1,34 +1,20 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-
-import javax.swing.text.MaskFormatter;
-
+import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
+import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
+import br.com.odontoprev.portal.corretor.business.SendMailAceite;
+import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
+import br.com.odontoprev.portal.corretor.dao.*;
+import br.com.odontoprev.portal.corretor.dto.*;
+import br.com.odontoprev.portal.corretor.model.*;
+import br.com.odontoprev.portal.corretor.service.*;
+import br.com.odontoprev.portal.corretor.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,49 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.odontoprev.portal.corretor.business.BeneficiarioBusiness;
-import br.com.odontoprev.portal.corretor.business.EmpresaBusiness;
-import br.com.odontoprev.portal.corretor.business.SendMailAceite;
-import br.com.odontoprev.portal.corretor.business.SendMailBoasVindasPME;
-import br.com.odontoprev.portal.corretor.dao.ArquivoContratacaoDAO;
-import br.com.odontoprev.portal.corretor.dao.EmpresaContatoDAO;
-import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
-import br.com.odontoprev.portal.corretor.dao.LogEmailBoasVindasPMEDAO;
-import br.com.odontoprev.portal.corretor.dao.TokenAceiteDAO;
-import br.com.odontoprev.portal.corretor.dao.VendaDAO;
-import br.com.odontoprev.portal.corretor.dto.CnpjDados;
-import br.com.odontoprev.portal.corretor.dto.CnpjDadosAceite;
-import br.com.odontoprev.portal.corretor.dto.ContatoEmpresa;
-import br.com.odontoprev.portal.corretor.dto.Empresa;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivo;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponse;
-import br.com.odontoprev.portal.corretor.dto.EmpresaArquivoResponseItem;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcms;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcmsEntrada;
-import br.com.odontoprev.portal.corretor.dto.EmpresaDcmsRetorno;
-import br.com.odontoprev.portal.corretor.dto.EmpresaEmailAceite;
-import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
-import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMS;
-import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMSResponse;
-import br.com.odontoprev.portal.corretor.dto.TokenAceite;
-import br.com.odontoprev.portal.corretor.dto.TokenAceiteResponse;
-import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
-import br.com.odontoprev.portal.corretor.model.TbodEmpresaContato;
-import br.com.odontoprev.portal.corretor.model.TbodLogEmailBoasVindasPME;
-import br.com.odontoprev.portal.corretor.model.TbodTokenAceite;
-import br.com.odontoprev.portal.corretor.model.TbodVenda;
-import br.com.odontoprev.portal.corretor.model.TbodVida;
-import br.com.odontoprev.portal.corretor.service.ArquivoContratacaoService;
-import br.com.odontoprev.portal.corretor.service.EmpresaService;
-import br.com.odontoprev.portal.corretor.service.PlanoService;
-import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
-import br.com.odontoprev.portal.corretor.service.VendaService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
-import br.com.odontoprev.portal.corretor.util.ConvertObjectUtil;
-import br.com.odontoprev.portal.corretor.util.DataUtil;
-import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
-import br.com.odontoprev.portal.corretor.util.XlsEmpresa;
-import br.com.odontoprev.portal.corretor.util.XlsVidas;
+import javax.swing.text.MaskFormatter;
+import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static br.com.odontoprev.portal.corretor.util.Constantes.*;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -373,6 +323,7 @@ public class EmpresaServiceImpl implements EmpresaService {
                     tbodEmpresa = empresaDAO.findByCnpj(cnpj);
                     if (tbodEmpresa == null) {
                         cnpjDados.setObservacao("Cnpj [" + cnpj + "] não encontrado na base !!! [" + (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date().getTime())) + "]");
+                        cnpjDados.setObservacaoLoteDcms(CNPJ_NAO_ENCONTRADO);
                     } else {
                         cnpjDados.setCdEmpresa(tbodEmpresa.getCdEmpresa());
                         cnpjDados.setRazaoSocial(tbodEmpresa.getRazaoSocial());
@@ -382,10 +333,18 @@ public class EmpresaServiceImpl implements EmpresaService {
                 }
             } else {
                 cnpjDados.setObservacao("Cnpj é obrigatório informar 14 digitos!!!");
+                cnpjDados.setObservacaoLoteDcms(CNPJ_INVALIDO);
             }
 
-        } catch (Exception e) {
+        } catch (org.springframework.dao.IncorrectResultSizeDataAccessException e) {
+
             cnpjDados.setObservacao("Encontrado +1 cnpj na base!!!");
+            cnpjDados.setObservacaoLoteDcms(CNPJ_DUPLICADO);
+            return cnpjDados;
+
+        } catch (Exception e) {
+            cnpjDados.setObservacao(e.getMessage());
+            cnpjDados.setObservacaoLoteDcms(e.getMessage());
             return cnpjDados;
         }
 
@@ -1048,16 +1007,26 @@ public class EmpresaServiceImpl implements EmpresaService {
 		listEmpresaDcms = new ArrayList<EmpresaDcmsEntrada>();
 		
 		//201810051920 - esert - fake
-		EmpresaDcmsEntrada empresaDcmsComCod = new EmpresaDcmsEntrada();
-		empresaDcmsComCod.setCnpj("07.498.076/0001-38");
-		empresaDcmsComCod.setEmpDcms("353768");
-		listEmpresaDcms.add(empresaDcmsComCod);
+		EmpresaDcmsEntrada empresaDcmsCnpjRepetido = new EmpresaDcmsEntrada();
+        empresaDcmsCnpjRepetido.setCnpj("12.061.697/0001-90");
+        empresaDcmsCnpjRepetido.setEmpDcms("353768");
+		listEmpresaDcms.add(empresaDcmsCnpjRepetido);
 		
 		//201810051920 - esert - fake
-		EmpresaDcmsEntrada empresaDcmsSemCod = new EmpresaDcmsEntrada();
-		empresaDcmsSemCod.setCnpj("27.701.019/0001-11");
-		empresaDcmsSemCod.setEmpDcms("123456");
-		listEmpresaDcms.add(empresaDcmsSemCod);
+		EmpresaDcmsEntrada empresaDcmsComCodDcms = new EmpresaDcmsEntrada();
+        empresaDcmsComCodDcms.setCnpj("25.332.122/0001-06");
+        empresaDcmsComCodDcms.setEmpDcms("123456");
+		listEmpresaDcms.add(empresaDcmsComCodDcms);
+
+        EmpresaDcmsEntrada empresaComCnpjInvalido = new EmpresaDcmsEntrada();
+        empresaComCnpjInvalido.setCnpj("25.332.000/0000-00");
+        empresaComCnpjInvalido.setEmpDcms("123456");
+        listEmpresaDcms.add(empresaComCnpjInvalido);
+
+        EmpresaDcmsEntrada empresaValida = new EmpresaDcmsEntrada();
+        empresaValida.setCnpj("28.984.416/0001-00");
+        empresaValida.setEmpDcms("123456");
+        listEmpresaDcms.add(empresaValida);
 
 		return listEmpresaDcms;
 	}
