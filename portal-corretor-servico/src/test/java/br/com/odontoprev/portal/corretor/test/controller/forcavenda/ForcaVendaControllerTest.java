@@ -1,9 +1,6 @@
 package br.com.odontoprev.portal.corretor.test.controller.forcavenda;
 
-import br.com.odontoprev.portal.corretor.dto.Corretora;
-import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
-import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
-import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.dto.*;
 import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
 import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
@@ -301,4 +298,51 @@ public class ForcaVendaControllerTest {
                 .andExpect(status().isBadRequest());
 
     }
+
+	@Test
+	public void testOk200GetEmailForcaVendaCorretora() throws Exception {
+
+		// Given
+		Long cdCorretora = 21L;
+		Long cdForcaVenda = 6L;
+		String emailForcaVenda = "fernando.mota@odontoprev.com.br";
+		String emailCorretora = "fernando.mota@odontoprev.com.br";
+
+		EmailForcaVendaCorretora emailForcaVendaCorretora = new EmailForcaVendaCorretora();
+		emailForcaVendaCorretora.setCdCorretora(cdCorretora);
+		emailForcaVendaCorretora.setEmailForcaVenda(emailForcaVenda);
+		emailForcaVendaCorretora.setCdForcaVenda(cdForcaVenda);
+		emailForcaVendaCorretora.setEmailCorretora(emailCorretora);
+
+		// Mockando Service que busca no banco de dados
+		given(service.findByCdForcaVendaEmail(cdForcaVenda))
+				.willReturn(emailForcaVendaCorretora);
+
+		// Efetua a requisição na rota e espera um status code
+		mvc.perform(get("/forcavenda/" + cdForcaVenda + "/email")
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.emailForcaVenda").value(emailForcaVenda))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.emailCorretora").value(emailCorretora))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.cdForcaVenda").value(cdForcaVenda))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.cdCorretora").value(cdCorretora));
+
+	}
+
+	@Test
+	public void testNoContent204GetEmailForcaVendaCorretora() throws Exception {
+
+		// Given
+		Long cdForcaVenda = 6L;
+
+		// Mockando Service que busca no banco de dados
+		given(service.findByCdForcaVendaEmail(cdForcaVenda))
+				.willReturn(null);
+
+		// Efetua a requisição na rota e espera um status code
+		mvc.perform(get("/forcavenda/" + cdForcaVenda + "/email")
+				.contentType(APPLICATION_JSON))
+				.andExpect(status().isNoContent());
+
+	}
 }

@@ -24,10 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.*;
 
@@ -1023,7 +1020,7 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
                 corretora.setCdCorretora(tbCorretora.getCdCorretora());
                 corretora.setCnpj(tbCorretora.getCnpj());
                 corretora.setRazaoSocial(tbCorretora.getRazaoSocial());
-
+                corretora.setEmail(tbCorretora.getEmail());
                 forcaVenda.setCorretora(corretora);
             }
 
@@ -1044,5 +1041,37 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
         return forcaVenda;
 
+    }
+
+    @Override
+    public EmailForcaVendaCorretora findByCdForcaVendaEmail(Long cdForcaVenda) {
+
+        log.info("[findByCdForcaVendaEmail - ini]");
+
+        ForcaVenda forcaVenda = findByCdForcaVenda(cdForcaVenda);
+
+        if (forcaVenda == null){
+            log.info("[forcaVenda == null]");
+            log.info("[findByCdForcaVendaEmail - fim]");
+            return null;
+        }
+
+        EmailForcaVendaCorretora emailForcaVendaCorretora = new EmailForcaVendaCorretora();
+        emailForcaVendaCorretora.setEmailForcaVenda(forcaVenda.getEmail());
+        emailForcaVendaCorretora.setCdForcaVenda(forcaVenda.getCdForcaVenda());
+
+        if (forcaVenda.getCorretora() != null){
+
+            emailForcaVendaCorretora.setEmailCorretora(forcaVenda.getCorretora().getEmail());
+            emailForcaVendaCorretora.setCdCorretora(forcaVenda.getCorretora().getCdCorretora());
+
+        } else {
+
+            log.error("[forcaVenda.getCorretora() == null]");
+
+        }
+
+        log.info("[findByCdForcaVendaEmail - fim]");
+        return emailForcaVendaCorretora;
     }
 }
