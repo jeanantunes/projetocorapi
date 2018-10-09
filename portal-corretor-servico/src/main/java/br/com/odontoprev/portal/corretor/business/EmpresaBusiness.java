@@ -193,21 +193,21 @@ public class EmpresaBusiness {
         return new EmpresaResponse(tbodEmpresa.getCdEmpresa(), "Empresa cadastrada.");
     }
 
-	public List<EmpresaDcmsEntrada> processarLoteDCMS(List<EmpresaDcmsEntrada> listEmpresaDCMSReq) {
+	public List<EmpresaDcmsLote> processarLoteDCMS(List<EmpresaDcmsLote> listEmpresaDCMSReq) {
 
         log.info("processarLoteDCMS() - ini");
-        List<EmpresaDcmsEntrada> listEmpresaDcmsRetorno = null;
+        List<EmpresaDcmsLote> listEmpresaDcmsRetorno = null;
 		
 		if(listEmpresaDCMSReq==null) {
             log.info("processarLoteDCMS() listEmpresaDCMSReq==null - erro");
             return null;
 		}
 		
-		listEmpresaDcmsRetorno = new ArrayList<EmpresaDcmsEntrada>();
+		listEmpresaDcmsRetorno = new ArrayList<EmpresaDcmsLote>();
 		
-		for(EmpresaDcmsEntrada empresaDcmsReq : listEmpresaDCMSReq) {
+		for(EmpresaDcmsLote empresaDcmsReq : listEmpresaDCMSReq) {
 
-            EmpresaDcmsEntrada empresaDcmsRetorno = new EmpresaDcmsEntrada();
+            EmpresaDcmsLote empresaDcmsRetorno = new EmpresaDcmsLote();
 			CnpjDados cnpjDados;
 
 			try {

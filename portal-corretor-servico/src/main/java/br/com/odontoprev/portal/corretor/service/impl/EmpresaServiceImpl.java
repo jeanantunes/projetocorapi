@@ -835,13 +835,14 @@ public class EmpresaServiceImpl implements EmpresaService {
 				fileUploadLoteDCMS.getCaminhoArquivo() //201810052115 - esert - ferramenta para testes locais via postman
 				);
 
-		List<EmpresaDcmsEntrada> listEmpresaDCMSReq = this.convertXLSReqToListEmpresaDCMS(fileXLSReq);
+		List<EmpresaDcmsLote> listEmpresaDCMSReq = this.convertXLSReqToListEmpresaDCMS(fileXLSReq);
 		
-		List<EmpresaDcmsEntrada> listEmpresaDCMSRes = empresaBusiness.processarLoteDCMS(listEmpresaDCMSReq);
+		List<EmpresaDcmsLote> listEmpresaDCMSRes = empresaBusiness.processarLoteDCMS(listEmpresaDCMSReq);
 
 		File fileXLSRes = this.convertListEmpresaDCMSToXLSRes( 
 				listEmpresaDCMSRes, 
-				fileUploadLoteDCMS.getNomeArquivo()
+				fileUploadLoteDCMS.getNomeArquivo(),
+				fileUploadLoteDCMS.getCaminhoArquivo()
 				);
 
 		@SuppressWarnings("unused")
@@ -882,9 +883,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	@SuppressWarnings("deprecation")
-	private List<EmpresaDcmsEntrada> convertXLSReqToListEmpresaDCMS(File fileXLSReq) {
+	private List<EmpresaDcmsLote> convertXLSReqToListEmpresaDCMS(File fileXLSReq) {
 		log.info("convertXLSReqToListEmpresaDCMS - ini");
-		List<EmpresaDcmsEntrada> listEmpresaDcms = null;
+		List<EmpresaDcmsLote> listEmpresaDcms = null;
 		
 		if(fileXLSReq==null) {
 			return null;
@@ -901,14 +902,14 @@ public class EmpresaServiceImpl implements EmpresaService {
             Sheet datatypeSheet = workbook.getSheetAt(0);
             Iterator<Row> iterator = datatypeSheet.iterator();
 
-            listEmpresaDcms = new ArrayList<EmpresaDcmsEntrada>();
+            listEmpresaDcms = new ArrayList<EmpresaDcmsLote>();
             
             while (iterator.hasNext()) {
 
                 Row currentRow = iterator.next();
                 Iterator<Cell> cellIterator = currentRow.iterator();
                 
-                EmpresaDcmsEntrada empresaDcmsEntrada = new EmpresaDcmsEntrada(); 
+                EmpresaDcmsLote empresaDcmsLote = new EmpresaDcmsLote(); 
 
                 while (cellIterator.hasNext()) {
 
@@ -921,10 +922,10 @@ public class EmpresaServiceImpl implements EmpresaService {
                     	if(currentCell1.getStringCellValue().equals("CD_VENDA")) {
                     		continue; //pula linha de cabessalho e vai pra prochima //201810052154
                     	}
-                        empresaDcmsEntrada.setCdVenda(Long.getLong(currentCell1.getStringCellValue()));
+                        empresaDcmsLote.setCdVenda(Long.getLong(currentCell1.getStringCellValue()));
                     } else if (currentCell1.getCellType() == CellType.NUMERIC.getCode()) {
                     	log.debug(currentCell1.getNumericCellValue() + "--");
-                        empresaDcmsEntrada.setCdVenda(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
+                        empresaDcmsLote.setCdVenda(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
                     }
 
                     if(!cellIterator.hasNext()) { 
@@ -940,10 +941,10 @@ public class EmpresaServiceImpl implements EmpresaService {
                     	if(currentCell2.getStringCellValue().equals("CD_EMPRESA")) {
                     		continue; //pula linha de cabessalho e vai pra prochima //201810052154
                     	}
-                        empresaDcmsEntrada.setCdEmpresa((Long.getLong(currentCell2.getStringCellValue())));
+                        empresaDcmsLote.setCdEmpresa((Long.getLong(currentCell2.getStringCellValue())));
                     } else if (currentCell2.getCellType() == CellType.NUMERIC.getCode()) {
                     	log.debug(currentCell2.getNumericCellValue() + "--");
-                        empresaDcmsEntrada.setCdEmpresa(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
+                        empresaDcmsLote.setCdEmpresa(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
                     }
 
                     if(!cellIterator.hasNext()) { 
@@ -959,10 +960,10 @@ public class EmpresaServiceImpl implements EmpresaService {
                     	if(currentCell3.getStringCellValue().equals("CNPJ_CLIENTE")) {
                     		continue; //pula linha de cabessalho e vai pra prochima //201810052154
                     	}
-                        empresaDcmsEntrada.setCnpj(currentCell3.getStringCellValue());
+                        empresaDcmsLote.setCnpj(currentCell3.getStringCellValue());
                     } else if (currentCell3.getCellType() == CellType.NUMERIC.getCode()) {
                         log.debug(currentCell3.getNumericCellValue() + "--");
-                        empresaDcmsEntrada.setCnpj(String.valueOf(currentCell3.getNumericCellValue()));
+                        empresaDcmsLote.setCnpj(String.valueOf(currentCell3.getNumericCellValue()));
                     }
                     
                     if(!cellIterator.hasNext()) { 
@@ -978,10 +979,10 @@ public class EmpresaServiceImpl implements EmpresaService {
                     	if(currentCell4.getStringCellValue().equals("RAZAO_SOCIAL_CLIENTE")) {
                     		continue; //pula linha de cabessalho e vai pra prochima //201810052154
                     	}
-                        empresaDcmsEntrada.setRazaoSocial(currentCell4.getStringCellValue());
+                        empresaDcmsLote.setRazaoSocial(currentCell4.getStringCellValue());
                     } else if (currentCell4.getCellType() == CellType.NUMERIC.getCode()) {
                         log.debug(currentCell4.getNumericCellValue() + "--");
-                        empresaDcmsEntrada.setRazaoSocial(String.valueOf(currentCell4.getNumericCellValue()));
+                        empresaDcmsLote.setRazaoSocial(String.valueOf(currentCell4.getNumericCellValue()));
                     }
 
                     if(!cellIterator.hasNext()) { 
@@ -997,28 +998,34 @@ public class EmpresaServiceImpl implements EmpresaService {
                     	if(currentCell5.getStringCellValue().equals("CAD_DCMS")) {
                     		continue; //pula linha de cabessalho e vai pra prochima //201810052154
                     	}
-                        empresaDcmsEntrada.setEmpDcms(currentCell5.getStringCellValue());
+                        empresaDcmsLote.setEmpDcms(currentCell5.getStringCellValue());
                     } else if (currentCell5.getCellType() == CellType.NUMERIC.getCode()) {
                         log.debug(currentCell5.getNumericCellValue() + "--");
-                        empresaDcmsEntrada.setEmpDcms(String.valueOf(currentCell5.getNumericCellValue()));
+                        //h t t p s : / / stackoverflow .com /questions /321549 /how-to-convert-a-double-to-long-without-casting
+                        empresaDcmsLote.setEmpDcms(String.valueOf(new Double(currentCell5.getNumericCellValue()).longValue())); //201810091132 - esert - transformar double em long para retirar decimal
                     }
 
                     break;
                     
                 } //while (cellIterator.hasNext())
                 
-                String msgValidaEmpresaDcmsEntrada = validaEmpresaDcmsEntrada(empresaDcmsEntrada);
-                if(msgValidaEmpresaDcmsEntrada!=null && !msgValidaEmpresaDcmsEntrada.trim().isEmpty()) {
-                	log.info("linha invalida; msgValidaEmpresaDcmsEntrada:[{}]; empresaDcmsEntrada:[{}]", 
-                			msgValidaEmpresaDcmsEntrada, 
-                			empresaDcmsEntrada
-                			);
-                	//linha invalida = retornar motivo
-                	empresaDcmsEntrada.setRetorno(Constantes.ERRO);
-                	empresaDcmsEntrada.setMensagemRetorno(msgValidaEmpresaDcmsEntrada);
-                }
+                String msgValidaEmpresaDcmsEntrada = validaEmpresaDcmsEntrada(empresaDcmsLote);
                 
-            	listEmpresaDcms.add(empresaDcmsEntrada);
+                if(msgValidaEmpresaDcmsEntrada!=null) {
+                	if(!msgValidaEmpresaDcmsEntrada.trim().equals("HEADER")) {
+	                	log.info("linha invalida; msgValidaEmpresaDcmsEntrada:[{}]; empresaDcmsEntrada:[{}]", 
+	                			msgValidaEmpresaDcmsEntrada, 
+	                			empresaDcmsLote
+	                			);
+	                	empresaDcmsLote.setRetorno(Constantes.ERRO);
+	                	empresaDcmsLote.setMensagemRetorno(msgValidaEmpresaDcmsEntrada); //linha invalida deve retornar motivo
+	                	listEmpresaDcms.add(empresaDcmsLote);
+                	} else {
+                		//se for HEADER nao adiciona na lista de retorno
+                	}
+                } else {
+                	listEmpresaDcms.add(empresaDcmsLote);
+                }
 
             } //while (iterator.hasNext())
             
@@ -1058,22 +1065,31 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	//201810081550 - esert - COR-861:Servico Rec/Ret Plan
-	private String validaEmpresaDcmsEntrada(EmpresaDcmsEntrada empresaDcmsEntrada) {
+	private String validaEmpresaDcmsEntrada(EmpresaDcmsLote empresaDcmsLote) {
 		String retorno = "";
-		if(empresaDcmsEntrada==null) {
+		if(empresaDcmsLote==null) {
 			retorno += ",OBJETO NULO";
 		} else {
-			if(empresaDcmsEntrada.getCnpj()==null){
+			if(empresaDcmsLote.getCdVenda() != null 
+				&& 
+				empresaDcmsLote.getCdVenda().equals("CD_VENDA")) {
+				retorno = "HEADER"; //201810091122 - esert
+				return retorno; //201810091122 - esert
+			}
+			if(empresaDcmsLote.getCnpj()==null){
 				retorno += ",CNPJ_CLIENTE NULO";
 			} else {
-				if(empresaDcmsEntrada.getCnpj().trim().isEmpty()){
+				if(empresaDcmsLote.getCnpj().trim().equals("CNPJ_CLIENTE")) {
+					retorno = "HEADER"; //201810091122 - esert
+					return retorno; //201810091122 - esert
+				} else if(empresaDcmsLote.getCnpj().trim().isEmpty()){
 					retorno += ",CNPJ_CLIENTE VAZIO";
 				}
 			}
-			if(empresaDcmsEntrada.getEmpDcms()==null){
+			if(empresaDcmsLote.getEmpDcms()==null){
 				retorno += ",CAD_DCMS NULO";
 			} else {
-				if(empresaDcmsEntrada.getEmpDcms().trim().isEmpty()){
+				if(empresaDcmsLote.getEmpDcms().trim().isEmpty()){
 					retorno += ",CAD_DCMS VAZIO";
 				}
 			}
@@ -1087,8 +1103,39 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
-	private File convertListEmpresaDCMSToXLSRes(List<EmpresaDcmsEntrada> listEmpresaDCMSRes, String nomeArquivo) {
-		final File file = new File(nomeArquivo);
+	private File convertListEmpresaDCMSToXLSRes(List<EmpresaDcmsLote> listEmpresaDCMSRes, String nomeArquivo, String caminhoArquivo) {
+		log.info("convertListEmpresaDCMSToXLSRes - ini");
+		
+		if(listEmpresaDCMSRes==null) {
+			log.info("convertListEmpresaDCMSToXLSRes - fim - listEmpresaDCMSRes==null");
+			return null;
+		}
+		if(nomeArquivo==null) {
+			log.info("convertListEmpresaDCMSToXLSRes - fim - nomeArquivo==null");
+			return null;
+		}
+		if(nomeArquivo.trim().isEmpty()) {
+			log.info("convertListEmpresaDCMSToXLSRes - fim - nomeArquivo.trim().isEmpty()");
+			return null;
+		}
+		
+		log.info("listEmpresaDCMSRes:[{}]", listEmpresaDCMSRes.size());
+		log.info("nomeArquivo:[{}]", nomeArquivo);
+		
+		int ultimoPonto = nomeArquivo.lastIndexOf(".");
+		String nomeSemPonto = nomeArquivo;
+		String extensaoComPonto = "";
+		String nomeArquivoRetorno = "";
+		if(ultimoPonto > -1) {
+			nomeSemPonto = nomeArquivo.substring(0, ultimoPonto);
+			extensaoComPonto = nomeArquivo.substring(ultimoPonto, nomeArquivo.length());
+			if(extensaoComPonto.indexOf("xlsx") >= -1){
+				extensaoComPonto = ".xls"; //201810091531 - esert - a extensao deve ser XLS e nao pode ser XLSX para a versao de Excel gerada pelo org.apache.poi/poi-ooxml/3.15 (vide pom.xml) 
+			}
+			String HHmmss = new SimpleDateFormat("HHmmss").format(new Date().getTime());
+			nomeArquivoRetorno = nomeSemPonto + ".retorno" + HHmmss + extensaoComPonto; 
+		}
+		final File fileXLSRet = new File(caminhoArquivo + nomeArquivoRetorno);
 
         log.info("convertListEmpresaDCMSToXLSRes - ini");
 
@@ -1115,7 +1162,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
             int rowCount = 0;
 
-            for (EmpresaDcmsEntrada item : listEmpresaDCMSRes) {
+            for (EmpresaDcmsLote item : listEmpresaDCMSRes) {
 
                 rowCount++;
                 Row row = sheet.createRow(rowCount);
@@ -1145,15 +1192,17 @@ public class EmpresaServiceImpl implements EmpresaService {
             workbook.close();
 
             @SuppressWarnings("resource")
-			FileOutputStream fos = new FileOutputStream(file);
+			FileOutputStream fos = new FileOutputStream(fileXLSRet);
             fos.write(fileOut.toByteArray());
+            fos.close(); //201810091511 - esert
             
+            log.info("fileXLSRet:[{}]", fileXLSRet);
             log.info("convertListEmpresaDCMSToXLSRes - fim");
-            return file;
+            return fileXLSRet;
 
         } catch (Exception e) {
             log.info("convertListEmpresaDCMSToXLSRes - erro");
-            String msgErro = "gerarCorretoraTotalVidasPMEXLS; Erro; Message:[" + e.getMessage() + "]; Cause:[" + e.getCause() + "]";
+            String msgErro = String.format("gerarCorretoraTotalVidasPMEXLS; Erro; Message:[{}]; Cause:[{}]", e.getMessage(), e.getCause());
             //throw new Exception(msgErro, e);
             log.error(msgErro, e);
             return null;
@@ -1161,20 +1210,29 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 	
 	//201810051810 - esert
-
 	private String convertFileToBase64(File fileXLSRes) {
+		log.info("convertFileToBase64 - ini");
+		if(fileXLSRes==null) {
+			return null;
+		}
+		log.info("fileXLSRes:[{}]", fileXLSRes);
 		String arquivoBase64 = null;
 		byte[] byteArray = new byte[(int)fileXLSRes.length()];
+		log.info("byteArray.length:[{}]", byteArray.length);
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(fileXLSRes);
 			fis.read(byteArray);
-			Base64.getEncoder().encodeToString(byteArray);
+			arquivoBase64 = Base64.getEncoder().encodeToString(byteArray); //201810091600 - esert - atribuir
+			log.info("arquivoBase64.length():[{}]", arquivoBase64.length());
 		} catch (FileNotFoundException e) {
+			log.info("convertFileToBase64 - erro");
 			log.error("FileNotFoundException", e);
 		} catch (IOException e) {
+			log.info("convertFileToBase64 - erro");
 			log.error("IOException", e);
 		}
+		log.info("convertFileToBase64 - fim");
 		return arquivoBase64;
 	}
 

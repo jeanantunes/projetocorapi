@@ -123,12 +123,13 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
+		<!-- 201810091540 - esert - comentado ref (poi 3.7) para nao conflitar com versao (poi 3.15) da linha 175 ate 177 e 181 a 183
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>3.7</version>
 		</dependency>
-		
+		-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>

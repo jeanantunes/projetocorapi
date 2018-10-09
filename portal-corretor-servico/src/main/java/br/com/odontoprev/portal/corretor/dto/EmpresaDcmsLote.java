@@ -1,7 +1,8 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 //201810052053 - esert - COR-861:Serviço - Receber / Retornar Planilha
-public class EmpresaDcmsEntrada extends EmpresaDcms {
+//201810091238 - esert - COR-861:Serviço - Receber / Retornar Planilha - rename EmpresaDcmsEntrada para EmpresaDcmsLote 
+public class EmpresaDcmsLote extends EmpresaDcms {
 
 	/**
 	 * 
