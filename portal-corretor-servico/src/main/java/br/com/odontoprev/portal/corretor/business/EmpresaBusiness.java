@@ -261,28 +261,30 @@ public class EmpresaBusiness {
                             empresaDcmsRetorno.setEmpDcms(cnpjDados.getEmpDcms());
                             empresaDcmsRetorno.setRetorno(ERRO);
 
-                        }
+                        } //if (cnpjDados.getEmpDcms() == null)
 
-                        } else {
+                    } else {
 
-                            log.info("processarLoteDCMS() - Empresa nao encontrada");
-                            empresaDcmsRetorno.setRetorno(ERRO);
-                            empresaDcmsRetorno.setMensagemRetorno(cnpjDados.getObservacaoLoteDcms());
+                        log.info("processarLoteDCMS() - Empresa nao encontrada");
+                        empresaDcmsRetorno.setRetorno(ERRO);
+                        empresaDcmsRetorno.setMensagemRetorno(cnpjDados.getObservacaoLoteDcms());
 
-                        }
-                    }
+                    } //if (cnpjDados.getCdEmpresa() != null)
+                } //else //if (empresaDcmsReq.getRetorno() != null && empresaDcmsReq.getRetorno().equals(ERRO))
 
-                } catch(Exception e){
-                    log.error(e);
-                    empresaDcmsRetorno.setRetorno(ERRO);
-                    empresaDcmsRetorno.setMensagemRetorno(e.getMessage());
-                }
+            } catch(Exception e){
+                log.error(e);
+                empresaDcmsRetorno.setRetorno(ERRO);
+                empresaDcmsRetorno.setMensagemRetorno(e.getMessage());
+            }
+		
+			empresaDcmsRetorno.setCdVenda(empresaDcmsReq.getCdVenda()); //201810091910 - esert
+			empresaDcmsRetorno.setCdEmpresa(empresaDcmsReq.getCdEmpresa()); //201810091910 - esert
+			empresaDcmsRetorno.setCnpj(empresaDcmsReq.getCnpj());
+			empresaDcmsRetorno.setRazaoSocial(empresaDcmsReq.getRazaoSocial());
+			listEmpresaDcmsRetorno.add(empresaDcmsRetorno);
 
-                empresaDcmsRetorno.setCnpj(empresaDcmsReq.getCnpj());
-                empresaDcmsRetorno.setRazaoSocial(empresaDcmsReq.getRazaoSocial());
-                listEmpresaDcmsRetorno.add(empresaDcmsRetorno);
-
-		}
+		} //for(EmpresaDcmsLote empresaDcmsReq : listEmpresaDCMSReq)
 
         log.info("processarLoteDCMS() - fim");
         return listEmpresaDcmsRetorno;
