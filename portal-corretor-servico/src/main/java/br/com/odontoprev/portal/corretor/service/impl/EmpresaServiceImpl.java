@@ -835,11 +835,11 @@ public class EmpresaServiceImpl implements EmpresaService {
 				fileUploadLoteDCMS.getCaminhoArquivo() //201810052115 - esert - ferramenta para testes locais via postman
 				);
 
-		List<EmpresaDcmsLote> listEmpresaDCMSReq = this.convertXLSReqToListEmpresaDCMS(fileXLSReq);
+		List<EmpresaDcmsLote> listEmpresaDCMSReq = this.convertFileXLSReqToListEmpresaDCMS(fileXLSReq);
 		
 		List<EmpresaDcmsLote> listEmpresaDCMSRes = empresaBusiness.processarLoteDCMS(listEmpresaDCMSReq);
 
-		File fileXLSRes = this.convertListEmpresaDCMSToXLSRes( 
+		File fileXLSRes = this.convertListEmpresaDCMSToFileXLSRes( 
 				listEmpresaDCMSRes, 
 				fileUploadLoteDCMS.getNomeArquivo(),
 				fileUploadLoteDCMS.getCaminhoArquivo()
@@ -856,7 +856,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 		return fileUploadLoteDCMSResponse;
 	}
 
-	//201810051810 - esert
+	//201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	private File convertBase64ToFile(String arquivoBase64, String nomeArquivo, String caminhoArquivo) {
 		File file = null;
 		byte[] byteArray = null;
@@ -883,8 +883,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	@SuppressWarnings("deprecation")
-	private List<EmpresaDcmsLote> convertXLSReqToListEmpresaDCMS(File fileXLSReq) {
-		log.info("convertXLSReqToListEmpresaDCMS - ini");
+	private List<EmpresaDcmsLote> convertFileXLSReqToListEmpresaDCMS(File fileXLSReq) {
+		log.info("convertFileXLSReqToListEmpresaDCMS - ini");
 		List<EmpresaDcmsLote> listEmpresaDcms = null;
 		
 		if(fileXLSReq==null) {
@@ -918,14 +918,14 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell1.getCellType() == CellType.STRING.getCode()) {
-                    	log.debug(currentCell1.getStringCellValue() + "--");
-                    	if(currentCell1.getStringCellValue().equals("CD_VENDA")) {
-                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
-                    	}
+                    	log.info("currentCell1:STRING[{}]", currentCell1.getStringCellValue());
+//                    	if(currentCell1.getStringCellValue().equals("CD_VENDA")) {
+//                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+//                    	}
                         empresaDcmsLote.setCdVenda(Long.getLong(currentCell1.getStringCellValue()));
                     } else if (currentCell1.getCellType() == CellType.NUMERIC.getCode()) {
-                    	log.debug(currentCell1.getNumericCellValue() + "--");
-                        empresaDcmsLote.setCdVenda(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
+                    	log.info("currentCell1:NUMERIC[{}]", currentCell1.getNumericCellValue());
+                        empresaDcmsLote.setCdVenda(new Double(currentCell1.getNumericCellValue()).longValue());
                     }
 
                     if(!cellIterator.hasNext()) { 
@@ -937,13 +937,13 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell2.getCellType() == CellType.STRING.getCode()) {
-                    	log.debug(currentCell2.getStringCellValue() + "--");
-                    	if(currentCell2.getStringCellValue().equals("CD_EMPRESA")) {
-                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
-                    	}
+                    	log.info("currentCell2:STRING[{}]", currentCell2.getStringCellValue());
+//                    	if(currentCell2.getStringCellValue().equals("CD_EMPRESA")) {
+//                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+//                    	}
                         empresaDcmsLote.setCdEmpresa((Long.getLong(currentCell2.getStringCellValue())));
                     } else if (currentCell2.getCellType() == CellType.NUMERIC.getCode()) {
-                    	log.debug(currentCell2.getNumericCellValue() + "--");
+                    	log.info("currentCell2:NUMERIC[{}]", currentCell2.getNumericCellValue());
                         empresaDcmsLote.setCdEmpresa(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
                     }
 
@@ -956,13 +956,13 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell3.getCellType() == CellType.STRING.getCode()) {
-                    	log.debug(currentCell3.getStringCellValue() + "--");
-                    	if(currentCell3.getStringCellValue().equals("CNPJ_CLIENTE")) {
-                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
-                    	}
+                    	log.info("currentCell3:STRING[{}]", currentCell3.getStringCellValue());
+//                    	if(currentCell3.getStringCellValue().equals("CNPJ_CLIENTE")) {
+//                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+//                    	}
                         empresaDcmsLote.setCnpj(currentCell3.getStringCellValue());
                     } else if (currentCell3.getCellType() == CellType.NUMERIC.getCode()) {
-                        log.debug(currentCell3.getNumericCellValue() + "--");
+                    	log.info("currentCell3:NUMERIC[{}]", currentCell3.getNumericCellValue());
                         empresaDcmsLote.setCnpj(String.valueOf(currentCell3.getNumericCellValue()));
                     }
                     
@@ -975,13 +975,13 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell4.getCellType() == CellType.STRING.getCode()) {
-                        log.debug(currentCell4.getStringCellValue() + "--");
-                    	if(currentCell4.getStringCellValue().equals("RAZAO_SOCIAL_CLIENTE")) {
-                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
-                    	}
+                    	log.info("currentCell4:STRING[{}]", currentCell4.getStringCellValue());
+//                    	if(currentCell4.getStringCellValue().equals("RAZAO_SOCIAL_CLIENTE")) {
+//                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+//                    	}
                         empresaDcmsLote.setRazaoSocial(currentCell4.getStringCellValue());
                     } else if (currentCell4.getCellType() == CellType.NUMERIC.getCode()) {
-                        log.debug(currentCell4.getNumericCellValue() + "--");
+                    	log.info("currentCell4:NUMERIC[{}]", currentCell4.getNumericCellValue());
                         empresaDcmsLote.setRazaoSocial(String.valueOf(currentCell4.getNumericCellValue()));
                     }
 
@@ -994,10 +994,10 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell5.getCellType() == CellType.STRING.getCode()) {
-                        log.debug(currentCell5.getStringCellValue() + "--");
-                    	if(currentCell5.getStringCellValue().equals("CAD_DCMS")) {
-                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
-                    	}
+                    	log.info("currentCell5:STRING[{}]", currentCell5.getStringCellValue());
+//                    	if(currentCell5.getStringCellValue().equals("CAD_DCMS")) {
+//                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
+//                    	}
                         empresaDcmsLote.setEmpDcms(currentCell5.getStringCellValue());
                     } else if (currentCell5.getCellType() == CellType.NUMERIC.getCode()) {
                         log.debug(currentCell5.getNumericCellValue() + "--");
@@ -1011,20 +1011,24 @@ public class EmpresaServiceImpl implements EmpresaService {
                 
                 String msgValidaEmpresaDcmsEntrada = validaEmpresaDcmsEntrada(empresaDcmsLote);
                 
-                if(msgValidaEmpresaDcmsEntrada!=null) {
-                	if(!msgValidaEmpresaDcmsEntrada.trim().equals("HEADER")) {
+                if(msgValidaEmpresaDcmsEntrada!=null) { //se msg nao eh nulo
+                	if(msgValidaEmpresaDcmsEntrada.trim().isEmpty()) { //se nao tem msg
+                    	listEmpresaDcms.add(empresaDcmsLote); //apenas adiciona item a lista
+                	} else if(msgValidaEmpresaDcmsEntrada.trim().equals("HEADER")) { //se msg eh HEADER
+                		//se for HEADER nao adiciona na lista de retorno
+                	} else { //se msg nao eh HEADER
+	                	empresaDcmsLote.setRetorno(Constantes.ERRO); //atribui ERRO para item da lista
+	                	empresaDcmsLote.setMensagemRetorno(msgValidaEmpresaDcmsEntrada); //atribui msg para item da lista
+	                	
+	                	listEmpresaDcms.add(empresaDcmsLote); //adiciona item a lista
+	                	
 	                	log.info("linha invalida; msgValidaEmpresaDcmsEntrada:[{}]; empresaDcmsEntrada:[{}]", 
 	                			msgValidaEmpresaDcmsEntrada, 
 	                			empresaDcmsLote
 	                			);
-	                	empresaDcmsLote.setRetorno(Constantes.ERRO);
-	                	empresaDcmsLote.setMensagemRetorno(msgValidaEmpresaDcmsEntrada); //linha invalida deve retornar motivo
-	                	listEmpresaDcms.add(empresaDcmsLote);
-                	} else {
-                		//se for HEADER nao adiciona na lista de retorno
                 	}
                 } else {
-                	listEmpresaDcms.add(empresaDcmsLote);
+                	listEmpresaDcms.add(empresaDcmsLote); //se msg nulo apenas adiciona a lista
                 }
 
             } //while (iterator.hasNext())
@@ -1036,35 +1040,12 @@ public class EmpresaServiceImpl implements EmpresaService {
             log.error("IOException", e);
             return null;
         }
-
-		//listEmpresaDcms = new ArrayList<EmpresaDcmsEntrada>();
-		
-		//201810051920 - esert - fake
-		//EmpresaDcmsEntrada empresaDcmsCnpjRepetido = new EmpresaDcmsEntrada();
-        //empresaDcmsCnpjRepetido.setCnpj("12.061.697/0001-90");
-        //empresaDcmsCnpjRepetido.setEmpDcms("353768");
-		//listEmpresaDcms.add(empresaDcmsCnpjRepetido);
-		//
-		////201810051920 - esert - fake
-		//EmpresaDcmsEntrada empresaDcmsComCodDcms = new EmpresaDcmsEntrada();
-        //empresaDcmsComCodDcms.setCnpj("25.332.122/0001-06");
-        //empresaDcmsComCodDcms.setEmpDcms("123456");
-		//listEmpresaDcms.add(empresaDcmsComCodDcms);
-//
-        //EmpresaDcmsEntrada empresaComCnpjInvalido = new EmpresaDcmsEntrada();
-        //empresaComCnpjInvalido.setCnpj("25.332.000/0000-00");
-        //empresaComCnpjInvalido.setEmpDcms("123456");
-        //listEmpresaDcms.add(empresaComCnpjInvalido);
-//
-        //EmpresaDcmsEntrada empresaValida = new EmpresaDcmsEntrada();
-        //empresaValida.setCnpj("28.984.416/0001-00");
-        //empresaValida.setEmpDcms("123456");
-        //listEmpresaDcms.add(empresaValida);
-
+        
+		log.info("convertFileXLSReqToListEmpresaDCMS - fim");
 		return listEmpresaDcms;
 	}
 
-	//201810081550 - esert - COR-861:Servico Rec/Ret Plan
+	//201810081550 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	private String validaEmpresaDcmsEntrada(EmpresaDcmsLote empresaDcmsLote) {
 		String retorno = "";
 		if(empresaDcmsLote==null) {
@@ -1103,19 +1084,19 @@ public class EmpresaServiceImpl implements EmpresaService {
 	}
 
 	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
-	private File convertListEmpresaDCMSToXLSRes(List<EmpresaDcmsLote> listEmpresaDCMSRes, String nomeArquivo, String caminhoArquivo) {
-		log.info("convertListEmpresaDCMSToXLSRes - ini");
+	private File convertListEmpresaDCMSToFileXLSRes(List<EmpresaDcmsLote> listEmpresaDCMSRes, String nomeArquivo, String caminhoArquivo) {
+		log.info("convertListEmpresaDCMSToFileXLSRes - ini");
 		
 		if(listEmpresaDCMSRes==null) {
-			log.info("convertListEmpresaDCMSToXLSRes - fim - listEmpresaDCMSRes==null");
+			log.info("convertListEmpresaDCMSToFileXLSRes - fim - listEmpresaDCMSRes==null");
 			return null;
 		}
 		if(nomeArquivo==null) {
-			log.info("convertListEmpresaDCMSToXLSRes - fim - nomeArquivo==null");
+			log.info("convertListEmpresaDCMSToFileXLSRes - fim - nomeArquivo==null");
 			return null;
 		}
 		if(nomeArquivo.trim().isEmpty()) {
-			log.info("convertListEmpresaDCMSToXLSRes - fim - nomeArquivo.trim().isEmpty()");
+			log.info("convertListEmpresaDCMSToFileXLSRes - fim - nomeArquivo.trim().isEmpty()");
 			return null;
 		}
 		
@@ -1137,7 +1118,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 		}
 		final File fileXLSRet = new File(caminhoArquivo + nomeArquivoRetorno);
 
-        log.info("convertListEmpresaDCMSToXLSRes - ini");
+        log.info("convertListEmpresaDCMSToFileXLSRes - ini");
 
         try {
 
@@ -1197,11 +1178,11 @@ public class EmpresaServiceImpl implements EmpresaService {
             fos.close(); //201810091511 - esert
             
             log.info("fileXLSRet:[{}]", fileXLSRet);
-            log.info("convertListEmpresaDCMSToXLSRes - fim");
+            log.info("convertListEmpresaDCMSToFileXLSRes - fim");
             return fileXLSRet;
 
         } catch (Exception e) {
-            log.info("convertListEmpresaDCMSToXLSRes - erro");
+            log.info("convertListEmpresaDCMSToFileXLSRes - erro");
             String msgErro = String.format("gerarCorretoraTotalVidasPMEXLS; Erro; Message:[{}]; Cause:[{}]", e.getMessage(), e.getCause());
             //throw new Exception(msgErro, e);
             log.error(msgErro, e);
@@ -1209,7 +1190,7 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
 	}
 	
-	//201810051810 - esert
+	//201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	private String convertFileToBase64(File fileXLSRes) {
 		log.info("convertFileToBase64 - ini");
 		if(fileXLSRes==null) {
