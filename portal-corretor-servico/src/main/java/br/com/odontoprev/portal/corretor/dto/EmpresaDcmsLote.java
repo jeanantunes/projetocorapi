@@ -11,7 +11,15 @@ public class EmpresaDcmsLote extends EmpresaDcms {
 	
 	private Long cdVenda; //COR-232 coluna A da planilha (Layout Arquivo Input DCMS em Massa.xlsx) , aba (Layout Upload)
 	private String razaoSocial; //COR-232 coluna D da planilha (Layout Arquivo Input DCMS em Massa.xlsx) , aba (Layout Upload)
+
+	//COR-232 coluna F da planilha (Layout Arquivo Input DCMS em Massa.xlsx) , aba (Layout Retorno)
+	//COR-232 : Deverá incluir uma coluna no arquivo com o nome "RETORNO" com o resultado "OK" para os códigos inputados com sucesso, e o retorno "ERRO" para os códigos não inputados com sucesso.
+	private String retorno; //OK, ERRO
 	
+	//COR-232 coluna G da planilha (Layout Arquivo Input DCMS em Massa.xlsx) , aba (Layout Retorno)
+	//COR-232 : Deverá incluir depois da coluna "RETORNO" uma coluna "MENSAGEM RETORNO" que deverá trazer a mensagem do porque não foi possível inputar o código DCMS.
+	private String mensagemRetorno;
+
 	public Long getCdVenda() {
 		return cdVenda;
 	}
@@ -37,14 +45,6 @@ public class EmpresaDcmsLote extends EmpresaDcms {
 	public void setMensagemRetorno(String mensagemRetorno) {
 		this.mensagemRetorno = mensagemRetorno;
 	}
-
-	//COR-232 coluna F da planilha (Layout Arquivo Input DCMS em Massa.xlsx) , aba (Layout Retorno)
-	//COR-232 : Deverá incluir uma coluna no arquivo com o nome "RETORNO" com o resultado "OK" para os códigos inputados com sucesso, e o retorno "ERRO" para os códigos não inputados com sucesso.
-	private String retorno; //OK, ERRO
-	
-	//COR-232 coluna G da planilha (Layout Arquivo Input DCMS em Massa.xlsx) , aba (Layout Retorno)
-	//COR-232 : Deverá incluir depois da coluna "RETORNO" uma coluna "MENSAGEM RETORNO" que deverá trazer a mensagem do porque não foi possível inputar o código DCMS.
-	private String mensagemRetorno;
 
 	@Override
 	public String toString() {
