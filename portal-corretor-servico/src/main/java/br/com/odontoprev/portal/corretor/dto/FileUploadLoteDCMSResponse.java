@@ -8,21 +8,15 @@ public class FileUploadLoteDCMSResponse implements Serializable {
 	private static final long serialVersionUID = -2818456229298410509L;
 
 	private String tipoConteudo; //"tipoConteudo":"application/vnd.ms-excel",
-	private String arquivoBase64; //"arquivoBase64":"qwertyuiopasdfghjklzxcvbnm"
 	private String nomeArquivo; //"nomeArquivo":"loteDcms20181005.xls",
 	private Long tamanho; //"tamanho":12345
-	
+	private Long registrosProcessados; //201810091923 - esert
+	private String arquivoBase64; //"arquivoBase64":"qwertyuiopasdfghjklzxcvbnm"
 	public String getTipoConteudo() {
 		return tipoConteudo;
 	}
 	public void setTipoConteudo(String tipoConteudo) {
 		this.tipoConteudo = tipoConteudo;
-	}
-	public String getArquivoBase64() {
-		return arquivoBase64;
-	}
-	public void setArquivoBase64(String arquivoBase64) {
-		this.arquivoBase64 = arquivoBase64;
 	}
 	public String getNomeArquivo() {
 		return nomeArquivo;
@@ -36,11 +30,28 @@ public class FileUploadLoteDCMSResponse implements Serializable {
 	public void setTamanho(Long tamanho) {
 		this.tamanho = tamanho;
 	}
+	public Long getRegistrosProcessados() {
+		return registrosProcessados;
+	}
+	public void setRegistrosProcessados(Long registrosProcessados) {
+		this.registrosProcessados = registrosProcessados;
+	}
+	public String getArquivoBase64() {
+		return arquivoBase64;
+	}
+	public void setArquivoBase64(String arquivoBase64) {
+		this.arquivoBase64 = arquivoBase64;
+	}
 	
 	@Override
 	public String toString() {
-		return "FileUploadLoteDCMS [tipoConteudo=" + tipoConteudo + ", arquivoBase64=" + arquivoBase64
-				+ ", nomeArquivo=" + nomeArquivo + ", tamanho=" + tamanho + "]";
+		return "FileUploadLoteDCMSResponse [" 
+				+ "tipoConteudo=" + tipoConteudo 
+				+ ", nomeArquivo=" + nomeArquivo
+				+ ", tamanho=" + tamanho 
+				+ ", registrosProcessados=" + registrosProcessados 
+				+ ", arquivoBase64=" + arquivoBase64 
+				+ "]";
 	}
 	
 	@Override
@@ -49,11 +60,11 @@ public class FileUploadLoteDCMSResponse implements Serializable {
 		int result = 1;
 		result = prime * result + ((arquivoBase64 == null) ? 0 : arquivoBase64.hashCode());
 		result = prime * result + ((nomeArquivo == null) ? 0 : nomeArquivo.hashCode());
+		result = prime * result + ((registrosProcessados == null) ? 0 : registrosProcessados.hashCode());
 		result = prime * result + ((tamanho == null) ? 0 : tamanho.hashCode());
 		result = prime * result + ((tipoConteudo == null) ? 0 : tipoConteudo.hashCode());
 		return result;
 	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -73,6 +84,11 @@ public class FileUploadLoteDCMSResponse implements Serializable {
 				return false;
 		} else if (!nomeArquivo.equals(other.nomeArquivo))
 			return false;
+		if (registrosProcessados == null) {
+			if (other.registrosProcessados != null)
+				return false;
+		} else if (!registrosProcessados.equals(other.registrosProcessados))
+			return false;
 		if (tamanho == null) {
 			if (other.tamanho != null)
 				return false;
@@ -86,4 +102,5 @@ public class FileUploadLoteDCMSResponse implements Serializable {
 		return true;
 	}
 
+	
 }
