@@ -1,5 +1,6 @@
 package br.com.odontoprev.portal.corretor.controller;
 
+import br.com.odontoprev.portal.corretor.dto.EmailForcaVendaCorretora;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
 import br.com.odontoprev.portal.corretor.dto.Login;
@@ -108,6 +109,21 @@ public class ForcaVendaController {
     public ForcaVendaResponse updateForcaVendaStatusReprovar(@RequestBody ForcaVenda forcaVenda) throws Exception {
         log.info("[updateForcaVendaStatusReprovar]");
         return forcaVendaService.updateForcaVendaStatusByCpf(forcaVenda, "REPROVAR");
+    }
+
+    @RequestMapping(value = "/forcavenda/{cdForcaVenda}/email", method = {RequestMethod.GET})
+    public ResponseEntity<EmailForcaVendaCorretora> getEmailForcaVendaCorretora(@PathVariable Long cdForcaVenda) throws Exception {
+        log.info("[getEmailForcaVendaCorretora]");
+
+        EmailForcaVendaCorretora emailForcaVendaCorretora = new EmailForcaVendaCorretora();
+        emailForcaVendaCorretora.setCdCorretora(21L);
+        emailForcaVendaCorretora.setCdForcaVenda(6L);
+        emailForcaVendaCorretora.setEmailCorretora("fernanto.mota@odontoprev.com.br");
+        emailForcaVendaCorretora.setEmailForcaVenda("fernanto.mota@odontoprev.com.br");
+
+        
+
+        return ResponseEntity.ok(emailForcaVendaCorretora);
     }
 
     @RequestMapping(value = "/forcavenda/bloqueio", method = {RequestMethod.GET})
