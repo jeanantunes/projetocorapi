@@ -847,12 +847,11 @@ public class EmpresaServiceImpl implements EmpresaService {
 		@SuppressWarnings("unused")
 		String arquivoBase64Res = convertFileToBase64(fileXLSRes);
 
-		//201810051716 - esert - dummy para teste yago
-		fileUploadLoteDCMSResponse.setArquivoBase64(fileUploadLoteDCMS.getArquivoBase64());
-		fileUploadLoteDCMSResponse.setNomeArquivo(fileUploadLoteDCMS.getNomeArquivo());
-		fileUploadLoteDCMSResponse.setTamanho(fileUploadLoteDCMS.getTamanho());
+		fileUploadLoteDCMSResponse.setArquivoBase64(arquivoBase64Res);
+		fileUploadLoteDCMSResponse.setNomeArquivo(fileXLSRes.getName());
+		fileUploadLoteDCMSResponse.setTamanho(fileXLSRes.length());
 		fileUploadLoteDCMSResponse.setTipoConteudo(fileUploadLoteDCMS.getTipoConteudo());
-		
+
 		return fileUploadLoteDCMSResponse;
 	}
 
@@ -1034,26 +1033,26 @@ public class EmpresaServiceImpl implements EmpresaService {
 		//listEmpresaDcms = new ArrayList<EmpresaDcmsEntrada>();
 		
 		//201810051920 - esert - fake
-		EmpresaDcmsEntrada empresaDcmsCnpjRepetido = new EmpresaDcmsEntrada();
-        empresaDcmsCnpjRepetido.setCnpj("12.061.697/0001-90");
-        empresaDcmsCnpjRepetido.setEmpDcms("353768");
-		listEmpresaDcms.add(empresaDcmsCnpjRepetido);
-		
-		//201810051920 - esert - fake
-		EmpresaDcmsEntrada empresaDcmsComCodDcms = new EmpresaDcmsEntrada();
-        empresaDcmsComCodDcms.setCnpj("25.332.122/0001-06");
-        empresaDcmsComCodDcms.setEmpDcms("123456");
-		listEmpresaDcms.add(empresaDcmsComCodDcms);
-
-        EmpresaDcmsEntrada empresaComCnpjInvalido = new EmpresaDcmsEntrada();
-        empresaComCnpjInvalido.setCnpj("25.332.000/0000-00");
-        empresaComCnpjInvalido.setEmpDcms("123456");
-        listEmpresaDcms.add(empresaComCnpjInvalido);
-
-        EmpresaDcmsEntrada empresaValida = new EmpresaDcmsEntrada();
-        empresaValida.setCnpj("28.984.416/0001-00");
-        empresaValida.setEmpDcms("123456");
-        listEmpresaDcms.add(empresaValida);
+		//EmpresaDcmsEntrada empresaDcmsCnpjRepetido = new EmpresaDcmsEntrada();
+        //empresaDcmsCnpjRepetido.setCnpj("12.061.697/0001-90");
+        //empresaDcmsCnpjRepetido.setEmpDcms("353768");
+		//listEmpresaDcms.add(empresaDcmsCnpjRepetido);
+		//
+		////201810051920 - esert - fake
+		//EmpresaDcmsEntrada empresaDcmsComCodDcms = new EmpresaDcmsEntrada();
+        //empresaDcmsComCodDcms.setCnpj("25.332.122/0001-06");
+        //empresaDcmsComCodDcms.setEmpDcms("123456");
+		//listEmpresaDcms.add(empresaDcmsComCodDcms);
+//
+        //EmpresaDcmsEntrada empresaComCnpjInvalido = new EmpresaDcmsEntrada();
+        //empresaComCnpjInvalido.setCnpj("25.332.000/0000-00");
+        //empresaComCnpjInvalido.setEmpDcms("123456");
+        //listEmpresaDcms.add(empresaComCnpjInvalido);
+//
+        //EmpresaDcmsEntrada empresaValida = new EmpresaDcmsEntrada();
+        //empresaValida.setCnpj("28.984.416/0001-00");
+        //empresaValida.setEmpDcms("123456");
+        //listEmpresaDcms.add(empresaValida);
 
 		return listEmpresaDcms;
 	}

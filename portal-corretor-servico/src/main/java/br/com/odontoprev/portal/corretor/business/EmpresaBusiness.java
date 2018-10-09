@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.ManagedBean;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -213,58 +212,75 @@ public class EmpresaBusiness {
 
 			try {
 
-				cnpjDados = empresaService.findDadosEmpresaByCnpj(empresaDcmsReq.getCnpj().replaceAll("[^0-9]",""));
+                if (empresaDcmsReq.getRetorno() != null && empresaDcmsReq.getRetorno().equals(ERRO)) {
 
-				if (cnpjDados.getCdEmpresa() != null){
-
-                    if (cnpjDados.getEmpDcms() == null){
-
-                        empresaDcmsReq.setCdEmpresa(cnpjDados.getCdEmpresa());
-                        log.info("processarLoteDCMS() - update empresa - ini");
-                        EmpresaResponse empresaResponse = empresaService.updateEmpresa(empresaDcmsReq);
-
-                        if(empresaResponse.getId()==0) {
-                            log.info("processarLoteDCMS() - update empresa error");
-                            empresaDcmsRetorno.setRetorno(ERRO);
-                            empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
-                            empresaDcmsRetorno.setMensagemRetorno(empresaResponse.getMensagem());
-
-                        } else {
-
-                            log.info("processarLoteDCMS() - update empresa sucesso");
-                            empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
-                            empresaDcmsRetorno.setRetorno(OK);
-                            empresaDcmsRetorno.setMensagemRetorno(empresaResponse.getMensagem());
-                        }
-
-                        log.info("processarLoteDCMS() - update empresa - fim");
-
-                    } else {
-
-                        log.info("processarLoteDCMS() - Empresa ja possui cd_dcms");
-                        empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
-                        empresaDcmsRetorno.setMensagemRetorno(CNPJ_POSSUI_CD_DCMS);
-                        empresaDcmsRetorno.setRetorno(ERRO);
-
-                    }
+                    empresaDcmsRetorno.setRazaoSocial(empresaDcmsReq.getRazaoSocial());
+                    empresaDcmsRetorno.setCnpj(empresaDcmsReq.getCnpj());
+                    empresaDcmsRetorno.setRetorno(ERRO);
+                    empresaDcmsRetorno.setMensagemRetorno(empresaDcmsReq.getMensagemRetorno());
 
                 } else {
 
-                    log.info("processarLoteDCMS() - Empresa nao encontrada");
-                    empresaDcmsRetorno.setRetorno(ERRO);
-                    empresaDcmsRetorno.setMensagemRetorno(cnpjDados.getObservacaoLoteDcms());
+                    if (empresaDcmsReq.getCnpj() == null){
+                        empresaDcmsRetorno.setRetorno(ERRO);
+                        empresaDcmsRetorno.setMensagemRetorno("CNPJ NAO INFORMADO");
+                        continue;
+                    }
 
+                    cnpjDados = empresaService.findDadosEmpresaByCnpj(empresaDcmsReq.getCnpj().replaceAll("[^0-9]", ""));
+
+                    if (cnpjDados.getCdEmpresa() != null) {
+
+                        if (cnpjDados.getEmpDcms() == null) {
+
+                            empresaDcmsReq.setCdEmpresa(cnpjDados.getCdEmpresa());
+                            log.info("processarLoteDCMS() - update empresa - ini");
+                            EmpresaResponse empresaResponse = empresaService.updateEmpresa(empresaDcmsReq);
+
+                            if (empresaResponse.getId() == 0) {
+                                log.info("processarLoteDCMS() - update empresa error");
+                                empresaDcmsRetorno.setRetorno(ERRO);
+                                empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
+                                empresaDcmsRetorno.setMensagemRetorno(empresaResponse.getMensagem());
+
+                            } else {
+
+                                log.info("processarLoteDCMS() - update empresa sucesso");
+                                empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
+                                empresaDcmsRetorno.setRetorno(OK);
+                                empresaDcmsRetorno.setMensagemRetorno(empresaResponse.getMensagem());
+                            }
+
+                            log.info("processarLoteDCMS() - update empresa - fim");
+
+                        } else {
+
+                            log.info("processarLoteDCMS() - Empresa ja possui cd_dcms");
+                            empresaDcmsRetorno.setCdEmpresa(cnpjDados.getCdEmpresa());
+                            empresaDcmsRetorno.setMensagemRetorno(CNPJ_POSSUI_CD_DCMS);
+                            empresaDcmsRetorno.setEmpDcms(cnpjDados.getEmpDcms());
+                            empresaDcmsRetorno.setRetorno(ERRO);
+
+                        }
+
+                        } else {
+
+                            log.info("processarLoteDCMS() - Empresa nao encontrada");
+                            empresaDcmsRetorno.setRetorno(ERRO);
+                            empresaDcmsRetorno.setMensagemRetorno(cnpjDados.getObservacaoLoteDcms());
+
+                        }
+                    }
+
+                } catch(Exception e){
+                    log.error(e);
+                    empresaDcmsRetorno.setRetorno(ERRO);
+                    empresaDcmsRetorno.setMensagemRetorno(e.getMessage());
                 }
 
-			} catch (ParseException e) {
-				log.error(e);
-				empresaDcmsRetorno.setRetorno(ERRO);
-				empresaDcmsRetorno.setMensagemRetorno(e.getMessage());
-			}
-
-            empresaDcmsRetorno.setCnpj(empresaDcmsReq.getCnpj());
-            empresaDcmsRetorno.setRazaoSocial(empresaDcmsReq.getRazaoSocial());
-			listEmpresaDcmsRetorno.add(empresaDcmsRetorno);
+                empresaDcmsRetorno.setCnpj(empresaDcmsReq.getCnpj());
+                empresaDcmsRetorno.setRazaoSocial(empresaDcmsReq.getRazaoSocial());
+                listEmpresaDcmsRetorno.add(empresaDcmsRetorno);
 
 		}
 
