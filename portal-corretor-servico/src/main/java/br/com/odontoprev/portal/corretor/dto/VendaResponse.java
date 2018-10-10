@@ -17,26 +17,9 @@ public class VendaResponse implements Serializable {
 	private String mensagemErro;
 	private Long cdEmpresa;
 	private boolean temBloqueio;
-	private boolean temErro;
-
-	@Override
-	public String toString() {
-		return "VendaResponse{" +
-				"id=" + id +
-				", mensagem='" + mensagem + '\'' +
-				", cdVenda=" + cdVenda +
-				", numeroProposta='" + numeroProposta + '\'' +
-				", dtVenda='" + dtVenda + '\'' +
-				", mensagemErro='" + mensagemErro + '\'' +
-				", cdEmpresa=" + cdEmpresa +
-				", temBloqueio=" + temBloqueio +
-				", codigoTipoBloqueio=" + codigoTipoBloqueio +
-				", descricaoTipoBloqueio='" + descricaoTipoBloqueio + '\'' +
-				'}';
-	}
-
 	private Long codigoTipoBloqueio;
 	private String descricaoTipoBloqueio;
+	private boolean temErro;
 
 	public VendaResponse(boolean temBloqueio, Long codigoTipoBloqueio, String descricaoTipoBloqueio, String mensagem) {
 
@@ -53,6 +36,12 @@ public class VendaResponse implements Serializable {
 	public VendaResponse(long id, String mensagem) {
 		this.id = id;
 		this.mensagem = mensagem;
+	}
+
+	public VendaResponse(long id, String mensagem, boolean temErro) {
+		this.id = id;
+		this.mensagem = mensagem;
+		this.temErro = temErro;
 	}
 	
 	//201808241648 - esert - COR-619 serv disp pdf pme - passar cdEmpresa para App/Web a fim de facilitar GET do PDF por cdEmpresa
@@ -130,4 +119,28 @@ public class VendaResponse implements Serializable {
 		this.descricaoTipoBloqueio = descricaoTipoBloqueio;
 	}
 
+	public boolean getTemErro() {
+		return temErro;
+	}
+
+	public void setTemErro(boolean temErro) {
+		this.temErro = temErro;
+	}
+
+	@Override
+	public String toString() {
+		return "VendaResponse{" +
+				"id=" + id +
+				", mensagem='" + mensagem + '\'' +
+				", cdVenda=" + cdVenda +
+				", numeroProposta='" + numeroProposta + '\'' +
+				", dtVenda='" + dtVenda + '\'' +
+				", mensagemErro='" + mensagemErro + '\'' +
+				", cdEmpresa=" + cdEmpresa +
+				", temBloqueio=" + temBloqueio +
+				", temErro=" + temErro +
+				", codigoTipoBloqueio=" + codigoTipoBloqueio +
+				", descricaoTipoBloqueio='" + descricaoTipoBloqueio + '\'' +
+				'}';
+	}
 }
