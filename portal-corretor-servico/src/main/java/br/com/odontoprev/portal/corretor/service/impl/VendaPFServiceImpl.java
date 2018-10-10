@@ -3,10 +3,12 @@ package br.com.odontoprev.portal.corretor.service.impl;
 import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
 import br.com.odontoprev.portal.corretor.business.VendaPMEBusiness;
 import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dto.EmailForcaVendaCorretora;
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import br.com.odontoprev.portal.corretor.service.VendaPFService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 import org.apache.commons.logging.Log;
@@ -22,14 +24,17 @@ public class VendaPFServiceImpl implements VendaPFService {
 	private static final Log log = LogFactory.getLog(VendaPFServiceImpl.class);
 
 	@Autowired
-	VendaPFBusiness vendaPFBusiness;
+	private VendaPFBusiness vendaPFBusiness; // COR-883 Adicionado private
 
 	@Autowired
-	VendaPMEBusiness vendaPMEBusiness;
+	private VendaPMEBusiness vendaPMEBusiness; // COR-883 Adicionado private
 
 	@Autowired
-	ForcaVendaDAO forcaVendaDAO;
-	
+	private ForcaVendaDAO forcaVendaDAO; // COR-883 Adicionado private
+
+	@Autowired
+	private ForcaVendaService forcaVendaService; // COR-883 Adicionado private
+
 	@Override
 	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
 	public VendaResponse addVenda(Venda venda) throws Exception {
@@ -89,6 +94,10 @@ public class VendaPFServiceImpl implements VendaPFService {
 			}
 
 		}
+
+		EmailForcaVendaCorretora emailForcaVendaCorretora;
+
+		emailForcaVendaCorretora = forcaVendaService.findByCdForcaVendaEmail(vendaPME.getCdForcaVenda());
 
 		log.info("[VendaPFServiceImpl::addVendaPME]");
 

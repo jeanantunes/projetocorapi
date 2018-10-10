@@ -17,6 +17,7 @@ public class VendaResponse implements Serializable {
 	private String mensagemErro;
 	private Long cdEmpresa;
 	private boolean temBloqueio;
+	private boolean temErro;
 
 	@Override
 	public String toString() {
