@@ -1,17 +1,15 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
-import br.com.odontoprev.portal.corretor.dao.*;
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
-import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
-import br.com.odontoprev.portal.corretor.enums.TipoNotificationTemplate;
-import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
-import br.com.odontoprev.portal.corretor.model.*;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
-import br.com.odontoprev.portal.corretor.util.DataUtil;
-import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
+import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.AGUARDANDO_APRO;
+import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.ATIVO;
+import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.PRE_CADASTRO;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +21,40 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.*;
+import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
+import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
+import br.com.odontoprev.portal.corretor.dao.DeviceTokenDAO;
+import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.LoginDAO;
+import br.com.odontoprev.portal.corretor.dao.NotificacaoDAO;
+import br.com.odontoprev.portal.corretor.dao.SistemaPushDAO;
+import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.TokenDAO;
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.DCSSLoginResponse;
+import br.com.odontoprev.portal.corretor.dto.EmailForcaVendaCorretora;
+import br.com.odontoprev.portal.corretor.dto.Endereco;
+import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
+import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.dto.PushNotification;
+import br.com.odontoprev.portal.corretor.dto.VendaResponse;
+import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
+import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
+import br.com.odontoprev.portal.corretor.enums.TipoNotificationTemplate;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
+import br.com.odontoprev.portal.corretor.model.TbodCorretora;
+import br.com.odontoprev.portal.corretor.model.TbodDeviceToken;
+import br.com.odontoprev.portal.corretor.model.TbodEndereco;
+import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
+import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.model.TbodNotificationTemplate;
+import br.com.odontoprev.portal.corretor.model.TbodSistemaPush;
+import br.com.odontoprev.portal.corretor.model.TbodStatusForcaVenda;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
+import br.com.odontoprev.portal.corretor.util.DataUtil;
+import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
 
 @Service
 public class ForcaVendaServiceImpl implements ForcaVendaService {
@@ -1074,4 +1102,35 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
         log.info("[findByCdForcaVendaEmail - fim]");
         return emailForcaVendaCorretora;
     }
+
+	//201810101622 - esert - COR-883:Serviço - Alterar POST/vendapme Validar E-mail (Com TDD 200) 
+    public VendaResponse verificarBloqueio(Long cdForcaVenda) {
+    	log.info("verificarBloqueio - ini");
+		VendaResponse vendaResponse = null;
+
+		TbodForcaVenda forcaVenda = forcaVendaDao.findByCdForcaVenda(cdForcaVenda);
+
+		if (forcaVenda.getTbodLogin() != null){
+
+			if (forcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM)){
+
+				log.info("[verificarBloqueio - forca venda bloqueado]");
+
+				boolean temBloqueio = true;
+				Long cdTipoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio();
+				String descricaoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao();
+				String mensagemVenda = "[Venda nao finalizada por bloqueio forca venda]";
+
+				vendaResponse = new VendaResponse(temBloqueio, cdTipoBloqueio, descricaoBloqueio, mensagemVenda);
+
+		    	log.info("verificarBloqueio - fim com msg");
+				return vendaResponse;
+
+			}
+
+		}
+		
+    	log.info("verificarBloqueio - fim sem msg");
+		return vendaResponse;
+	}
 }

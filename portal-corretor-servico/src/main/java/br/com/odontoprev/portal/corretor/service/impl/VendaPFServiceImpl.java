@@ -1,21 +1,18 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
-import br.com.odontoprev.portal.corretor.business.VendaPMEBusiness;
-import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
-import br.com.odontoprev.portal.corretor.dto.EmailForcaVendaCorretora;
-import br.com.odontoprev.portal.corretor.dto.Venda;
-import br.com.odontoprev.portal.corretor.dto.VendaPME;
-import br.com.odontoprev.portal.corretor.dto.VendaResponse;
-import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
-import br.com.odontoprev.portal.corretor.service.VendaPFService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import br.com.odontoprev.portal.corretor.business.VendaPFBusiness;
+import br.com.odontoprev.portal.corretor.business.VendaPMEBusiness;
+import br.com.odontoprev.portal.corretor.dto.Venda;
+import br.com.odontoprev.portal.corretor.dto.VendaPME;
+import br.com.odontoprev.portal.corretor.dto.VendaResponse;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.service.VendaPFService;
 
 @Service
 @Transactional(rollbackFor={Exception.class}) //201805242036 - inc //201805242118 - alt //208106291623 - alt
@@ -30,76 +27,45 @@ public class VendaPFServiceImpl implements VendaPFService {
 	private VendaPMEBusiness vendaPMEBusiness; // COR-883 Adicionado private
 
 	@Autowired
-	private ForcaVendaDAO forcaVendaDAO; // COR-883 Adicionado private
-
-	@Autowired
 	private ForcaVendaService forcaVendaService; // COR-883 Adicionado private
 
 	@Override
 	@Transactional(rollbackFor={Exception.class}) //201806290926 - esert - COR-352 rollback pf
 	public VendaResponse addVenda(Venda venda) throws Exception {
 
-		TbodForcaVenda forcaVenda = forcaVendaDAO.findByCdForcaVenda(venda.getCdForcaVenda());
+		log.info("[VendaPFServiceImpl::addVenda::checando status forca venda]");
 
-		log.info("[VendaPFServiceImpl::checando status forca venda]");
-
-		if (forcaVenda.getTbodLogin() != null){
-
-			if (forcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM)){
-
-				log.info("[VendaPFServiceImpl::forca venda bloqueado]");
-
-				boolean temBloqueio = true;
-				Long cdTipoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio();
-				String descricaoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao();
-				String mensagemVenda = "[Venda PF nao finalizada por bloqueio forca venda]";
-
-				VendaResponse vendaResponse = new VendaResponse(temBloqueio, cdTipoBloqueio, descricaoBloqueio, mensagemVenda);
-
-				return vendaResponse;
-
-			}
-
-
+		//201810101622 - esert - COR-883:Serviço - Alterar POST/vendapme Validar E-mail (Com TDD 200)
+		VendaResponse vendaResponseBloqueio = forcaVendaService.verificarBloqueio(venda.getCdForcaVenda());
+		if(vendaResponseBloqueio!=null) {
+			return vendaResponseBloqueio;
 		}
 
-		log.info("[VendaPFServiceImpl::addVenda]");
+		log.info("[VendaPFServiceImpl::addVenda::salvar]");
 		
 		return vendaPFBusiness.salvarVendaComTitularesComDependentes(venda, Boolean.TRUE);
 	}
 
+	//201810101622 - esert - COR-883:Serviço - Alterar POST/vendapme Validar E-mail (Com TDD 200)
 	@Override
 	@Transactional(rollbackFor={Exception.class}) //201806280926 - esert - COR-348 rollback pme
 	public VendaResponse addVendaPME(VendaPME vendaPME) {
 
-		TbodForcaVenda forcaVenda = forcaVendaDAO.findByCdForcaVenda(vendaPME.getCdForcaVenda());
+		log.info("[VendaPFServiceImpl::addVendaPME::checando status forca venda]");
 
-		log.info("[VendaPFServiceImpl::checando status forca venda]");
-
-		if (forcaVenda.getTbodLogin() != null){
-
-			if (forcaVenda.getTbodLogin().getTemBloqueio().equals(Constantes.SIM)){
-
-				log.info("[VendaPFServiceImpl::forca venda bloqueado]");
-
-				boolean temBloqueio = true;
-				Long cdTipoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getCdTipoBloqueio();
-				String descricaoBloqueio = forcaVenda.getTbodLogin().getTbodTipoBloqueio().getDescricao();
-				String mensagemVenda = "[Venda PME nao finalizada por bloqueio forca venda]";
-
-				VendaResponse vendaResponse = new VendaResponse(temBloqueio, cdTipoBloqueio, descricaoBloqueio, mensagemVenda);
-
-				return vendaResponse;
-
-			}
-
+		VendaResponse vendaResponseBloqueio = forcaVendaService.verificarBloqueio(vendaPME.getCdForcaVenda());
+		if(vendaResponseBloqueio!=null) {
+			return vendaResponseBloqueio;
 		}
+		
+		log.info("[VendaPFServiceImpl::addVendaPME::checando erros antes salvar]");
 
-		EmailForcaVendaCorretora emailForcaVendaCorretora;
-
-		emailForcaVendaCorretora = forcaVendaService.findByCdForcaVendaEmail(vendaPME.getCdForcaVenda());
-
-		log.info("[VendaPFServiceImpl::addVendaPME]");
+		VendaResponse vendaResponseErro = vendaPMEBusiness.verificarErro(vendaPME);
+		if(vendaResponseErro!=null) {
+			return vendaResponseErro;
+		}
+		
+		log.info("[VendaPFServiceImpl::addVendaPME::salvar]");
 
 		return vendaPMEBusiness.salvarVendaPMEComEmpresasPlanosTitularesDependentes(vendaPME);
 	}

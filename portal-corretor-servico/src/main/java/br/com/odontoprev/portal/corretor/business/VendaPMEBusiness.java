@@ -6,8 +6,8 @@ import java.util.Date;
 
 import javax.annotation.ManagedBean;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.odontoprev.portal.corretor.dto.ArquivoContratacao;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.EmailForcaVendaCorretora;
 import br.com.odontoprev.portal.corretor.dto.Empresa;
 import br.com.odontoprev.portal.corretor.dto.EmpresaResponse;
 import br.com.odontoprev.portal.corretor.dto.Plano;
@@ -24,13 +25,14 @@ import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.service.ArquivoContratacaoService;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
 import br.com.odontoprev.portal.corretor.service.TokenAceiteService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 
 @ManagedBean
 public class VendaPMEBusiness {
 
-	private static final Log log = LogFactory.getLog(VendaPMEBusiness.class);
+	private static final Logger log = LoggerFactory.getLogger(VendaPMEBusiness.class);
 	
 	@Autowired
 	EmpresaBusiness empresaBusiness;
@@ -46,7 +48,10 @@ public class VendaPMEBusiness {
 	
 	@Autowired
 	ArquivoContratacaoService arquivoContratacaoService; //201808232052 - esert - COR-617 servico gerar pdf contratacao pme
-	
+
+	@Autowired
+	private ForcaVendaService forcaVendaService; //201810101622 - esert - COR-883:Serviço - Alterar POST/vendapme Validar E-mail (Com TDD 200)
+
 	@Transactional(rollbackFor={Exception.class}) //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
 	public VendaResponse salvarVendaPMEComEmpresasPlanosTitularesDependentes(VendaPME vendaPME) {
 
@@ -167,6 +172,47 @@ public class VendaPMEBusiness {
 				empresa.setNomeCorretora(corretora.getRazaoSocial());
 			}
 		}
+	}
+
+	//201810101622 - esert - COR-883:Serviço - Alterar POST/vendapme Validar E-mail (Com TDD 200)
+	public VendaResponse verificarErro(VendaPME vendaPME) {
+		log.info("verificarErro - ini");
+		VendaResponse vendaResponse = null; //nenhum erro de validacao
+		EmailForcaVendaCorretora emailForcaVendaCorretora = forcaVendaService.findByCdForcaVendaEmail(vendaPME.getCdForcaVenda());
+		if(emailForcaVendaCorretora == null) {
+			log.error("emailForcaVendaCorretora == null para vendaPME.getCdForcaVenda():[{}]", vendaPME.getCdForcaVenda());
+		} else {
+			if(vendaPME.getEmpresas()!=null) {
+				for(Empresa empresa: vendaPME.getEmpresas()){
+					if(empresa.getEmail()!=null) {
+						if(empresa.getEmail().equals(emailForcaVendaCorretora.getEmailForcaVenda())) {
+							vendaResponse = new VendaResponse(
+									0, 
+									String.format("proibido email empresa igual email forca venda [%s].", 
+											emailForcaVendaCorretora.getEmailForcaVenda()
+											), 
+									true
+									);
+							log.info("verificarErro - fim com msg");
+							return vendaResponse; //ficha suja
+						}
+						if(empresa.getEmail().equals(emailForcaVendaCorretora.getEmailCorretora())) {
+							vendaResponse = new VendaResponse(
+									0, 
+									String.format("proibido email empresa igual email corretora [%s].", 
+											emailForcaVendaCorretora.getEmailCorretora()
+											), 
+									true
+									);
+							log.info("verificarErro - fim com msg");
+							return vendaResponse; //ficha suja
+						}
+					} //if(empresa.getEmail()!=null)
+				} //for(Empresa empresa: vendaPME.getEmpresas())
+			} //if(vendaPME.getEmpresas()!=null)
+		} //else //if(emailForcaVendaCorretora == null)
+		log.info("verificarErro - fim ok sem msg");
+		return null; //se chegou ate aqui entao volta null = ficha limpa
 	}
 
 }
