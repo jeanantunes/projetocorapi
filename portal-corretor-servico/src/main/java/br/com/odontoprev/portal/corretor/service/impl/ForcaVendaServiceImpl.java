@@ -878,11 +878,16 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
             tbForcaVenda = forcaVendaDao.save(tbForcaVenda);
 
-            envioMensagemAtivo(tbForcaVenda);
+            try{
+                envioMensagemAtivo(tbForcaVenda);
+            }catch (Exception e){
+                log.error("envioMensagemAtivo(tbForcaVenda) {}", tbForcaVenda);
+            }
+
 
             //COR-877
             ForcaVenda forcaVendaParaDCSS = this.adaptEntityToDto(tbForcaVenda, forcaVenda);
-            if (tbForcaVenda.getCodigoDcssUsuario().equals(null)) {
+            if (tbForcaVenda.getCodigoDcssUsuario() == null) {
                 DCSSLoginResponse reponseDCSSLogin = this.postIntegracaoForcaDeVendaDcss(forcaVendaParaDCSS);
                 if (reponseDCSSLogin != null && reponseDCSSLogin.getCodigo() != null) {
                     tbForcaVenda.setCodigoDcssUsuario(reponseDCSSLogin.getCodigo());
