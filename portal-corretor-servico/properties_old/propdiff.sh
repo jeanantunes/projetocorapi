@@ -1,4 +1,4 @@
-echo on
+#!/bin/bash -v
 
 WORK_DIR=/c/Users/Vector/Downloads/rotasNovasSprint15
 HOME_GIT=/c/vector/workspaceEdu/est-portalcorretor-api
@@ -19,10 +19,10 @@ cd $HOME_GIT/$PROPERTIES_PATH
 
 #git stash
 git checkout $SPRINT_ANT
-cp * $WORK_DIR/$SPRINT_ANT
+cp $PropertiesFile $WORK_DIR/$SPRINT_ANT
 
 git checkout $SPRINT_ATU
-cp * $WORK_DIR/$SPRINT_ATU
+cp $PropertiesFile $WORK_DIR/$SPRINT_ATU
 
 cd $WORK_DIR/$SPRINT_ANT
 grep $PropertiesTag $PropertiesFile > $PropertiesTxt
