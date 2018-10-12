@@ -1,4 +1,4 @@
-echo on
+#!/bin/bash -v
 
 WORK_DIR=/c/Users/Vector/Downloads/rotasNovasSprint15
 HOME_GIT=/c/vector/workspaceEdu/est-portalcorretor-api
