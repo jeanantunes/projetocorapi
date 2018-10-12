@@ -90,6 +90,9 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Autowired
     ArquivoContratacaoDAO arquivoContratacaoDAO;
 
+	@Value("${server.path.xlslotedcms}") //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha
+	private String pathXlsLoteDcms; //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha
+    
     @Override
     @Transactional
     public EmpresaResponse add(Empresa empresa) {
@@ -858,11 +861,13 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	//201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	private File convertBase64ToFile(String arquivoBase64, String nomeArquivo, String caminhoArquivo) {
+		log.info("convertBase64ToFile - ini");
 		File file = null;
 		byte[] byteArray = null;
-		if(caminhoArquivo==null || caminhoArquivo.isEmpty()) { //201810052115 - esert - ferramenta para testes locais via postman
+		if(caminhoArquivo==null || caminhoArquivo.trim().isEmpty()) { //201810052115 - esert - ferramenta para testes locais via postman
 			byteArray = Base64.getDecoder().decode(arquivoBase64);
-			try (OutputStream stream = new FileOutputStream(nomeArquivo)) {
+			log.info("pathXlsLoteDcms + nomeArquivo:[{}]", pathXlsLoteDcms + nomeArquivo);
+			try (OutputStream stream = new FileOutputStream(pathXlsLoteDcms + nomeArquivo)) { //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha - pathXlsLoteDcms 
 			    try {
 					stream.write(byteArray);
 				    file = new File(nomeArquivo);
@@ -878,6 +883,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			String caminhoNomeArquivo = caminhoArquivo + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
 			file = new File(caminhoNomeArquivo); //201810052115 - esert - ferramenta para testes locais via postman
 		}
+		log.info("convertBase64ToFile - fim");
 		return file;
 	}
 
@@ -1115,6 +1121,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 			}
 			String HHmmss = new SimpleDateFormat("HHmmss").format(new Date().getTime());
 			nomeArquivoRetorno = nomeSemPonto + ".retorno" + HHmmss + extensaoComPonto; 
+		}
+		if(caminhoArquivo==null || caminhoArquivo.trim().isEmpty()) {
+			caminhoArquivo = pathXlsLoteDcms; //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha 
 		}
 		final File fileXLSRet = new File(caminhoArquivo + nomeArquivoRetorno);
 
