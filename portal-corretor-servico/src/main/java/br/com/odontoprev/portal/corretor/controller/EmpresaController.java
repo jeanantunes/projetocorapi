@@ -122,7 +122,7 @@ public class EmpresaController {
 			if(empresa==null) {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();			
 			}
-			
+
 			log.info("findEmpresa - fim");	
 			return ResponseEntity.ok(empresa);
 			

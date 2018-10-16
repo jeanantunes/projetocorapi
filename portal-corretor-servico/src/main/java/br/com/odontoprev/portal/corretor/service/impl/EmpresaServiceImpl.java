@@ -759,7 +759,12 @@ public class EmpresaServiceImpl implements EmpresaService {
             return null;
         }
 
-        if (empresa.getEmail() != null && !empresa.getEmail().isEmpty()) {
+        String emailForcaVenda = tbodEmpresa.getTbodVendas().get(0).getTbodForcaVenda().getEmail();
+
+        if (empresa.getEmail().equals(emailForcaVenda)){
+            log.error("updateEmpresaEmail {} empresa.getEmail() == emailForcaVenda");
+            return new EmpresaResponse(HttpStatus.BAD_REQUEST.value(), String.format("Empresa: [%d], não pode ter o mesmo e-mail do Forca Venda.", tbodEmpresa.getCdEmpresa()));
+        }else if (empresa.getEmail() != null && !empresa.getEmail().isEmpty()) {
 
             tbodEmpresa.setEmail(empresa.getEmail());
             tbodEmpresa = empresaDAO.save(tbodEmpresa);
