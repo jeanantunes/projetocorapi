@@ -41,6 +41,13 @@ public class VendaPFServiceImpl implements VendaPFService {
 			return vendaResponseBloqueio;
 		}
 
+		log.info("[VendaPFServiceImpl::addVendaPME::checando erros antes salvar]");
+
+		VendaResponse vendaResponseErro = vendaPFBusiness.verificarErro(venda);
+		if(vendaResponseErro!=null) {
+			return vendaResponseErro;
+		}
+
 		log.info("[VendaPFServiceImpl::addVenda::salvar]");
 		
 		return vendaPFBusiness.salvarVendaComTitularesComDependentes(venda, Boolean.TRUE);
