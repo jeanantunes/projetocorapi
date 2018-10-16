@@ -760,8 +760,9 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
 
         String emailForcaVenda = tbodEmpresa.getTbodVendas().get(0).getTbodForcaVenda().getEmail();
+        String emailCorretora = tbodEmpresa.getTbodVendas().get(0).getTbodForcaVenda().getTbodCorretora().getEmail();
 
-        if (empresa.getEmail().equals(emailForcaVenda)){
+        if (empresa.getEmail().equals(emailForcaVenda) || empresa.getEmail().equals(emailCorretora)){
             log.error("updateEmpresaEmail {} empresa.getEmail() == emailForcaVenda");
             return new EmpresaResponse(HttpStatus.BAD_REQUEST.value(), String.format("Empresa: [%d], não pode ter o mesmo e-mail do Forca Venda.", tbodEmpresa.getCdEmpresa()));
         }else if (empresa.getEmail() != null && !empresa.getEmail().isEmpty()) {
