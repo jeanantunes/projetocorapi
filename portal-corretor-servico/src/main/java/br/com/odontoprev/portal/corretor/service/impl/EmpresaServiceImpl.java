@@ -854,7 +854,6 @@ public class EmpresaServiceImpl implements EmpresaService {
 				fileUploadLoteDCMS.getCaminhoArquivo()
 				);
 
-		@SuppressWarnings("unused")
 		String arquivoBase64Res = convertFileToBase64(fileXLSRes);
 
 		fileUploadLoteDCMSResponse.setArquivoBase64(arquivoBase64Res);
@@ -1065,9 +1064,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 		if(empresaDcmsLote==null) {
 			retorno += ",OBJETO NULO";
 		} else {
-			if(empresaDcmsLote.getCdVenda() != null 
-				&& 
-				empresaDcmsLote.getCdVenda().equals("CD_VENDA")) {
+			if(empresaDcmsLote.getCdVenda() != null) {
 				retorno = "HEADER"; //201810091122 - esert
 				return retorno; //201810091122 - esert
 			}
