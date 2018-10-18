@@ -871,12 +871,14 @@ public class EmpresaServiceImpl implements EmpresaService {
 		File file = null;
 		byte[] byteArray = null;
 		if(caminhoArquivo==null || caminhoArquivo.trim().isEmpty()) { //201810052115 - esert - ferramenta para testes locais via postman
+            String caminhoNomeArquivo = pathXlsLoteDcms + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
+            log.info("caminhoNomeArquivo:[{}]", caminhoNomeArquivo);
+            file = new File(caminhoNomeArquivo);
 			byteArray = Base64.getDecoder().decode(arquivoBase64);
-			log.info("pathXlsLoteDcms + nomeArquivo:[{}]", pathXlsLoteDcms + nomeArquivo);
-			try (OutputStream stream = new FileOutputStream(pathXlsLoteDcms + nomeArquivo)) { //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha - pathXlsLoteDcms 
+			try (OutputStream stream = new FileOutputStream(file)) { //201810181928 //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha - pathXlsLoteDcms
 			    try {
 					stream.write(byteArray);
-				    file = new File(nomeArquivo);
+				    //file = new File(nomeArquivo);
 				} catch (IOException e) {
 					log.error("IOException", e);
 				}
