@@ -71,9 +71,9 @@ public class LoginServiceImpl implements LoginService {
             try {
 	            perfil = "Corretor";
 	            
-	            //if(!bloqueioService.doBloqueioForcaVenda(login.getUsuario())) { //201809181600 - esert - COR-730 - protecao
-	        	//	throw new Exception("ERRO doBloqueioForcaVenda(login.getUsuario(" + login.getUsuario() + "))"); //201809201050 - esert - COR-730 : Novo servico (processar bloqueio)
-	        	//}
+	            if(!bloqueioService.doBloqueioForcaVenda(login.getUsuario())) { //201809181600 - esert - COR-730 - protecao
+	        		throw new Exception("ERRO doBloqueioForcaVenda(login.getUsuario(" + login.getUsuario() + "))"); //201809201050 - esert - COR-730 : Novo servico (processar bloqueio)
+	        	}
 	
 	            final ForcaVenda forcaVenda = forcaVendaService.findForcaVendaByCpf(login.getUsuario());
 	
