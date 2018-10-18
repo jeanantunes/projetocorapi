@@ -1,30 +1,49 @@
 package br.com.odontoprev.portal.corretor.business;
 
-import br.com.odontoprev.portal.corretor.dao.*;
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.interceptor.LoggerInterceptor;
-import br.com.odontoprev.portal.corretor.model.*;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
-import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
-import br.com.odontoprev.portal.corretor.service.impl.ApiManagerTokenServiceImpl;
-import br.com.odontoprev.portal.corretor.util.Constantes;
-import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.ManagedBean;
-import javax.annotation.PostConstruct;
-import javax.transaction.RollbackException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import javax.annotation.ManagedBean;
+import javax.persistence.RollbackException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.odontoprev.portal.corretor.dao.EmpresaDAO;
+import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
+import br.com.odontoprev.portal.corretor.dao.StatusVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.VendaDAO;
+import br.com.odontoprev.portal.corretor.dto.Beneficiario;
+import br.com.odontoprev.portal.corretor.dto.BeneficiarioPropostaDCMS;
+import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
+import br.com.odontoprev.portal.corretor.dto.CorretoraPropostaDCMS;
+import br.com.odontoprev.portal.corretor.dto.DadosBancariosPropostaDCMS;
+import br.com.odontoprev.portal.corretor.dto.DadosBancariosVenda;
+import br.com.odontoprev.portal.corretor.dto.EmailForcaVendaCorretora;
+import br.com.odontoprev.portal.corretor.dto.EnderecoProposta;
+import br.com.odontoprev.portal.corretor.dto.PlanoDCMS;
+import br.com.odontoprev.portal.corretor.dto.PropostaDCMS;
+import br.com.odontoprev.portal.corretor.dto.PropostaDCMSResponse;
+import br.com.odontoprev.portal.corretor.dto.ResponsavelContratual;
+import br.com.odontoprev.portal.corretor.dto.TipoCobrancaPropostaDCMS;
+import br.com.odontoprev.portal.corretor.dto.Venda;
+import br.com.odontoprev.portal.corretor.dto.VendaResponse;
+import br.com.odontoprev.portal.corretor.model.TbodEmpresa;
+import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
+import br.com.odontoprev.portal.corretor.model.TbodPlano;
+import br.com.odontoprev.portal.corretor.model.TbodResponsavelContratual;
+import br.com.odontoprev.portal.corretor.model.TbodStatusVenda;
+import br.com.odontoprev.portal.corretor.model.TbodVenda;
+import br.com.odontoprev.portal.corretor.service.DCSSService;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 
 
 @ManagedBean
@@ -34,13 +53,14 @@ public class VendaPFBusiness {
     //private static final Log log = LogFactory.getLog(VendaPFBusiness.class);
     private static final Logger log = LoggerFactory.getLogger(VendaPFBusiness.class);
 
-    private RestTemplate restTemplate = null;
+//    private RestTemplate restTemplate = null; //201810171900 - esert - exc - COR-763:Isolar Inserção JSON Request DCMS
 
-    @PostConstruct
-    private void init() {
-        if (restTemplate == null)
-            restTemplate = new RestTemplate();
-    }
+//201810171900 - esert - exc - COR-763:Isolar Inserção JSON Request DCMS
+//    @PostConstruct
+//    private void init() {
+//        if (restTemplate == null)
+//            restTemplate = new RestTemplate();
+//    }
 
     @Autowired
     VendaDAO vendaDao;
@@ -60,8 +80,8 @@ public class VendaPFBusiness {
     @Autowired
     BeneficiarioBusiness beneficiarioBusiness;
 
-    @Autowired
-    ApiManagerTokenServiceImpl apiManagerTokenService;
+//    @Autowired
+//    ApiManagerTokenServiceImpl apiManagerTokenService; //201810171900 - esert - exc - COR-763:Isolar Inserção JSON Request DCMS
 
     @Autowired
     ResponsavelContratualBusiness responsavelContratualBusiness;
@@ -69,21 +89,26 @@ public class VendaPFBusiness {
     @Autowired
     ForcaVendaService forcaVendaService;
 
-    @Autowired
-    OdpvAuditorService odpvAuditor; //201806071601 - esert - log do json enviado ao dcms - solic fsetai
+//201810171900 - esert - exc - COR-763:Isolar Inserção JSON Request DCMS
+//    @Autowired
+//    OdpvAuditorService odpvAuditor; //201806071601 - esert - log do json enviado ao dcms - solic fsetai
 
-    @Value("${DCSS_VENDAS_PROPOSTA_URL}")
-    //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
-    private String dcss_venda_propostaUrl; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
-
-    @Value("${DCSS_VENDAS_PROPOSTA_PATH}")
-    private String dcss_venda_propostaPath;
+//201810171900 - esert - exc - COR-763:Isolar Inserção JSON Request DCMS
+//    @Value("${DCSS_VENDAS_PROPOSTA_URL}")
+//    //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
+//    private String dcss_venda_propostaUrl; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
+//
+//    @Value("${DCSS_VENDAS_PROPOSTA_PATH}")
+//    private String dcss_venda_propostaPath;
 
     @Value("${DCSS_CODIGO_CANAL_VENDAS}")
     private String dcss_codigo_canal_vendas; //201803021328 esertorio para moliveira
 
     @Value("${DCSS_CODIGO_EMPRESA_DCMS}")
     private String dcss_codigo_empresa_dcms; //201803021538 esertorio para moliveira
+
+    @Autowired
+	private DCSSService dcssService; //201810171900 - esert - inc - COR-763:Isolar Inserção JSON Request DCMS
 
     @Transactional(rollbackFor = {Exception.class})
     //201806120946 - gmazzi@zarp - rollback vendapme //201806261820 - esert - merge from sprint6_rollback
@@ -343,7 +368,7 @@ public class VendaPFBusiness {
 
         PropostaDCMS propostaDCMS = atribuirVendaPFParaPropostaDCMS(venda, tbodPlano);
 
-        PropostaDCMSResponse propostaDCMSResponse = chamarWSLegadoPropostaPOST(propostaDCMS);
+        PropostaDCMSResponse propostaDCMSResponse = dcssService.chamarWSLegadoPropostaPOST(propostaDCMS);
 
         //201807201529 - esert - mock-teste
         //PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();//mock-teste
@@ -352,6 +377,13 @@ public class VendaPFBusiness {
 
         if (propostaDCMSResponse != null) {
             log.info("chamarWsDcssLegado; propostaDCMSResponse.getNumeroProposta:[" + propostaDCMSResponse.getNumeroProposta() + "]; getMensagemErro:[" + propostaDCMSResponse.getMensagemErro() + "]");
+            if(propostaDCMSResponse.getNumeroProposta()==null) {
+            	log.info("chamarWsDcssLegado; propostaDCMSResponse.getNumeroProposta()==null");
+            	throw new RollbackException("chamarWsDcssLegado; propostaDCMSResponse.getNumeroProposta()==null");
+            }
+        } else {
+            log.info("chamarWsDcssLegado; propostaDCMSResponse == null");
+            throw new RollbackException("chamarWsDcssLegado; propostaDCMSResponse == null");
         }
 
         log.info("chamarWsDcssLegado - fim");
@@ -625,150 +657,115 @@ public class VendaPFBusiness {
         return propostaDCMS;
     }
 
-    @SuppressWarnings({})
-    @Transactional(rollbackFor = {Exception.class}) //201806290926 - esert - COR-352 rollback pf
-    private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS propostaDCMS) throws Exception {
-        log.info("chamarWSLegadoPropostaPOST - ini");
-        PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();
-//		ApiManagerToken apiManager = null;
-//		ApiToken apiToken = null;
-        ResponseEntity<PropostaDCMSResponse> response;
-        RestTemplate restTemplate = new RestTemplate();
-        String msgErro = "";
-
-        try {
-            String URLAPI = dcss_venda_propostaUrl + dcss_venda_propostaPath; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
-
-//			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
-//			apiToken = apiManager.generateToken();
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
-            headers.add("Cache-Control", "no-cache");
-            //headers.add("Content-Type", "application/x-www-form-urlencoded");
-            headers.add("Content-Type", "application/json");
-
-            Gson gson = new Gson();
-            String propostaJson = gson.toJson(propostaDCMS);
-            //log.info("propostaJson:[" + propostaJson + "];");
-            //odpvAuditor.audit(dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
-            odpvAuditor.audit(URLAPI, null, propostaJson, "VendaPFBusiness.chamarWsDcssLegado", LoggerInterceptor.getHeaders(headers), null); //201806291203 - esert - log do json com headers
-
-            HttpEntity<?> request = new HttpEntity<PropostaDCMS>(propostaDCMS, headers);
-
-            response = restTemplate.exchange(
-                    URLAPI,
-                    HttpMethod.POST,
-                    request,
-                    PropostaDCMSResponse.class);
-
-//			response = restTemplate.postForEntity(
-//				URLAPI, 
-//				proposta, 
-//				PropostaDCMSResponse.class
-//			);
-
-            if (response != null) {
-                log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + response.getStatusCode() + "];");
-            }
-
-            if (response == null
-                    || (response.getStatusCode() == HttpStatus.FORBIDDEN)
-                    || (response.getStatusCode() == HttpStatus.BAD_REQUEST)
-            ) {
-                msgErro = "chamarWSLegadoPropostaPOST; HTTP_STATUS " + response.getStatusCode();
-                log.error(msgErro);
-                propostaDCMSResponse.setMensagemErro(msgErro);
-                return propostaDCMSResponse;
-            }
-
-//		} catch (CredentialsInvalidException e1) {
-//			msgErro = "chamarWSLegadoPropostaPOST; CredentialsInvalidException.getMessage():[" + e1.getMessage() + "];";
-//			log.error(msgErro);
-//			propostaDCMSResponse.setMensagemErro(msgErro);
-//			return propostaDCMSResponse;
-//		} catch (URLEndpointNotFound e1) {
-//			msgErro = "chamarWSLegadoPropostaPOST; URLEndpointNotFound.getMessage():[" + e1.getMessage() + "];";
-//			log.error(msgErro);
-//			propostaDCMSResponse.setMensagemErro(msgErro);
-//			return propostaDCMSResponse;
-//		} catch (ConnectionApiException e) {
-//			msgErro = "chamarWSLegadoPropostaPOST; ConnectionApiException.getMessage():[" + e.getMessage() + "];";
-//			log.error(msgErro);
-//			propostaDCMSResponse.setMensagemErro(msgErro);
-//			//return propostaDCMSResponse;
-//			throw e;			
-//		} catch (RestClientException e) {
-//			msgErro = "chamarWSLegadoPropostaPOST; RestClientException.getMessage():[" + e.getMessage() + "];";
-//			log.error(msgErro);
-//			propostaDCMSResponse.setMensagemErro(msgErro);
-//			//return propostaDCMSResponse;
-//			throw e; //201806291524 - esert - se o DCMS falhar deve fazer rollback - COR-352 rollback pf
-//			//e.printStackTrace();
-//		} catch (ApiTokenException e2) {
-//			// TODO Auto-generated catch block
-//			//e.printStackTrace();
-//			throw e2;
-        } catch (Exception e) {
-            msgErro = "chamarWSLegadoPropostaPOST; Exception.getMessage():[" + e.getMessage() + "];";
-            log.error(msgErro);
-            //e.printStackTrace();
-            propostaDCMSResponse.setMensagemErro(msgErro);
-
-            throw new RollbackException(msgErro); //201806291524 - esert - se o DCMS falhar deve fazer rollback - COR-352 rollback pf
-
-            ////201808021330 - fake
-            ////201809131714 - fake - novo teste apos aplicar/merge do COR-736 no sprint13 - esert
-            //propostaDCMSResponse.setMensagemErro(propostaDCMSResponse.getMensagemErro().concat(";fake-999999"));
-            //propostaDCMSResponse.setNumeroProposta("999999");
-            //return propostaDCMSResponse;
-        }
-        propostaDCMSResponse = response.getBody();
-
-        log.info("chamarWSLegadoPropostaPOST; fim;");
-        return propostaDCMSResponse;
-
-    }
-
-    private String calcularDigitoAgencia(String agencia, String banco) {
-
-        String digito;
-
-        switch (banco) {
-
-            case Constantes.BRADESCO:
-
-                int multiplicador = 2;
-                int total = 0;
-
-                for (int i = 4; i > 0; i--) {
-
-                    String digitoSelecionado = String.valueOf(agencia.charAt(i - 1));
-                    total += multiplicador * Integer.parseInt(digitoSelecionado);
-                    multiplicador++;
-
-                }
-
-                int resto = total % 11;
-                int resultado = 11 - resto;
-
-                if (resultado >= 10) {
-
-                    digito = "P";// += "P";
-
-                } else {
-
-                    digito = String.valueOf(resultado);
-
-                }
-                break;
-
-            default:
-                return "";
-
-        }
-        return digito;
-    }
+//    @SuppressWarnings({})
+//    @Transactional(rollbackFor = {Exception.class}) //201806290926 - esert - COR-352 rollback pf
+//    private PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS propostaDCMS) throws Exception {
+//        log.info("chamarWSLegadoPropostaPOST - ini");
+//        PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();
+////		ApiManagerToken apiManager = null;
+////		ApiToken apiToken = null;
+//        ResponseEntity<PropostaDCMSResponse> response;
+//        RestTemplate restTemplate = new RestTemplate();
+//        String msgErro = "";
+//
+//        try {
+//            String URLAPI = dcss_venda_propostaUrl + dcss_venda_propostaPath; //201810031800 - esert - COR-852:Alterar Request Angariador Dados nao Obrigatorios - segregar rota de login da rota de proposta para desv e teste
+//
+////			apiManager = ApiManagerTokenFactory.create(ApiManagerTokenEnum.WSO2, "PORTAL_CORRETOR_SERVICO");
+////			apiToken = apiManager.generateToken();
+//
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.add("Authorization", "Bearer " + apiManagerTokenService.getToken());
+//            headers.add("Cache-Control", "no-cache");
+//            //headers.add("Content-Type", "application/x-www-form-urlencoded");
+//            headers.add("Content-Type", "application/json");
+//
+//            Gson gson = new Gson();
+//            String propostaJson = gson.toJson(propostaDCMS);
+//            //log.info("propostaJson:[" + propostaJson + "];");
+//            //odpvAuditor.audit(dcss_venda_propostaPath, propostaJson, "VendaPFBusiness.chamarWsDcssLegado()"); //201806071601 - esert - log do json enviado ao dcms - solic fsetai
+//            odpvAuditor.audit(URLAPI, null, propostaJson, "VendaPFBusiness.chamarWsDcssLegado", LoggerInterceptor.getHeaders(headers), null); //201806291203 - esert - log do json com headers
+//
+//            HttpEntity<?> request = new HttpEntity<PropostaDCMS>(propostaDCMS, headers);
+//
+////            response = restTemplate.exchange(
+////                    URLAPI,
+////                    HttpMethod.POST,
+////                    request,
+////                    PropostaDCMSResponse.class);
+//
+//            PropostaDCMSResponse propostaDCMSResponseFAKE = new PropostaDCMSResponse(); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
+//            propostaDCMSResponseFAKE.setNumeroProposta("999999"); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
+//            propostaDCMSResponseFAKE.setMensagemErro("FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999"); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
+//            response = ResponseEntity.ok(propostaDCMSResponseFAKE); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
+//            
+////			response = restTemplate.postForEntity(
+////				URLAPI, 
+////				proposta, 
+////				PropostaDCMSResponse.class
+////			);
+//
+//            if (response != null) {
+//                log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + response.getStatusCode() + "];");
+//            }
+//
+//            if (response == null
+//                    || (response.getStatusCode() == HttpStatus.FORBIDDEN)
+//                    || (response.getStatusCode() == HttpStatus.BAD_REQUEST)
+//            ) {
+//                msgErro = "chamarWSLegadoPropostaPOST; HTTP_STATUS " + response.getStatusCode();
+//                log.error(msgErro);
+//                propostaDCMSResponse.setMensagemErro(msgErro);
+//                return propostaDCMSResponse;
+//            }
+//
+////		} catch (CredentialsInvalidException e1) {
+////			msgErro = "chamarWSLegadoPropostaPOST; CredentialsInvalidException.getMessage():[" + e1.getMessage() + "];";
+////			log.error(msgErro);
+////			propostaDCMSResponse.setMensagemErro(msgErro);
+////			return propostaDCMSResponse;
+////		} catch (URLEndpointNotFound e1) {
+////			msgErro = "chamarWSLegadoPropostaPOST; URLEndpointNotFound.getMessage():[" + e1.getMessage() + "];";
+////			log.error(msgErro);
+////			propostaDCMSResponse.setMensagemErro(msgErro);
+////			return propostaDCMSResponse;
+////		} catch (ConnectionApiException e) {
+////			msgErro = "chamarWSLegadoPropostaPOST; ConnectionApiException.getMessage():[" + e.getMessage() + "];";
+////			log.error(msgErro);
+////			propostaDCMSResponse.setMensagemErro(msgErro);
+////			//return propostaDCMSResponse;
+////			throw e;			
+////		} catch (RestClientException e) {
+////			msgErro = "chamarWSLegadoPropostaPOST; RestClientException.getMessage():[" + e.getMessage() + "];";
+////			log.error(msgErro);
+////			propostaDCMSResponse.setMensagemErro(msgErro);
+////			//return propostaDCMSResponse;
+////			throw e; //201806291524 - esert - se o DCMS falhar deve fazer rollback - COR-352 rollback pf
+////			//e.printStackTrace();
+////		} catch (ApiTokenException e2) {
+////			// TODO Auto-generated catch block
+////			//e.printStackTrace();
+////			throw e2;
+//        } catch (Exception e) {
+//            msgErro = "chamarWSLegadoPropostaPOST; Exception.getMessage():[" + e.getMessage() + "];";
+//            log.error(msgErro);
+//            //e.printStackTrace();
+//            propostaDCMSResponse.setMensagemErro(msgErro);
+//
+//            throw new RollbackException(msgErro); //201806291524 - esert - se o DCMS falhar deve fazer rollback - COR-352 rollback pf
+//
+//            ////201808021330 - fake
+//            ////201809131714 - fake - novo teste apos aplicar/merge do COR-736 no sprint13 - esert
+//            //propostaDCMSResponse.setMensagemErro(propostaDCMSResponse.getMensagemErro().concat(";fake-999999"));
+//            //propostaDCMSResponse.setNumeroProposta("999999");
+//            //return propostaDCMSResponse;
+//        }
+//        propostaDCMSResponse = response.getBody();
+//
+//        log.info("chamarWSLegadoPropostaPOST; fim;");
+//        return propostaDCMSResponse;
+//
+//    }
 
     public VendaResponse verificarErro(Venda vendaPF) {
         log.info("verificarErro - ini");
@@ -809,5 +806,45 @@ public class VendaPFBusiness {
         log.info("verificarErro - fim ok sem msg");
         return null; //se chegou ate aqui entao volta null = ficha limpa
     }
+
+    public String calcularDigitoAgencia(String agencia, String banco) {
+
+		String digito;
+
+		switch (banco) {
+
+		case Constantes.BRADESCO:
+
+			int multiplicador = 2;
+			int total = 0;
+
+			for (int i = 4; i > 0; i--) {
+
+				String digitoSelecionado = String.valueOf(agencia.charAt(i - 1));
+				total += multiplicador * Integer.parseInt(digitoSelecionado);
+				multiplicador++;
+
+			}
+
+			int resto = total % 11;
+			int resultado = 11 - resto;
+
+			if (resultado >= 10) {
+
+				digito = "P";// += "P";
+
+			} else {
+
+				digito = String.valueOf(resultado);
+
+			}
+			break;
+
+		default:
+			return "";
+
+		}
+		return digito;
+	}
 
 }
