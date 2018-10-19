@@ -64,6 +64,7 @@ public class XlsCorretoraTotalVidas {
             rowhead.createCell(19).setCellValue("TOTAL_VIDAS");//20
             rowhead.createCell(20).setCellValue("DIA_FATURA");//21
             rowhead.createCell(21).setCellValue("VALOR_VENDA");
+            rowhead.createCell(22).setCellValue("STATUS");
 
             int rowCount = 0;
 
@@ -115,6 +116,12 @@ public class XlsCorretoraTotalVidas {
                     strValor_venda = item.getValor_venda().toString();
                 }
                 row.createCell(21).setCellValue(strValor_venda);
+
+                String strStatus_venda = "(n/a)";
+                if (item.getStatus_venda() != null) {
+                    strStatus_venda = item.getStatus_venda().toString();
+                }
+                row.createCell(22).setCellValue(strStatus_venda);
 
             }
 

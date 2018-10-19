@@ -108,6 +108,9 @@ public class VwodCorretoraTotalVidasPME implements Serializable {
     @Column(name = "VALOR_VENDA")
     private String valor_venda;
 
+    @Column(name = "STATUS_VENDA")
+    private String status_venda;
+
     public Date getDtVenda() {
         return dtVenda;
     }
@@ -284,6 +287,15 @@ public class VwodCorretoraTotalVidasPME implements Serializable {
         this.valor_venda = valor_venda;
     }
 
+
+    public String getStatus_venda() {
+        return status_venda;
+    }
+
+    public void setStatus_venda(String status_venda) {
+        this.status_venda = status_venda;
+    }
+
     @Override
     public String toString() {
         return "VwodCorretoraTotalVidasPME{" +
@@ -309,6 +321,7 @@ public class VwodCorretoraTotalVidasPME implements Serializable {
                 ", total_vidas=" + total_vidas +
                 ", dia_fatura=" + dia_fatura +
                 ", valor_venda='" + valor_venda + '\'' +
+                ", status_venda='" + status_venda + '\'' +
                 '}';
     }
 
