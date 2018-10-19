@@ -47,12 +47,11 @@ public class DCSSServiceImpl implements DCSSService {
 
 	@Autowired
 	OdpvAuditorService odpvAuditor; //201806071601 - esert - log do json enviado ao dcms - solic fsetai
-
     
     //@SuppressWarnings({})
     //@Transactional(rollbackFor = {Exception.class}) //201806290926 - esert - COR-352 rollback pf
-	//@Transactional(noRollbackFor = {Exception.class}) //201810181226 - esert - COR-763:Isolar Inserção JSON Request DCMS
-	//@Transactional(isolation=Isolation.DEFAULT) //201810181300 - esert - COR-763:Isolar Inserção JSON Request DCMS
+	//@Transactional(noRollbackFor = {Exception.class}) //201810181226 - esert - teste - COR-763:Isolar Inserção JSON Request DCMS
+	//@Transactional(isolation=Isolation.DEFAULT) //201810181300 - esert - teste - COR-763:Isolar Inserção JSON Request DCMS
     public PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS propostaDCMS) {
         log.info("chamarWSLegadoPropostaPOST - ini");
         PropostaDCMSResponse propostaDCMSResponse = new PropostaDCMSResponse();
@@ -82,19 +81,19 @@ public class DCSSServiceImpl implements DCSSService {
 
             HttpEntity<?> request = new HttpEntity<PropostaDCMS>(propostaDCMS, headers);
 
-            /*
+            /**/
             response = restTemplate.exchange(
                     URLAPI,
                     HttpMethod.POST,
                     request,
                     PropostaDCMSResponse.class);
-            */
-
+            /**/
+            /*
             PropostaDCMSResponse propostaDCMSResponseFAKE = new PropostaDCMSResponse(); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
             propostaDCMSResponseFAKE.setNumeroProposta("999999"); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
             propostaDCMSResponseFAKE.setMensagemErro("FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999"); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
             response = ResponseEntity.ok(propostaDCMSResponseFAKE); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
-            
+            */
 
             if (response != null) {
                 log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + response.getStatusCode() + "];");
