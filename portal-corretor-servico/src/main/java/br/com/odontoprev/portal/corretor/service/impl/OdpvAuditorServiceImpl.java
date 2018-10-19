@@ -7,6 +7,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.JsonRequestDAO;
@@ -37,6 +39,7 @@ public class OdpvAuditorServiceImpl implements OdpvAuditorService {
 
 	//201806121747 - esert - inc Header + Parameter
 	@Override
+	@Transactional(isolation=Isolation.DEFAULT, readOnly=false, propagation=Propagation.REQUIRES_NEW) //201810191204 - esert - COR-763:Isolar Inserção JSON Request DCMS
 	public void audit( String requestURI, Principal principal, String stringJsonBody, String stringUserAgent, String headers, String parameters) {
 		// TODO Auto-generated method stub
 		log.info("[audit] requestURI:[" + requestURI + "]"); //201806041509 - esert

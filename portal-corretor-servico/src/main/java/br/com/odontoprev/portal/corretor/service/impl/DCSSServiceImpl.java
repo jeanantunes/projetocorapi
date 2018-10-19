@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +26,7 @@ import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 
 //201810171900 - esert - inc - COR-763:Isolar Inserção JSON Request DCMS
 @Service
-@Component
+//@Component //201810191155 - esert - exc - teste - COR-763:Isolar Inserção JSON Request DCMS
 @Transactional(noRollbackFor = {Exception.class}) //201810181226 - esert - COR-763:Isolar Inserção JSON Request DCMS
 public class DCSSServiceImpl implements DCSSService {
 
@@ -81,22 +82,19 @@ public class DCSSServiceImpl implements DCSSService {
 
             HttpEntity<?> request = new HttpEntity<PropostaDCMS>(propostaDCMS, headers);
 
+            /*
             response = restTemplate.exchange(
                     URLAPI,
                     HttpMethod.POST,
                     request,
                     PropostaDCMSResponse.class);
+            */
 
-//            PropostaDCMSResponse propostaDCMSResponseFAKE = new PropostaDCMSResponse(); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
-//            propostaDCMSResponseFAKE.setNumeroProposta("999999"); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
-//            propostaDCMSResponseFAKE.setMensagemErro("FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999"); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
-//            response = ResponseEntity.ok(propostaDCMSResponseFAKE); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
+            PropostaDCMSResponse propostaDCMSResponseFAKE = new PropostaDCMSResponse(); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
+            propostaDCMSResponseFAKE.setNumeroProposta("999999"); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
+            propostaDCMSResponseFAKE.setMensagemErro("FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999"); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
+            response = ResponseEntity.ok(propostaDCMSResponseFAKE); //201810171713 - esert - COR-763 - FAKE RESPOSTA DA CHAMADA POST AO DCMS 999999
             
-//			response = restTemplate.postForEntity(
-//				URLAPI, 
-//				proposta, 
-//				PropostaDCMSResponse.class
-//			);
 
             if (response != null) {
                 log.info("chamarWSLegadoPropostaPOST; propostaRet.getStatusCode():[" + response.getStatusCode() + "];");
