@@ -2,6 +2,7 @@ package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class Empresa implements Serializable  {
 
@@ -27,6 +28,8 @@ public class Empresa implements Serializable  {
 	private ContatoEmpresa contactEmpresa;
 	private String dataVigencia; //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
 	private String dataMovimentacao; //201806141829 - esert - (COR-303 Modificar Serviço /vendapme)
+	private String dataAceite;
+	private Long cdStatusVenda;
 	private Long cdEmpresa; //201807241630 - esert - COR-398
 	private String empDcms; //201807241630 - esert - COR-398
 	private String cpfRepresentante; //201807251530 - esert - COR-513
@@ -200,6 +203,22 @@ public class Empresa implements Serializable  {
 		this.dataMovimentacao = dataMovimentacao;
 	}
 
+	public String getDataAceite() {
+		return dataAceite;
+	}
+
+	public void setDataAceite(String dataAceite) {
+		this.dataAceite = dataAceite;
+	}
+
+	public Long getCdStatusVenda() {
+		return cdStatusVenda;
+	}
+
+	public void setCdStatusVenda(Long cdStatusVenda) {
+		this.cdStatusVenda = cdStatusVenda;
+	}
+
 	public String getEmpDcms() {
 		return empDcms;
 	}
@@ -218,32 +237,71 @@ public class Empresa implements Serializable  {
 
 	@Override
 	public String toString() {
-		return "Empresa [" 
-				+ "cnpj=" + cnpj 
-				+ ", cdEmpresa=" + cdEmpresa //201807241630 - esert - COR-398
-				+ ", razaoSocial=" + razaoSocial 
-				+ ", incEstadual=" + incEstadual
-				+ ", ramoAtividade=" + ramoAtividade 
-				+ ", nomeFantasia=" + nomeFantasia 
-				+ ", representanteLegal=" + representanteLegal 
-				+ ", contatoEmpresa=" + contatoEmpresa 
-				+ ", telefone=" + telefone 
-				+ ", celular=" + celular 
-				+ ", email=" + email 
-				+ ", vencimentoFatura=" + vencimentoFatura 
-				+ ", cnae=" + cnae
-				+ ", dataVencimentoFatura=" + dataVencimentoFatura 
-				+ ", enderecoEmpresa=" + enderecoEmpresa
-				+ ", planos=" + planos 
-				+ ", cnpjCorretora=" + cnpjCorretora 
-				+ ", nomeCorretora=" + nomeCorretora
-				+ ", contactEmpresa=" + contactEmpresa 
-				+ ", dataVigencia=" + dataVigencia 
-				+ ", dataMovimentacao=" + dataMovimentacao 
-				+ ", empDcms=" + empDcms //201807241630 - esert - COR-398
-				+ ", cpfRepresentante=" + cpfRepresentante //201807251530 - esert - COR-513
-				+ "]";
+		return "Empresa{" +
+				"cnpj='" + cnpj + '\'' +
+				", razaoSocial='" + razaoSocial + '\'' +
+				", incEstadual='" + incEstadual + '\'' +
+				", ramoAtividade='" + ramoAtividade + '\'' +
+				", nomeFantasia='" + nomeFantasia + '\'' +
+				", representanteLegal='" + representanteLegal + '\'' +
+				", contatoEmpresa=" + contatoEmpresa +
+				", telefone='" + telefone + '\'' +
+				", celular='" + celular + '\'' +
+				", email='" + email + '\'' +
+				", vencimentoFatura=" + vencimentoFatura +
+				", cnae='" + cnae + '\'' +
+				", dataVencimentoFatura='" + dataVencimentoFatura + '\'' +
+				", enderecoEmpresa=" + enderecoEmpresa +
+				", planos=" + planos +
+				", cnpjCorretora='" + cnpjCorretora + '\'' +
+				", nomeCorretora='" + nomeCorretora + '\'' +
+				", contactEmpresa=" + contactEmpresa +
+				", dataVigencia='" + dataVigencia + '\'' +
+				", dataMovimentacao='" + dataMovimentacao + '\'' +
+				", dataAceite='" + dataAceite + '\'' +
+				", cdStatusVenda=" + cdStatusVenda +
+				", cdEmpresa=" + cdEmpresa +
+				", empDcms='" + empDcms + '\'' +
+				", cpfRepresentante='" + cpfRepresentante + '\'' +
+				'}';
 	}
 
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Empresa)) return false;
+		Empresa empresa = (Empresa) o;
+		return isContatoEmpresa() == empresa.isContatoEmpresa() &&
+				getVencimentoFatura() == empresa.getVencimentoFatura() &&
+				Objects.equals(getCnpj(), empresa.getCnpj()) &&
+				Objects.equals(getRazaoSocial(), empresa.getRazaoSocial()) &&
+				Objects.equals(getIncEstadual(), empresa.getIncEstadual()) &&
+				Objects.equals(getRamoAtividade(), empresa.getRamoAtividade()) &&
+				Objects.equals(getNomeFantasia(), empresa.getNomeFantasia()) &&
+				Objects.equals(getRepresentanteLegal(), empresa.getRepresentanteLegal()) &&
+				Objects.equals(getTelefone(), empresa.getTelefone()) &&
+				Objects.equals(getCelular(), empresa.getCelular()) &&
+				Objects.equals(getEmail(), empresa.getEmail()) &&
+				Objects.equals(getCnae(), empresa.getCnae()) &&
+				Objects.equals(getDataVencimentoFatura(), empresa.getDataVencimentoFatura()) &&
+				Objects.equals(getEnderecoEmpresa(), empresa.getEnderecoEmpresa()) &&
+				Objects.equals(getPlanos(), empresa.getPlanos()) &&
+				Objects.equals(getCnpjCorretora(), empresa.getCnpjCorretora()) &&
+				Objects.equals(getNomeCorretora(), empresa.getNomeCorretora()) &&
+				Objects.equals(getContactEmpresa(), empresa.getContactEmpresa()) &&
+				Objects.equals(getDataVigencia(), empresa.getDataVigencia()) &&
+				Objects.equals(getDataMovimentacao(), empresa.getDataMovimentacao()) &&
+				Objects.equals(getDataAceite(), empresa.getDataAceite()) &&
+				Objects.equals(getCdStatusVenda(), empresa.getCdStatusVenda()) &&
+				Objects.equals(getCdEmpresa(), empresa.getCdEmpresa()) &&
+				Objects.equals(getEmpDcms(), empresa.getEmpDcms()) &&
+				Objects.equals(getCpfRepresentante(), empresa.getCpfRepresentante());
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(getCnpj(), getRazaoSocial(), getIncEstadual(), getRamoAtividade(), getNomeFantasia(), getRepresentanteLegal(), isContatoEmpresa(), getTelefone(), getCelular(), getEmail(), getVencimentoFatura(), getCnae(), getDataVencimentoFatura(), getEnderecoEmpresa(), getPlanos(), getCnpjCorretora(), getNomeCorretora(), getContactEmpresa(), getDataVigencia(), getDataMovimentacao(), getDataAceite(), getCdStatusVenda(), getCdEmpresa(), getEmpDcms(), getCpfRepresentante());
+	}
 }

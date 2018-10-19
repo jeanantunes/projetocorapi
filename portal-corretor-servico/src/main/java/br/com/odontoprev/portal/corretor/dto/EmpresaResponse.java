@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class EmpresaResponse implements Serializable {
 
@@ -26,4 +27,18 @@ public class EmpresaResponse implements Serializable {
 		return mensagem;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof EmpresaResponse)) return false;
+		EmpresaResponse that = (EmpresaResponse) o;
+		return getId() == that.getId() &&
+				Objects.equals(getMensagem(), that.getMensagem());
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(getId(), getMensagem());
+	}
 }

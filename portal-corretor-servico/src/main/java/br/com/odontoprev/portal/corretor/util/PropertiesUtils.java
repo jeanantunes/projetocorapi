@@ -41,7 +41,11 @@ public class PropertiesUtils {
 	public static final String PATH_XLS_EMPRESA = "server.path.empresa";
 	
 	public static final String PATH_XLS_VIDAS = "server.path.vidas";
+
+	public static final String PATH_PDF_PME = "server.path.pdfpme"; //201808311529 - esert - COR-617 gerar pdf pme
 	
+	public static final String PATH_PDF_CONTRATO_CORRETORA = "server.path.pdfcontratocorretora"; //201809121539 - esert - COR-714 - Serviço - Novo serviço gerar enviar contrato corretora
+
 	public static final String SENDMAIL_ENDPOINT_URL = "SENDMAIL_ENDPOINT_URL";
 	
 	public static final String REQUESTMAIL_RECEPIENTNAME = "requestmail.body.recepientname";

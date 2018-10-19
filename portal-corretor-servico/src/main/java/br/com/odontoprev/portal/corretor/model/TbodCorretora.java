@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the TBOD_CORRETORA database table.
- * 
+ *
  */
 @Entity
 @Table(name = "TBOD_CORRETORA")
@@ -48,6 +48,9 @@ public class TbodCorretora implements Serializable {
 
 	@Column(name = "CPF_RESPONSAVEL")
 	private String cpfResponsavel;
+
+	@Column(name = "CPF_RESPONSAVEL2")
+	private String cpfResponsavel2;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "DATA_ABERTURA")
@@ -99,11 +102,21 @@ public class TbodCorretora implements Serializable {
 	// bi-directional many-to-one association to TbodForcaVenda
 	@OneToMany(mappedBy = "tbodCorretora")
 	private List<TbodForcaVenda> tbodForcaVendas;
+	
+	// bi-directional many-to-one association to TbodForcaVenda
+	@OneToMany(mappedBy = "tbodCorretora")
+	private List<TbodContratoCorretora> tbodContratoCorretoras; //201809112123 - esert
 
 	// bi-directional many-to-one association to TbodLogin
 	@ManyToOne
 	@JoinColumn(name = "CD_LOGIN")
 	private TbodLogin tbodLogin;
+
+	@Column(name = "TEM_SUSEP")
+	private String temSusep;
+
+	@Column(name = "CODIGO_SUSEP")
+	private String codigoSusep;
 
 	// //bi-directional many-to-one association to TbodLogin
 	// @OneToMany(mappedBy="tbodCorretora")
@@ -158,6 +171,14 @@ public class TbodCorretora implements Serializable {
 
 	public void setCpfResponsavel(String cpfResponsavel) {
 		this.cpfResponsavel = cpfResponsavel;
+	}
+
+	public String getCpfResponsavel2() {
+		return cpfResponsavel2;
+	}
+
+	public void setCpfResponsavel2(String cpfResponsavel2) {
+		this.cpfResponsavel2 = cpfResponsavel2;
 	}
 
 	public Date getDataAbertura() {
@@ -328,6 +349,62 @@ public class TbodCorretora implements Serializable {
 
 	public void setTbodLogin(TbodLogin tbodLogin) {
 		this.tbodLogin = tbodLogin;
+	}
+
+	public String getTemSusep() {
+		return temSusep;
+	}
+
+	public void setTemSusep(String temSusep) {
+		this.temSusep = temSusep;
+	}
+
+	public String getCodigoSusep() {
+		return codigoSusep;
+	}
+
+	public void setCodigoSusep(String codigoSusep) {
+		this.codigoSusep = codigoSusep;
+	}
+
+	public List<TbodContratoCorretora> getTbodContratoCorretoras() {
+		return tbodContratoCorretoras;
+	}
+
+	public void setTbodContratoCorretoras(List<TbodContratoCorretora> tbodContratoCorretoras) {
+		this.tbodContratoCorretoras = tbodContratoCorretoras;
+	}
+
+	@Override
+	public String toString() {
+		return "TbodCorretora [" 
+				+ "cdCorretora=" + cdCorretora 
+				+ ", ativo=" + ativo 
+				+ ", celular=" + celular 
+				+ ", cnpj=" + cnpj 
+				+ ", codigo=" + codigo 
+				+ ", cpfResponsavel=" + cpfResponsavel 
+				+ ", cpfResponsavel2=" + cpfResponsavel2 
+				+ ", dataAbertura=" + dataAbertura 
+				+ ", email=" + email 
+				+ ", nome=" + nome
+				+ ", nomeRepresentanteLegal1=" + nomeRepresentanteLegal1 
+				+ ", nomeRepresentanteLegal2=" + nomeRepresentanteLegal2 
+				+ ", razaoSocial=" + razaoSocial 
+				+ ", regional=" + regional
+				+ ", simplesNacional=" + simplesNacional 
+				+ ", statusCnpj=" + statusCnpj 
+				+ ", telefone=" + telefone
+				+ ", cnae=" + cnae 
+				+ ", tbodEndereco=" + tbodEndereco 
+				+ ", tbodCorretoraBancos=" + tbodCorretoraBancos
+				+ ", tbodDocumentoAssociados=" + tbodDocumentoAssociados 
+				//+ ", tbodForcaVendas=" + tbodForcaVendas //201809131236 - esert - exc para aliviar o retorno
+				+ ", tbodLogin=" + tbodLogin 
+				+ ", temSusep=" + temSusep 
+				+ ", codigoSusep=" + codigoSusep 
+				+ ", tbodContratoCorretoras=" + tbodContratoCorretoras //201809112126 - esert 
+				+ "]";
 	}
 
 	// public List<TbodLogin> getTbodLogins() {

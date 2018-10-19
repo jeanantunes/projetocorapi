@@ -56,4 +56,56 @@ public class VendaPME implements Serializable {
 		+ ", titulares.size()="	+ (titulares != null ? titulares.size() : "null") 
 		+ "]";
 	}
+
+	//201808291915 - esert - COR-632 tdd POST/vendapme
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cdForcaVenda == null) ? 0 : cdForcaVenda.hashCode());
+		result = prime * result + ((empresas == null) ? 0 : empresas.hashCode());
+		result = prime * result + ((plataforma == null) ? 0 : plataforma.hashCode());
+		result = prime * result + ((titulares == null) ? 0 : titulares.hashCode());
+		return result;
+	}
+
+	//201808291915 - esert - COR-632 tdd POST/vendapme
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		VendaPME other = (VendaPME) obj;
+		
+		if(other.toString().equals(this.toString()))
+			return true;
+		
+//		if (cdForcaVenda == null) {
+//			if (other.cdForcaVenda != null)
+//				return false;
+//		} else if (!cdForcaVenda.equals(other.cdForcaVenda))
+//			return false;
+//		if (empresas == null) {
+//			if (other.empresas != null)
+//				return false;
+//		} else if (!empresas.equals(other.empresas))
+//			return false;
+//		if (plataforma == null) {
+//			if (other.plataforma != null)
+//				return false;
+//		} else if (!plataforma.equals(other.plataforma))
+//			return false;
+//		if (titulares == null) {
+//			if (other.titulares != null)
+//				return false;
+//		} else if (!titulares.equals(other.titulares))
+//			return false;
+		
+		return true;
+	}
+	
+	
 }

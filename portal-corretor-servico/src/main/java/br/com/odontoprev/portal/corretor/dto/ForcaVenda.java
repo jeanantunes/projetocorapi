@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ForcaVenda implements Serializable {
 
@@ -23,7 +24,8 @@ public class ForcaVenda implements Serializable {
 	private String rg;
 	private String senha;
 	private String canalVenda;
-	private String status;	
+	private String status;
+	private Login login;
 
 	public String getStatus() {
 		return status;
@@ -169,6 +171,14 @@ public class ForcaVenda implements Serializable {
 		this.canalVenda = canalVenda;
 	}
 
+	public Login getLogin() {
+		return login;
+	}
+
+	public void setLogin(Login login) {
+		this.login = login;
+	}
+
 	@Override
 	public String toString() {
 		return "ForcaVenda [cdForcaVenda=" + cdForcaVenda + ", nome=" + nome + ", celular=" + celular + ", email="
@@ -176,6 +186,39 @@ public class ForcaVenda implements Serializable {
 				+ ", ativo=" + ativo + ", departamento=" + departamento + ", cargo=" + cargo + ", dataNascimento="
 				+ dataNascimento + ", nomeEmpresa=" + nomeEmpresa + ", nomeGerente=" + nomeGerente + ", responsavel="
 				+ responsavel + ", rg=" + rg + ", senha=" + senha + "]";
+	}
+
+	//201809201611 - esert - apenas move dos metodos pro fim da classe
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ForcaVenda)) return false;
+		ForcaVenda that = (ForcaVenda) o;
+		return isAtivo() == that.isAtivo() &&
+				Objects.equals(getCdForcaVenda(), that.getCdForcaVenda()) &&
+				Objects.equals(getNome(), that.getNome()) &&
+				Objects.equals(getCelular(), that.getCelular()) &&
+				Objects.equals(getEmail(), that.getEmail()) &&
+				Objects.equals(getCorretora(), that.getCorretora()) &&
+				Objects.equals(getStatusForcaVenda(), that.getStatusForcaVenda()) &&
+				Objects.equals(getCpf(), that.getCpf()) &&
+				Objects.equals(getDepartamento(), that.getDepartamento()) &&
+				Objects.equals(getCargo(), that.getCargo()) &&
+				Objects.equals(getDataNascimento(), that.getDataNascimento()) &&
+				Objects.equals(getNomeEmpresa(), that.getNomeEmpresa()) &&
+				Objects.equals(getNomeGerente(), that.getNomeGerente()) &&
+				Objects.equals(getResponsavel(), that.getResponsavel()) &&
+				Objects.equals(getRg(), that.getRg()) &&
+				Objects.equals(getSenha(), that.getSenha()) &&
+				Objects.equals(getCanalVenda(), that.getCanalVenda()) &&
+				Objects.equals(getStatus(), that.getStatus()) &&
+				Objects.equals(getLogin(), that.getLogin());
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(getCdForcaVenda(), getNome(), getCelular(), getEmail(), getCorretora(), getStatusForcaVenda(), getCpf(), isAtivo(), getDepartamento(), getCargo(), getDataNascimento(), getNomeEmpresa(), getNomeGerente(), getResponsavel(), getRg(), getSenha(), getCanalVenda(), getStatus(), getLogin());
 	}
 
 }

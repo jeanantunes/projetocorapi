@@ -9,30 +9,37 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMS;
+import br.com.odontoprev.portal.corretor.dto.FileUploadLoteDCMSResponse;
 import br.com.odontoprev.portal.corretor.model.TbodUploadForcavenda;
+import br.com.odontoprev.portal.corretor.service.EmpresaService;
 import br.com.odontoprev.portal.corretor.service.UploadService;
 
 @Controller
 public class UploadController {
 	
-	private static final Log log = LogFactory.getLog(UploadController.class);
+	private static final Logger log = LoggerFactory.getLogger(UploadController.class);
 	
 	@Autowired
 	UploadService uploadService;
+
+	@Autowired
+	private EmpresaService empresaService;
 	
 	@RequestMapping(value="upload/{cdCorretora}", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadFile, @PathVariable String cdCorretora  ) throws IOException, EncryptedDocumentException, InvalidFormatException{	
@@ -114,6 +121,28 @@ public class UploadController {
          
         log.info("##### Server File Location: " + serverFile.getAbsolutePath());
 		return serverFile;
+	}
+
+	//201810041803 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	//201810051600 - esert - COR-861:Serviço - Receber / Retornar Planilha - refactor
+	@RequestMapping(value="fileupload/lotedcms", method = RequestMethod.POST)
+	public ResponseEntity<FileUploadLoteDCMSResponse> fileuploadLoteDCMS(@RequestBody FileUploadLoteDCMS fileUploadLoteDCMS) throws IOException, EncryptedDocumentException, InvalidFormatException{	
+		log.info("fileuploadLoteDCMS - ini");
+		FileUploadLoteDCMSResponse fileUploadLoteDCMSResponse = new FileUploadLoteDCMSResponse();
+		try {
+		
+			log.info(fileUploadLoteDCMS.toString());
+
+			fileUploadLoteDCMSResponse = empresaService.processarLoteDCMS(fileUploadLoteDCMS);
+			
+			log.info("fileuploadLoteDCMS - fim");		      
+	        return ResponseEntity.ok(fileUploadLoteDCMSResponse);
+	        
+		} catch (Exception e) {
+			log.info("fileuploadLoteDCMS - erro");		      
+			log.error("Exception", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 }

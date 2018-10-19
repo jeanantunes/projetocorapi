@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+//import com.itextpdf.text.DocumentException;
+
 import br.com.odontoprev.portal.corretor.dto.Venda;
 import br.com.odontoprev.portal.corretor.dto.VendaPME;
 import br.com.odontoprev.portal.corretor.dto.VendaResponse;
-import br.com.odontoprev.portal.corretor.service.ConvertObjectService;
 import br.com.odontoprev.portal.corretor.service.VendaPFService;
 
 @RestController
@@ -24,8 +25,8 @@ public class VendaController {
 	@Autowired
 	VendaPFService vendaPFService;
 	
-	@Autowired
-	ConvertObjectService convertObjectToJson;
+//	@Autowired
+//	ConvertObjectService convertObjectToJson;
 	
 	@RequestMapping(value = "/vendapf", method = { RequestMethod.POST })
 	@Transactional(rollbackFor= {Exception.class}) //201806291652 - esert/rmarques - COR-358 rollback pf
@@ -47,5 +48,4 @@ public class VendaController {
 		
 		return vendaPFService.addVendaPME(vendaPME);
 	}
-	
 }

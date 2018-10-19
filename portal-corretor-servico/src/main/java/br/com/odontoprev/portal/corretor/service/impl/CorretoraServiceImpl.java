@@ -8,28 +8,19 @@ import java.util.List;
 
 import javax.persistence.NonUniqueResultException;
 
+import br.com.odontoprev.portal.corretor.dao.*;
+import br.com.odontoprev.portal.corretor.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.odontoprev.portal.corretor.dao.BancoContaDAO;
-import br.com.odontoprev.portal.corretor.dao.CorretoraBancoDAO;
-import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
-import br.com.odontoprev.portal.corretor.dao.EnderecoDAO;
-import br.com.odontoprev.portal.corretor.dao.LoginDAO;
 import br.com.odontoprev.portal.corretor.dto.Conta;
 import br.com.odontoprev.portal.corretor.dto.Corretora;
 import br.com.odontoprev.portal.corretor.dto.CorretoraResponse;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.dto.Login;
 import br.com.odontoprev.portal.corretor.dto.Representante;
-import br.com.odontoprev.portal.corretor.model.TbodBancoConta;
-import br.com.odontoprev.portal.corretor.model.TbodCorretora;
-import br.com.odontoprev.portal.corretor.model.TbodCorretoraBanco;
-import br.com.odontoprev.portal.corretor.model.TbodEndereco;
-import br.com.odontoprev.portal.corretor.model.TbodLogin;
-import br.com.odontoprev.portal.corretor.model.TbodTipoEndereco;
 import br.com.odontoprev.portal.corretor.service.CorretoraService;
 import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
@@ -50,6 +41,9 @@ public class CorretoraServiceImpl implements CorretoraService {
 
 	@Autowired
 	CorretoraBancoDAO corretoraBancoDAO;
+
+	@Autowired
+	ContratoCorretoraDAO contratoCorretoraDAO;
 	
 	@Autowired
 	LoginDAO loginDao;
@@ -120,6 +114,9 @@ public class CorretoraServiceImpl implements CorretoraService {
 			tbCorretora.setRegional("1"); // TODO Onde pega a Regional?
 			tbCorretora.setTbodEndereco(tbEndereco);
 
+			tbCorretora.setTemSusep(corretora.getTemSusep());
+			tbCorretora.setCodigoSusep(corretora.getCodigoSusep());
+
 			//Representantes
 			if (corretora.getRepresentantes() != null && !corretora.getRepresentantes().isEmpty()) {
 				tbCorretora.setNomeRepresentanteLegal1(corretora.getRepresentantes().get(0).getNome());
@@ -130,7 +127,10 @@ public class CorretoraServiceImpl implements CorretoraService {
 					tbCorretoraBanco.setCpfResponsavelLegal2(corretora.getRepresentantes().get(1).getCpf());
 				}
 			}
-			
+
+//			TbodContratoCorretora cdCorretoraContrato = contratoCorretoraDAO.findByTbodCorretoraCdCorretora(tbCorretora.getCdCorretora());
+//			System.out.println(cdCorretoraContrato);
+
 			tbCorretora = corretoraDao.save(tbCorretora);
 
 			tbCorretoraBanco.setTbodCorretora(tbCorretora);
@@ -229,7 +229,7 @@ public class CorretoraServiceImpl implements CorretoraService {
 	}
 
 	@Override
-	public Corretora buscaCorretoraPorCnpj(String cnpj) {
+	public Corretora buscaCorretoraPorCnpj(String cnpj) throws Exception {
 
 		log.info("[buscaCorretoraPorCnpj]");
 		
@@ -240,7 +240,7 @@ public class CorretoraServiceImpl implements CorretoraService {
 
 			if (tbCorretora == null) {
 				log.error("buscaCorretoraPorCnpj :: cnpj:[" + cnpj + "] len:[" + cnpj.length() + "] não encontrado.");
-				return new Corretora();
+				return null;
 			}
 
 			// Corretora
@@ -277,28 +277,32 @@ public class CorretoraServiceImpl implements CorretoraService {
 				}
 				corretora.setEnderecoCorretora(endereco);
 			}
+
+			corretora.setTemSusep(tbCorretora.getTemSusep());
+			corretora.setCodigoSusep(tbCorretora.getCodigoSusep());
 			
 			List<Representante> representantes = new ArrayList<Representante>();
 			Representante representante;
 
+			//Representantes
+			//rever campos nas tabelas 201803091426
+			if(tbCorretora.getNomeRepresentanteLegal1() != null && !tbCorretora.getNomeRepresentanteLegal1().isEmpty()) {
+				representante = new Representante();
+				representante.setNome(tbCorretora.getNomeRepresentanteLegal1());
+				representante.setCpf(tbCorretora.getCpfResponsavel());
+				representantes.add(representante);
+			}
+			if(tbCorretora.getNomeRepresentanteLegal2() != null && !tbCorretora.getNomeRepresentanteLegal2().isEmpty()) {
+				representante = new Representante();
+				representante.setNome(tbCorretora.getNomeRepresentanteLegal2());
+				representante.setCpf(tbCorretora.getCpfResponsavel2());
+				representantes.add(representante);
+			}
+			corretora.setRepresentantes(representantes);
+
 			//Dados Bancarios
 			if(tbCorretora.getTbodCorretoraBancos() != null && !tbCorretora.getTbodCorretoraBancos().isEmpty()) {
-				//Representantes
-				//rever campos nas tabelas 201803091426
-				if(tbCorretora.getNomeRepresentanteLegal1() != null && !tbCorretora.getNomeRepresentanteLegal1().isEmpty()) {
-					representante = new Representante();
-					representante.setNome(tbCorretora.getNomeRepresentanteLegal1());
-					representante.setCpf(tbCorretora.getTbodCorretoraBancos().get(0).getCpfResponsavelLegal1());
-					representantes.add(representante);
-				}
-				if(tbCorretora.getNomeRepresentanteLegal2() != null && !tbCorretora.getNomeRepresentanteLegal2().isEmpty()) {
-					representante = new Representante();
-					representante.setNome(tbCorretora.getNomeRepresentanteLegal2());
-					representante.setCpf(tbCorretora.getTbodCorretoraBancos().get(0).getCpfResponsavelLegal2());
-					representantes.add(representante);
-				}
-				corretora.setRepresentantes(representantes);
-				
+
 				if(tbCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta() != null) {
 					Conta conta = new Conta();
 					conta.setCdBancoConta(tbCorretora.getTbodCorretoraBancos().get(0).getTbodBancoConta().getCdBancoConta());
@@ -318,15 +322,71 @@ public class CorretoraServiceImpl implements CorretoraService {
 				login.setFotoPerfilB64(tbLogin.getFotoPerfilB64());
 				login.setSenha(tbLogin.getSenha());
 				login.setUsuario(tbCorretora.getCnpj());
+				if (tbLogin.getTemBloqueio() != null) {
+					login.setTemBloqueio(tbLogin.getTemBloqueio().equals(Constantes.SIM));
+				}
+				if (tbLogin.getTbodTipoBloqueio() != null) {
+					login.setCodigoTipoBloqueio(tbLogin.getTbodTipoBloqueio().getCdTipoBloqueio());
+					login.setDescricaoTipoBloqueio(tbLogin.getTbodTipoBloqueio().getDescricao());
+				}
 				corretora.setLogin(login);
 			}
 			
 		} catch (NonUniqueResultException e) {
+
 			log.error("buscaCorretoraPorCnpj :: Detalhe: [ Mais de um registro encontraco com o CNPJ informado]");
+			throw new Exception("buscaCorretoraPorCnpj :: Detalhe: [ Mais de um registro encontraco com o CNPJ informado]", e);
+
 		} catch (Exception e) {
+
 			log.error("buscaCorretoraPorCnpj :: Detalhe: [" + e.getMessage() + "]");
-			return new Corretora();
+			throw new Exception("buscaCorretoraPorCnpj :: Detalhe: [" + e.getMessage() + "]", e);
+
 		}
+
 		return corretora;
 	}
+
+	@Override
+	public CorretoraResponse updateCorretoraDados(Corretora corretora) {
+
+		log.info("[updateCorretoraDados - ini]");
+
+		TbodCorretora tbodCorretora;
+
+		try {
+
+			tbodCorretora = corretoraDao.findOne(corretora.getCdCorretora());
+
+			if(tbodCorretora != null) {
+
+				//Update Email
+				if (corretora.getEmail() != null && !corretora.getEmail().isEmpty()) {
+
+					log.info("[updateCorretoraDados - tbodCorretora.setEmail(corretora.getEmail())]");
+					tbodCorretora.setEmail(corretora.getEmail());
+				}
+
+				log.info("[updateCorretoraDados - corretoraDao.save()]");
+				tbodCorretora = corretoraDao.save(tbodCorretora);
+
+				log.info("[updateCorretoraDados - fim]");
+				return new CorretoraResponse(tbodCorretora.getCdCorretora(),
+						"Corretora atualizada. CNPJ [" + tbodCorretora.getCnpj() + "]");
+			}
+			else {
+
+				log.info("[updateCorretoraDados - fim]");
+				return null;
+
+			}
+
+		} catch (Exception e) {
+			log.info("[updateCorretoraDados - erro]");
+			log.error("updateCorretoraDados :: Detalhe: [" + e.getMessage() + "]");
+			return new CorretoraResponse(0, "updateCorretoraDados; Erro:[" + e.getMessage() + "]");
+		}
+
+	}
+
 }

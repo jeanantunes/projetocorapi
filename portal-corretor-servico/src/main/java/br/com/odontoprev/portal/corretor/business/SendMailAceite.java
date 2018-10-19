@@ -17,6 +17,7 @@ import br.com.odontoprev.portal.corretor.dto.EmailAceite;
 import br.com.odontoprev.portal.corretor.dto.Plano;
 import br.com.odontoprev.portal.corretor.serviceEmail.ApiException;
 import br.com.odontoprev.portal.corretor.serviceEmail.api.DefaultApi;
+import br.com.odontoprev.portal.corretor.serviceEmail.model.Attachment;
 import br.com.odontoprev.portal.corretor.serviceEmail.model.RequestEmail;
 import br.com.odontoprev.portal.corretor.util.FileReaderUtil;
 import br.com.odontoprev.portal.corretor.util.PropertiesUtils;
@@ -59,8 +60,18 @@ public class SendMailAceite {
 			body.setSenderName(senderName);
 			body.setType(type);
 			body.setSubject(subject);
+			
+			//208108231952 - esert - COR-617 serviço gerar pdf detalhe contratação pme
+			//if(email.getArquivoBase64()!=null) {
+			if(email.getArquivoContratacao().getArquivoBase64()!=null) { //208108240106
+				Attachment attachment = new Attachment();
+				attachment.setContentAttachmentBase64(email.getArquivoContratacao().getArquivoBase64()); //208108231952
+				attachment.setFileNameAttachment(email.getArquivoContratacao().getNomeArquivo()); //208108240106
+				body.setAttachment(attachment);
+			}
 
-			apiInstance.sendEmail(body);
+			apiInstance.sendEmail(body); //TODO 201808221825 - esert - DESCOMENTAR
+			
 		} catch (ApiException e) {
 			log.error("SendMailAceite.sendMail(); getMessage:[" + e.getMessage() + "]"); 
 			log.error("SendMailAceite.sendMail(); getResponseBody:[" + e.getResponseBody() + "]");
@@ -99,7 +110,7 @@ public class SendMailAceite {
 						.replace("@CORRETORA", email.getNomeCorretora())
 						.replace("@EMPRESA", email.getNomeEmpresa())
 						.replace("@PLANO", planosSb.toString())
-						.replace("@PREÇOPLANO", precosSb.toString());
+						.replace("@PREÇOPLANO", precosSb.toString().replace(".",","));
 				
 	//			htmlStr = htmlStr.replace("@NOMEDOCORRETOR", "Joao Silva")
 	//					.replace("@CORRETORA", "Corretora e Cia")

@@ -162,11 +162,24 @@ public class Beneficiario implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Beneficiario [cdVida=" + cdVida + ", cdTitular=" + cdTitular + ", celular=" + celular + ", cpf=" + cpf
-				+ ", cnpj=" + cnpj + ", dataNascimento=" + dataNascimento + ", email=" + email + ", nome=" + nome
-				+ ", nomeMae=" + nomeMae + ", pfPj=" + pfPj + ", sexo=" + sexo + ", cdPlano=" + cdPlano + ", cdVenda="
-				+ cdVenda + ", dadosBancarios=" + dadosBancarios + ", endereco=" + endereco + ", dependentes="
-				+ dependentes + "]";
+		return "Beneficiario [" 
+				+ "cdVida=" + cdVida 
+				+ ", cdTitular=" + cdTitular 
+				+ ", celular=" + celular 
+				+ ", cpf=" + cpf
+				+ ", cnpj=" + cnpj 
+				+ ", dataNascimento=" + dataNascimento 
+				+ ", email=" + email 
+				+ ", nome=" + nome
+				+ ", nomeMae=" + nomeMae 
+				+ ", pfPj=" + pfPj 
+				+ ", sexo=" + sexo 
+				+ ", cdPlano=" + cdPlano 
+				+ ", cdVenda=" + cdVenda 
+				+ ", dadosBancarios=" + dadosBancarios 
+				+ ", endereco=" + endereco 
+				+ ", dependentes=" + dependentes 
+				+ "]";
 	}
 
 }

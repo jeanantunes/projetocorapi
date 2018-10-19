@@ -23,7 +23,8 @@ public final class Constantes {
 	public static final long STATUS_VENDA_ENVIADO = 1; //1 Enviado //201807051747 - esert - (COR-357 Serviço - Definição de Códigos/Status)  
 	public static final long STATUS_VENDA_CRITICADO = 2; //2 Criticado //201807051747 - esert - (COR-357 Serviço - Definição de Códigos/Status)
 	public static final long STATUS_VENDA_APROVADO = 3; //3 Aprovado //201807051747 - esert - (COR-357 Serviço - Definição de Códigos/Status)
-	
+	public static final long STATUS_VENDA_AGUARDANDO = 5;
+
 	public static final Object TIPO_INTERFACE_APP = "app"; //201807161655 - esert - COR-222
 	public static final Object TIPO_INTERFACE_WEB = "web"; //201807161655 - esert - COR-222
 	
@@ -36,4 +37,18 @@ public final class Constantes {
 	public static final String BRADESCO ="237";
 	public static final String ITAU = "341";
 	public static final String SANTANDER = "033";
+	
+	public static final Long CONTRATO_CORRETAGEM_V1 = 1l; //201809111832 - esert - COR-752 - DB - alterar tabela TBOD_CONTRATO_CORRETORA
+	public static final Long CONTRATO_INTERMEDIACAO_V1 = 2L; //201809111832 - esert - COR-752 - DB - alterar tabela TBOD_CONTRATO_CORRETORA
+	
+	public static final Long TIPO_BLOQUEIO_SEM_BLOQUEIO = 0L; //201809181744 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+	public static final Long TIPO_BLOQUEIO_CORRETAGEM_INTERMEDIACAO = 1L; //201809181744 - esert - COR-730 : Serviço - Novo serviço (processar bloqueio)
+	
+	public static final String OK = "OK"; //201810051928 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	public static final String ERRO = "ERRO"; //201810051928 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	public static final String CNPJ_NAO_ENCONTRADO = "CNPJ NAO ENCONTRADO NA BASE";
+	public static final String CNPJ_DUPLICADO = "CNPJ DUPLICADO NA BASE";
+	public static final String CNPJ_POSSUI_CD_DCMS = "CNPJ JA POSSUI CD_DCMS";
+	public static final String CNPJ_INVALIDO = "CNPJ INVALIDO";
+
 }

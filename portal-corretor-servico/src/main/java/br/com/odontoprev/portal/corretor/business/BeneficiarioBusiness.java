@@ -2,7 +2,6 @@ package br.com.odontoprev.portal.corretor.business;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.annotation.ManagedBean;
 import javax.transaction.RollbackException;
@@ -20,9 +19,7 @@ import br.com.odontoprev.portal.corretor.dao.VendaDAO;
 import br.com.odontoprev.portal.corretor.dao.VendaVidaDAO;
 import br.com.odontoprev.portal.corretor.dao.VidaDAO;
 import br.com.odontoprev.portal.corretor.dto.Beneficiario;
-import br.com.odontoprev.portal.corretor.dto.BeneficiarioPaginacao;
 import br.com.odontoprev.portal.corretor.dto.BeneficiarioResponse;
-import br.com.odontoprev.portal.corretor.dto.Beneficiarios;
 import br.com.odontoprev.portal.corretor.dto.Endereco;
 import br.com.odontoprev.portal.corretor.model.TbodEndereco;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;

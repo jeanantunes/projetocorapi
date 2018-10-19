@@ -2,8 +2,10 @@ package br.com.odontoprev.portal.corretor.service;
 
 import java.util.List;
 
+import br.com.odontoprev.portal.corretor.dto.EmailForcaVendaCorretora;
 import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
 import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.dto.VendaResponse;
 import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
 import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
 
@@ -30,4 +32,9 @@ public interface ForcaVendaService {
 	/***** status excluir ou reprovar - Força *****/
 	ForcaVendaResponse updateForcaVendaStatusByCpf(ForcaVenda forcaVenda, String opcaoStatus) throws Exception;
 
+	public ForcaVenda findByCdForcaVenda(Long cdForcaVenda);
+
+    public EmailForcaVendaCorretora findByCdForcaVendaEmail(Long cdForcaVenda);
+
+	public VendaResponse verificarBloqueio(Long cdForcaVenda);
 }
