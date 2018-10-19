@@ -1,352 +1,358 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-         <title>ODONTOPREV</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        
-        <style type="text/css">
-		    table,tr, td {
-				font-family: Arial, sans-serif;
-				}
-				
-				a:link {
-					text-decoration: none;
-				}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ODONTOPREV</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
-				a:visited {
-					text-decoration: none;
-				}
+    <style type="text/css">
+        table, tr, td {
+            font-family: Arial, sans-serif;
+        }
 
-				a:hover {
-					text-decoration: none;
-				}
+        a:link {
+            text-decoration: none;
+        }
 
-				a:active {
-					text-decoration: none;
-				}			
-			
-			body{
-				margin:0;
-				background-color:#eeeeee;
-				}
-				
-			.detalhe1{
-				font-size:11px;
-				color:#1a75cf;
-			}
-			
-			.detalhe2{
-				font-size:10px;
-				color:#00247d;
-			}
-			
-			.detalhe3{
-				font-size:29px;
-				color:#1a75cf;
-				font-weight: bold;
-			}
-			
-			.detalhe4{
-				font-weight: bold;
-			}
-			
-			.detalhe5{
-				font-size:11px;
-				color:#ffffff;
-			}
-			
-			.detalhe6{
-				font-size:10px;
-				color:#ffffff;
-			}
-			
-			.detalhe7{
-				font-size:16px;
-				color:#1a75cf;
-				}
+        a:visited {
+            text-decoration: none;
+        }
 
-			.detalhe8{
-				font-size:20px;
-				color:#dc4680;
-				font-weight: bold;
-			}
-			
-			
-			.corbg{
-				background-color:#eeeeee;
-				padding:5px;
-			}
+        a:hover {
+            text-decoration: none;
+        }
 
-			.corbg1{
-				border-style:solid;
-				border-width:2px 0px 2px 0px;
-				border-color:#eeeeee;
-				background-color:#fbfbfb;
-				padding:5px;
-			}
-			
-			.geral{
-				background-color:#ffffff;
-			}
-			
-			.destaque1{
-				background-color:#ffffff;
-				padding:10px;
-				font-size:17px;
-				color:#dc4680;
-			}
-			
-			.destaque2{
-				background-color:#1a75cf;
-				padding:10px;
-			}
-			
+        a:active {
+            text-decoration: none;
+        }
 
-			.destaque3{
-				background-color:#eeeeee;
-				padding:10px;
-				font-size:25px;
-				color:#dc4680;
-			}
-			
-			.destaque4{
+        body {
+            margin: 0;
+            background-color: #eeeeee;
+        }
 
-			background-color:#000000;
-			padding:10px;
-			font-size:18px;
-			color:#ffffff;
-			}
+        .detalhe1 {
+            font-size: 11px;
+            color: #1a75cf;
+        }
 
-			.destaque5{
-				
-				padding:10px;
-				font-size:17px;
-				color:#1a75ce;
-			}
+        .detalhe2 {
+            font-size: 10px;
+            color: #00247d;
+        }
+
+        .detalhe3 {
+            font-size: 29px;
+            color: #1a75cf;
+            font-weight: bold;
+        }
+
+        .detalhe4 {
+            font-weight: bold;
+        }
+
+        .detalhe5 {
+            font-size: 11px;
+            color: #ffffff;
+        }
+
+        .detalhe6 {
+            font-size: 10px;
+            color: #ffffff;
+        }
+
+        .detalhe7 {
+            font-size: 16px;
+            color: #1a75cf;
+        }
+
+        .detalhe8 {
+            font-size: 20px;
+            color: #dc4680;
+            font-weight: bold;
+        }
+
+        .corbg {
+            background-color: #eeeeee;
+            padding: 5px;
+        }
+
+        .corbg1 {
+            border-style: solid;
+            border-width: 2px 0px 2px 0px;
+            border-color: #eeeeee;
+            background-color: #fbfbfb;
+            padding: 5px;
+        }
+
+        .geral {
+            background-color: #ffffff;
+        }
+
+        .destaque1 {
+            background-color: #ffffff;
+            padding: 10px;
+            font-size: 17px;
+            color: #dc4680;
+        }
+
+        .destaque2 {
+            background-color: #1a75cf;
+            padding: 10px;
+        }
+
+        .destaque3 {
+            background-color: #eeeeee;
+            padding: 10px;
+            font-size: 25px;
+            color: #dc4680;
+        }
+
+        .destaque4 {
+
+            background-color: #000000;
+            padding: 10px;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .destaque5 {
+
+            padding: 10px;
+            font-size: 17px;
+            color: #1a75ce;
+        }
+
+        emlinha {
+            display: inline;
+        }
+
+        .texto1 {
+            background-color: #ffffff;
+            font-size: 18px;
+            color: #656565;
+            padding: 0px 35px;
+
+        }
+
+        .texto2 {
+            font-size: 15px;
+            color: #656565;
+            padding: 0px 35px;
+        }
+
+        .texto3 {
+            background-color: #ffffff;
+            font-size: 15px;
+            color: #656565;
+        }
+
+        .texto4 {
+            background-color: #ffffff;
+            font-size: 15px;
+            color: #d9487f;
+        }
+
+        .texto5 {
+            background-color: #ffffff;
+            font-size: 15px;
+            color: #65bb22;
+        }
+
+        .espacamento {
+            padding: 15px;
+
+        }
+
+        .lista {
+            list-style-type: none;
+            font-size: 15px;
+            color: #1a75cf;
+        }
 
 
-			emlinha{
-				display: inline;
-			}
-			
-			.texto1{
-				background-color:#ffffff;
-				font-size:18px;
-				color:#656565;
-				padding:0px 35px ;
-			}
+    </style>
+</head>
+<body>
 
-			.texto2{
-				font-size:15px;
-				color:#656565;
-				padding:0px 35px ;
-			}
-			
-			.texto3{
-				background-color:#ffffff;
-				font-size:15px;
-				color:#656565;
-			}
-
-			.texto4{
-				background-color:#ffffff;
-				font-size:15px;
-				color:#d9487f;
-			}
-
-			.texto5{
-				background-color:#ffffff;
-				font-size:15px;
-				color:#65bb22;
-			}
-			
-			.espacamento{
-				padding:15px;
-			
-			}
-
-			.lista{
-				list-style-type:none;
-				font-size:15px;
-				color:#1a75cf;
-			}
-			
-			
-				
-        </style>
-    </head>
-	<body>
-	
 <!-- ================================================================================= -->
 <!-- -----------------------------TOPO ODONTOPREV---------------------------------------->
 <!-- ================================================================================= -->
 
 
-
 <!-- Tabela para espaço / margem -->
 
-	    <table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
-		<tbody>
-			<tr>
-				<td align="right" valign="middle" class="corbg">
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	
+<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
+    <tbody>
+    <tr>
+        <td align="right" valign="middle" class="corbg">
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 <!-- informações extras -->
-    <table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
-		<tbody>
-			<tr>
-				<td align="right" valign="middle" class="corbg">
-					<span class="detalhe1">Sua boca fala por você! E o que você tem feito por ela?</span><br>
-					<span class="detalhe2">Adicione o e-mail odontoprev@odontoprev.com.br aos seus contatos</span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	
-	
-	
+<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
+    <tbody>
+    <tr>
+        <td align="right" valign="middle" class="corbg">
+            <span class="detalhe1">Sua boca fala por você! E o que você tem feito por ela?</span><br>
+            <span class="detalhe2">Adicione o e-mail odontoprev@odontoprev.com.br aos seus contatos</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
 <!-- ================================================================================= -->
 <!-- -----------------------------------Conteúdo ---------------------------------------->
 <!-- ================================================================================= -->
 
 
-
-	
-	<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
-		<tbody>
+<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
+    <tbody>
 
 
-			<tr>
-				<td align="left" valign="middle" class="geral">
-					<a>
-						<img src="@HEADER" border="0" width="600" style="display:block"/>
-					</a>
-				</td>
-			</tr>
-		
-		</tbody>
-	</table>
+    <tr>
+        <td align="left" valign="middle" class="geral">
+            <a>
+                <img src="@HEADER" border="0" width="600" style="display:block"/>
+            </a>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
 
 
 <!-- ================================================================================= -->
 
 
-
-	<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
-		<tbody>
-
-
-			<tr>
-				<td align="left" valign="middle" class="texto1">
-	
-               <p class="texto3"><br/> 
-				Ol&aacute;, somos a OdontoPrev, a maior operadora de planos odontol&oacute;gicos da Am&eacute;rica Latina!<br/> <br/>
-
-                Queremos confirmar a sua contrata&ccedil;&atilde;o dos nossos planos odontol&oacute;gicos para que os funcion&aacute;rios da sua empresa possam contar com o atendimento de qualidade &uacute;nica dos nossos 28mil dentistas, em escala nacional!<br/> <br/>
-
-				O Corretor <span class="texto4">@NOMEDOCORRETOR</span> <span class="texto3">da</span> <span class="texto4">@CORRETORA</span> <span class="texto3">acabou de cadastrar a</span> <span class="texto4">@EMPRESA</span> <span class="texto3">como cliente OdontoPrev.<br/> <br/> 
-
-				Fa&ccedil;a download da <a href="http://www.odontoprev.com.br/pme/imagens/formularios/proposta_contratual_PME_INTEGRAL_MASTER.pdf" target="_blank" class="texto5">Proposta Contratual</a> e das <a href="http://www.odontoprev.com.br/pme/imagens/formularios/contrato_Condi%C3%A7%C3%B5es%20Gerais.pdf" target="_blank" class="texto5">Condi&ccedil;&otilde;es Gerais</a> do benef&iacute;cio odontol&oacute;gico de seus funcion&aacute;rios! Em virtude da contrata&ccedil;&atilde;o digital a assinatura e envio  de documenta&ccedil;&atilde;o s&atilde;o substitu&iacute;dos pelo aceite do email, ok?</span><br/><br/>
-
-				   Para garantir a vigência prevista de <span class="texto4">@DATAVIGENCIA</span> confirme esta contratação até o dia <span class="texto4">@DATAMOVIMENTACAO</span>. Caso a sua confirmação ocorra após este prazo, seu contrato se iniciará posteriormente.
-
-				<span class="texto3">Para confirmar seu aceite e a contrata&ccedil;&atilde;;o do plano(s)</span> <span class="texto4">@PLANO</span> <span class="texto3">a</span> <span class="texto4">R$ @PREÇOPLANO</span> <span class="texto3">por colaborador, por favor clique aqui:</span><br/> <br/>
-				<p />
-				
-				<p align="center">
-				<a href="@TOKEN" target="_blank"><img src="@BTN" alt="btn"></a></p><br />
-				
-				
+<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
+    <tbody>
 
 
-				
-				
-			
+    <tr>
+        <td align="left" valign="middle" class="texto1">
+            <div style="text-align: justify;text-justify: inter-word;">
+
+                <p class="texto3"><br/>
+                    Ol&aacute;, somos a OdontoPrev, a maior operadora de planos odontol&oacute;gicos da Am&eacute;rica
+                    Latina!<br/> <br/>
+
+                    Queremos confirmar a sua contrata&ccedil;&atilde;o dos nossos planos odontol&oacute;gicos para que
+                    os
+                    funcion&aacute;rios da sua empresa possam contar com o atendimento de qualidade &uacute;nica dos
+                    nossos
+                    28mil dentistas, em escala nacional!<br/> <br/>
+
+                    O Corretor <span class="texto4">@NOMEDOCORRETOR</span> <span class="texto3">da</span> <span
+                            class="texto4">@CORRETORA</span> <span class="texto3">acabou de cadastrar a</span> <span
+                            class="texto4">@EMPRESA</span> <span class="texto3">como cliente OdontoPrev.<br/> <br/>
+
+				Fa&ccedil;a download da <a
+                                href="http://www.odontoprev.com.br/pme/imagens/formularios/proposta_contratual_PME_INTEGRAL_MASTER.pdf"
+                                target="_blank" class="texto5">Proposta Contratual</a> e das <a
+                                href="http://www.odontoprev.com.br/pme/imagens/formularios/contrato_Condi%C3%A7%C3%B5es%20Gerais.pdf"
+                                target="_blank" class="texto5">Condi&ccedil;&otilde;es Gerais</a> do benef&iacute;cio odontol&oacute;gico de seus funcion&aacute;rios! Em virtude da contrata&ccedil;&atilde;o digital a assinatura e envio  de documenta&ccedil;&atilde;o s&atilde;o substitu&iacute;dos pelo aceite do email, ok?</span><br/><br/>
+
+                    Para garantir a vigência prevista de <span class="texto4">@DATAVIGENCIA</span> confirme esta
+                    contratação
+                    até o dia <span class="texto4">@DATAMOVIMENTACAO</span>. Caso a sua confirmação ocorra após este
+                    prazo,
+                    seu contrato se iniciará posteriormente.<br/><br/>
+
+                    <span class="texto3">Para confirmar seu aceite e a contrata&ccedil;&atilde;o do plano(s)</span>
+                    <span
+                            class="texto4">@PLANO</span> <span class="texto3">a</span> <span
+                            class="texto4">R$ @PREÇOPLANO</span> <span class="texto3">por colaborador, por favor clique aqui:</span><br/><br/>
+                <p/>
+
+                <p align="center">
+                    <a href="@TOKEN" target="_blank"><img src="@BTN" alt="btn"></a></p><br/>
+
 
                 <p class="texto3">Atenciosamente,</p>
                 <p class="texto3">Equipe OdontoPrev</p><br/><br/>
-				
 
-				</td>
-			</tr>
-		</tbody>
-	</table>
 
-<!-- ================================================================================= -->	
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- ================================================================================= -->
 <!-- ================================================================================= -->
 <!-- -----------------------------------Rodapé ---------------------------------------->
 <!-- ================================================================================= -->
 <!-- ================================================================================= -->
 
-	<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
-			<tr>
-				<td align="left" valign="middle" class="destaque2">
-					<p class="detalhe5">
-					   Informa&ccedil;&otilde;es e D&uacute;vidas:<span class="detalhe4">0800-722-2152</span><br>
-					   Central de Atendimento e Relacionamento: <span class="detalhe4">0800-702-9000</span><br>
-					   Atendimento ao Deficiente Auditivo e de Fala: <span class="detalhe4">0800-722-2191</span><br>
-					   Serviço de Atendimento ao Cliente (SAC): <span class="detalhe4">0800-722-2255</span><br>
-					   Ouvidoria: <span class="detalhe4">0800-721-6378</span>
-					</p>
-				</td>
-				<td align="left" valign="middle" class="destaque2">
-					<p class="detalhe5">
-						<span class="detalhe4">Nos siga nas Redes Sociais</span></font></p>
-						<a href="https://www.facebook.com/OdontoPrevOficial" target="_blank">
-							<img src="@FB" border="0" width="51"/>
-						</a>
-						<a href="https://www.linkedin.com/company/odontoprev" target="_blank">
-							<img src="@LD" border="0" width="51"/>
-						</a>
-						<a href="https://www.youtube.com/user/OdontoPrevOficial" target="_blank">
-							<img src="@YT" border="0" width="51"/>
-						</a>
-					</p>
-				</td>
-			</tr>				
-		</tbody>
-	</table>
-	<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
-		<tbody>
-			<tr>
-				<td align="left" valign="middle" class="destaque2">
-					<p class="detalhe6"><img src="@ANS" border="0" width="165"/>OdontoPrev – CRO/SP nº 2728 | RT: J. M. Benozatti – CRO/SP nº 19009
-					</p>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	
-	
-	<!-- informações extras -->
-    <table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
-		<tbody>
-			<tr>
-				<td align="left" valign="middle" class="corbg">
-					<p class="detalhe2">	Você est&aacute; recebendo esta mensagem porque se cadastrou junto &agrave; OdontoPrev ou solicitou informa&ccedil;&otilde;es por e-mail.
-					Se n&atilde;o deseja mais receber e-mails da OdontoPrev, <a href="#">clique aqui</a>.
-					A OdontoPrev respeita a sua privacidade. Por favor, visite a nossa Pol&iacute;tica de Privacidade.
-					<br><br>
-					© Odontoprev. S/A | CNPJ: 58.119.199/0001-51 | 	Av. Dr. Marcos Penteado de Ulh&ocir;a Rodrigues, 939  | 	14º andar - Edifício Jatob&acute; Torre II - Tambor&eacute; - Barueri-SP | CEP-06460-040</p>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<p>
+<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
+    <tr>
+        <td align="left" valign="middle" class="destaque2">
+            <p class="detalhe5">
+                Informa&ccedil;&otilde;es e D&uacute;vidas:<span class="detalhe4">0800-722-2152</span><br>
+                Central de Atendimento e Relacionamento: <span class="detalhe4">0800-702-9000</span><br>
+                Atendimento ao Deficiente Auditivo e de Fala: <span class="detalhe4">0800-722-2191</span><br>
+                Serviço de Atendimento ao Cliente (SAC): <span class="detalhe4">0800-722-2255</span><br>
+                Ouvidoria: <span class="detalhe4">0800-721-6378</span>
+            </p>
+        </td>
+        <td align="left" valign="middle" class="destaque2">
+            <p class="detalhe5">
+                <span class="detalhe4">Nos siga nas Redes Sociais</span></font></p>
+            <a href="https://www.facebook.com/OdontoPrevOficial" target="_blank">
+                <img src="@FB" border="0" width="51"/>
+            </a>
+            <a href="https://www.linkedin.com/company/odontoprev" target="_blank">
+                <img src="@LD" border="0" width="51"/>
+            </a>
+            <a href="https://www.youtube.com/user/OdontoPrevOficial" target="_blank">
+                <img src="@YT" border="0" width="51"/>
+            </a>
+            </p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
+    <tbody>
+    <tr>
+        <td align="left" valign="middle" class="destaque2">
+            <p class="detalhe6"><img src="@ANS" border="0" width="165"/>OdontoPrev – CRO/SP nº 2728 | RT: J. M.
+                Benozatti – CRO/SP nº 19009
+            </p>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 
+<!-- informações extras -->
+<table cellspacing="0" cellpadding="0" width="600" align="center" border="0">
+    <tbody>
+    <tr>
+        <td align="left" valign="middle" class="corbg">
+            <p class="detalhe2"> Você est&aacute; recebendo esta mensagem porque se cadastrou junto &agrave; OdontoPrev
+                ou solicitou informa&ccedil;&otilde;es por e-mail.
+                Se n&atilde;o deseja mais receber e-mails da OdontoPrev, <a href="#">clique aqui</a>.
+                A OdontoPrev respeita a sua privacidade. Por favor, visite a nossa Pol&iacute;tica de Privacidade.
+                <br><br>
+                © Odontoprev. S/A | CNPJ: 58.119.199/0001-51 | Av. Dr. Marcos Penteado de Ulh&ocir;a Rodrigues, 939 |
+                14º andar - Edifício Jatob&acute; Torre II - Tambor&eacute; - Barueri-SP | CEP-06460-040</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>
 
 
-	</p>
-	
-	
-	
-	</body>
-	
-	
+</p>
+
+
+</body>
+
+
 </html>
