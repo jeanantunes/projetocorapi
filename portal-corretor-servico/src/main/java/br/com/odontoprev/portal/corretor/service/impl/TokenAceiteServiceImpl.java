@@ -116,6 +116,8 @@ public class TokenAceiteServiceImpl implements TokenAceiteService {
             emailAceite.setNomeEmpresa(venda.getTbodEmpresa().getRazaoSocial());
             emailAceite.setEmailEnvio(venda.getTbodEmpresa().getEmail());
             emailAceite.setToken(tokenAceitePK.getCdToken());
+            emailAceite.setDataMovimentacao(DataUtil.dateToStringParse(venda.getDtMovimentacao()));
+            emailAceite.setDataVigencia(DataUtil.dateToStringParse(venda.getDtVigencia()));
 
             List<Plano> planos = planoService.findPlanosByEmpresa(venda.getTbodEmpresa().getCdEmpresa());
 

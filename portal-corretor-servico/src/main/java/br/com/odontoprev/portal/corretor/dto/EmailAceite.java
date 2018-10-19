@@ -13,6 +13,8 @@ public class EmailAceite {
 	private Long codigoEmpresa; //201808231840 - esert - COR-617 Serviço Geração PDF Contratação PME
 	//private String arquivoBase64; //201808231852 - esert - COR-617 Serviço Geração PDF Contratação PME
 	private ArquivoContratacao arquivoContratacao; //201808240102 - esert - COR-617 Serviço Geração PDF Contratação PME
+	private String dataVigencia;
+	private String dataMovimentacao;
 
 	public String getNomeCorretor() {
 		return nomeCorretor;
@@ -84,21 +86,37 @@ public class EmailAceite {
 	public void setArquivoContratacao(ArquivoContratacao arquivoContratacao) {
 		this.arquivoContratacao = arquivoContratacao;
 	}
-	
-	
+
+	public String getDataVigencia() {
+		return dataVigencia;
+	}
+
+	public void setDataVigencia(String dataVigencia) {
+		this.dataVigencia = dataVigencia;
+	}
+
+	public String getDataMovimentacao() {
+		return dataMovimentacao;
+	}
+
+	public void setDataMovimentacao(String dataMovimentacao) {
+		this.dataMovimentacao = dataMovimentacao;
+	}
+
 	@Override
 	public String toString() {
-		return "Email [" 
-				+ "nomeCorretor=" + nomeCorretor 
-				+ ", nomeCorretora=" + nomeCorretora 
-				+ ", nomeEmpresa=" + nomeEmpresa 
-				+ ", codigoEmpresa=" + codigoEmpresa 
-				+ ", emailEnvio=" + emailEnvio 
-				+ ", token=" + token 
-				+ ", planos=" + planos 
-				//+ ", arquivoBase64=" + arquivoBase64!=null?String.valueOf(arquivoBase64.length()):"NuLL" 
-				+ ", arquivoContratacao=" + arquivoContratacao 
-				+ "]";
+		return "EmailAceite{" +
+				"nomeCorretor='" + nomeCorretor + '\'' +
+				", nomeCorretora='" + nomeCorretora + '\'' +
+				", nomeEmpresa='" + nomeEmpresa + '\'' +
+				", emailEnvio='" + emailEnvio + '\'' +
+				", token='" + token + '\'' +
+				", planos=" + planos +
+				", codigoEmpresa=" + codigoEmpresa +
+				//", arquivoContratacao=" + arquivoContratacao +
+				", dataVigencia='" + dataVigencia + '\'' +
+				", dataMovimentacao='" + dataMovimentacao + '\'' +
+				'}';
 	}
-	
+
 }

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import javax.annotation.ManagedBean;
 
+import br.com.odontoprev.portal.corretor.util.DataUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,6 +111,8 @@ public class SendMailAceite {
 						.replace("@CORRETORA", email.getNomeCorretora())
 						.replace("@EMPRESA", email.getNomeEmpresa())
 						.replace("@PLANO", planosSb.toString())
+						.replace("@DATAVIGENCIA", email.getDataVigencia())
+						.replace("@DATAMOVIMENTACAO", email.getDataMovimentacao())
 						.replace("@PREÇOPLANO", precosSb.toString().replace(".",","));
 				
 	//			htmlStr = htmlStr.replace("@NOMEDOCORRETOR", "Joao Silva")
