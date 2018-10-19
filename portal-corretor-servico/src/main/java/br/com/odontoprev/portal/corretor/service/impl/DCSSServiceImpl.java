@@ -1,7 +1,5 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import javax.transaction.TransactionScoped;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,6 +26,7 @@ import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 //201810171900 - esert - inc - COR-763:Isolar Inserção JSON Request DCMS
 @Service
 @Component
+@Transactional(noRollbackFor = {Exception.class}) //201810181226 - esert - COR-763:Isolar Inserção JSON Request DCMS
 public class DCSSServiceImpl implements DCSSService {
 
 	private static final Logger log = LoggerFactory.getLogger(DCSSServiceImpl.class);
@@ -52,7 +50,7 @@ public class DCSSServiceImpl implements DCSSService {
     
     //@SuppressWarnings({})
     //@Transactional(rollbackFor = {Exception.class}) //201806290926 - esert - COR-352 rollback pf
-	@Transactional(noRollbackFor = {Exception.class}) //201810181226 - esert - COR-763:Isolar Inserção JSON Request DCMS
+	//@Transactional(noRollbackFor = {Exception.class}) //201810181226 - esert - COR-763:Isolar Inserção JSON Request DCMS
 	//@Transactional(isolation=Isolation.DEFAULT) //201810181300 - esert - COR-763:Isolar Inserção JSON Request DCMS
     public PropostaDCMSResponse chamarWSLegadoPropostaPOST(PropostaDCMS propostaDCMS) {
         log.info("chamarWSLegadoPropostaPOST - ini");

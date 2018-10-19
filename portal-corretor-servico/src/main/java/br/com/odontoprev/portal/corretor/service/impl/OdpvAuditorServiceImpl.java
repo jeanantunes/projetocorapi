@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.JsonRequestDAO;
 import br.com.odontoprev.portal.corretor.model.TbodJsonRequest;
@@ -14,27 +15,13 @@ import br.com.odontoprev.portal.corretor.service.OdpvAuditorService;
 
 //201806061517 - esert
 @Service
+//@Transactional(noRollbackFor= {Exception.class}) //201810181847 - esert - COR-763:Isolar Inserção JSON Request DCMS
 public class OdpvAuditorServiceImpl implements OdpvAuditorService {
 	
 	private static final Log log = LogFactory.getLog(OdpvAuditorServiceImpl.class);
 	
 	@Autowired
 	JsonRequestDAO jsonRequestDAO;
-
-
-//	@Override
-//	public void audit(String body) {
-//		// TODO Auto-generated method stub
-//		//log.info("[audit] body:[" + body + "]"); //201806041519 - esert
-//		this.audit(
-//				null, //String requestURI, 
-//				null, //Principal principal, 
-//				body, //stringJsonBody, 
-//				null, //String stringUserAgent, 
-//				null, //String headers, 
-//				null //String parameters
-//		);
-//	}
 
 	@Override
 	public void audit( String requestURI, String stringJsonBody, String stringUserAgent) { //201806061502 - esert
@@ -47,19 +34,6 @@ public class OdpvAuditorServiceImpl implements OdpvAuditorService {
 				null
 		); //201806121747 - esert - inc Header + Parameter
 	}
-
-//	@Override
-//	public void audit(String requestURI, Principal principal, String stringJsonBody, String stringUserAgent) {
-//		// TODO Auto-generated method stub
-//		this.audit(
-//				requestURI, 
-//				principal, 
-//				stringJsonBody, 
-//				stringUserAgent, 
-//				null, //String headers, 
-//				null //String parameters
-//		);
-//	}
 
 	//201806121747 - esert - inc Header + Parameter
 	@Override

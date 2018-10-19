@@ -18,7 +18,8 @@ public class PortalCorretorServicoApplication extends SpringBootServletInitializ
 	public static void main(String[] args) {
 
 //		log.info("[PortalCorretorServicoApplication][v.201802251422]");
-		log.info("[PortalCorretorServicoApplication][v.201805301758]"); //201805301758 - esert - interceptor - teste
+//		log.info("[PortalCorretorServicoApplication][v.201805301758]"); //201805301758 - esert - interceptor - teste
+		log.info("[PortalCorretorServicoApplication][v.201810181904]"); //201810181904 - esert - wip - COR-763:Isolar Transação de Inserção do JSON Request DCMS das Demais Persistências
 
 		SpringApplication.run(PortalCorretorServicoApplication.class, args);
 	}
