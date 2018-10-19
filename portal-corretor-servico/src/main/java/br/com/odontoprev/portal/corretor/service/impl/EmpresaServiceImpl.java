@@ -90,9 +90,9 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Autowired
     ArquivoContratacaoDAO arquivoContratacaoDAO;
 
-    @Value("${server.path.xlslotedcms}") //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha
-    private String pathXlsLoteDcms; //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha
-
+	@Value("${server.path.xlslotedcms}") //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha
+	private String pathXlsLoteDcms; //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha
+    
     @Override
     @Transactional
     public EmpresaResponse add(Empresa empresa) {
@@ -759,13 +759,7 @@ public class EmpresaServiceImpl implements EmpresaService {
             return null;
         }
 
-        String emailForcaVenda = tbodEmpresa.getTbodVendas().get(0).getTbodForcaVenda().getEmail();
-        String emailCorretora = tbodEmpresa.getTbodVendas().get(0).getTbodForcaVenda().getTbodCorretora().getEmail();
-
-        if (empresa.getEmail().equals(emailForcaVenda) || empresa.getEmail().equals(emailCorretora)){
-            log.error("updateEmpresaEmail {} empresa.getEmail() == emailForcaVenda");
-            return new EmpresaResponse(HttpStatus.BAD_REQUEST.value(), String.format("Empresa: [%d], não pode ter o mesmo e-mail do Forca Venda.", tbodEmpresa.getCdEmpresa()));
-        }else if (empresa.getEmail() != null && !empresa.getEmail().isEmpty()) {
+        if (empresa.getEmail() != null && !empresa.getEmail().isEmpty()) {
 
             tbodEmpresa.setEmail(empresa.getEmail());
             tbodEmpresa = empresaDAO.save(tbodEmpresa);
@@ -781,14 +775,14 @@ public class EmpresaServiceImpl implements EmpresaService {
     }
 
     //201809251843 - esert - COR-820 Criar POST /empresa-emailaceite
-    @Override
-    public EmpresaResponse enviarEmpresaEmailAceite(Empresa empresa) {
+	@Override
+	public EmpresaResponse enviarEmpresaEmailAceite(Empresa empresa) {
 
         log.info("enviarEmpresaEmailAceite - ini");
 
         try {
 
-            TbodEmpresa tbodEmpresa = empresaDAO.findOne(empresa.getCdEmpresa());
+        	TbodEmpresa tbodEmpresa = empresaDAO.findOne(empresa.getCdEmpresa());
             if (tbodEmpresa != null) {
 
                 List<TbodVenda> listTbodVenda = tbodEmpresa.getTbodVendas();
@@ -796,7 +790,7 @@ public class EmpresaServiceImpl implements EmpresaService {
                     log.error("listTbodVenda == null || listTbodVenda.size() == 0 para empresa.getCdEmpresa(" + empresa.getCdEmpresa() + ")!");
                     return null;
                 }
-
+                
                 TbodVenda tbodVenda = listTbodVenda.get(listTbodVenda.size()-1);
 
                 TokenAceite tokenAceite = new TokenAceite(); //201805181904 - esert - COR-171
@@ -821,7 +815,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
             } else {
                 log.error("CdEmpresa [" + empresa.getCdEmpresa() + "] nao encontrado !"); //201705172015 - esert
-                return null; //NoContent //201809251905 - esert
+            	return null; //NoContent //201809251905 - esert
             }
 
         } catch (Exception e) {
@@ -831,98 +825,97 @@ public class EmpresaServiceImpl implements EmpresaService {
 
         log.info("enviarEmpresaEmailAceite - fim");
         return new EmpresaResponse(HttpStatus.OK.value(), String.format("Empresa: [%d], email enviado.", empresa.getCdEmpresa()));
-    }
+	}
 
-    //201810051800 - esert - COR-861:Serviço - Receber / Retornar Planilha
-    @Override
-    public FileUploadLoteDCMSResponse processarLoteDCMS(FileUploadLoteDCMS fileUploadLoteDCMS) {
-        FileUploadLoteDCMSResponse fileUploadLoteDCMSResponse = new FileUploadLoteDCMSResponse();
+	//201810051800 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	@Override
+	public FileUploadLoteDCMSResponse processarLoteDCMS(FileUploadLoteDCMS fileUploadLoteDCMS) {
+		FileUploadLoteDCMSResponse fileUploadLoteDCMSResponse = new FileUploadLoteDCMSResponse();
+		
+		File fileXLSReq = this.convertBase64ToFile( 
+				fileUploadLoteDCMS.getArquivoBase64(), 
+				fileUploadLoteDCMS.getNomeArquivo(),
+				fileUploadLoteDCMS.getCaminhoArquivo() //201810052115 - esert - ferramenta para testes locais via postman
+				);
 
-        File fileXLSReq = this.convertBase64ToFile(
-                fileUploadLoteDCMS.getArquivoBase64(),
-                fileUploadLoteDCMS.getNomeArquivo(),
-                fileUploadLoteDCMS.getCaminhoArquivo() //201810052115 - esert - ferramenta para testes locais via postman
-        );
+		List<EmpresaDcmsLote> listEmpresaDCMSReq = this.convertFileXLSReqToListEmpresaDCMS(fileXLSReq);
+		
+		List<EmpresaDcmsLote> listEmpresaDCMSRes = empresaBusiness.processarLoteDCMS(listEmpresaDCMSReq);
 
-        List<EmpresaDcmsLote> listEmpresaDCMSReq = this.convertFileXLSReqToListEmpresaDCMS(fileXLSReq);
+		File fileXLSRes = this.convertListEmpresaDCMSToFileXLSRes( 
+				listEmpresaDCMSRes, 
+				fileUploadLoteDCMS.getNomeArquivo(),
+				fileUploadLoteDCMS.getCaminhoArquivo()
+				);
 
-        List<EmpresaDcmsLote> listEmpresaDCMSRes = empresaBusiness.processarLoteDCMS(listEmpresaDCMSReq);
+		@SuppressWarnings("unused")
+		String arquivoBase64Res = convertFileToBase64(fileXLSRes);
 
-        File fileXLSRes = this.convertListEmpresaDCMSToFileXLSRes(
-                listEmpresaDCMSRes,
-                fileUploadLoteDCMS.getNomeArquivo(),
-                fileUploadLoteDCMS.getCaminhoArquivo()
-        );
+		fileUploadLoteDCMSResponse.setArquivoBase64(arquivoBase64Res);
+		fileUploadLoteDCMSResponse.setNomeArquivo(fileXLSRes.getName());
+		fileUploadLoteDCMSResponse.setTamanho(fileXLSRes.length());
+		fileUploadLoteDCMSResponse.setTipoConteudo(fileUploadLoteDCMS.getTipoConteudo());
 
-        String arquivoBase64Res = convertFileToBase64(fileXLSRes);
+		return fileUploadLoteDCMSResponse;
+	}
 
-        fileUploadLoteDCMSResponse.setArquivoBase64(arquivoBase64Res);
-        fileUploadLoteDCMSResponse.setNomeArquivo(fileXLSRes.getName());
-        fileUploadLoteDCMSResponse.setTamanho(fileXLSRes.length());
-        fileUploadLoteDCMSResponse.setTipoConteudo(fileUploadLoteDCMS.getTipoConteudo());
+	//201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	private File convertBase64ToFile(String arquivoBase64, String nomeArquivo, String caminhoArquivo) {
+		log.info("convertBase64ToFile - ini");
+		File file = null;
+		byte[] byteArray = null;
+		if(caminhoArquivo==null || caminhoArquivo.trim().isEmpty()) { //201810052115 - esert - ferramenta para testes locais via postman
+			byteArray = Base64.getDecoder().decode(arquivoBase64);
+			log.info("pathXlsLoteDcms + nomeArquivo:[{}]", pathXlsLoteDcms + nomeArquivo);
+			try (OutputStream stream = new FileOutputStream(pathXlsLoteDcms + nomeArquivo)) { //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha - pathXlsLoteDcms 
+			    try {
+					stream.write(byteArray);
+				    file = new File(nomeArquivo);
+				} catch (IOException e) {
+					log.error("IOException", e);
+				}
+			} catch (FileNotFoundException e1) {
+				log.error("FileNotFoundException", e1);
+			} catch (IOException e1) {
+				log.error("IOException", e1);
+			}
+		} else {
+			String caminhoNomeArquivo = caminhoArquivo + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
+			file = new File(caminhoNomeArquivo); //201810052115 - esert - ferramenta para testes locais via postman
+		}
+		log.info("convertBase64ToFile - fim");
+		return file;
+	}
 
-        return fileUploadLoteDCMSResponse;
-    }
+	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	@SuppressWarnings("deprecation")
+	private List<EmpresaDcmsLote> convertFileXLSReqToListEmpresaDCMS(File fileXLSReq) {
+		log.info("convertFileXLSReqToListEmpresaDCMS - ini");
+		List<EmpresaDcmsLote> listEmpresaDcms = null;
+		
+		if(fileXLSReq==null) {
+			return null;
+		}
 
-    //201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
-    private File convertBase64ToFile(String arquivoBase64, String nomeArquivo, String caminhoArquivo) {
-        log.info("convertBase64ToFile - ini");
-        File file = null;
-        byte[] byteArray = null;
-        if(caminhoArquivo==null || caminhoArquivo.trim().isEmpty()) { //201810052115 - esert - ferramenta para testes locais via postman
-            String caminhoNomeArquivo = pathXlsLoteDcms + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
-            log.info("caminhoNomeArquivo:[{}]", caminhoNomeArquivo);
-            file = new File(caminhoNomeArquivo);
-            byteArray = Base64.getDecoder().decode(arquivoBase64);
-            try (OutputStream stream = new FileOutputStream(file)) { //201810181928 //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha - pathXlsLoteDcms
-                try {
-                    stream.write(byteArray);
-                    //file = new File(nomeArquivo);
-                } catch (IOException e) {
-                    log.error("IOException", e);
-                }
-            } catch (FileNotFoundException e1) {
-                log.error("FileNotFoundException", e1);
-            } catch (IOException e1) {
-                log.error("IOException", e1);
-            }
-        } else {
-            String caminhoNomeArquivo = caminhoArquivo + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
-            file = new File(caminhoNomeArquivo); //201810052115 - esert - ferramenta para testes locais via postman
-        }
-        log.info("convertBase64ToFile - fim");
-        return file;
-    }
+		log.info("fileXLSReq:[{}]", fileXLSReq.getName());
 
-    //201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
-    @SuppressWarnings("deprecation")
-    private List<EmpresaDcmsLote> convertFileXLSReqToListEmpresaDCMS(File fileXLSReq) {
-        log.info("convertFileXLSReqToListEmpresaDCMS - ini");
-        List<EmpresaDcmsLote> listEmpresaDcms = null;
-
-        if(fileXLSReq==null) {
-            return null;
-        }
-
-        log.info("fileXLSReq:[{}]", fileXLSReq.getName());
-
-        //h t t p s : //www. mkyong. com /java /apache-poi-reading-and-writing-excel-file-in-java/
+		//h t t p s : //www. mkyong. com /java /apache-poi-reading-and-writing-excel-file-in-java/
         try {
 
             FileInputStream excelFile = new FileInputStream(fileXLSReq);
             @SuppressWarnings("resource")
-            Workbook workbook = new XSSFWorkbook(excelFile);
+			Workbook workbook = new XSSFWorkbook(excelFile);
             Sheet datatypeSheet = workbook.getSheetAt(0);
             Iterator<Row> iterator = datatypeSheet.iterator();
 
             listEmpresaDcms = new ArrayList<EmpresaDcmsLote>();
-
+            
             while (iterator.hasNext()) {
 
                 Row currentRow = iterator.next();
                 Iterator<Cell> cellIterator = currentRow.iterator();
-
-                EmpresaDcmsLote empresaDcmsLote = new EmpresaDcmsLote();
+                
+                EmpresaDcmsLote empresaDcmsLote = new EmpresaDcmsLote(); 
 
                 while (cellIterator.hasNext()) {
 
@@ -931,18 +924,18 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell1.getCellType() == CellType.STRING.getCode()) {
-                        log.info("currentCell1:STRING[{}]", currentCell1.getStringCellValue());
+                    	log.info("currentCell1:STRING[{}]", currentCell1.getStringCellValue());
 //                    	if(currentCell1.getStringCellValue().equals("CD_VENDA")) {
 //                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
 //                    	}
                         empresaDcmsLote.setCdVenda(Long.getLong(currentCell1.getStringCellValue()));
                     } else if (currentCell1.getCellType() == CellType.NUMERIC.getCode()) {
-                        log.info("currentCell1:NUMERIC[{}]", currentCell1.getNumericCellValue());
+                    	log.info("currentCell1:NUMERIC[{}]", currentCell1.getNumericCellValue());
                         empresaDcmsLote.setCdVenda(new Double(currentCell1.getNumericCellValue()).longValue());
                     }
 
-                    if(!cellIterator.hasNext()) {
-                        continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha
+                    if(!cellIterator.hasNext()) { 
+                    	continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha                     	
                     }
 
                     //CD_EMPRESA //02
@@ -950,18 +943,18 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell2.getCellType() == CellType.STRING.getCode()) {
-                        log.info("currentCell2:STRING[{}]", currentCell2.getStringCellValue());
+                    	log.info("currentCell2:STRING[{}]", currentCell2.getStringCellValue());
 //                    	if(currentCell2.getStringCellValue().equals("CD_EMPRESA")) {
 //                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
 //                    	}
                         empresaDcmsLote.setCdEmpresa((Long.getLong(currentCell2.getStringCellValue())));
                     } else if (currentCell2.getCellType() == CellType.NUMERIC.getCode()) {
-                        log.info("currentCell2:NUMERIC[{}]", currentCell2.getNumericCellValue());
+                    	log.info("currentCell2:NUMERIC[{}]", currentCell2.getNumericCellValue());
                         empresaDcmsLote.setCdEmpresa(Long.getLong(String.valueOf(currentCell1.getNumericCellValue())));
                     }
 
-                    if(!cellIterator.hasNext()) {
-                        continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha
+                    if(!cellIterator.hasNext()) { 
+                    	continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha                     	
                     }
 
                     //CNPJ_CLIENTE //03
@@ -969,45 +962,45 @@ public class EmpresaServiceImpl implements EmpresaService {
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell3.getCellType() == CellType.STRING.getCode()) {
-                        log.info("currentCell3:STRING[{}]", currentCell3.getStringCellValue());
+                    	log.info("currentCell3:STRING[{}]", currentCell3.getStringCellValue());
 //                    	if(currentCell3.getStringCellValue().equals("CNPJ_CLIENTE")) {
 //                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
 //                    	}
                         empresaDcmsLote.setCnpj(currentCell3.getStringCellValue());
                     } else if (currentCell3.getCellType() == CellType.NUMERIC.getCode()) {
-                        log.info("currentCell3:NUMERIC[{}]", currentCell3.getNumericCellValue());
+                    	log.info("currentCell3:NUMERIC[{}]", currentCell3.getNumericCellValue());
                         empresaDcmsLote.setCnpj(String.valueOf(currentCell3.getNumericCellValue()));
                     }
-
-                    if(!cellIterator.hasNext()) {
-                        continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha
+                    
+                    if(!cellIterator.hasNext()) { 
+                    	continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha                     	
                     }
-
+                    
                     //RAZAO_SOCIAL_CLIENTE //04
                     Cell currentCell4 = cellIterator.next();
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell4.getCellType() == CellType.STRING.getCode()) {
-                        log.info("currentCell4:STRING[{}]", currentCell4.getStringCellValue());
+                    	log.info("currentCell4:STRING[{}]", currentCell4.getStringCellValue());
 //                    	if(currentCell4.getStringCellValue().equals("RAZAO_SOCIAL_CLIENTE")) {
 //                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
 //                    	}
                         empresaDcmsLote.setRazaoSocial(currentCell4.getStringCellValue());
                     } else if (currentCell4.getCellType() == CellType.NUMERIC.getCode()) {
-                        log.info("currentCell4:NUMERIC[{}]", currentCell4.getNumericCellValue());
+                    	log.info("currentCell4:NUMERIC[{}]", currentCell4.getNumericCellValue());
                         empresaDcmsLote.setRazaoSocial(String.valueOf(currentCell4.getNumericCellValue()));
                     }
 
-                    if(!cellIterator.hasNext()) {
-                        continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha
+                    if(!cellIterator.hasNext()) { 
+                    	continue; //201810052200 - esert - celula vazia acabou linha pula para proxima linha                     	
                     }
-
+                    
                     //CAD_DCMS //05
                     Cell currentCell5 = cellIterator.next();
                     //getCellTypeEnum shown as deprecated for version 3.15
                     //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
                     if (currentCell5.getCellType() == CellType.STRING.getCode()) {
-                        log.info("currentCell5:STRING[{}]", currentCell5.getStringCellValue());
+                    	log.info("currentCell5:STRING[{}]", currentCell5.getStringCellValue());
 //                    	if(currentCell5.getStringCellValue().equals("CAD_DCMS")) {
 //                    		continue; //pula linha de cabessalho e vai pra prochima //201810052154
 //                    	}
@@ -1019,33 +1012,33 @@ public class EmpresaServiceImpl implements EmpresaService {
                     }
 
                     break;
-
+                    
                 } //while (cellIterator.hasNext())
-
+                
                 String msgValidaEmpresaDcmsEntrada = validaEmpresaDcmsEntrada(empresaDcmsLote);
-
+                
                 if(msgValidaEmpresaDcmsEntrada!=null) { //se msg nao eh nulo
-                    if(msgValidaEmpresaDcmsEntrada.trim().isEmpty()) { //se nao tem msg
-                        listEmpresaDcms.add(empresaDcmsLote); //apenas adiciona item a lista
-                    } else if(msgValidaEmpresaDcmsEntrada.trim().equals("HEADER")) { //se msg eh HEADER
-                        //se for HEADER nao adiciona na lista de retorno
-                    } else { //se msg nao eh HEADER
-                        empresaDcmsLote.setRetorno(Constantes.ERRO); //atribui ERRO para item da lista
-                        empresaDcmsLote.setMensagemRetorno(msgValidaEmpresaDcmsEntrada); //atribui msg para item da lista
-
-                        listEmpresaDcms.add(empresaDcmsLote); //adiciona item a lista
-
-                        log.info("linha invalida; msgValidaEmpresaDcmsEntrada:[{}]; empresaDcmsEntrada:[{}]",
-                                msgValidaEmpresaDcmsEntrada,
-                                empresaDcmsLote
-                        );
-                    }
+                	if(msgValidaEmpresaDcmsEntrada.trim().isEmpty()) { //se nao tem msg
+                    	listEmpresaDcms.add(empresaDcmsLote); //apenas adiciona item a lista
+                	} else if(msgValidaEmpresaDcmsEntrada.trim().equals("HEADER")) { //se msg eh HEADER
+                		//se for HEADER nao adiciona na lista de retorno
+                	} else { //se msg nao eh HEADER
+	                	empresaDcmsLote.setRetorno(Constantes.ERRO); //atribui ERRO para item da lista
+	                	empresaDcmsLote.setMensagemRetorno(msgValidaEmpresaDcmsEntrada); //atribui msg para item da lista
+	                	
+	                	listEmpresaDcms.add(empresaDcmsLote); //adiciona item a lista
+	                	
+	                	log.info("linha invalida; msgValidaEmpresaDcmsEntrada:[{}]; empresaDcmsEntrada:[{}]", 
+	                			msgValidaEmpresaDcmsEntrada, 
+	                			empresaDcmsLote
+	                			);
+                	}
                 } else {
-                    listEmpresaDcms.add(empresaDcmsLote); //se msg nulo apenas adiciona a lista
+                	listEmpresaDcms.add(empresaDcmsLote); //se msg nulo apenas adiciona a lista
                 }
 
             } //while (iterator.hasNext())
-
+            
         } catch (FileNotFoundException e) {
             log.error("FileNotFoundException", e);
             return null;
@@ -1053,84 +1046,86 @@ public class EmpresaServiceImpl implements EmpresaService {
             log.error("IOException", e);
             return null;
         }
+        
+		log.info("convertFileXLSReqToListEmpresaDCMS - fim");
+		return listEmpresaDcms;
+	}
 
-        log.info("convertFileXLSReqToListEmpresaDCMS - fim");
-        return listEmpresaDcms;
-    }
+	//201810081550 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	private String validaEmpresaDcmsEntrada(EmpresaDcmsLote empresaDcmsLote) {
+		String retorno = "";
+		if(empresaDcmsLote==null) {
+			retorno += ",OBJETO NULO";
+		} else {
+			if(empresaDcmsLote.getCdVenda() != null 
+				&& 
+				empresaDcmsLote.getCdVenda().equals("CD_VENDA")) {
+				retorno = "HEADER"; //201810091122 - esert
+				return retorno; //201810091122 - esert
+			}
+			if(empresaDcmsLote.getCnpj()==null){
+				retorno += ",CNPJ_CLIENTE NULO";
+			} else {
+				if(empresaDcmsLote.getCnpj().trim().equals("CNPJ_CLIENTE")) {
+					retorno = "HEADER"; //201810091122 - esert
+					return retorno; //201810091122 - esert
+				} else if(empresaDcmsLote.getCnpj().trim().isEmpty()){
+					retorno += ",CNPJ_CLIENTE VAZIO";
+				}
+			}
+			if(empresaDcmsLote.getEmpDcms()==null){
+				retorno += ",CAD_DCMS NULO";
+			} else {
+				if(empresaDcmsLote.getEmpDcms().trim().isEmpty()){
+					retorno += ",CAD_DCMS VAZIO";
+				}
+			}
+		}
+		if(retorno!=null) {
+			if(!retorno.trim().isEmpty()) {
+				retorno = retorno.substring(1,retorno.length());
+			}
+		}
+		return retorno;
+	}
 
-    //201810081550 - esert - COR-861:Serviço - Receber / Retornar Planilha
-    private String validaEmpresaDcmsEntrada(EmpresaDcmsLote empresaDcmsLote) {
-        String retorno = "";
-        if(empresaDcmsLote==null) {
-            retorno += ",OBJETO NULO";
-        } else {
-            if(empresaDcmsLote.getCdVenda() != null) {
-                retorno = "HEADER"; //201810091122 - esert
-                return retorno; //201810091122 - esert
-            }
-            if(empresaDcmsLote.getCnpj()==null){
-                retorno += ",CNPJ_CLIENTE NULO";
-            } else {
-                if(empresaDcmsLote.getCnpj().trim().equals("CNPJ_CLIENTE")) {
-                    retorno = "HEADER"; //201810091122 - esert
-                    return retorno; //201810091122 - esert
-                } else if(empresaDcmsLote.getCnpj().trim().isEmpty()){
-                    retorno += ",CNPJ_CLIENTE VAZIO";
-                }
-            }
-            if(empresaDcmsLote.getEmpDcms()==null){
-                retorno += ",CAD_DCMS NULO";
-            } else {
-                if(empresaDcmsLote.getEmpDcms().trim().isEmpty()){
-                    retorno += ",CAD_DCMS VAZIO";
-                }
-            }
-        }
-        if(retorno!=null) {
-            if(!retorno.trim().isEmpty()) {
-                retorno = retorno.substring(1,retorno.length());
-            }
-        }
-        return retorno;
-    }
-
-    //201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
-    private File convertListEmpresaDCMSToFileXLSRes(List<EmpresaDcmsLote> listEmpresaDCMSRes, String nomeArquivo, String caminhoArquivo) {
-        log.info("convertListEmpresaDCMSToFileXLSRes - ini");
-
-        if(listEmpresaDCMSRes==null) {
-            log.info("convertListEmpresaDCMSToFileXLSRes - fim - listEmpresaDCMSRes==null");
-            return null;
-        }
-        if(nomeArquivo==null) {
-            log.info("convertListEmpresaDCMSToFileXLSRes - fim - nomeArquivo==null");
-            return null;
-        }
-        if(nomeArquivo.trim().isEmpty()) {
-            log.info("convertListEmpresaDCMSToFileXLSRes - fim - nomeArquivo.trim().isEmpty()");
-            return null;
-        }
-
-        log.info("listEmpresaDCMSRes:[{}]", listEmpresaDCMSRes.size());
-        log.info("nomeArquivo:[{}]", nomeArquivo);
-
-        int ultimoPonto = nomeArquivo.lastIndexOf(".");
-        String nomeSemPonto = nomeArquivo;
-        String extensaoComPonto = "";
-        String nomeArquivoRetorno = "";
-        if(ultimoPonto > -1) {
-            nomeSemPonto = nomeArquivo.substring(0, ultimoPonto);
-            extensaoComPonto = nomeArquivo.substring(ultimoPonto, nomeArquivo.length());
-            if(extensaoComPonto.indexOf("xlsx") >= -1){
-                extensaoComPonto = ".xls"; //201810091531 - esert - a extensao deve ser XLS e nao pode ser XLSX para a versao de Excel gerada pelo org.apache.poi/poi-ooxml/3.15 (vide pom.xml)
-            }
-            String HHmmss = new SimpleDateFormat("HHmmss").format(new Date().getTime());
-            nomeArquivoRetorno = nomeSemPonto + ".retorno" + HHmmss + extensaoComPonto;
-        }
-        if(caminhoArquivo==null || caminhoArquivo.trim().isEmpty()) {
-            caminhoArquivo = pathXlsLoteDcms; //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha
-        }
-        final File fileXLSRet = new File(caminhoArquivo + nomeArquivoRetorno);
+	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	private File convertListEmpresaDCMSToFileXLSRes(List<EmpresaDcmsLote> listEmpresaDCMSRes, String nomeArquivo, String caminhoArquivo) {
+		log.info("convertListEmpresaDCMSToFileXLSRes - ini");
+		
+		if(listEmpresaDCMSRes==null) {
+			log.info("convertListEmpresaDCMSToFileXLSRes - fim - listEmpresaDCMSRes==null");
+			return null;
+		}
+		if(nomeArquivo==null) {
+			log.info("convertListEmpresaDCMSToFileXLSRes - fim - nomeArquivo==null");
+			return null;
+		}
+		if(nomeArquivo.trim().isEmpty()) {
+			log.info("convertListEmpresaDCMSToFileXLSRes - fim - nomeArquivo.trim().isEmpty()");
+			return null;
+		}
+		
+		log.info("listEmpresaDCMSRes:[{}]", listEmpresaDCMSRes.size());
+		log.info("nomeArquivo:[{}]", nomeArquivo);
+		
+		int ultimoPonto = nomeArquivo.lastIndexOf(".");
+		String nomeSemPonto = nomeArquivo;
+		String extensaoComPonto = "";
+		String nomeArquivoRetorno = "";
+		if(ultimoPonto > -1) {
+			nomeSemPonto = nomeArquivo.substring(0, ultimoPonto);
+			extensaoComPonto = nomeArquivo.substring(ultimoPonto, nomeArquivo.length());
+			if(extensaoComPonto.indexOf("xlsx") >= -1){
+				extensaoComPonto = ".xls"; //201810091531 - esert - a extensao deve ser XLS e nao pode ser XLSX para a versao de Excel gerada pelo org.apache.poi/poi-ooxml/3.15 (vide pom.xml) 
+			}
+			String HHmmss = new SimpleDateFormat("HHmmss").format(new Date().getTime());
+			nomeArquivoRetorno = nomeSemPonto + ".retorno" + HHmmss + extensaoComPonto; 
+		}
+		if(caminhoArquivo==null || caminhoArquivo.trim().isEmpty()) {
+			caminhoArquivo = pathXlsLoteDcms; //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha 
+		}
+		final File fileXLSRet = new File(caminhoArquivo + nomeArquivoRetorno);
 
         log.info("convertListEmpresaDCMSToFileXLSRes - ini");
 
@@ -1187,10 +1182,10 @@ public class EmpresaServiceImpl implements EmpresaService {
             workbook.close();
 
             @SuppressWarnings("resource")
-            FileOutputStream fos = new FileOutputStream(fileXLSRet);
+			FileOutputStream fos = new FileOutputStream(fileXLSRet);
             fos.write(fileOut.toByteArray());
             fos.close(); //201810091511 - esert
-
+            
             log.info("fileXLSRet:[{}]", fileXLSRet);
             log.info("convertListEmpresaDCMSToFileXLSRes - fim");
             return fileXLSRet;
@@ -1202,33 +1197,33 @@ public class EmpresaServiceImpl implements EmpresaService {
             log.error(msgErro, e);
             return null;
         }
-    }
-
-    //201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
-    private String convertFileToBase64(File fileXLSRes) {
-        log.info("convertFileToBase64 - ini");
-        if(fileXLSRes==null) {
-            return null;
-        }
-        log.info("fileXLSRes:[{}]", fileXLSRes);
-        String arquivoBase64 = null;
-        byte[] byteArray = new byte[(int)fileXLSRes.length()];
-        log.info("byteArray.length:[{}]", byteArray.length);
-        FileInputStream fis;
-        try {
-            fis = new FileInputStream(fileXLSRes);
-            fis.read(byteArray);
-            arquivoBase64 = Base64.getEncoder().encodeToString(byteArray); //201810091600 - esert - atribuir
-            log.info("arquivoBase64.length():[{}]", arquivoBase64.length());
-        } catch (FileNotFoundException e) {
-            log.info("convertFileToBase64 - erro");
-            log.error("FileNotFoundException", e);
-        } catch (IOException e) {
-            log.info("convertFileToBase64 - erro");
-            log.error("IOException", e);
-        }
-        log.info("convertFileToBase64 - fim");
-        return arquivoBase64;
-    }
+	}
+	
+	//201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
+	private String convertFileToBase64(File fileXLSRes) {
+		log.info("convertFileToBase64 - ini");
+		if(fileXLSRes==null) {
+			return null;
+		}
+		log.info("fileXLSRes:[{}]", fileXLSRes);
+		String arquivoBase64 = null;
+		byte[] byteArray = new byte[(int)fileXLSRes.length()];
+		log.info("byteArray.length:[{}]", byteArray.length);
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(fileXLSRes);
+			fis.read(byteArray);
+			arquivoBase64 = Base64.getEncoder().encodeToString(byteArray); //201810091600 - esert - atribuir
+			log.info("arquivoBase64.length():[{}]", arquivoBase64.length());
+		} catch (FileNotFoundException e) {
+			log.info("convertFileToBase64 - erro");
+			log.error("FileNotFoundException", e);
+		} catch (IOException e) {
+			log.info("convertFileToBase64 - erro");
+			log.error("IOException", e);
+		}
+		log.info("convertFileToBase64 - fim");
+		return arquivoBase64;
+	}
 
 }
