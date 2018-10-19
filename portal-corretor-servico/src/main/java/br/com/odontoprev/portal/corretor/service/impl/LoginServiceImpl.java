@@ -135,9 +135,9 @@ public class LoginServiceImpl implements LoginService {
         } else {
             try {
 
-                if(!bloqueioService.doBloqueioCorretora(login.getUsuario())) { //201809181600 - esert - COR-730 : protecao
-                	throw new Exception("ERRO doBloqueioCorretora(login.getUsuario(" + login.getUsuario() + "))"); //201809201050 - esert - COR-730 : Novo servico (processar bloqueio)
-                }
+                //if(!bloqueioService.doBloqueioCorretora(login.getUsuario())) { //201809181600 - esert - COR-730 : protecao
+                //	throw new Exception("ERRO doBloqueioCorretora(login.getUsuario(" + login.getUsuario() + "))"); //201809201050 - esert - COR-730 : Novo servico (processar bloqueio)
+                //}
 
             	final TbodLogin loginCorretora = loginDAO
                         .findByTbodCorretoras(login.getUsuario());

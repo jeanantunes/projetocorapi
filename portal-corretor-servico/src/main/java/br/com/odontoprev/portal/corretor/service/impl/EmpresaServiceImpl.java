@@ -837,12 +837,12 @@ public class EmpresaServiceImpl implements EmpresaService {
 	@Override
 	public FileUploadLoteDCMSResponse processarLoteDCMS(FileUploadLoteDCMS fileUploadLoteDCMS) {
 		FileUploadLoteDCMSResponse fileUploadLoteDCMSResponse = new FileUploadLoteDCMSResponse();
-		
-		File fileXLSReq = this.convertBase64ToFile( 
-				fileUploadLoteDCMS.getArquivoBase64(), 
-				fileUploadLoteDCMS.getNomeArquivo(),
-				fileUploadLoteDCMS.getCaminhoArquivo() //201810052115 - esert - ferramenta para testes locais via postman
-				);
+
+        File fileXLSReq = this.convertBase64ToFile(
+                fileUploadLoteDCMS.getArquivoBase64(),
+                fileUploadLoteDCMS.getNomeArquivo(),
+                fileUploadLoteDCMS.getCaminhoArquivo() //201810052115 - esert - ferramenta para testes locais via postman
+        );
 
 		List<EmpresaDcmsLote> listEmpresaDCMSReq = this.convertFileXLSReqToListEmpresaDCMS(fileXLSReq);
 		
@@ -854,6 +854,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 				fileUploadLoteDCMS.getCaminhoArquivo()
 				);
 
+
 		String arquivoBase64Res = convertFileToBase64(fileXLSRes);
 
 		fileUploadLoteDCMSResponse.setArquivoBase64(arquivoBase64Res);
@@ -864,35 +865,35 @@ public class EmpresaServiceImpl implements EmpresaService {
 		return fileUploadLoteDCMSResponse;
 	}
 
-	//201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
-	private File convertBase64ToFile(String arquivoBase64, String nomeArquivo, String caminhoArquivo) {
-		log.info("convertBase64ToFile - ini");
-		File file = null;
-		byte[] byteArray = null;
-		if(caminhoArquivo==null || caminhoArquivo.trim().isEmpty()) { //201810052115 - esert - ferramenta para testes locais via postman
+    //201810051810 - esert - COR-861:Serviço - Receber / Retornar Planilha
+    private File convertBase64ToFile(String arquivoBase64, String nomeArquivo, String caminhoArquivo) {
+        log.info("convertBase64ToFile - ini");
+        File file = null;
+        byte[] byteArray = null;
+        if (caminhoArquivo == null || caminhoArquivo.trim().isEmpty()) { //201810052115 - esert - ferramenta para testes locais via postman
             String caminhoNomeArquivo = pathXlsLoteDcms + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
             log.info("caminhoNomeArquivo:[{}]", caminhoNomeArquivo);
             file = new File(caminhoNomeArquivo);
-			byteArray = Base64.getDecoder().decode(arquivoBase64);
-			try (OutputStream stream = new FileOutputStream(file)) { //201810181928 //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha - pathXlsLoteDcms
-			    try {
-					stream.write(byteArray);
-				    //file = new File(nomeArquivo);
-				} catch (IOException e) {
-					log.error("IOException", e);
-				}
-			} catch (FileNotFoundException e1) {
-				log.error("FileNotFoundException", e1);
-			} catch (IOException e1) {
-				log.error("IOException", e1);
-			}
-		} else {
-			String caminhoNomeArquivo = caminhoArquivo + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
-			file = new File(caminhoNomeArquivo); //201810052115 - esert - ferramenta para testes locais via postman
-		}
-		log.info("convertBase64ToFile - fim");
-		return file;
-	}
+            byteArray = Base64.getDecoder().decode(arquivoBase64);
+            try (OutputStream stream = new FileOutputStream(file)) { //201810181928 //201810111925 - esert - COR-861:Servico - Receber / Retornar Planilha - pathXlsLoteDcms
+                try {
+                    stream.write(byteArray);
+                    //file = new File(nomeArquivo);
+                } catch (IOException e) {
+                    log.error("IOException", e);
+                }
+            } catch (FileNotFoundException e1) {
+                log.error("FileNotFoundException", e1);
+            } catch (IOException e1) {
+                log.error("IOException", e1);
+            }
+        } else {
+            String caminhoNomeArquivo = caminhoArquivo + "/" + nomeArquivo; //201810052115 - esert - ferramenta para testes locais via postman
+            file = new File(caminhoNomeArquivo); //201810052115 - esert - ferramenta para testes locais via postman
+        }
+        log.info("convertBase64ToFile - fim");
+        return file;
+    }
 
 	//201810051900 - esert - COR-861:Serviço - Receber / Retornar Planilha
 	@SuppressWarnings("deprecation")
@@ -1064,7 +1065,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 		if(empresaDcmsLote==null) {
 			retorno += ",OBJETO NULO";
 		} else {
-			if(empresaDcmsLote.getCdVenda() != null) {
+
+			if(empresaDcmsLote.getCdVenda() != null) { // 201810182259 DEPLOY DE ULTIMA HORA
+
 				retorno = "HEADER"; //201810091122 - esert
 				return retorno; //201810091122 - esert
 			}
