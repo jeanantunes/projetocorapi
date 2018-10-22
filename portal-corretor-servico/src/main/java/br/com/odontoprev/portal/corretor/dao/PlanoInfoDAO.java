@@ -12,7 +12,7 @@ import br.com.odontoprev.portal.corretor.model.TbodPlanoInfo;
 @org.springframework.stereotype.Repository
 public interface PlanoInfoDAO extends Repository<TbodPlanoInfo, Long> {
 
-	@Query("from TbodPlanoInfo where ativo = :Ativo order by tipoSegmento")
+	@Query("from TbodPlanoInfo where ativo = :Ativo order by tipoSegmento, cdPlanoInfo")
 	List<TbodPlanoInfo> findByAtivo(@Param("Ativo") String Ativo);
 	
 }

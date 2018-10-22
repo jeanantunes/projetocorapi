@@ -5,9 +5,9 @@ import java.util.Objects;
 
 public class Arquivo implements Serializable {
 
-	private static final long serialVersionUID = 1045042428826361544L;
+    private static final long serialVersionUID = 1045042428826361544L;
 	
-	Long cdArquivo;
+    Long cdArquivo;
     String  nomeArquivo;
     String tipoConteudo;
     Long tamanho;
