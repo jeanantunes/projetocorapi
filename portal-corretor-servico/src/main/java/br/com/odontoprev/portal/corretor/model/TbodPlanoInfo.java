@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+/*201810221532 - esert - COR-932:API - Novo GET /planoinfo*/
 @Entity
 @Table(name = "TBOD_PLANO_INFO")
 public class TbodPlanoInfo implements Serializable {
@@ -21,7 +22,7 @@ public class TbodPlanoInfo implements Serializable {
 	@Column(name = "CD_PLANO_INFO") //"CD_PLANO_INFO" NUMBER(10) NOT NULL, -- PK será referenciada pela TBOD_PLANO.
 	@SequenceGenerator(name = "SEQ_TBOD_PLANO_INFO", sequenceName = "SEQ_TBOD_PLANO_INFO", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_PLANO_INFO")
-	private long cdPlanoInfo;
+	private Long cdPlanoInfo;
 
 	@Column(name = "NOME_PLANO_INFO") //"NOME_PLANO_INFO" VARCHAR(255) NOT NULL,
 	private String nomePlanoInfo;
@@ -53,7 +54,7 @@ public class TbodPlanoInfo implements Serializable {
 	public TbodPlanoInfo() {
 	}
 
-	public long getCdPlanoInfo() {
+	public Long getCdPlanoInfo() {
 		return cdPlanoInfo;
 	}
 

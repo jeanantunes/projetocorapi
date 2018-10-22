@@ -5,15 +5,16 @@ import java.util.Objects;
 
 public class PlanoInfo implements Serializable {
 
-    Long codigoPlanoInfo;
+	private static final long serialVersionUID = 1336338726489381946L;
+	
+	Long codigoPlanoInfo;
     String nomePlanoInfo;
     String descricao;
     Long codigoArquivoGeral;
     Long codigoArquivoCarencia;
-    Long cdArquivoIcone;
+    Long codigoArquivoIcone;
     String tipoSegmento;
     String ativo;
-    Long codigoArquivoIcone;
     Arquivo arquivoIcone;
 
 
@@ -55,14 +56,6 @@ public class PlanoInfo implements Serializable {
 
     public void setCodigoArquivoCarencia(Long codigoArquivoCarencia) {
         this.codigoArquivoCarencia = codigoArquivoCarencia;
-    }
-
-    public Long getCdArquivoIcone() {
-        return cdArquivoIcone;
-    }
-
-    public void setCdArquivoIcone(Long cdArquivoIcone) {
-        this.cdArquivoIcone = cdArquivoIcone;
     }
 
     public String getTipoSegmento() {
@@ -107,7 +100,6 @@ public class PlanoInfo implements Serializable {
                 Objects.equals(descricao, planoInfo.descricao) &&
                 Objects.equals(codigoArquivoGeral, planoInfo.codigoArquivoGeral) &&
                 Objects.equals(codigoArquivoCarencia, planoInfo.codigoArquivoCarencia) &&
-                Objects.equals(cdArquivoIcone, planoInfo.cdArquivoIcone) &&
                 Objects.equals(tipoSegmento, planoInfo.tipoSegmento) &&
                 Objects.equals(ativo, planoInfo.ativo) &&
                 Objects.equals(codigoArquivoIcone, planoInfo.codigoArquivoIcone) &&
@@ -116,7 +108,7 @@ public class PlanoInfo implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigoPlanoInfo, nomePlanoInfo, descricao, codigoArquivoGeral, codigoArquivoCarencia, cdArquivoIcone, tipoSegmento, ativo, codigoArquivoIcone, arquivoIcone);
+        return Objects.hash(codigoPlanoInfo, nomePlanoInfo, descricao, codigoArquivoGeral, codigoArquivoCarencia, tipoSegmento, ativo, codigoArquivoIcone, arquivoIcone);
     }
 
     @Override
@@ -127,7 +119,6 @@ public class PlanoInfo implements Serializable {
                 ", descricao='" + descricao + '\'' +
                 ", codigoArquivoGeral=" + codigoArquivoGeral +
                 ", codigoArquivoCarencia=" + codigoArquivoCarencia +
-                ", cdArquivoIcone=" + cdArquivoIcone +
                 ", tipoSegmento='" + tipoSegmento + '\'' +
                 ", ativo='" + ativo + '\'' +
                 ", codigoArquivoIcone=" + codigoArquivoIcone +

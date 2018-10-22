@@ -4,25 +4,40 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.odontoprev.portal.corretor.dao.ArquivoDAO;
 import br.com.odontoprev.portal.corretor.dao.PlanoDAO;
+import br.com.odontoprev.portal.corretor.dao.PlanoInfoDAO;
+import br.com.odontoprev.portal.corretor.dto.Arquivo;
 import br.com.odontoprev.portal.corretor.dto.Plano;
+import br.com.odontoprev.portal.corretor.dto.PlanoInfo;
+import br.com.odontoprev.portal.corretor.dto.PlanoInfos;
+import br.com.odontoprev.portal.corretor.model.TbodArquivo;
 import br.com.odontoprev.portal.corretor.model.TbodPlano;
+import br.com.odontoprev.portal.corretor.model.TbodPlanoInfo;
 import br.com.odontoprev.portal.corretor.service.PlanoService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
 
 @Service
 @Transactional(rollbackFor={Exception.class}) //201806281838 - esert - COR-348
 public class PlanoServiceImpl implements PlanoService {
 	
-	private static final Log log = LogFactory.getLog(PlanoServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(PlanoServiceImpl.class);
 	
 	@Autowired
-	PlanoDAO planoDAO;
+	private PlanoDAO planoDAO;
+
+	@Autowired
+	private PlanoInfoDAO planoInfoDAO; //201810221659 - esert - COR-932:API - Novo GET /planoinfo
+
+	@Autowired
+	private ArquivoDAO arquivoDAO; //201810221721 - esert - COR-932:API - Novo GET /planoinfo
 
 	@Override
 	public List<Plano> getPlanos() {
@@ -80,6 +95,70 @@ public class PlanoServiceImpl implements PlanoService {
 		
 		return planos;
 		
+	}
+
+	@Override
+	public PlanoInfos getpPlanoInfos() {
+		log.info("getpPlanoInfos - ini");
+		PlanoInfos planoInfos = new PlanoInfos();
+		
+//		try {
+			List<TbodPlanoInfo> listTbodPlanoInfo = planoInfoDAO.findByAtivo(Constantes.SIM);
+			
+			if(listTbodPlanoInfo==null || listTbodPlanoInfo.size()==0) {
+				log.info("getpPlanoInfos - listTbodPlanoInfo==null && listTbodPlanoInfo.size()==0");
+				return null;
+			}
+			
+			if(listTbodPlanoInfo!=null) {
+				planoInfos.setPlanoInfos(new ArrayList<PlanoInfo>());
+			}
+			for(TbodPlanoInfo tbodPlanoInfo : listTbodPlanoInfo) {
+				PlanoInfo planoInfo = new PlanoInfo();
+				
+				planoInfo.setCodigoPlanoInfo(tbodPlanoInfo.getCdPlanoInfo());
+				planoInfo.setNomePlanoInfo(tbodPlanoInfo.getNomePlanoInfo());
+				planoInfo.setDescricao(tbodPlanoInfo.getDescricao());
+				planoInfo.setTipoSegmento(tbodPlanoInfo.getTipoSegmento());
+				planoInfo.setAtivo(tbodPlanoInfo.getAtivo());
+				
+				if(tbodPlanoInfo.getTbodArquivoGeral()!=null) {
+					planoInfo.setCodigoArquivoGeral(tbodPlanoInfo.getTbodArquivoGeral().getCodigoArquivo());
+				}
+				if(tbodPlanoInfo.getTbodArquivoCarencia()!=null) {
+					planoInfo.setCodigoArquivoCarencia(tbodPlanoInfo.getTbodArquivoCarencia().getCodigoArquivo());
+				}
+				if(tbodPlanoInfo.getTbodArquivoIcone()!=null) {
+					planoInfo.setCodigoArquivoIcone(tbodPlanoInfo.getTbodArquivoIcone().getCodigoArquivo());
+				}
+				
+				if(planoInfo.getCodigoArquivoIcone()!=null) {
+					TbodArquivo tbodArquivo = arquivoDAO.findOne(planoInfo.getCodigoArquivoIcone());
+					if(tbodArquivo!=null) {
+						Arquivo arquivoIcone = new Arquivo();
+						arquivoIcone.setCdArquivo(tbodArquivo.getCodigoArquivo());
+						arquivoIcone.setNomeArquivo(tbodArquivo.getNomeArquivo());
+						arquivoIcone.setTipoConteudo(tbodArquivo.getTipoConteudo());
+						arquivoIcone.setTamanho(tbodArquivo.getTamanhoArquivo());
+						arquivoIcone.setArquivoBase64(Base64.encodeBase64String(tbodArquivo.getArquivo()));
+						planoInfo.setArquivoIcone(arquivoIcone);
+					} else {
+						log.info("tbodArquivo==null para planoInfo.getCodigoArquivoIcone({})", planoInfo.getCodigoArquivoIcone());
+					}
+				} else {
+					log.info("planoInfo.getCodigoArquivoIcone()==null para tbodPlanoInfo.getCdPlanoInfo():[{}]", tbodPlanoInfo.getCdPlanoInfo());
+				}
+				
+				planoInfos.getPlanoInfos().add(planoInfo);
+			}
+//		} catch (Exception e) {
+//			log.info("getpPlanoInfos - erro");
+//			log.error("getpPlanoInfos - erro", e);
+//			return null;
+//		}
+		
+		log.info("getpPlanoInfos - fim");
+		return planoInfos;
 	}
 
 }

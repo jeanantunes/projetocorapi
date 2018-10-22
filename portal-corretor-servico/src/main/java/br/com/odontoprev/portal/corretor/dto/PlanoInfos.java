@@ -6,7 +6,9 @@ import java.util.Objects;
 
 public class PlanoInfos implements Serializable {
 
-    List<PlanoInfo> planoInfos;
+	private static final long serialVersionUID = -853705059870114824L;
+	
+	List<PlanoInfo> planoInfos;
 
     public List<PlanoInfo> getPlanoInfos() {
         return planoInfos;
