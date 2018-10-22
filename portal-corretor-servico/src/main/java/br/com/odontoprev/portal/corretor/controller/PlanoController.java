@@ -45,6 +45,7 @@ public class PlanoController {
 		
 	}
 	
+	/*201810221655 - esert - COR-932:API - Novo GET /planoinfo */
 	@RequestMapping(value = "/planoinfo", method = { RequestMethod.GET })
 	public ResponseEntity<PlanoInfos> getPlanoInfos() {
 		PlanoInfos planoInfos = null;

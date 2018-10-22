@@ -97,6 +97,7 @@ public class PlanoServiceImpl implements PlanoService {
 		
 	}
 
+	/*201810221655 - esert - COR-932:API - Novo GET /planoinfo */
 	@Override
 	public PlanoInfos getpPlanoInfos() {
 		log.info("getpPlanoInfos - ini");

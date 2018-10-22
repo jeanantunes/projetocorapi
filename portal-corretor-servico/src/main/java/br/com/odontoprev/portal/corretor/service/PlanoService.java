@@ -11,7 +11,7 @@ public interface PlanoService {
 
 	public List<Plano> findPlanosByEmpresa(long cdEmpresa);
 
-	public PlanoInfos getpPlanoInfos();
+	public PlanoInfos getpPlanoInfos(); /*201810221655 - esert - COR-932:API - Novo GET /planoinfo */
 
 }
 
