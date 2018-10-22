@@ -17,6 +17,7 @@ import javax.persistence.Table;
  * The persistent class for the TBOD_PLANO database table.
  * 
  */
+//201810221552 - esert - COR-932:API - Novo GET /planoinfo - incluido CD_PLANO_INFO tbodPlanoInfo
 @Entity
 @Table(name = "TBOD_PLANO")
 @NamedQuery(name = "TbodPlano.findAll", query = "SELECT t FROM TbodPlano t")
@@ -60,6 +61,11 @@ public class TbodPlano implements Serializable {
 	// bi-directional many-to-one association to TbodVenda
 	@OneToMany(mappedBy = "tbodPlano")
 	private List<TbodVenda> tbodVendas;
+
+	// bi-directional many-to-one association to TbodTipoPlano
+	@ManyToOne
+	@JoinColumn(name = "CD_PLANO_INFO") //201810221552 - esert - COR-932:API - Novo GET /planoinfo
+	private TbodPlanoInfo tbodPlanoInfo;
 
 	public TbodPlano() {
 	}
@@ -178,6 +184,32 @@ public class TbodPlano implements Serializable {
 		tbodVenda.setTbodPlano(null);
 
 		return tbodVenda;
+	}
+
+	public TbodPlanoInfo getTbodPlanoInfo() {
+		return tbodPlanoInfo;
+	}
+
+	public void setTbodPlanoInfo(TbodPlanoInfo tbodPlanoInfo) {
+		this.tbodPlanoInfo = tbodPlanoInfo;
+	}
+
+	@Override
+	public String toString() {
+		return "TbodPlano [" 
+				+ "cdPlano=" + cdPlano 
+				+ ", ativo=" + ativo 
+				+ ", codigo=" + codigo 
+				+ ", nomePlano=" + nomePlano
+				+ ", titulo=" + titulo 
+				+ ", valorAnual=" + valorAnual 
+				+ ", valorMensal=" + valorMensal 
+				+ ", sigla=" + sigla 
+				+ ", tbodTipoPlano=" + tbodTipoPlano 
+				+ ", tbodPlanoCoberturas=" + tbodPlanoCoberturas
+				+ ", tbodVendas=" + tbodVendas 
+				+ ", tbodPlanoInfo=" + tbodPlanoInfo 
+				+ "]";
 	}
 
 }
