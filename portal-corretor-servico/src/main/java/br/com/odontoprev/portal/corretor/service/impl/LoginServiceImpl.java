@@ -155,7 +155,7 @@ public class LoginServiceImpl implements LoginService {
                     String dtAceiteContrato = null;
                     List<TbodContratoCorretora> listTbodContratoCorretora = 
                     		//contratoCorretoraDAO.findByTbodCorretoraCdCorretora(corretora.getCdCorretora());
-                    		contratoCorretoraDAO.findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(
+                    		contratoCorretoraDAO.findContratoCdCorretoraAndCdContratoModelo2Or1(
                     				corretora.getCdCorretora(), 
                     				Constantes.CONTRATO_CORRETAGEM_V1, 
                     				Constantes.CONTRATO_INTERMEDIACAO_V1);
