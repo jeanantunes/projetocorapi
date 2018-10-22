@@ -1,31 +1,10 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
-import javax.transaction.Transactional;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import br.com.odontoprev.portal.corretor.business.SendMailContratoCorretora;
 import br.com.odontoprev.portal.corretor.dao.ContratoCorretoraDAO;
 import br.com.odontoprev.portal.corretor.dao.ContratoModeloDAO;
 import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretora;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraDataAceite;
-import br.com.odontoprev.portal.corretor.dto.ContratoCorretoraPreenchido;
-import br.com.odontoprev.portal.corretor.dto.ContratoModelo;
-import br.com.odontoprev.portal.corretor.dto.EmailContratoCorretora;
+import br.com.odontoprev.portal.corretor.dto.*;
 import br.com.odontoprev.portal.corretor.model.TbodContratoCorretora;
 import br.com.odontoprev.portal.corretor.model.TbodContratoModelo;
 import br.com.odontoprev.portal.corretor.model.TbodCorretora;
@@ -36,6 +15,21 @@ import br.com.odontoprev.portal.corretor.util.Constantes;
 import br.com.odontoprev.portal.corretor.util.DataUtil;
 import br.com.odontoprev.portal.corretor.util.Html2Pdf;
 import br.com.odontoprev.portal.corretor.util.StringsUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -133,7 +127,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 
 			//List<TbodContratoCorretora> listTbodContratoCorretora = contratoCorretoraDAO.findByTbodCorretoraCdCorretora(cdCorretora);
 			List<TbodContratoCorretora> listTbodContratoCorretora = 
-					contratoCorretoraDAO.findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(
+					contratoCorretoraDAO.findContratoCdCorretoraAndCdContratoModelo2Or1(
 							cdCorretora,
 							Constantes.CONTRATO_CORRETAGEM_V1,
 							Constantes.CONTRATO_INTERMEDIACAO_V1
@@ -493,7 +487,7 @@ public class ContratoCorretoraServiceImpl implements ContratoCorretoraService {
 			log.info("getContratoCorretoraPreenchidoByteArray(" + cdCorretora + ") - fim");
 			return createPdfContratoCorretora(
 				contratoCorretoraDAO
-				.findByTbodCorretoraCdCorretoraAndTbodContratoModeloCdContratoModeloOrTbodContratoModeloCdContratoModelo(
+				.findContratoCdCorretoraAndCdContratoModelo2Or1(
 						cdCorretora, 
 						Constantes.CONTRATO_CORRETAGEM_V1, 
 						Constantes.CONTRATO_INTERMEDIACAO_V1
