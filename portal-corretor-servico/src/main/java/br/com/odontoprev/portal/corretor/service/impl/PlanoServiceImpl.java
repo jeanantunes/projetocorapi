@@ -1,6 +1,7 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,6 +142,7 @@ public class PlanoServiceImpl implements PlanoService {
 						arquivoIcone.setNomeArquivo(tbodArquivo.getNomeArquivo());
 						arquivoIcone.setTipoConteudo(tbodArquivo.getTipoConteudo());
 						arquivoIcone.setTamanho(tbodArquivo.getTamanhoArquivo());
+						arquivoIcone.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(tbodArquivo.getDataCriacao())); //201810231726
 						arquivoIcone.setArquivoBase64(Base64.encodeBase64String(tbodArquivo.getArquivo()));
 						planoInfo.setArquivoIcone(arquivoIcone);
 					} else {

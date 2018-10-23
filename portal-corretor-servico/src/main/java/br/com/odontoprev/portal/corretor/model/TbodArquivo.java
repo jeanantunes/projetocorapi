@@ -28,7 +28,8 @@ public class TbodArquivo implements Serializable {
 	@Column(name = "NOME_ARQUIVO") //"NOME_ARQUIVO" VARCHAR(255) NOT NULL,
 	private String nomeArquivo;
 
-	@Temporal(TemporalType.DATE)
+	//h t t p s : // stackoverflow .com /questions /35189340 /jpa-date-not-show-hour-minute-second
+	@Temporal(TemporalType.TIMESTAMP) //201810231732 - esert - de DATE para TIMESTAMP 
 	@Column(name = "DATA_CRIACAO") //"DATA_CRIACAO" DATE NOT NULL,
 	private Date dataCriacao;
 	
