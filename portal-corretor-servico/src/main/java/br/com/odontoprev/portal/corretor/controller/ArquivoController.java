@@ -47,7 +47,7 @@ public class ArquivoController {
     }
 
     //201810231800 - esert - COR-723:API - Novo GET/ARQUIVO/(ID)
-    @RequestMapping(value = "/arquivo/arquivo/{cdArquivo}/arquivo", method = RequestMethod.GET)
+    @RequestMapping(value = "/arquivo/{cdArquivo}/arquivo", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getArquivoByteArray(@PathVariable("cdArquivo") Long cdArquivo) {
         log.info("getArquivoByteArray - ini");
         try {
@@ -75,7 +75,7 @@ public class ArquivoController {
     }
     
     //201810231800 - esert - COR-723:API - Novo GET/ARQUIVO/(ID)
-    @RequestMapping(value = "/arquivo/arquivo/{cdArquivo}/json", method = RequestMethod.GET)
+    @RequestMapping(value = "/arquivo/{cdArquivo}/json", method = RequestMethod.GET)
     public ResponseEntity<Arquivo> getArquivo(@PathVariable("cdArquivo") Long cdArquivo) {
     	log.info("getArquivo - ini");
     	try {

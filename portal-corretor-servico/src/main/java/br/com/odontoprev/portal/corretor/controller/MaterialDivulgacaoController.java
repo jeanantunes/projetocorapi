@@ -95,7 +95,8 @@ public class MaterialDivulgacaoController {
 	}
 
 	//201807161117 - esert - qg para validacao da imagem obtida
-	@RequestMapping(value = "/arquivo/{id}", method = RequestMethod.GET)
+	//201810241452 - esert/yalm - COR-721:API - Novo POST/ARQUIVO Fazer Carga - especializar a rota para evitar duplicidade com novas rotas do ArquivoController.
+	@RequestMapping(value = "/materialdivulgacao/arquivo/{id}", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> getArquivo(@PathVariable("id") Long id) {
 	    byte[] image = Base64.decodeBase64(materialDivulgacaoService.getMaterialDivulgacao(id, true).getArquivo());
 	    return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
