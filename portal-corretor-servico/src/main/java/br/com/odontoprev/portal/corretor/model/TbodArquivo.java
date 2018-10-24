@@ -69,7 +69,7 @@ public class TbodArquivo implements Serializable {
 		this.nomeArquivo = nomeArquivo;
 	}
 
-	public Long getTamanhoArquivo() {
+	public Long getTamanho() {
 		return tamanho;
 	}
 
