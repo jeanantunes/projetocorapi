@@ -1,10 +1,11 @@
 package br.com.odontoprev.portal.corretor.service;
 
 import br.com.odontoprev.portal.corretor.dto.Arquivo;
+import br.com.odontoprev.portal.corretor.dto.Arquivos;
 
 public interface ArquivoService {
 
-	public Arquivo saveArquivo(Arquivo arquivo);
+	public Arquivos saveArquivo(Arquivos arquivos);
 
 	public Arquivo getByCdArquivo(Long cdArquivo);
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.odontoprev.portal.corretor.dto.Arquivo;
+import br.com.odontoprev.portal.corretor.dto.Arquivos;
 import br.com.odontoprev.portal.corretor.service.ArquivoService;
 
 //201810220000 - jota - COR-723:API - Novo GET/ARQUIVO/(ID) - assinaturas dos metodos
@@ -28,15 +29,31 @@ public class ArquivoController {
     @Autowired
     private ArquivoService arquivoService;
 
-    //201810231800 - esert - COR-723:API - Novo GET/ARQUIVO/(ID)
+    //201810231800 - esert - COR-721:API POST/arquivo/carregar
+    //201810241700 - esert - COR-721:API POST/arquivo/carregar - alterado para suportar List<Arquivo> 
     @RequestMapping(value = "/arquivo/carregar", method = {RequestMethod.POST})
-    public ResponseEntity<Arquivo> carregarArquivo(@RequestBody Arquivo arquivo) throws ParseException {
+    public ResponseEntity<Arquivos> carregarArquivo(@RequestBody Arquivos arquivos) throws ParseException {
         log.info("carregarArquivo - ini");
-        log.info("arquivoInfo:[".concat(arquivo.toString()).concat("]"));
-        Arquivo responseObject;
-
+        Arquivos responseObject = null;
+        
         try {
-            responseObject = arquivoService.saveArquivo(arquivo);
+        	if(arquivos==null) {
+                log.info("ERRO em carregarArquivo(): arquivos==null");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        	} else if(arquivos.getArquivos()==null) {
+                log.info("ERRO em carregarArquivo(): arquivos.getArquivos()==null");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        	} else if(arquivos.getArquivos().size()==0) {
+                log.info("ERRO em carregarArquivo(): arquivos.getArquivos().size()==0");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        	}
+        	
+        	responseObject = arquivoService.saveArquivo(arquivos);
+        	
+        	if(responseObject==null) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        	}
+
         } catch (Exception e) {
             log.error("ERRO em carregarArquivo()", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

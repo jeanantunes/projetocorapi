@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.codec.binary.Base64;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.odontoprev.portal.corretor.dao.ArquivoDAO;
 import br.com.odontoprev.portal.corretor.dto.Arquivo;
+import br.com.odontoprev.portal.corretor.dto.Arquivos;
 import br.com.odontoprev.portal.corretor.model.TbodArquivo;
 import br.com.odontoprev.portal.corretor.service.ArquivoService;
 
@@ -36,30 +38,51 @@ public class ArquivoServiceImpl implements ArquivoService {
 		
 		TbodArquivo entity = arquivoDAO.findOne(cdArquivo);
 						
-		Arquivo arquivo = adaptEntityToDto(entity);
+		Arquivo arquivo = adaptEntityToDto(entity, true); //201810241823 - esert - true faz gerar e retornar do base64 na consulta
 		
 		log.info("getByCdArquivo - fim");
 		return arquivo;
-
 	}
 	
+	//201810241700 - esert - COR-721:API POST/arquivo/carregar - alterado para suportar List<Arquivo> 
 	@Override
-	public Arquivo saveArquivo(Arquivo dto) {
-		log.info("saveArquivo - ini");	
-		TbodArquivo tbod = null;
-		
-		if(dto.getCdArquivo() != null) {
-			tbod = arquivoDAO.findOne(dto.getCdArquivo());
+	public Arquivos saveArquivo(Arquivos listDtoReq) {
+		log.info("saveArquivo - ini");
+		Arquivos listDtoRes = null;
+		if(listDtoReq==null) {
+			return listDtoRes;
+		}
+		listDtoRes = new Arquivos();
+		listDtoRes.setArquivos(new ArrayList<Arquivo>());
+		for(Arquivo dto : listDtoReq.getArquivos()) {
+            log.info("arquivo:[".concat(dto.toString()).concat("]"));
+			Arquivo dtoRes = null;
+			try {
+				TbodArquivo tbod = null;
+				
+				if(dto.getCdArquivo() != null) {
+					tbod = arquivoDAO.findOne(dto.getCdArquivo());
+				}
+				
+				tbod = adaptDtoToEntity(dto);
+				
+				tbod = arquivoDAO.save(tbod);
+				
+				dtoRes = adaptEntityToDto(tbod, false); //201810241823 - esert - false poupa gerar e retornar do base64 na gravacao
+				
+			} catch (Exception e) {
+				dtoRes = new Arquivo();
+				dto.setNomeArquivo(dto.getNomeArquivo());
+				dto.setCaminhoArquivo(dto.getCaminhoArquivo());
+				dto.setArquivoBase64("Erro:[" + e.getMessage() + "] para dto.getNomeArquivo():[" + dto.getNomeArquivo() + "]");
+				log.info("Erro:[" + e.getMessage() + "] para dto.getNomeArquivo():[" + dto.getNomeArquivo() + "]");
+			}
+			
+			listDtoRes.getArquivos().add(dtoRes);
 		}
 		
-		tbod = adaptDtoToEntity(dto);
-		
-		tbod = arquivoDAO.save(tbod);
-		
-		dto = adaptEntityToDto(tbod);
-		
 		log.info("saveArquivo - fim");	
-		return dto;
+		return listDtoRes;
 	}
 
 	private TbodArquivo adaptDtoToEntity(Arquivo dto) {
@@ -122,7 +145,7 @@ public class ArquivoServiceImpl implements ArquivoService {
 		return entity;
 	}
 
-	private Arquivo adaptEntityToDto(TbodArquivo entity) {
+	private Arquivo adaptEntityToDto(TbodArquivo entity, boolean withBase64) {
 		log.info("Arquivo adaptEntityToDto(TbodArquivo entity) - ini");
 		Arquivo dto = null;
 		try {
@@ -144,8 +167,10 @@ public class ArquivoServiceImpl implements ArquivoService {
 				
 				dto.setTamanho( entity.getArquivo()!=null ? (long)entity.getArquivo().length : -1L );
 
-				dto.setArquivoBase64(Base64.encodeBase64String(entity.getArquivo())); //201807131230
-				//dto.setTamanho( dto.getArquivoBase64()!=null ? (long)dto.getArquivoBase64().length() : -1L ); //201810241251 - esert - informar o tamanho real em bytes e nao o tamanho do string base64
+				if(withBase64) {
+					dto.setArquivoBase64(Base64.encodeBase64String(entity.getArquivo())); //201807131230
+					//dto.setTamanho( dto.getArquivoBase64()!=null ? (long)dto.getArquivoBase64().length() : -1L ); //201810241251 - esert - informar o tamanho real em bytes e nao o tamanho do string base64
+				}
 
 			}
 		} catch (Exception e) {

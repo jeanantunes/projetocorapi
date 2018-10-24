@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.junit.Before;
@@ -26,6 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.google.gson.Gson;
 
 import br.com.odontoprev.portal.corretor.dto.Arquivo;
+import br.com.odontoprev.portal.corretor.dto.Arquivos;
 import br.com.odontoprev.portal.corretor.service.ArquivoService;
 
 //201810231900 - esert - COR-723:API - Novo GET/ARQUIVO/(ID)
@@ -153,6 +155,7 @@ public class ArquivoControllerTest {
 		               .andExpect(status().isNoContent());
 	   }
 
+	   //201810241700 - esert - COR-721:API POST/arquivo/carregar - alterado para suportar List<Arquivo> 
 	   @Test
 	   public void testOk200carregarArquivo() throws Exception {
 	       //Montando Request
@@ -167,7 +170,10 @@ public class ArquivoControllerTest {
 	       dtoGiven.setTamanho(33516L);	       
 	       dtoGiven.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE.toString());	       
 	       dtoGiven.setArquivoBase64("qwertyuiopasdfghjklzxcvbnm");
-	       String jsonDtoGiven = new Gson().toJson(dtoGiven);
+	       Arquivos listDtoGiven = new Arquivos();
+	       listDtoGiven.setArquivos(new ArrayList<Arquivo>());
+	       listDtoGiven.getArquivos().add(dtoGiven);
+	       String jsonDtoGiven = new Gson().toJson(listDtoGiven);
 
 	       //Montando Given
 	       //Long cdArquivoRes = 2510L;
@@ -177,10 +183,13 @@ public class ArquivoControllerTest {
 	       dtoRes.setNomeArquivo("arduino-uno-schematic.pdf");	       
 	       dtoRes.setTamanho(33516L);	       
 	       dtoRes.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE.toString());	       
-	       dtoRes.setArquivoBase64("qwertyuiopasdfghjklzxcvbnm");	       
+	       dtoRes.setArquivoBase64("qwertyuiopasdfghjklzxcvbnm");
+	       Arquivos listDtoRes = new Arquivos();
+	       listDtoRes.setArquivos(new ArrayList<Arquivo>());
+	       listDtoRes.getArquivos().add(dtoRes);
 
 	       //Mockando Service que busca no banco de dados 
-	       given(service.saveArquivo(dtoRes)).willReturn(dtoGiven);	       
+	       given(service.saveArquivo(listDtoGiven)).willReturn(listDtoRes);	       
 	       
 	       //Efetua a requisição na rota e espera um status code
 		   mvc.perform(post("/arquivo/carregar")
@@ -190,7 +199,7 @@ public class ArquivoControllerTest {
 	               .andExpect(status().isOk());
 	       
 	       //Verifica se os metódos da lógica interna foram chamados
-	       BDDMockito.verify(service).saveArquivo(dtoGiven);
+	       BDDMockito.verify(service).saveArquivo(listDtoGiven);
 	   }
 
 }
