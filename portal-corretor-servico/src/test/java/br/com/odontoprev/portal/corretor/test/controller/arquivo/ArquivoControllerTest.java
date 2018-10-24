@@ -3,6 +3,7 @@ package br.com.odontoprev.portal.corretor.test.controller.arquivo;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.text.SimpleDateFormat;
@@ -21,6 +22,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.google.gson.Gson;
 
 import br.com.odontoprev.portal.corretor.dto.Arquivo;
 import br.com.odontoprev.portal.corretor.service.ArquivoService;
@@ -149,5 +152,45 @@ public class ArquivoControllerTest {
 					   .contentType(APPLICATION_JSON))
 		               .andExpect(status().isNoContent());
 	   }
-	   
+
+	   @Test
+	   public void testOk200carregarArquivo() throws Exception {
+	       //Montando Request
+	       //Long cdArquivoRequest = 2510L;
+
+	       //Montando Given
+	       Long cdArquivoGiven = 2510L;
+		   Arquivo dtoGiven = new Arquivo();
+		   dtoGiven.setCdArquivo(cdArquivoGiven);	       
+		   dtoGiven.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));	       
+	       dtoGiven.setNomeArquivo("arduino-uno-schematic.pdf");	       
+	       dtoGiven.setTamanho(33516L);	       
+	       dtoGiven.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE.toString());	       
+	       dtoGiven.setArquivoBase64("qwertyuiopasdfghjklzxcvbnm");
+	       String jsonDtoGiven = new Gson().toJson(dtoGiven);
+
+	       //Montando Given
+	       //Long cdArquivoRes = 2510L;
+		   Arquivo dtoRes = new Arquivo();
+		   dtoRes.setCdArquivo(cdArquivoGiven);	       
+		   dtoRes.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));	       
+	       dtoRes.setNomeArquivo("arduino-uno-schematic.pdf");	       
+	       dtoRes.setTamanho(33516L);	       
+	       dtoRes.setTipoConteudo(MediaType.APPLICATION_PDF_VALUE.toString());	       
+	       dtoRes.setArquivoBase64("qwertyuiopasdfghjklzxcvbnm");	       
+
+	       //Mockando Service que busca no banco de dados 
+	       given(service.saveArquivo(dtoRes)).willReturn(dtoGiven);	       
+	       
+	       //Efetua a requisição na rota e espera um status code
+		   mvc.perform(post("/arquivo/carregar")
+				   .contentType(APPLICATION_JSON)
+				   .content(jsonDtoGiven)
+				   )
+	               .andExpect(status().isOk());
+	       
+	       //Verifica se os metódos da lógica interna foram chamados
+	       BDDMockito.verify(service).saveArquivo(dtoGiven);
+	   }
+
 }

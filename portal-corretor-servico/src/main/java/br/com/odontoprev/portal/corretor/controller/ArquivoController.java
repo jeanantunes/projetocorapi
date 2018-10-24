@@ -29,7 +29,7 @@ public class ArquivoController {
     private ArquivoService arquivoService;
 
     //201810231800 - esert - COR-723:API - Novo GET/ARQUIVO/(ID)
-    @RequestMapping(value = "/arquivo/arquivo/carregar", method = {RequestMethod.POST})
+    @RequestMapping(value = "/arquivo/carregar", method = {RequestMethod.POST})
     public ResponseEntity<Arquivo> carregarArquivo(@RequestBody Arquivo arquivo) throws ParseException {
         log.info("carregarArquivo - ini");
         log.info("arquivoInfo:[".concat(arquivo.toString()).concat("]"));
