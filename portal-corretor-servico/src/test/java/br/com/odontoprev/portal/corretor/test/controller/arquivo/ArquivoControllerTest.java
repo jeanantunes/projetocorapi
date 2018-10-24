@@ -67,7 +67,7 @@ public class ArquivoControllerTest {
 	       given(service.getByCdArquivo(cdArquivoGiven)).willReturn(dtoGiven);	       
 	       
 	       //Efetua a requisição na rota e espera um status code
-		   mvc.perform(get("/arquivo/arquivo/" + cdArquivoRequest + "/json")
+		   mvc.perform(get("/arquivo/" + cdArquivoRequest + "/json")
 				   .contentType(APPLICATION_JSON))
 	               .andExpect(status().isOk());
 	       
@@ -94,7 +94,7 @@ public class ArquivoControllerTest {
 	       given(service.getByCdArquivo(cdArquivoGiven)).willReturn(dtoGiven);	       
 	       
 	       //Efetua a requisição na rota e espera um status code
-		   mvc.perform(get("/arquivo/arquivo/" + cdArquivoRequest + "/json")
+		   mvc.perform(get("/arquivo/" + cdArquivoRequest + "/json")
 				   .contentType(APPLICATION_JSON))
 	               .andExpect(status().isNoContent());
 	   }
@@ -118,7 +118,7 @@ public class ArquivoControllerTest {
 	       given(service.getByCdArquivo(cdArquivoGiven)).willReturn(dtoGiven);	       
 	       
 	       //Efetua a requisição na rota e espera um status code
-		   mvc.perform(get("/arquivo/arquivo/" + cdArquivoRequest + "/arquivo")
+		   mvc.perform(get("/arquivo/" + cdArquivoRequest + "/arquivo")
 				   .contentType(APPLICATION_JSON))
 	               .andExpect(status().isOk());
 	       
@@ -145,7 +145,7 @@ public class ArquivoControllerTest {
 		   given(service.getByCdArquivo(cdArquivoGiven)).willReturn(dtoGiven);	       
 		   
 		   //Efetua a requisição na rota e espera um status code
-		   mvc.perform(get("/arquivo/arquivo/" + cdArquivoRequest + "/arquivo")
+		   mvc.perform(get("/arquivo/" + cdArquivoRequest + "/arquivo")
 					   .contentType(APPLICATION_JSON))
 		               .andExpect(status().isNoContent());
 	   }

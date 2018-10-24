@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import br.com.odontoprev.portal.corretor.controller.ArquivoController;
 import br.com.odontoprev.portal.corretor.service.ArquivoService;
 
-//201810231900 - esert - COR-723:API - Novo GET/ARQUIVO/(ID)
+//201810231900 - esert - COR-723:API - Novo GET/arquivo/(ID)
 //Classe responsável por configurar objetos que queremos mockar
 @Configuration
 @ComponentScan(
