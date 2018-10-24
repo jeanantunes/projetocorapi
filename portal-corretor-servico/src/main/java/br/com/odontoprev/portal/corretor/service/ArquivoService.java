@@ -5,7 +5,8 @@ import br.com.odontoprev.portal.corretor.dto.Arquivos;
 
 public interface ArquivoService {
 
-	public Arquivos saveArquivo(Arquivos arquivos);
+	//201810241700 - esert - COR-721:API POST/arquivo/carregar - alterado para suportar List<Arquivo>
+	public Arquivos saveArquivo(Arquivos arquivos); 
 
 	public Arquivo getByCdArquivo(Long cdArquivo);
 }

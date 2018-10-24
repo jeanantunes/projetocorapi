@@ -30,7 +30,7 @@ public class ArquivoController {
     private ArquivoService arquivoService;
 
     //201810231800 - esert - COR-721:API POST/arquivo/carregar
-    //201810241700 - esert - COR-721:API POST/arquivo/carregar - alterado para suportar List<Arquivo> 
+    //201810241700 - esert - COR-721:API POST/arquivo/carregar - alterado para suportar List<Arquivo>
     @RequestMapping(value = "/arquivo/carregar", method = {RequestMethod.POST})
     public ResponseEntity<Arquivos> carregarArquivo(@RequestBody Arquivos arquivos) throws ParseException {
         log.info("carregarArquivo - ini");
