@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -77,11 +78,20 @@ public class ArquivoServiceImpl implements ArquivoService {
 				entity.setNomeArquivo(dto.getNomeArquivo());
 				entity.setTamanhoArquivo(dto.getTamanho());
 				entity.setTipoConteudo(dto.getTipoConteudo());
-				entity.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dto.getDataCriacao()));
 				
 				if(dto.getCaminhoArquivo()!=null && !dto.getCaminhoArquivo().isEmpty()) {
 					File file = new File(dto.getCaminhoArquivo().concat(dto.getNomeArquivo()));
 					
+					// h t t p s : //stackoverflow .com /questions /51438 /getting-a-files-mime-type-in-java
+					String mimeType = URLConnection.guessContentTypeFromName(file.getName()); //201810241246 - esert - determina ContentType/TipoConteudo automaticamente 
+					log.info("mimeType:[{}] = URLConnection.guessContentTypeFromName(file.getName({}))"
+							,mimeType
+							,file.getName()
+							);
+					if(entity.getTipoConteudo()==null || entity.getTipoConteudo().trim().length()==0) {
+						entity.setTipoConteudo(mimeType); //
+					}
+
 					if(entity.getTamanho()==null) {
 						entity.setTamanhoArquivo(file.length());
 					}
@@ -131,12 +141,11 @@ public class ArquivoServiceImpl implements ArquivoService {
 				dto.setNomeArquivo(entity.getNomeArquivo());
 				dto.setTamanho(entity.getTamanho());
 				dto.setTipoConteudo(entity.getTipoConteudo());
-				dto.setDataCriacao(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(entity.getDataCriacao()));
 				
 				dto.setTamanho( entity.getArquivo()!=null ? (long)entity.getArquivo().length : -1L );
 
 				dto.setArquivoBase64(Base64.encodeBase64String(entity.getArquivo())); //201807131230
-				dto.setTamanho( dto.getArquivoBase64()!=null ? (long)dto.getArquivoBase64().length() : -1L );
+				//dto.setTamanho( dto.getArquivoBase64()!=null ? (long)dto.getArquivoBase64().length() : -1L ); //201810241251 - esert - informar o tamanho real em bytes e nao o tamanho do string base64
 
 			}
 		} catch (Exception e) {
