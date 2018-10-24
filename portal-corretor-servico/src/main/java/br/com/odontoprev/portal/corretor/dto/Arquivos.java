@@ -24,5 +24,30 @@ public class Arquivos implements Serializable {
 	@Override
 	public String toString() {
 		return "Arquivos [arquivos=" + arquivos!=null ? String.valueOf(arquivos.size()) : "NuLL" + "]";
-	}	
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((arquivos == null) ? 0 : arquivos.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Arquivos other = (Arquivos) obj;
+		if (arquivos == null) {
+			if (other.arquivos != null)
+				return false;
+		} else if (!arquivos.equals(other.arquivos))
+			return false;
+		return true;
+	}
 }
