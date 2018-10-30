@@ -1066,7 +1066,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 			retorno += ",OBJETO NULO";
 		} else {
 
-			if(empresaDcmsLote.getCdVenda() != null) { // 201810182259 DEPLOY DE ULTIMA HORA
+			if(empresaDcmsLote.getCdVenda() == null) { // 201810182259 DEPLOY DE ULTIMA HORA
 
 				retorno = "HEADER"; //201810091122 - esert
 				return retorno; //201810091122 - esert
