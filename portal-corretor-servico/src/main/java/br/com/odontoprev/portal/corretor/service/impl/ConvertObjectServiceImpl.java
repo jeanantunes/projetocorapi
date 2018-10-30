@@ -30,32 +30,33 @@ public class ConvertObjectServiceImpl implements ConvertObjectService {
 	@Autowired
 	ForcaVendaDAO forcaVendaDAO;
 
-	@Override
-	public void addJsonInTable(Venda vendaPF, VendaPME vendaPME, String userAgent) {
-
-		log.info("[addJsonInTable - venda PF e PME]");
-		
-		try {
-			TbodForcaVenda tbodForcaVenda = forcaVendaDAO.findOne(vendaPF != null ? vendaPF.getCdForcaVenda() : vendaPME.getCdForcaVenda());
-			
-			TbodJsonRequest jsonRequest = new TbodJsonRequest();
-			jsonRequest.setCdForcaVenda(vendaPF != null ? vendaPF.getCdForcaVenda() : vendaPME.getCdForcaVenda());			
-			jsonRequest.setDtCriacao(new Date());
-			jsonRequest.setModeloCelular(userAgent);
-			if(tbodForcaVenda.getTbodCorretora() != null && tbodForcaVenda.getTbodCorretora().getCdCorretora() != null) {
-				jsonRequest.setCdCorretora(tbodForcaVenda.getTbodCorretora().getCdCorretora());
-			}
-			jsonRequest.setUrl(vendaPF != null ? "/vendapf" : "/vendapme");
-			if (vendaPF != null) {
-				jsonRequest.setJson(convertService.ConvertObjectToJson(vendaPF,null));
-			}else {
-				jsonRequest.setJson(convertService.ConvertObjectToJson(null,vendaPME));
-			}			
-			jsonRequestDAO.save(jsonRequest);
-		} catch (Exception e) {
-			log.error(e);
-			log.error("Erro ao cadastrar json de vendas PF e PME :: Detalhe: [" + e.getMessage() + "]");
-		}		
-	}
+//201810301710 - esert - exc por desuso //2KILL	
+//	@Override
+//	public void addJsonInTable(Venda vendaPF, VendaPME vendaPME, String userAgent) {
+//
+//		log.info("[addJsonInTable - venda PF e PME]");
+//		
+//		try {
+//			TbodForcaVenda tbodForcaVenda = forcaVendaDAO.findOne(vendaPF != null ? vendaPF.getCdForcaVenda() : vendaPME.getCdForcaVenda());
+//			
+//			TbodJsonRequest jsonRequest = new TbodJsonRequest();
+//			jsonRequest.setCdForcaVenda(vendaPF != null ? vendaPF.getCdForcaVenda().toString() : vendaPME.getCdForcaVenda().toString());			
+//			jsonRequest.setDtCriacao(new Date());
+//			jsonRequest.setModeloCelular(userAgent);
+//			if(tbodForcaVenda.getTbodCorretora() != null && tbodForcaVenda.getTbodCorretora().getCdCorretora() != null) {
+//				jsonRequest.setCdCorretora(tbodForcaVenda.getTbodCorretora().getCdCorretora());
+//			}
+//			jsonRequest.setUrl(vendaPF != null ? "/vendapf" : "/vendapme");
+//			if (vendaPF != null) {
+//				jsonRequest.setJson(convertService.ConvertObjectToJson(vendaPF,null));
+//			}else {
+//				jsonRequest.setJson(convertService.ConvertObjectToJson(null,vendaPME));
+//			}			
+//			jsonRequestDAO.save(jsonRequest);
+//		} catch (Exception e) {
+//			log.error(e);
+//			log.error("Erro ao cadastrar json de vendas PF e PME :: Detalhe: [" + e.getMessage() + "]");
+//		}		
+//	}
 	
 }
