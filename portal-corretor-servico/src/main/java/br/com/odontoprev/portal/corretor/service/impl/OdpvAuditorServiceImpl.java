@@ -66,7 +66,14 @@ public class OdpvAuditorServiceImpl implements OdpvAuditorService {
 				jsonRequest.setUrl(requestURI.substring(0,maxLenRequestURI)); //201806122234 - esert - campo URL tabela TBOD_JSON_REQUEST aumentado de 20 vinte para 200 duzentos
 			}
 
-			jsonRequest.setJson(stringJsonBody);
+			int maxLenJsonBody = 0;
+			if(stringJsonBody != null) { //201810301731 - esert - protecao - alt protecao limite tamanho Json em 4000
+				maxLenJsonBody = stringJsonBody.length();
+				if(maxLenJsonBody > 4000) {
+					maxLenJsonBody = 4000;
+				}
+				jsonRequest.setJson(stringJsonBody.substring(0, maxLenJsonBody)); //201810301731 - esert - alt protecao limite tamanho Json em 4000  
+			}
 			
 			int maxLenHeaders = 0;
 			if(headers != null) { //201806291132 - esert - protecao - pq na chamada dcss nao tem header deu nullPointerException
