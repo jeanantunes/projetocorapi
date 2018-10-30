@@ -18,10 +18,10 @@ public class TbodJsonRequest implements Serializable {
 	@SequenceGenerator(name = "SEQ_TBOD_JSON_REQUEST", sequenceName = "SEQ_TBOD_JSON_REQUEST", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_TBOD_JSON_REQUEST")
 	@Column(name = "CD_JSON_REQUEST")
-	private long cdJsonRequest;
+	private Long cdJsonRequest; //201810301710 - esert - alterado de long para Long conforme implementacoes atuais
 
 	@Column(name = "CD_FORCA_VENDA")
-	private long cdForcaVenda;
+	private String cdForcaVenda; //201810301710 - esert - alterado de long para String compativel com base //apesar que estava diferente desde criacao tabela em 2018-05-24 11:55:44
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "DT_CRIACAO")
@@ -37,7 +37,7 @@ public class TbodJsonRequest implements Serializable {
 	private String url;
 	
 	@Column(name="CD_CORRETORA")
-	private long cdCorretora;
+	private Long cdCorretora;
 
 	//201806121714 - esert - inclusao campo para salvar header
 	@Column(name="HEADER")
@@ -50,17 +50,17 @@ public class TbodJsonRequest implements Serializable {
 	public TbodJsonRequest() {
 	}
 
-	public long getCdJsonRequest() {
+	public Long getCdJsonRequest() {
 		return this.cdJsonRequest;
 	}
 	public void setCdJsonRequest(long cdJsonRequest) {
 		this.cdJsonRequest = cdJsonRequest;
 	}
 
-	public long getCdForcaVenda() {
+	public String getCdForcaVenda() {
 		return cdForcaVenda;
 	}
-	public void setCdForcaVenda(long cdForcaVenda) {
+	public void setCdForcaVenda(String cdForcaVenda) {
 		this.cdForcaVenda = cdForcaVenda;
 	}
 
@@ -92,10 +92,10 @@ public class TbodJsonRequest implements Serializable {
 		this.url = url;
 	}
 
-	public long getCdCorretora() {
+	public Long getCdCorretora() {
 		return cdCorretora;
 	}
-	public void setCdCorretora(long cdCorretora) {
+	public void setCdCorretora(Long cdCorretora) {
 		this.cdCorretora = cdCorretora;
 	}
 
