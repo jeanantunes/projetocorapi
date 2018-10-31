@@ -14,8 +14,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 //201810221513 - esert - COR-721:API - Novo POST/ARQUIVO Fazer Carga
+//201810311142 - esert - COR-1005:Rename TBOD_ARQUIVO Para TBOD_COR_ARQUIVO - GOHORSE urgente troca so nome tabela e depois acerta resto por debito tecnico
 @Entity
-@Table(name = "TBOD_ARQUIVO")
+@Table(name = "TBOD_COR_ARQUIVO")
 public class TbodArquivo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
