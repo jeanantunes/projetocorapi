@@ -2,6 +2,9 @@ package br.com.odontoprev.portal.corretor.util;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class SubstituirParametrosUtil {
 
 
