@@ -1,17 +1,15 @@
 package br.com.odontoprev.portal.corretor.service.impl;
 
-import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
-import br.com.odontoprev.portal.corretor.dao.*;
-import br.com.odontoprev.portal.corretor.dto.*;
-import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
-import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
-import br.com.odontoprev.portal.corretor.enums.TipoNotificationTemplate;
-import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
-import br.com.odontoprev.portal.corretor.model.*;
-import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
-import br.com.odontoprev.portal.corretor.util.Constantes;
-import br.com.odontoprev.portal.corretor.util.DataUtil;
-import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
+import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.AGUARDANDO_APRO;
+import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.ATIVO;
+import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.PRE_CADASTRO;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +21,42 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum.*;
+import br.com.odontoprev.portal.corretor.business.SendMailForcaStatus;
+import br.com.odontoprev.portal.corretor.dao.CorretoraDAO;
+import br.com.odontoprev.portal.corretor.dao.DeviceTokenDAO;
+import br.com.odontoprev.portal.corretor.dao.ForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.LoginDAO;
+import br.com.odontoprev.portal.corretor.dao.NotificacaoDAO;
+import br.com.odontoprev.portal.corretor.dao.SistemaPushDAO;
+import br.com.odontoprev.portal.corretor.dao.StatusForcaVendaDAO;
+import br.com.odontoprev.portal.corretor.dao.TokenDAO;
+import br.com.odontoprev.portal.corretor.dto.Corretora;
+import br.com.odontoprev.portal.corretor.dto.DCSSLoginResponse;
+import br.com.odontoprev.portal.corretor.dto.EmailForcaVendaCorretora;
+import br.com.odontoprev.portal.corretor.dto.Endereco;
+import br.com.odontoprev.portal.corretor.dto.ForcaVenda;
+import br.com.odontoprev.portal.corretor.dto.ForcaVendaResponse;
+import br.com.odontoprev.portal.corretor.dto.Login;
+import br.com.odontoprev.portal.corretor.dto.PushNotification;
+import br.com.odontoprev.portal.corretor.dto.VendaResponse;
+import br.com.odontoprev.portal.corretor.enums.ParametrosMsgAtivo;
+import br.com.odontoprev.portal.corretor.enums.StatusForcaVendaEnum;
+import br.com.odontoprev.portal.corretor.enums.TipoNotificationTemplate;
+import br.com.odontoprev.portal.corretor.exceptions.ApiTokenException;
+import br.com.odontoprev.portal.corretor.model.TbodCorretora;
+import br.com.odontoprev.portal.corretor.model.TbodDeviceToken;
+import br.com.odontoprev.portal.corretor.model.TbodEndereco;
+import br.com.odontoprev.portal.corretor.model.TbodForcaVenda;
+import br.com.odontoprev.portal.corretor.model.TbodLogin;
+import br.com.odontoprev.portal.corretor.model.TbodNotificationTemplate;
+import br.com.odontoprev.portal.corretor.model.TbodSistemaPush;
+import br.com.odontoprev.portal.corretor.model.TbodStatusForcaVenda;
+import br.com.odontoprev.portal.corretor.model.TbodTipoBloqueio;
+import br.com.odontoprev.portal.corretor.service.ForcaVendaService;
+import br.com.odontoprev.portal.corretor.service.PushNotificationService;
+import br.com.odontoprev.portal.corretor.util.Constantes;
+import br.com.odontoprev.portal.corretor.util.DataUtil;
+import br.com.odontoprev.portal.corretor.util.SubstituirParametrosUtil;
 
 @Service
 public class ForcaVendaServiceImpl implements ForcaVendaService {
@@ -70,6 +97,11 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
     @Value("${DCSS_CODIGO_CANAL_VENDAS}")
     private String dcss_codigo_canal_vendas;
 
+    @Autowired
+	private PushNotificationService pushNotificationService; //201810301511 - esert - 
+
+    @Autowired
+	private SubstituirParametrosUtil substituirParametrosUtil; //201810301511 - esert -
 
     private DCSSLoginResponse postIntegracaoForcaDeVendaDcss(ForcaVenda forca) throws ApiTokenException {
 
@@ -967,36 +999,62 @@ public class ForcaVendaServiceImpl implements ForcaVendaService {
 
     @Override
     public String envioMensagemAtivo(TbodForcaVenda forcaVenda) throws ApiTokenException {
-        String mensagemComParametros;
-        SubstituirParametrosUtil substituirParametrosUtil = new SubstituirParametrosUtil();
-        Map<String, String> mensagemComParametrosMap = new HashMap<String, String>();
+    	String titulo;
+        String mensagemComParametrosAplicados;
+        String nomeSistemaPush;
         TbodNotificationTemplate tbodNotificationTemplate = new TbodNotificationTemplate();
-        PushNotification pushNotification = new PushNotification();
         TbodDeviceToken tbodDeviceToken = new TbodDeviceToken();
         TbodSistemaPush tbodSistemaPush = new TbodSistemaPush();
 
-        tbodNotificationTemplate = notificacaoDAO.findbyTipo(TipoNotificationTemplate.ATIVACAO_FORCA_VENDA.toString()); //201806191650 - esert - bug (result returns more than one elements) vide rmarques@odpv
-
-        tbodSistemaPush = sistemaPushDAO.findbyNmSistema("CORRETOR");
+        nomeSistemaPush = "CORRETOR";
 
         tbodDeviceToken = tokenDAO.findbyCdlogin(forcaVenda.getTbodLogin().getCdLogin());
+        String[] tokenStringArray = new String[]{tbodDeviceToken.getToken()};
+        
+        tbodNotificationTemplate = notificacaoDAO.findbyTipo(TipoNotificationTemplate.ATIVACAO_FORCA_VENDA.toString()); //201806191650 - esert - bug (result returns more than one elements) vide rmarques@odpv
 
-        mensagemComParametros = tbodNotificationTemplate.getMensagem();
+        titulo = tbodNotificationTemplate.getTitulo();
+
+        Map<String, String> mensagemComParametrosMap = new HashMap<String, String>();
         mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMEFORCAVENDA.name(), forcaVenda.getNome());
         mensagemComParametrosMap.put(ParametrosMsgAtivo.NOMECORRETORA.name(), forcaVenda.getTbodCorretora().getNome());
-        pushNotification.setMessage(substituirParametrosUtil.substituirParametrosMensagem(mensagemComParametros, mensagemComParametrosMap));
-        Map<String, String> dadosTituloMensagem = new HashMap<>();
-        dadosTituloMensagem.put(tbodNotificationTemplate.getTitulo(), pushNotification.getMessage());
+		mensagemComParametrosAplicados = substituirParametrosUtil.substituirParametrosMensagem(
+			tbodNotificationTemplate.getMensagem(), 
+			mensagemComParametrosMap
+		);
 
-        pushNotification.setTitle(tbodNotificationTemplate.getTitulo());
-        pushNotification.setDados(dadosTituloMensagem);
-        pushNotification.setDestinations(new String[]{tbodDeviceToken.getToken()});
+		//201810301400 - esert - COR-983:API Serviço - Alterar Serviço PUT /forcavenda/statusreprovado (call push)
+		/*inicio 
+		 * montarPushNotification(
+		 *  nomeSistemaPush
+		 * ,tokenStringArray
+		 * ,
+		 * )
+		 */
+        PushNotification pushNotification = new PushNotification();
+        
+        pushNotification.setTitle(titulo);
+        pushNotification.setMessage(mensagemComParametrosAplicados);
+
+        Map<String, String> dadosMap = new HashMap<>();
+        dadosMap.put(
+        		titulo, 
+        		mensagemComParametrosAplicados
+        		);
+        pushNotification.setDados(dadosMap);
+        
+        pushNotification.setDestinations(tokenStringArray);
+        pushNotification.setSystemOperation(tbodDeviceToken.getSistemaOperacional());
+
+		tbodSistemaPush = sistemaPushDAO.findbyNmSistema(nomeSistemaPush );
         pushNotification.setPrivateKey(tbodSistemaPush.getTextoPrivateKey());
         pushNotification.setSenderSystem(tbodSistemaPush.getSistema());
-        pushNotification.setSystemOperation(tbodDeviceToken.getSistemaOperacional());
         pushNotification.setProjetoFirebase(tbodSistemaPush.getProjetoFirebase());
-        PushNotificationServiceImpl pushNotificationService = new PushNotificationServiceImpl();
 
+		/*final montarPushNotification()*/
+        
+        
+        //PushNotificationServiceImpl pushNotificationService = new PushNotificationServiceImpl();
         return pushNotificationService.envioMensagemPush(pushNotification);
     }
 
